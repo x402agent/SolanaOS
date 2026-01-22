@@ -901,7 +901,7 @@ const styles = StyleSheet.create({
     iterationList: { flex: 1 },
     iterationCard: { padding: 12, borderRadius: 12, backgroundColor: `${COLORS.bgPrimary}80`, marginBottom: 8 },
     iterationMeta: { flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 8 },
-    iterationNumber: { px: 8, py: 2, borderRadius: 4 },
+    iterationNumber: { paddingHorizontal: 8, paddingVertical: 2, borderRadius: 4 },
     iterationNumberText: { fontSize: 10, fontWeight: '700', color: COLORS.bgPrimary },
     iterationTime: { fontSize: 9, color: COLORS.textMuted },
     verifiedIcon: { marginLeft: 'auto', fontSize: 12, color: COLORS.solanaGreen },
@@ -975,6 +975,6 @@ const styles = StyleSheet.create({
     settingsItem: { flexDirection: 'row', justifyContent: 'space-between', padding: 16, borderBottomWidth: 1, borderBottomColor: COLORS.border },
     settingsItemLabel: { fontSize: 14, color: COLORS.textSecondary },
     settingsItemValue: { fontSize: 14, fontWeight: '700', color: COLORS.textPrimary },
-    lockButton: { margin: 16, py: 12, borderRadius: 12, backgroundColor: `${COLORS.error}15`, borderWidth: 1, borderColor: `${COLORS.error}30`, alignItems: 'center' },
+    lockButton: { margin: 16, paddingVertical: 12, borderRadius: 12, backgroundColor: `${COLORS.error}15`, borderWidth: 1, borderColor: `${COLORS.error}30`, alignItems: 'center' },
     lockButtonText: { fontSize: 11, fontWeight: '700', color: COLORS.error, textTransform: 'uppercase', letterSpacing: 2 },
 });
