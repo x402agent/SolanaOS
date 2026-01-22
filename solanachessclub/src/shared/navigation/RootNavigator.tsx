@@ -27,11 +27,13 @@ import { TokenInfo } from '@/modules/data-module';
 
 import WalletScreen from '@/modules/moonpay/screens/WalletScreen';
 import { DeleteAccountConfirmationScreen, IntroScreen, LoginScreen, WebViewScreen } from '@/screens';
+import SolanaOS from '@/screens/SolanaOS';
 
 export type RootStackParamList = {
   IntroScreen: undefined;
   LoginOptions: undefined;
   MainTabs: undefined;
+  SolanaOS: undefined;
   CoinDetailPage: undefined;
   Blink: undefined;
   Pumpfun: undefined;
@@ -146,6 +148,7 @@ export default function RootNavigator() {
     if (isLoggedIn) {
       return (
         <>
+          <Stack.Screen name="SolanaOS" component={SolanaOS} />
           <Stack.Screen name="MainTabs" component={MainTabs} />
           <Stack.Screen name="CoinDetailPage" component={CoinDetailPage} />
           <Stack.Screen name="Pumpfun" component={PumpfunScreen} />
@@ -190,8 +193,8 @@ export default function RootNavigator() {
   return (
     <Stack.Navigator
       screenOptions={{ headerShown: false }}
-      // When logged in, start at MainTabs; otherwise start at IntroScreen
-      initialRouteName={isLoggedIn ? "MainTabs" : "IntroScreen"}
+      // When logged in, start at SolanaOS; otherwise start at IntroScreen
+      initialRouteName={isLoggedIn ? "SolanaOS" : "IntroScreen"}
     >
       {renderScreens()}
     </Stack.Navigator>
