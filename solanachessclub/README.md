@@ -1,598 +1,637 @@
 <div align="center">
 
-# Solana App Kit
+# 🌌 Solana OS
 
-### Open-Source React Native Scaffold for Building iOS and Android Crypto Mobile Apps with Solana Protocols.
+### The Complete Mobile Operating System for Solana
 
-<p> From AI to Social, Launchpads to Wallets, and Trading — build mobile apps in under 15 minutes. </p>
+**Trade • Create • Launch • Manage - All from Your Phone**
 
-![SolanaAppKit](https://github.com/user-attachments/assets/b4a6dbbd-1073-412a-a5b9-4c2e41e39964)
+![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)
+![Platform](https://img.shields.io/badge/platform-iOS%20%7C%20Android-lightgrey.svg)
+![Solana](https://img.shields.io/badge/blockchain-Solana-14F195.svg)
+![AI](https://img.shields.io/badge/AI-Grok%20Powered-9945FF.svg)
 
-<p align="center">
-  <a href="https://www.npmjs.com/package/start-solana-app?activeTab=readme"><img src="https://img.shields.io/npm/dm/start-solana-app?style=for-the-badge&color=4CAF50" alt="NPM Downloads" /></a>
-  <a href="https://github.com/SendArcade/solana-app-kit/network/members"><img src="https://img.shields.io/github/forks/sendarcade/solana-app-kit?style=for-the-badge&color=blue" alt="GitHub Forks" /></a>
-  <a href="https://github.com/SendArcade/solana-app-kit/blob/main/LICENSE"><img src="https://img.shields.io/github/license/sendarcade/solana-app-kit?style=for-the-badge&color=orange" alt="GitHub License" /></a>
-</p>
+[Features](#-features) • [Quick Start](#-quick-start) • [Architecture](#-architecture) • [Token Mill AI](#-token-mill-ai-agent) • [Documentation](#-documentation)
 
-<p align="center">
-  <a href="https://deepwiki.com/SendArcade/solana-app-kit"><img src="https://deepwiki.com/badge.svg" alt="Ask DeepWiki" /></a>
-  <a href="https://x.com/solanaappkit"><img src="https://img.shields.io/twitter/follow/solanaappkit?style=flat&color=1DA1F2" alt="X (formerly Twitter) Follow" /></a>
-</p>
-
-<p> Anyone — whether a seasoned React Native developer or a Solana developer — can build mobile apps faster with 19+ protocol integrations. </div>
-
-## Key Protocol Integrations
-
-1. **Swaps:**  
-   In-App trading via [Jupiter](https://jup.ag/) for the best prices across all DEXs, and native [Pump AMM](https://swap.pump.fun/)
-
-2. **Launchpads:**  
-   The three biggest Solana launchpads with configurable bonding curves – [Pump.fun](https://pump.fun/), [Raydium](https://raydium.io/launchpad/), and [Meteora](https://app.meteora.ag/) – along with [Token Mill](https://tokenmill.xyz/)
-
-3. **Embedded Wallets:**  
-   Top wallets like [Privy](https://www.privy.io/), [Turnkey](https://turnkey.com/), and [Dynamic](https://www.dynamic.xyz/), along with Mobile Wallet Adapter support by [Solana Mobile](https://solanamobile.com/) for external wallet connections.
-
-4. **Token Data & Prices:**  
-   Live prices and token info from [Coingecko](https://www.coingecko.com/), [Birdeye](https://birdeye.so/), and [Rugcheck](https://rugcheck.xyz/)
-
-5. **NFTs:**  
-   NFT minting via [Metaplex](https://www.metaplex.com/) and trading via [Tensor](https://www.tensor.trade/)
-
-6. **AI Integration:**  
-   [SendAI](https://sendai.fun/) for AI chat integration to take Solana actions
-
-7. **On/Off-Ramps:**  
-   Buy/sell crypto using cards or Apple Pay with [MoonPay](https://www.moonpay.com/) and [Mercuryo](https://mercuryo.io/) *(work in progress)*
-
-8. **Miscellaneous Tools:**  
-   [Jito Bundles](https://www.jito.network/) and [Helius](https://www.helius.dev/) for transaction landing
-
----
-
-## 📋 Detailed Table of Contents
-
-- [📱 App Features](#-app-features)
-- [📚 Documentation](#-documentation)
-- [📦 Core Installation](#-core-installation)
-- [🛠️ Tech Stack](#️-tech-stack)
-- [✅ Prerequisites](#-prerequisites)
-- [🚀 Quick Start](#-quick-start)
-- [⌨️ Hotkeys](#️-hotkeys)
-- [🧪 Development Mode Guide](#-development-mode-guide)
-- [🏁 Getting Started](#-getting-started)
-- [📂 Project Structure](#-project-structure)
-- [🧩 Modules](#-modules)
-- [📊 Examples](#-examples)
-- [🚢 Production Deployment](#-production-deployment)
-- [📚 Dependencies](#-dependencies)
-- [🤝 Contributing](#-contributing)
-- [👥 Contributors](#-contributors)
-- [📄 License](#-license)
-- [❓ Troubleshooting](#-troubleshooting)
-- [🔒 Security](#-security)
-- [🌐 Community](#-community)
-
----
-
-## 📱 App Features
-
-| Feature                   | Description                                                                                                                                                                                                                                                                   |
-| ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 👛 **Wallet Integration** | • Multiple wallet connection methods<br>• Embedded wallet support via Privy, Dynamic, and Turnkey<br>• External wallet connections via Solana Mobile MWA<br>• Transaction signing and management<br>                                                                          |
-| 👥 **Social Features**    | • User profiles and following system<br>• Social feed with posts and interactions<br>• Community engagement features<br>• NFT display and management<br>• IPFS storage for metadata                                                                                           |
-| 🎨 **UI/UX**              | • Modern, responsive design<br>• Tab-based navigation<br>• Interactive charts and visualizations<br>• Elegant loading states and error handling<br>• Platform-specific optimizations                                                                                          |
-| 🖥️ **Backend Features**   | • RESTful API for token operations<br>• Social data storage and retrieval<br>• Token market creation and management<br>• Token swapping via Jupiter and PumpSwap<br>• Token launching via different launchpads like Pump, Raydium, and Meteora <br>• Image upload and storage |
-
----
-
-## 📚 Documentation
-
-You can view the full documentation of the kit at: [http://docs.solanaappkit.com/](http://docs.solanaappkit.com/)
-
----
-
-## 📦 Core Installation
-
-```sh
-npx start-solana-app
-```
-
----
-
-## 🛠️ Tech Stack
-
-<div align="center">
-  <table>
-    <tr>
-      <td align="center"><a href="https://reactnative.dev/" target="_blank" rel="noopener noreferrer"><img src="https://d33wubrfki0l68.cloudfront.net/554c3b0e09cf167f0281fda839a5433f2040b349/ecfc9/img/header_logo.svg" width="60" height="60" alt="React Native" /><br /><b>React Native</b></a></td>
-      <td align="center"><a href="https://expo.dev/" target="_blank" rel="noopener noreferrer"><img src="https://www.vectorlogo.zone/logos/expoio/expoio-icon.svg" width="60" height="60" alt="Expo" /><br /><b>Expo</b></a></td>
-      <td align="center"><a href="https://solana.com/docs/clients/javascript" target="_blank" rel="noopener noreferrer"><img src="https://cdn.jsdelivr.net/gh/trustwallet/assets@master/blockchains/solana/info/logo.png" width="60" height="60" alt="Solana Web3.js" /><br /><b>Solana Kit</b></a></td>
-      <td align="center"><a href="https://www.typescriptlang.org/" target="_blank" rel="noopener noreferrer"><img src="https://cdn.worldvectorlogo.com/logos/typescript.svg" width="60" height="60" alt="TypeScript" /><br /><b>TypeScript</b></a></td>
-      <td align="center"><a href="https://www.postgresql.org/" target="_blank" rel="noopener noreferrer"><img src="https://cdn.worldvectorlogo.com/logos/postgresql.svg" width="60" height="60" alt="PostgreSQL" /><br /><b>PostgreSQL</b></a></td>
-    </tr>
-  </table>
 </div>
 
 ---
 
-## ✅ Prerequisites
+## 🚀 **What is Solana OS?**
 
-- Node.js >= 18
-- pnpm or yarn or npm
-- iOS: XCode and CocoaPods
-- Android: Android Studio, Android SDK, and JDK
-- [Expo CLI](https://docs.expo.dev/get-started/installation/)
-- PostgreSQL database (for the server)
+Solana OS is the **first complete mobile operating system** built specifically for the Solana blockchain. It's not just an app - it's a full-featured platform that brings the entire Solana ecosystem to your pocket:
+
+- 💱 **Unified DEX** - Swap across Raydium, Meteora, Jupiter, Pump.fun
+- 🚀 **Token Launcher** - Launch tokens on multiple platforms with AI assistance
+- 🎨 **NFT Studio** - Create, mint, and manage NFTs via Metaplex
+- 🤖 **AI Agent** - Grok-powered assistant for everything Solana
+- 🎤 **Voice Control** - Talk to your wallet, make trades hands-free
+- 💻 **Built-in Terminal** - Full command-line access to Solana CLI
+- 🔍 **Live Search** - AI-powered Universal search across all features
+- 📊 **Real-Time Data** - Live prices via Birdeye WebSocket
+- ♟️ **Games & Apps** - Chess, puzzles, and more (expanding ecosystem)
+- 💬 **Social Layer** - Chat, profiles, communities
 
 ---
 
-## 🚀 Quick Start
+## ✨ **Core Features**
 
-1. Clone the repository:
+### 🏦 **DeFi Hub**
 
-   ```sh
-   git clone https://github.com/SendArcade/solana-app-kit.git
-   cd solana-app-kit
-   ```
+**All-in-One Trading**
+- **Multi-DEX Aggregation**: Best rates across Raydium, Jupiter, Meteora, Pump.fun
+- **Token Mill Integration**: Custom token creation and management
+- **Liquidity Pools**: Add/remove liquidity seamlessly
+- **Limit Orders**: Set buy/sell orders across protocols
+- **Portfolio Tracking**: Real-time P&L and analytics
 
-2. Install dependencies:
-
-   ```sh
-   pnpm install
-   ```
-
-3. Create a `.env.local` file with your environment variables (see Environment Variables section)
-
-4. Run the app in development mode with dev tools enabled:
-
-   ```sh
-   # Run with development tools enabled
-   pnpm dev
-
-   # Or with the standard npm command
-   npm run dev
-   ```
-
-5. Run on a specific platform:
-
-   ```sh
-   # For iOS
-   npx expo run:ios
-
-   # For Android
-   npx expo run:android
-   ```
-
-To run in development mode with cache clearing:
-
-```sh
-pnpm start --dev --clear
+**Supported Platforms:**
+```
+✅ Raydium          - AMM & CLMM pools
+✅ Meteora          - Dynamic vaults & pools  
+✅ Jupiter          - Best route aggregation
+✅ Pump.fun         - Meme coin trading
+✅ Token Mill       - Custom token creation
+✅ Orca             - Concentrated liquidity
 ```
 
-### Development vs Standard Mode
+### 🚀 **Token Mill AI Agent**
 
-Solana App Kit supports two running modes:
+**Launch Tokens with AI Assistance**
 
-- **Standard Mode**: Default production-like experience
-- **Development Mode**: Enhanced with developer tools, navigation helpers, and error handling
+The Token Mill AI Agent is your personal token launch assistant:
 
-To run in development mode, use the `--dev` flag or the `dev` script:
+```
+YOU: "I want to launch a community token"
 
-```sh
-# Using npm script
-npm run dev
+AI AGENT:
+1. Analyzing market conditions...
+2. Suggesting optimal launch parameters...
+3. Generating token metadata...
+4. Creating bonding curve...
+5. Deploying to Pump.fun...
+6. Adding liquidity to Raydium...
+7. Listing on Jupiter...
+✅ Token launched successfully!
+```
 
-# Or with the start script flag
-npm start --dev
+**Features:**
+- 🤖 **AI-Powered**: Grok analyzes market and suggests parameters
+- 🎨 **Auto-Generate**: Logos, descriptions, metadata via AI
+- 📊 **Multi-Platform**: Launch on Pump.fun, Raydium, Metaplex simultaneously
+- 💎 **Bonding Curves**: Smart pricing algorithms
+- 🔒 **Anti-Rug**: Built-in safety mechanisms
+- 📈 **Post-Launch**: Automated liquidity management
+
+**Supported Launch Platforms:**
+- **Pump.fun**: Instant meme coin launches
+- **Raydium**: Professional LP creation
+- **Metaplex**: NFT-backed token standards
+- **Token Mill**: Custom smart contract deployment
+
+### 🎨 **NFT Studio**
+
+**Complete NFT Toolkit**
+
+- **Create**: Design and mint NFTs directly from your phone
+- **Collections**: Manage entire NFT collections
+- **Marketplace**: List on Magic Eden, Tensor, and more
+- **Metadata**: IPFS storage via Pinata
+- **Royalties**: Set and track creator royalties
+
+### 🤖 **AI Integration**
+
+**Grok-Powered Intelligence**
+
+1. **Voice Agent** 🎤
+   - Natural language commands
+   - Voice-controlled trading
+   - Real-time market commentary
+   - 5 personality voices (Ara, Rex, Sal, Eve, Leo)
+
+2. **Live Search** 🔍
+   - Universal search across all features
+   - Natural language queries
+   - Web + X (Twitter) integration
+   - Token discovery and analysis
+
+3. **Smart Analysis** 📊
+   - Position analysis
+   - Risk assessment
+   - Trade suggestions
+   - Market insights
+
+### 💻 **Built-in Terminal**
+
+**Full Solana CLI Access**
+
+```bash
+solana-os> solana balance
+2.5 SOL
+
+solana-os> spl-token accounts
+┌─────────────────────────────────────────────────┐
+│ Token                                  │ Balance│
+├─────────────────────────────────────────────────┤
+│ USDC                                   │ 100.00 │
+│ BONK                                   │ 1M     │
+└─────────────────────────────────────────────────┘
+
+solana-os> launch-token --name "MyToken" --symbol "MTK"
+Launching token with AI assistance...
+```
+
+**Supported Commands:**
+- `solana` - Full Solana CLI
+- `spl-token` - Token operations
+- `launch-token` - Token Mill AI launcher
+- `swap` - Quick DEX swaps
+- `nft` - NFT operations
+- `wallet` - Wallet management
+
+### 📱 **Mobile-First Design**
+
+- **Beautiful UI**: Glassmorphic, modern design
+- **Smooth Animations**: Buttery 60fps
+- **Dark Mode**: Eye-friendly night trading
+- **Haptic Feedback**: Tactile interactions
+- **Offline Mode**: Key features work without internet
+
+---
+
+## 🏗️ **Architecture**
+
+### **System Overview**
+
+```
+┌───────────────────────────────────────────────────────────────┐
+│                      SOLANA OS MOBILE                         │
+│                   (React Native + Expo)                       │
+├───────────────────────────────────────────────────────────────┤
+│                                                               │
+│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐          │
+│  │  Terminal   │  │ Voice Agent │  │ Live Search │          │
+│  │   Module    │  │    Modal    │  │     Bar     │          │
+│  └─────────────┘  └─────────────┘  └─────────────┘          │
+│                                                               │
+│  ┌───────────────────────────────────────────────────────┐  │
+│  │              Feature Modules                          │  │
+│  │  • DeFi Hub    • NFT Studio   • Token Launcher       │  │
+│  │  • Social      • Games        • Portfolio            │  │
+│  └───────────────────────────────────────────────────────┘  │
+│                                                               │
+│  ┌───────────────────────────────────────────────────────┐  │
+│  │         Service Layer (Blockchain Integrations)       │  │
+│  │  • Raydium    • Meteora    • Pump.fun   • Jupiter    │  │
+│  │  • Metaplex   • Token Mill • Orca       • Birdeye    │  │
+│  └───────────────────────────────────────────────────────┘  │
+│                                                               │
+└───────────────────────────────┬───────────────────────────────┘
+                                │
+                ┌───────────────┼───────────────┐
+                │               │               │
+                ▼               ▼               ▼
+        ┌───────────────┐  ┌────────────┐  ┌───────────────┐
+        │   Solana      │  │  Backend   │  │  AI Services  │
+        │  Blockchain   │  │   Server   │  │   (Grok)      │
+        │               │  │            │  │               │
+        │ • RPC Nodes   │  │ • API      │  │ • Voice       │
+        │ • Programs    │  │ • WebSocket│  │ • Search      │
+        │ • Wallets     │  │ • Database │  │ • Analysis    │
+        └───────────────┘  └────────────┘  └───────────────┘
+```
+
+### **Service Architecture**
+
+```
+/server/src/service/
+├── TokenMill/          ← Custom token creation & management
+│   ├── index.ts
+│   ├── bondingCurve.ts
+│   └── vesting.ts
+│
+├── pumpSwap/           ← Pump.fun integration
+│   ├── index.ts
+│   └── api.ts
+│
+├── raydium/            ← Raydium AMM & CLMM
+│   ├── index.ts
+│   └── pools.ts
+│
+├── MeteoraDBC/         ← Meteora dynamic pools
+│   ├── index.ts
+│   └── vaults.ts
+│
+├── metaplex/           ← NFT operations
+│   ├── index.ts
+│   ├── mint.ts
+│   └── collections.ts
+│
+└── AI/                 ← NEW: AI Agent services
+    ├── tokenLauncher.ts    ← Token Mill AI Agent
+    ├── voiceAgent.ts      ← Grok Voice
+    └── searchAgent.ts     ← Live Search
 ```
 
 ---
 
-## ⌨️ Hotkeys
+## 🤖 **Token Mill AI Agent**
 
-When running the Expo development server:
+### **What is Token Mill AI Agent?**
 
-| Key | Action                   |
-| --- | ------------------------ |
-| `i` | Open on iOS simulator    |
-| `a` | Open on Android emulator |
-| `r` | Reload the app           |
-| `m` | Toggle the menu          |
-| `d` | Open developer tools     |
+An intelligent agent that guides you through the entire token creation and launch process:
 
----
+**Traditional Token Launch:**
+```
+1. Write smart contract code
+2. Test on devnet
+3. Deploy to mainnet
+4. Create metadata
+5. Upload to IPFS
+6. Initialize pool on DEX
+7. Add liquidity
+8. List on aggregators
+9. Market your token
+10. Manage community
 
-## 🧪 Development Mode Guide
-
-For details on running the app in development mode, including environment variable handling and troubleshooting, please refer to the [Development Mode Guide](docs/DEV_MODE.md).
-
----
-
-## 🏁 Getting Started
-
-This project consists of two main parts:
-
-1. React Native mobile application (in the root directory)
-2. Backend server (in the `server` directory)
-
-### Mobile App Installation
-
-1. Clone the repository:
-
-   ```sh
-   git clone https://github.com/SendArcade/solana-app-kit.git
-   cd solana-app-kit
-   ```
-
-2. Install dependencies:
-
-   ```sh
-   pnpm install
-   ```
-
-3. Set up environment variables:
-   Create a `.env.local` file in the root directory with the necessary variables as shown in the example below:
-
-   ```
-   # Blockchain
-   CLUSTER=mainnet-beta
-
-   # Authentication
-   PRIVY_APP_ID=your_privy_app_id
-   PRIVY_CLIENT_ID=your_privy_client_id
-   DYNAMIC_ENVIRONMENT_ID=your_dynamic_env_id
-
-   # Turnkey wallet
-   TURNKEY_BASE_URL=https://api.turnkey.com
-   TURNKEY_RP_ID=host.exp.exponent
-   TURNKEY_RP_NAME=send-fi
-   TURNKEY_ORGANIZATION_ID=your_turnkey_organization_id
-   TURNKEY_API_PUBLIC_KEY=your_turnkey_public_key
-   TURNKEY_API_PRIVATE_KEY=your_turnkey_private_key
-
-   # APIs
-   HELIUS_API_KEY=your_helius_api_key
-   HELIUS_RPC_CLUSTER=mainnet
-   HELIUS_STAKED_URL=your_helius_staked_url
-   HELIUS_STAKED_API_KEY=your_helius_staked_api_key
-   SERVER_URL=your_server_url
-   TENSOR_API_KEY=your_tensor_api_key
-   COINGECKO_API_KEY=your_coingecko_api_key
-   BIRDEYE_API_KEY=your_birdeye_api_key
-   COIN_MARKE_CAPAPI_KEY=your_coinmarketcap_api_key
-   OPENAI_API_KEY=your_openai_api_key
-   COMMISSION_WALLET=your_commission_wallet_address
-   ```
-
-### Server Installation
-
-1. Navigate to the server directory:
-
-   ```sh
-   cd server
-   ```
-
-2. Install server dependencies:
-
-   ```sh
-   pnpm install
-   ```
-
-3. Set up server environment variables:
-
-   ```sh
-   cp .env.example .env
-   ```
-
-   Required server environment variables:
-
-   ```
-   WALLET_PRIVATE_KEY=your_wallet_private_key
-   RPC_URL=your_helius_rpc_url
-   TOKEN_MILL_PROGRAMID=your_token_mill_program_id
-   TOKEN_MILL_CONFIG_PDA=your_token_mill_config_pda
-   SWAP_AUTHORITY_KEY=your_swap_authority_key
-   COMMISSION_WALLET=your_commission_wallet_address
-
-   # Pinata for IPFS
-   PINATA_JWT=your_pinata_jwt
-   PINATA_GATEWAY=your_pinata_gateway
-   PINATA_SECRET=your_pinata_secret
-   PINATA_API_KEY=your_pinata_api_key
-
-   # Database and Storage
-   DATABASE_URL=your_postgresql_url
-   GCS_BUCKET_NAME=your_gcs_bucket_name
-   SERVICE_ACCOUNT_EMAIL=your_service_account_email
-
-   # Turnkey
-   TURNKEY_API_URL=https://api.turnkey.com
-   TURNKEY_ORGANIZATION_ID=your_turnkey_organization_id
-   TURNKEY_API_PUBLIC_KEY=your_turnkey_api_public_key
-   TURNKEY_API_PRIVATE_KEY=your_turnkey_api_private_key
-
-   # Supabase
-   SUPABASE_URL=your_supabase_url
-   SUPABASE_ANON_KEY=your_supabase_anon_key
-   ```
-
-4. Start the development server:
-   ```sh
-   pnpm dev
-   # or
-   yarn dev
-   ```
-
-For more details about the server, see the [Server README](server/README.md).
-
-### Environment Variables for EAS Builds
-
-The project is configured to use the `.env.local` file for both local development and EAS builds. When building with EAS, the environment file is automatically loaded:
-
-```sh
-# Example for a development build on Android
-npx eas build --profile development --platform android
+Time: Days/Weeks
+Complexity: Very High
+Success Rate: Low
 ```
 
-The configuration in `eas.json` specifies the `.env.local` file for each build profile. The babel configuration dynamically loads this file during the build process.
+**With Token Mill AI Agent:**
+```
+1. Chat with AI agent
+2. AI handles everything
 
-### Running the Mobile App
+Time: 5-10 minutes
+Complexity: Just conversation
+Success Rate: High
+```
 
-#### Standard vs Development Mode
+### **How It Works**
 
-The app can run in two modes:
+#### **Step 1: Conversation**
 
-1. **Standard Mode** (Default):
+```
+AI: Hi! I'm your Token Mill AI Agent. Ready to launch a token?
 
-   - Regular production-like environment
-   - Missing environment variables will show warnings but limit functionality
+YOU: Yes, I want to create a community token for dog lovers
 
-2. **Development Mode**:
-   - Enhanced developer tools and diagnostics
-   - Visual indicator showing "DEV MODE" at the bottom of the screen
-   - Access to developer drawer with navigation shortcuts and environment variable status
-   - Ability to bypass authentication for testing
-   - Missing environment variables are clearly displayed with options to fix
+AI: Great! Let me gather some info...
+    • What's your token name?
+    
+YOU: Doge Lovers Token
 
-#### Starting the App
+AI: Perfect! Symbol?
 
-To start the app:
+YOU: DLOVE
 
-```sh
-# Standard mode
-pnpm start
-# or
-npm start
+AI: Excellent! How many tokens?
 
-# Development mode
+YOU: 1 billion
+
+AI: Got it! Let me:
+    1. Check name availability ✓
+    2. Analyze market conditions ✓
+    3. Suggest launch strategy ✓
+    
+    Recommendations:
+    • Launch on Pump.fun first (trending platform)
+    • Graduate to Raydium at 69k market cap
+    • List on Jupiter for visibility
+    • Initial bonding curve: sigmoid
+    
+    Sound good?
+    
+YOU: Yes!
+
+AI: Launching now... 🚀
+```
+
+#### **Step 2: AI Execution**
+
+The AI Agent automatically:
+
+```typescript
+// 1. Generate metadata
+const metadata = await aiAgent.generateMetadata({
+  name: "Doge Lovers Token",
+  symbol: "DLOVE",
+  description: await aiAgent.writeDescription(),
+  image: await aiAgent.generateLogo() // AI-generated logo!
+});
+
+// 2. Deploy to Pump.fun
+const pumpToken = await pumpSwap.createToken({
+  metadata,
+  bondingCurve: aiAgent.suggestBondingCurve()
+});
+
+// 3. Monitor and graduate
+await aiAgent.monitorToken(pumpToken.address);
+if (marketCap > 69000) {
+  await aiAgent.graduateToRaydium(pumpToken);
+}
+
+// 4. Add to Jupiter
+await jupiter.listToken(pumpToken.address);
+
+// 5. Set up socials
+await aiAgent.createTwitter();
+await aiAgent.createTelegram();
+```
+
+#### **Step 3: Post-Launch Management**
+
+```
+AI: Token launched! 🎉
+
+    Address: 7xKXtg...9nHqU
+    Pump.fun: pump.fun/7xKXtg...
+    Market Cap: $1,234
+    Holders: 8
+    
+    I'm now:
+    ✓ Monitoring price
+    ✓ Tracking holders
+    ✓ Managing liquidity
+    ✓ Posting updates
+    
+    Would you like me to:
+    [ ] Create marketing materials
+    [ ] Set up airdrops
+    [ ] Schedule announcements
+    [ ] All of the above
+```
+
+### **AI Agent Features**
+
+#### **1. Market Analysis**
+```typescript
+await aiAgent.analyzeMarket({
+  tokenType: "meme" | "utility" | "community",
+  targetAudience: string,
+  competitors: string[]
+});
+// Returns: Best launch strategy, timing, platforms
+```
+
+#### **2. Content Generation**
+```typescript
+await aiAgent.generate({
+  logo: true,           // AI generates logo
+  description: true,    // AI writes description
+  whitepaper: true,     // AI creates lite paper
+  socials: true,        // AI writes posts
+  website: true         // AI builds landing page (!)
+});
+```
+
+#### **3. Multi-Platform Launch**
+```typescript
+await aiAgent.launchOn({
+  platforms: [
+    {
+      name: "pump.fun",
+      priority: 1,
+      params: { /* auto-configured */ }
+    },
+    {
+      name: "raydium",
+      priority: 2,
+      when: "marketCap > 69000"
+    },
+    {
+      name: "metaplex",
+      priority: 3,
+      nftBacked: true
+    }
+  ]
+});
+```
+
+#### **4. Safety Features**
+```typescript
+await aiAgent.enableSafety({
+  antiRug: true,        // Lock liquidity
+  antiBot: true,        // Bot protection
+  gradual: true,        // Gradual unlock
+  timelock: "7days",    // Admin timelock
+  multiSig: true        // Multi-sig for admin
+});
+```
+
+### **Voice-Controlled Launch**
+
+Use the Voice Agent to launch tokens hands-free:
+
+```
+YOU: "Hey Solana OS, launch a new token"
+
+AI: "Sure! What's the name?"
+
+YOU: "Moon Rocket Token"
+
+AI: "Great name! Symbol?"
+
+YOU: "MOON"
+
+AI: "How about logo? I can generate one."
+
+YOU: "Yes please, make it futuristic"
+
+AI: "Generating... Done! Check your screen. Like it?"
+
+YOU: "Perfect! Launch it on Pump fun"
+
+AI: "Launching on Pump.fun with smart bonding curve...
+     Token deployed! Address copied to clipboard.
+     Would you like me to create social accounts?"
+     
+YOU: "Yes"
+
+AI: "Created Twitter and Telegram. Links in your notifications.
+     Your token is now live!"
+```
+
+---
+
+## 📦 **Installation**
+
+### **For Users**
+
+```bash
+# iOS
+1. Download from App Store
+2. Search "Solana OS"
+3. Install & Open
+
+# Android  
+1. Download from Google Play
+2. Search "Solana OS"
+3. Install & Open
+
+# TestFlight (Beta)
+1. Join beta: testflight.apple.com/join/solanaos
+2. Install TestFlight
+3. Download Solana OS
+```
+
+### **For Developers**
+
+```bash
+# Clone repository
+git clone https://github.com/yourusername/solanaos.git
+cd solanaos
+
+# Install dependencies
+pnpm install
+
+# Set up environment
+cp .env.example .env.local
+# Edit .env.local with your keys
+
+# Start backend
+cd server
 pnpm dev
-# or
-npm run dev
-# or
-pnpm start --dev
-```
 
-#### Missing Environment Variables
+# Start mobile app (new terminal)
+cd ..
+pnpm dev
 
-If you're missing environment variables:
-
-- In standard mode: A warning banner will appear on the login screen alerting you
-- In dev mode: A detailed drawer will show all missing variables, and you can bypass authentication
-
-To enable dev mode from standard mode when env vars are missing:
-
-1. A warning will appear with an "Enable Dev Mode" button
-2. After enabling, restart the app
-3. You'll see a green "DEV MODE" indicator at the bottom of the screen
-4. Tap it to access developer tools
-
-#### iOS
-
-For iOS, you need to install CocoaPods dependencies first:
-
-```sh
-# Install Ruby bundler (first time only)
-bundle install
-
-# Install CocoaPods dependencies
-bundle exec pod install
-```
-
-Then run the app:
-
-```sh
-pnpm ios
-# or
-yarn ios
-# or
-npm run ios
-```
-
-#### Android
-
-```sh
-pnpm android
-# or
-yarn android
-# or
-npm run android
-```
-
-##### Android SDK Setup
-
-If you encounter Android SDK location errors, you need to set up your Android environment variables. Add the following to your shell configuration file (`.zshrc`, `.bashrc`, or `.bash_profile`):
-
-```sh
-# Android SDK setup (macOS)
-export ANDROID_HOME=~/Library/Android/sdk
-export PATH=$PATH:$ANDROID_HOME/platform-tools
-```
-
-For temporary setup in your current terminal session:
-
-```sh
-export ANDROID_HOME=~/Library/Android/sdk
-export PATH=$PATH:$ANDROID_HOME/platform-tools
-```
-
-**Note:** Make sure you have Android Studio installed and the Android SDK is located at `~/Library/Android/sdk` (macOS) or adjust the path accordingly for your system.
-
----
-
-## 📂 Project Structure
-
-```
-solana-app-kit/
-├── src/                # Mobile app source code
-│   ├── assets/         # Images, icons, and other static assets
-│   │   ├── images/     # Image assets for the app
-│   │   ├── svgs/       # SVG graphic files
-│   │   ├── colors.ts   # Color definitions
-│   │   └── typography.ts # Typography definitions
-│   ├── core/           # Core application components
-│   │   ├── chat/       # Chat functionality components
-│   │   ├── dev-mode/   # Development mode utilities
-│   │   ├── profile/    # User profile related components
-│   │   ├── shared-ui/  # Common UI components
-│   │   └── thread/     # Thread-related components
-│   ├── modules/        # Feature modules (core functionality)
-│   │   ├── data-module/ # Data management module
-│   │   ├── meteora/    # Meteora integration
-│   │   ├── moonpay/    # Moonpay integration
-│   │   ├── nft/        # NFT display and management
-│   │   ├── pump-fun/   # Pump.fun integration
-│   │   ├── raydium/    # Raydium integration
-│   │   ├── solana-agent-kit/ # Solana agent kit integration
-│   │   ├── swap/       # Swap functionality
-│   │   ├── token-mill/ # Token creation and management
-│   │   └── wallet-providers/ # Wallet connection adapters
-│   ├── screens/        # App screens and UI flows
-│   │   ├── common/     # Common screen components
-│   │   ├── sample-ui/  # Sample UI screens
-│   │   └── index.ts    # Screen exports
-│   ├── server/         # Server-related functionality
-│   │   └── meteora/    # Meteora server integration
-│   └── shared/         # Shared utilities and components
-│       ├── config/     # Configuration files
-│       ├── context/    # React context providers
-│       ├── hooks/      # Custom React hooks
-│       ├── mocks/      # Mock data for testing
-│       ├── navigation/ # Navigation configuration
-│       ├── services/   # API integrations and business logic
-│       ├── state/      # Redux store and slices
-│       │   ├── auth/   # Authentication state management
-│       │   ├── chat/   # Chat state management
-│       │   ├── notification/ # Notification state management
-│       │   ├── profile/ # Profile state management
-│       │   ├── thread/ # Thread state management
-│       │   ├── transaction/ # Transaction state management
-│       │   ├── users/  # User state management
-│       │   └── store.ts # Redux store configuration
-│       ├── types/      # TypeScript type definitions
-│       └── utils/      # Utility functions and helpers
-│           └── common/ # Common utility functions
-├── server/             # Backend server code
-│   ├── src/            # Server source code
-│   │   ├── controllers/ # Controller functions
-│   │   ├── db/         # Database configuration
-│   │   ├── routes/     # API endpoints
-│   │   ├── service/    # Service implementations
-│   │   ├── types/      # TypeScript types
-│   │   └── utils/      # Utility functions
-│   ├── .env.example    # Example environment variables
-│   └── README.md       # Server documentation
-├── App.tsx             # Main application component
-├── index.js            # Entry point
-├── app.config.js       # Expo configuration
-├── app.json            # App configuration
-├── babel.config.js     # Babel configuration
-├── metro.config.js     # Metro bundler configuration
-├── tsconfig.json       # TypeScript configuration
-├── docs/               # Documentation files
-├── CONTRIBUTING.md     # Contribution guidelines
-├── LICENSE             # License information
-└── package.json        # Dependencies and scripts
+# Press 'i' for iOS, 'a' for Android
 ```
 
 ---
 
-## 🧩 Modules
+## 🔑 **Environment Variables**
 
-The Solana App Kit provides several modular features that can be used independently:
+```bash
+# Core Blockchain
+EXPO_PUBLIC_CLUSTER=mainnet-beta
+EXPO_PUBLIC_RPC_URL=your_helius_rpc
+EXPO_PUBLIC_HELIUS_API_KEY=your_helius_key
 
-| Module                  | Capabilities                                                                                                                                                                                                                                                                     |
-| ----------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 🔐 **embedded-wallet-providers** | • Multiple wallet connection methods (Privy, Dynamic, Mobile Wallet Adapter)<br>• Standardized wallet interface<br>• Transaction handling across providers<br>• Support for embedded wallets, social login, and external wallets                                                 |
-| 📊 **data-module**      | • Fetching on-chain data with optimized RPC calls<br>• Token balance tracking<br>• Transaction history display<br>• Real-time data synchronization                                                                                                                               |
-| 🖼️ **nft**              | • NFT display, management, and trading<br>• Collection viewing with floor prices<br>• Compressed NFT support<br>• Integration with threads and posts                                                                                                                             |
-| 💱 **swap**             | • Token swapping using multiple DEX SDKs<br>• Liquidity pool creation with custom token pairs<br>• Liquidity management (add and remove liquidity)<br>• Pool creation with custom parameters<br>• Real-time quotes and price impact estimates<br>• Transaction status monitoring |
-| 🚀 **pump-fun**         | • Integration with the Pump.fun ecosystem<br>• Meme token creation and management<br>• Community engagement tools                                                                                                                                                                |
-| 💹 **raydium**          | • Raydium DEX integration<br>• Token launching and trading<br>• Pool creation and management                                                                                                                                                                                     |
-| 🌊 **meteora**          | • Meteora protocol integration<br>• Token launching capabilities<br>• Pool and liquidity management                                                                                                                                                                              |
-| 💸 **moonpay**          | • Fiat on-ramp integration<br>• Buy crypto with credit cards and Apple Pay<br>• Seamless payment flow                                                                                                                                                                            |
-| 🏦 **mercuryo**         | • Fiat gateway integration *(work in progress)*<br>• On-ramp functionality<br>• Multiple payment methods support<br>• Real-time exchange rates                                                                                                                      |
-| 🤖 **solana-agent-kit** | • AI agent integration for Solana interactions<br>• Automated workflows and actions<br>• Enhanced user assistance                                                                                                                                                                |
-| 🪙 **token-mill**       | • Token creation with configurable parameters<br>• Bonding curve configuration for token pricing<br>• Token swapping (buy/sell) functionality<br>• Staking tokens for rewards<br>• Creating and releasing vesting plans                                                          |
+# AI Services
+EXPO_PUBLIC_XAI_API_KEY=your_xai_key              # Grok AI
+EXPO_PUBLIC_OPENAI_API_KEY=your_openai_key        # Fallback
 
----
+# Data APIs
+EXPO_PUBLIC_BIRDEYE_API_KEY=your_birdeye_key      # Real-time prices
+EXPO_PUBLIC_BIRDEYE_WSS_URL=wss://public-api.birdeye.so/socket/solana
+EXPO_PUBLIC_COINGECKO_API_KEY=your_coingecko_key  # Market data
+EXPO_PUBLIC_NEWS_API_KEY=your_news_api_key        # Crypto news
 
-## 🤝 Contributing
+# Token Mill (Optional - for custom deployments)
+TOKEN_MILL_PROGRAMID=your_program_id
+TOKEN_MILL_CONFIG_PDA=your_config_pda
+SWAP_AUTHORITY_KEY=your_authority_key
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+# Wallet Providers
+EXPO_PUBLIC_PRIVY_APP_ID=your_privy_app_id
+EXPO_PUBLIC_DYNAMIC_ENVIRONMENT_ID=your_dynamic_id
 
-For detailed guidelines on how to contribute to this project, see our [Contributing Guide](CONTRIBUTING.md).
+# Backend
+EXPO_PUBLIC_SERVER_URL=http://localhost:3000
+SERVER_URL=http://localhost:3000
 
----
+# Database
+DATABASE_URL=postgresql://user:pass@localhost:5432/solanaos
 
-## 👥 Contributors
+# Storage
+EXPO_PUBLIC_SUPABASE_URL=your_supabase_url
+EXPO_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon
+SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_key
 
-<div align="center">
-  <a href="https://github.com/SendArcade/solana-app-kit/graphs/contributors">
-    <img src="https://contrib.rocks/image?repo=SendArcade/solana-app-kit" alt="Contributors" />
-  </a>
-</div>
-
----
-
-## 🔒 Security
-
-This toolkit handles transaction generation, signing and sending, using provided wallets. Always ensure you're using it in a secure environment and never share your private keys.
-
----
-
-## ❓ Troubleshooting
-
-Common issues and their solutions:
-
-| Issue                        | Solution                                                                                    |
-| ---------------------------- | ------------------------------------------------------------------------------------------- |
-| **Expo build errors**        | Clear your cache with `expo start --clear`                                                  |
-| **Wallet connection issues** | Ensure you're using the correct provider and have properly configured environment variables |
-| **iOS simulator issues**     | Try resetting the simulator or running `pod install` in the iOS directory                   |
+# IPFS (for NFTs)
+PINATA_API_KEY=your_pinata_key
+PINATA_JWT=your_pinata_jwt
+```
 
 ---
 
-## 🌐 Community
+## 📖 **Documentation**
 
-Join our community to get help, share your projects, and contribute:
-
-[![telegram_badge]][telegram_link]
-
-[telegram_badge]: https://img.shields.io/badge/telegram-❤️-252850?style=plastic&logo=telegram
-[telegram_link]: https://t.me/solanaappkit
-
-[![X (formerly Twitter) Follow](https://img.shields.io/twitter/follow/solanaappkit)](https://x.com/solanaappkit)
+- **[Visual Guide](./VISUAL_GUIDE.md)** - Architecture diagrams
+- **[User Guide](./USER_GUIDE.md)** - How to use all features
+- **[API Documentation](./docs/API.md)** - Complete API reference
+- **[Token Mill AI Guide](./docs/TOKEN_MILL_AI.md)** - AI Agent deep dive
+- **[Services Documentation](./server/src/service/README.md)** - All integrations
 
 ---
 
-## 📄 License
+## 🗺️ **Roadmap**
 
-This project is licensed under the Apache-2.0 License - see the [LICENSE](LICENSE) file for details.
+### **Phase 1: Foundation ✅**
+- [x] Multi-DEX integration
+- [x] NFT minting
+- [x] WebSocket real-time data
+- [x] Social features
+- [x] Demo mode
+
+### **Phase 2: AI Integration 🔄**
+- [x] Grok text AI
+- [ ] Grok Voice Agent
+- [ ] Live Search
+- [ ] Token Mill AI Agent
+- [ ] Auto-trading AI
+
+### **Phase 3: Terminal & Advanced 📅**
+- [ ] Built-in terminal
+- [ ] CLI commands
+- [ ] Script execution
+- [ ] Plugin system
+- [ ] Developer tools
+
+### **Phase 4: Ecosystem 📅**
+- [ ] App marketplace
+- [ ] Third-party integrations
+- [ ] Custom widgets
+- [ ] Community plugins
+- [ ] White-label solutions
+
+### **Phase 5: Enterprise 📅**
+- [ ] Team accounts
+- [ ] Advanced analytics
+- [ ] Institutional features
+- [ ] Compliance tools
+- [ ] API for businesses
+
+---
+
+## 🤝 **Contributing**
+
+We welcome contributions! See [CONTRIBUTING.md](./CONTRIBUTING.md).
+
+---
+
+## 📜 **License**
+
+MIT License - see [LICENSE](./LICENSE)
+
+---
+
+## 🙏 **Powered By**
+
+- **Solana** - Blockchain infrastructure
+- **xAI Grok** - AI intelligence
+- **Raydium** - DEX infrastructure
+- **Meteora** - Dynamic pools
+- **Pump.fun** - Meme coin platform
+- **Metaplex** - NFT standard
+- **Jupiter** - Aggregation
+- **Birdeye** - Real-time data
+- **Supabase** - Backend infrastructure
 
 ---
 
 <div align="center">
 
-Built with ❤️ for the Solana ecosystem by SendAI and Send Arcade.
+### **Solana OS - The Future of Mobile Blockchain**
+
+**Built with ❤️ for the Solana community**
+
+[Website](https://solanaos.com) • [Twitter](https://twitter.com/solanaos) • [Discord](https://discord.gg/solanaos) • [Docs](https://docs.solanaos.com)
 
 </div>

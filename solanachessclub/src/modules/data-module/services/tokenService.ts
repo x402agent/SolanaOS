@@ -47,10 +47,10 @@ export async function fetchTokenBalance(
       // For native SOL
       const balance = await connection.getBalance(walletPublicKey);
       console.log("[TokenService] SOL balance in lamports:", balance);
-      
+
       // Convert lamports to SOL
       const SOL_DECIMALS = 9;
-      
+
       // For very small SOL amounts (less than 0.001 SOL), return the full balance
       // without reserving any for fees, since the user likely just wants to see what they have
       if (balance < 1_000_000) { // 0.001 SOL in lamports
@@ -58,18 +58,18 @@ export async function fetchTokenBalance(
         console.log("[TokenService] SOL balance is very small, returning full amount:", fullSolBalance);
         return fullSolBalance;
       }
-      
+
       // Otherwise, reserve a small amount for fees
       const MIN_SOL_RESERVE = 0.0005; // 0.0005 SOL reserved for fees (500,000 lamports)
       const MIN_LAMPORTS_RESERVE = MIN_SOL_RESERVE * Math.pow(10, SOL_DECIMALS);
-      
+
       // Calculate usable balance
       const usableBalance = Math.max(0, balance - MIN_LAMPORTS_RESERVE);
       const solBalance = usableBalance / Math.pow(10, SOL_DECIMALS);
-      
-      console.log("[TokenService] SOL balance converted to SOL:", solBalance, 
+
+      console.log("[TokenService] SOL balance converted to SOL:", solBalance,
         `(Reserved ${MIN_SOL_RESERVE} SOL for fees, raw balance: ${balance / Math.pow(10, SOL_DECIMALS)} SOL)`);
-      
+
       return solBalance;
     } else {
       // For SPL tokens
@@ -113,23 +113,23 @@ export async function fetchTokenPrice(tokenInfo: TokenInfo | null): Promise<numb
 
   try {
     console.log(`[TokenService] Fetching price for ${tokenInfo.symbol} (${tokenInfo.address})`);
-    
+
     // Use Birdeye API to get token price
     const response = await fetch(`https://public-api.birdeye.so/defi/v3/token/market-data?address=${tokenInfo.address}&chain=solana`, {
       method: 'GET',
       headers: {
         'accept': 'application/json',
-        'X-API-KEY': BIRDEYE_API_KEY || ''
+        'x-api-key': BIRDEYE_API_KEY || ''
       }
     });
-    
+
     if (!response.ok) {
       const errorText = await response.text();
       console.error(`[TokenService] Birdeye API error: ${response.status}, ${errorText}`);
       console.log(`[TokenService] Failed to get Birdeye price for ${tokenInfo.symbol}, trying Jupiter as fallback`);
     } else {
       const data = await response.json();
-      
+
       if (data.success && data.data && typeof data.data.price === 'number') {
         console.log(`[TokenService] Birdeye returned price for ${tokenInfo.symbol}: ${data.data.price}`);
         return data.data.price;
@@ -137,7 +137,7 @@ export async function fetchTokenPrice(tokenInfo: TokenInfo | null): Promise<numb
         console.log(`[TokenService] Birdeye API returned invalid price data:`, JSON.stringify(data));
       }
     }
-    
+
     // If Birdeye fails, try Jupiter API as a last resort
     try {
       console.log(`[TokenService] Trying Jupiter as fallback for ${tokenInfo.symbol}`);
@@ -155,7 +155,7 @@ export async function fetchTokenPrice(tokenInfo: TokenInfo | null): Promise<numb
     } catch (err) {
       console.log(`[TokenService] Error fetching ${tokenInfo.symbol} price from Jupiter`, err);
     }
-    
+
     console.log(`[TokenService] Failed to get price for ${tokenInfo.symbol} from any source`);
     return null;
   } catch (err) {
@@ -185,14 +185,14 @@ export async function estimateTokenUsdValue(
       decimals: decimals,
       logoURI: ''
     };
-    
+
     const price = await fetchTokenPrice(tokenInfo);
-    
+
     if (price && normalizedAmount > 0) {
       const estimatedValue = normalizedAmount * price;
       return `$${estimatedValue.toFixed(2)}`;
     }
-    
+
     return '';
   } catch (err) {
     console.error('Error estimating token value:', err);
@@ -213,7 +213,7 @@ export function toBaseUnits(amount: string, decimals: number): number {
 const BIRDEYE_BASE_URL = 'https://public-api.birdeye.so';
 const BIRDEYE_HEADERS = {
   'accept': 'application/json',
-  'X-API-KEY': BIRDEYE_API_KEY || ''
+  'x-api-key': BIRDEYE_API_KEY || ''
 };
 
 /**
@@ -262,33 +262,33 @@ export async function fetchTokenList(params: TokenListParams = {}): Promise<Toke
       limit: 100,
       offset: 0,
     };
-    
+
     const finalParams = { ...defaultParams, ...params };
-    
+
     // Build query string
     const queryParams = new URLSearchParams();
     Object.entries(finalParams).forEach(([key, value]) => {
       queryParams.append(key, value.toString());
     });
-    
+
     const url = `${BIRDEYE_BASE_URL}/defi/v3/token/list?${queryParams.toString()}`;
-    
+
     console.log(`[TokenService] Fetching token list with URL: ${url}`);
-    
+
     const response = await fetch(url, {
       method: 'GET',
       headers: BIRDEYE_HEADERS
     });
-    
+
     if (!response.ok) {
       // Log the error response for debugging
       const errorText = await response.text();
       console.error(`[TokenService] Birdeye API error: ${response.status}, ${errorText}`);
       throw new Error(`Failed to fetch token list: ${response.status}`);
     }
-    
+
     const data = await response.json();
-    
+
     if (data.success && data.data && data.data.items) {
       // Transform Birdeye tokens to TokenInfo format and ensure no null values
       return data.data.items.map((item: BirdeyeTokenItem) => ({
@@ -304,7 +304,7 @@ export async function fetchTokenList(params: TokenListParams = {}): Promise<Toke
         liquidity: item.liquidity || 0
       }));
     }
-    
+
     return [];
   } catch (error) {
     console.error('Error fetching token list from Birdeye:', error);
@@ -335,7 +335,7 @@ export async function searchTokens(params: TokenSearchParams): Promise<TokenInfo
     if (!params.keyword || params.keyword.trim() === '') {
       return [];
     }
-    
+
     // Default parameters based on API documentation
     const defaultParams = {
       chain: 'solana',
@@ -349,12 +349,12 @@ export async function searchTokens(params: TokenSearchParams): Promise<TokenInfo
       offset: 0,
       limit: 20
     };
-    
+
     // Remove keyword from params to avoid duplication
     const { keyword, ...restParams } = params;
-    
+
     const finalParams = { ...defaultParams, ...restParams };
-    
+
     // Build query string
     const queryParams = new URLSearchParams();
     Object.entries(finalParams).forEach(([key, value]) => {
@@ -364,31 +364,31 @@ export async function searchTokens(params: TokenSearchParams): Promise<TokenInfo
         queryParams.append(key, value.toString());
       }
     });
-    
+
     const url = `${BIRDEYE_BASE_URL}/defi/v3/search?${queryParams.toString()}`;
-    
+
     console.log(`[TokenService] Searching tokens with URL: ${url}`);
-    
+
     const response = await fetch(url, {
       method: 'GET',
       headers: BIRDEYE_HEADERS
     });
-    
+
     if (!response.ok) {
       // Log the error response for debugging
       const errorText = await response.text();
       console.error(`[TokenService] Birdeye API error: ${response.status}, ${errorText}`);
       throw new Error(`Failed to search tokens: ${response.status}`);
     }
-    
+
     const data = await response.json();
-    
+
     if (data.success && data.data && data.data.items) {
       const tokens: TokenInfo[] = [];
-      
+
       // Find the token results
       const tokenResults = data.data.items.find((item: any) => item.type === 'token');
-      
+
       if (tokenResults && tokenResults.result) {
         // Transform Birdeye tokens to TokenInfo format and ensure no null values
         return tokenResults.result.map((item: any) => ({
@@ -405,7 +405,7 @@ export async function searchTokens(params: TokenSearchParams): Promise<TokenInfo
         }));
       }
     }
-    
+
     return [];
   } catch (error) {
     console.error('Error searching tokens from Birdeye:', error);
@@ -419,26 +419,26 @@ export async function searchTokens(params: TokenSearchParams): Promise<TokenInfo
 export async function fetchTokenMetadata(tokenAddress: string): Promise<TokenInfo | null> {
   try {
     const url = `${BIRDEYE_BASE_URL}/defi/v3/token/meta-data/single?address=${tokenAddress}&chain=solana`;
-    
+
     const response = await fetch(url, {
       method: 'GET',
       headers: BIRDEYE_HEADERS
     });
-    
+
     if (!response.ok) {
       const errorText = await response.text();
       console.error(`[TokenService] Birdeye API error: ${response.status}, ${errorText}`);
       throw new Error(`Failed to fetch token metadata: ${response.status}`);
     }
-    
+
     const data = await response.json();
-    
+
     if (data.success && data.data) {
       const tokenData = data.data;
-      
+
       // Get market data as well
       const marketData = await fetchTokenMarketData(tokenAddress);
-      
+
       // Ensure no null values in the token data
       return {
         address: tokenAddress,
@@ -453,7 +453,7 @@ export async function fetchTokenMetadata(tokenAddress: string): Promise<TokenInf
         liquidity: (marketData && marketData.liquidity) || 0
       };
     }
-    
+
     // If we can't fetch the data, return a basic token with the address
     return {
       address: tokenAddress,
@@ -491,24 +491,24 @@ export async function fetchTokenMetadata(tokenAddress: string): Promise<TokenInf
 async function fetchTokenMarketData(tokenAddress: string): Promise<any | null> {
   try {
     const url = `${BIRDEYE_BASE_URL}/defi/v3/token/market-data?address=${tokenAddress}&chain=solana`;
-    
+
     const response = await fetch(url, {
       method: 'GET',
       headers: BIRDEYE_HEADERS
     });
-    
+
     if (!response.ok) {
       const errorText = await response.text();
       console.error(`[TokenService] Birdeye API error: ${response.status}, ${errorText}`);
       return null;
     }
-    
+
     const data = await response.json();
-    
+
     if (data.success && data.data) {
       return data.data;
     }
-    
+
     return null;
   } catch (error) {
     console.error('Error fetching token market data from Birdeye:', error);
@@ -538,10 +538,10 @@ export async function ensureCompleteTokenInfo(token: Partial<TokenInfo>): Promis
   if (token.address) {
     try {
       const metadata = await fetchTokenMetadata(token.address);
-    if (metadata) {
+      if (metadata) {
         // Merge fetched data with existing data, preferring existing non-null values
-      return {
-        ...metadata,
+        return {
+          ...metadata,
           symbol: token.symbol || metadata.symbol,
           name: token.name || metadata.name,
           decimals: token.decimals !== undefined ? token.decimals : metadata.decimals,
