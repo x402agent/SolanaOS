@@ -1,0 +1,48 @@
+---
+title: "Function: default()"
+description: "> **default**(`__namedParameters`): `Element`"
+---
+
+[**solana-social-kit**](../../../../README.mdx)
+
+***
+
+[solana-social-kit](../../../../README.mdx) / [components/thread/Thread](../README.mdx) / default
+
+# Function: default()
+
+> **default**(`__namedParameters`): `Element`
+
+Defined in: [src/components/thread/Thread.tsx:57](https://github.com/SendArcade/solana-app-kit/blob/bd4b3556b8f469c27ebb06f4df65b3a36b43ba3b/src/components/thread/Thread.tsx#L57)
+
+Thread component that displays a list of posts with nested replies
+
+## Parameters
+
+### \_\_namedParameters
+
+`ThreadProps`
+
+## Returns
+
+`Element`
+
+## Component
+
+## Description
+
+The Thread component is a core component that renders a list of posts in a threaded
+discussion format. It supports nested replies, post composition, and customizable
+styling through themes and style overrides.
+
+## Example
+
+```tsx
+<Thread
+  rootPosts={posts}
+  currentUser={user}
+  showHeader={true}
+  onPostCreated={() => refetchPosts()}
+  onPressPost={(post) => handlePostPress(post)}
+/>
+```

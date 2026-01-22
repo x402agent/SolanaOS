@@ -1,0 +1,65 @@
+---
+title: "Function: checkIfUserFollowsMe()"
+description: "Check if a specific user follows the current user"
+---
+
+[**solana-social-kit**](../../../README.mdx)
+
+***
+
+[solana-social-kit](../../../README.mdx) / [services/profileService](../README.mdx) / checkIfUserFollowsMe
+
+# Function: checkIfUserFollowsMe()
+
+> **checkIfUserFollowsMe**(`myWallet`: string, `userWallet`: string): `Promise<boolean>`
+
+Defined in: [src/services/profileService.ts:90](https://github.com/SendArcade/solana-app-kit/blob/main/src/services/profileService.ts#L90)
+
+Checks if a target user is following the current user. This function determines if a specific
+user (identified by `userWallet`) is in the followers list of the current user (identified by `myWallet`).
+
+This is useful for creating follow-back functionality or determining reciprocal follow relationships.
+
+## Parameters
+
+| Parameter | Type | Description |
+| :------ | :------ | :------ |
+| `myWallet` | `string` | The current user's wallet address |
+| `userWallet` | `string` | The target user's wallet address to check |
+
+## Returns
+
+| Type | Description |
+| :------ | :------ |
+| `Promise<boolean>` | `true` if the target user follows the current user, `false` otherwise |
+
+## Behavior
+
+- Returns `false` if the server URL is not configured
+- Returns `false` if the server returns an unsuccessful response
+- Logs warnings to the console on errors but does not throw exceptions
+
+## Example
+
+```typescript
+import { checkIfUserFollowsMe } from 'services/profileService';
+
+async function checkAndDisplayFollowRelationship(myAddress: string, otherUserAddress: string) {
+  try {
+    const theyFollowMe = await checkIfUserFollowsMe(myAddress, otherUserAddress);
+    
+    if (theyFollowMe) {
+      console.log(`${otherUserAddress} follows you!`);
+      // Enable follow back button or show appropriate UI
+    } else {
+      console.log(`${otherUserAddress} does not follow you.`);
+      // Show regular follow button
+    }
+    
+    return theyFollowMe;
+  } catch (error) {
+    console.warn('Error checking follow relationship:', error);
+    return false;
+  }
+}
+``` 

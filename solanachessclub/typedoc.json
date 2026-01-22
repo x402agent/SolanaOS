@@ -1,0 +1,18 @@
+{
+  "entryPoints": ["./src"],
+  "entryPointStrategy": "expand",
+  "out": "docs/references",
+  "excludePrivate": true,
+  "excludeProtected": true,
+  "excludeExternals": true,
+  "hideGenerator": true,
+  "readme": "none",
+  "plugin": ["typedoc-plugin-markdown"],
+  "theme": "markdown",
+  "exclude": [
+    "**/node_modules/**",
+    "**/test/**",
+    "**/android/**",
+    "**/ios/**"
+  ]
+} 

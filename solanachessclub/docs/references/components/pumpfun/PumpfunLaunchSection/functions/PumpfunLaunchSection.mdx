@@ -1,0 +1,69 @@
+---
+title: "Function: PumpfunLaunchSection()"
+description: "> **PumpfunLaunchSection**(`props`, `deprecatedLegacyContext`?): `ReactNode`"
+---
+
+[**solana-social-kit**](../../../../README.mdx)
+
+***
+
+[solana-social-kit](../../../../README.mdx) / [components/pumpfun/PumpfunLaunchSection](../README.mdx) / PumpfunLaunchSection
+
+# Function: PumpfunLaunchSection()
+
+> **PumpfunLaunchSection**(`props`, `deprecatedLegacyContext`?): `ReactNode`
+
+Defined in: [src/components/pumpfun/PumpfunLaunchSection.tsx:64](https://github.com/SendArcade/solana-app-kit/blob/bd4b3556b8f469c27ebb06f4df65b3a36b43ba3b/src/components/pumpfun/PumpfunLaunchSection.tsx#L64)
+
+A component that provides a user interface for launching new tokens through Pump.fun
+
+## Parameters
+
+### props
+
+[`PumpfunLaunchSectionProps`](../interfaces/PumpfunLaunchSectionProps.mdx)
+
+### deprecatedLegacyContext?
+
+`any`
+
+**Deprecated**
+
+**See**
+
+[React Docs](https://legacy.reactjs.org/docs/legacy-context.html#referencing-context-in-lifecycle-methods)
+
+## Returns
+
+`ReactNode`
+
+## Component
+
+## Description
+
+PumpfunLaunchSection is a comprehensive form component that allows users to create
+and launch new tokens on the Pump.fun platform. It provides a complete interface
+for token creation with image upload support and initial purchase functionality.
+
+Features:
+- Token name and symbol input
+- Description field
+- Social media links (Twitter, Telegram)
+- Website URL
+- Token image upload via device gallery
+- Initial purchase amount in SOL
+- Loading state handling
+- Input validation
+- Error handling and user feedback
+- Customizable styling
+
+## Example
+
+```tsx
+<PumpfunLaunchSection
+  containerStyle={styles.customContainer}
+  inputStyle={styles.customInput}
+  buttonStyle={styles.customButton}
+  launchButtonLabel="Create Token"
+/>
+```

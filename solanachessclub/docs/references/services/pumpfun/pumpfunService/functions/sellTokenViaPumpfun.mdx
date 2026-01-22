@@ -1,0 +1,47 @@
+---
+title: "Function: sellTokenViaPumpfun()"
+description: "Sell tokens via Pump.fun or Raydium based on token availability"
+---
+
+[**solana-social-kit**](../../../../README.mdx)
+
+***
+
+[solana-social-kit](../../../../README.mdx) / [services/pumpfun/pumpfunService](../README.mdx) / sellTokenViaPumpfun
+
+# Function: sellTokenViaPumpfun()
+
+> **sellTokenViaPumpfun**(`params`): `Promise<{ success: boolean; txId: string }>`
+
+Defined in: [src/services/pumpfun/pumpfunService.ts:264](https://github.com/SendArcade/solana-app-kit/blob/main/src/services/pumpfun/pumpfunService.ts#L264)
+
+Sells tokens using either Pump.fun or Raydium DEX automatically.
+This function first checks if the token is available on Raydium, and if so, uses Raydium's swap API.
+Otherwise, it falls back to using Pump.fun's bonding curve for the sale.
+
+## Parameters
+```
+| Parameter | Type | Description |
+| :------ | :------ | :------ |
+| `params` | `Object` | Parameters for token sale |
+| `params.sellerPublicKey` | `string` | Public key of the seller wallet |
+| `params.tokenAddress` | `string` | Mint address of the token to sell |
+| `params.tokenAmount` | `number` | Amount of tokens to sell |
+| `params.solanaWallet` | `any` | Privy wallet instance for signing transactions |
+```
+## Returns
+```
+| Type | Description |
+| :------ | :------ |
+| `Promise<{ success: boolean; txId: string }>` | Transaction result with signature |
+```
+## Example
+
+```typescript
+const { txId, success } = await sellTokenViaPumpfun({
+  sellerPublicKey: wallet.publicKey,
+  tokenAddress: "5tMi5XcfuLBzxjPZ5RzPUgbcbGNnUQnBkRoqP9DP5gGF",
+  tokenAmount: 100,
+  solanaWallet: wallet
+});
+```

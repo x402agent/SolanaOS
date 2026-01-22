@@ -1,0 +1,41 @@
+---
+title: "components/thread/PostHeader"
+description: "A component for rendering the header section of a thread post"
+---
+
+[**solana-social-kit**](../../../README.mdx)
+
+***
+
+[solana-social-kit](../../../README.mdx) / components/thread/PostHeader
+
+# PostHeader Component
+
+The PostHeader component renders the top section of a thread post, displaying user information and post metadata.
+
+## Overview
+
+- Displays the user's avatar, username, and verification status
+- Shows post creation time
+- Provides a dropdown menu for post actions (edit/delete)
+- Supports user interaction via avatar/username tapping
+- Customizable through theme and style overrides
+
+## Usage
+
+```tsx
+import PostHeader from 'path/to/components/thread/post/PostHeader';
+
+<PostHeader 
+  post={postData}
+  onDeletePost={handleDelete}
+  onEditPost={handleEdit}
+  onPressUser={handleUserPress}
+  themeOverrides={customTheme}
+  styleOverrides={customStyles}
+/>
+```
+
+## Functions
+
+- [default](functions/default.mdx) - Main component implementation

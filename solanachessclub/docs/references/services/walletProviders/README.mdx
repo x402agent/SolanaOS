@@ -1,0 +1,54 @@
+---
+title: "services/walletProviders"
+description: "Wallet integration services for various providers"
+---
+
+[**solana-social-kit**](../../README.mdx)
+
+***
+
+[solana-social-kit](../../README.mdx) / services/walletProviders
+
+# services/walletProviders
+
+This module provides adapters and services for different wallet providers, allowing a unified interface for interacting with different wallet technologies. Currently supported providers include:
+
+## Modules
+
+- [dynamic](dynamic/README.mdx) - Integration with Dynamic wallet adapter
+- [privy](privy/README.mdx) - Integration with Privy embedded wallet
+- [turnkey](turnkey/README.mdx) - Integration with Turnkey wallet infrastructure
+
+## Overview
+
+Each wallet provider implementation follows a similar pattern, offering functions for:
+- User authentication (login/logout)
+- Wallet creation and management
+- Transaction signing
+- Provider-specific features
+
+Applications can switch between different wallet implementations by using the configuration system and `useAuth` hook which delegates to the appropriate provider.
+
+## References
+
+### getDynamicClient
+
+Re-exports [getDynamicClient](dynamic/functions/getDynamicClient.mdx)
+
+***
+
+### handleTurnkeyConnect
+
+Re-exports [handleTurnkeyConnect](turnkey/functions/handleTurnkeyConnect.mdx)
+
+***
+
+### initDynamicClient
+
+Re-exports [initDynamicClient](dynamic/functions/initDynamicClient.mdx)
+
+***
+
+### usePrivyWalletLogic
+
+Re-exports [usePrivyWalletLogic](privy/functions/usePrivyWalletLogic.mdx)

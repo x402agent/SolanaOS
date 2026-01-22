@@ -1,0 +1,63 @@
+# Pump.fun Integration
+
+## Overview
+Handles the creation and management of tokens on Pump.fun's bonding curve system, along with buy/sell functionality.
+
+## Key Components
+
+### 📁 Directory Structure
+- `src/components/pumpfun/` - UI components for token interactions
+- `src/services/pumpfun/pumpfunService.ts` - Core functionality for Pump.fun operations
+- `src/utils/pumpfun/pumpfunUtils.ts` - Helper utilities for token handling
+
+### 🚀 Core Functions
+- `createAndBuyTokenViaPumpfun` - Creates a new token and makes initial purchase
+- `buyTokenViaPumpfun` - Purchases existing tokens on the platform
+- `sellTokenViaPumpfun` - Liquidates token holdings back to SOL
+
+### 🔄 Integration Features
+- Metadata uploading to decentralized storage
+- Connection to PumpFunSDK
+- Bridging to Raydium for tokens not available on Pump.fun
+- Transaction tracking and history
+
+### 💻 UI Components
+- `PumpfunBuySection` - Interface for purchasing tokens
+- `PumpfunSellSection` - Interface for selling tokens
+- `PumpfunLaunchSection` - Interface for launching new tokens
+- `PumpfunTokenDetails` - Display component for token information
+
+## Usage Example
+
+```javascript
+import { pumpfunService } from 'solana-app-kit';
+
+// Create and buy a new token
+async function launchToken() {
+  try {
+    const result = await pumpfunService.createAndBuyTokenViaPumpfun({
+      name: 'My Token',
+      symbol: 'MTK',
+      description: 'My first token on Pump.fun',
+      amountInSol: 0.1
+    });
+    console.log('Token created:', result);
+  } catch (error) {
+    console.error('Error creating token:', error);
+  }
+}
+
+// Buy an existing token
+async function purchaseToken(tokenAddress) {
+  try {
+    const result = await pumpfunService.buyTokenViaPumpfun({
+      tokenAddress,
+      amountInSol: 0.5
+    });
+    console.log('Purchase successful:', result);
+  } catch (error) {
+    console.error('Error purchasing token:', error);
+  }
+}
+```
+```

@@ -1,0 +1,101 @@
+import {StyleSheet} from 'react-native';
+import COLORS from '../../../../assets/colors';
+import TYPOGRAPHY from '../../../../assets/typography';
+
+export const styles = StyleSheet.create({
+  profileInfo: {
+    width: '100%',
+    paddingHorizontal: 16,
+    paddingBottom: 12,
+    gap: 12,
+  },
+  profImgContainer: {
+    width: 72,
+    height: 72,
+    borderRadius: 42,
+    alignItems: 'center',
+    justifyContent: 'center',
+    overflow: 'hidden',
+  },
+  profImg: {
+    width: '100%',
+    height: '100%',
+    resizeMode: 'cover',
+  },
+  username: {
+    fontFamily: TYPOGRAPHY.fontFamily,
+    fontSize: TYPOGRAPHY.size.xl,
+    fontWeight: TYPOGRAPHY.fontWeightToString(TYPOGRAPHY.semiBold),
+    lineHeight: TYPOGRAPHY.lineHeight.xl,
+    letterSpacing: TYPOGRAPHY.letterSpacing,
+    color: COLORS.white,
+  },
+  handleText: {
+    fontFamily: TYPOGRAPHY.fontFamily,
+    fontSize: TYPOGRAPHY.size.xs,
+    fontWeight: TYPOGRAPHY.fontWeightToString(TYPOGRAPHY.medium),
+    letterSpacing: TYPOGRAPHY.letterSpacing,
+    color: COLORS.greyDark,
+  },
+  followsBadge: {
+    backgroundColor: COLORS.lighterBackground,
+    paddingHorizontal: 12,
+    borderRadius: 6,
+    paddingVertical: 4,
+    fontFamily: TYPOGRAPHY.fontFamily,
+    fontSize: TYPOGRAPHY.size.xs,
+    fontWeight: TYPOGRAPHY.fontWeightToString(TYPOGRAPHY.medium),
+    letterSpacing: TYPOGRAPHY.letterSpacing,
+    textAlign: 'left',
+    color: COLORS.brandPrimary,
+    borderWidth: 1,
+    borderColor: COLORS.borderDarkColor,
+  },
+  bioSection: {
+    fontFamily: TYPOGRAPHY.fontFamily,
+    fontSize: TYPOGRAPHY.size.sm,
+    fontWeight: TYPOGRAPHY.fontWeightToString(TYPOGRAPHY.regular),
+    letterSpacing: TYPOGRAPHY.letterSpacing,
+    textAlign: 'left',
+    color: COLORS.white,
+  },
+  statsContainer: {
+    flexDirection: 'row',
+    gap: 12,
+    marginTop: 8,
+  },
+  statItem: {
+    flexDirection: 'row',
+    gap: 2,
+  },
+  statCount: {
+    fontFamily: TYPOGRAPHY.fontFamily,
+    fontSize: TYPOGRAPHY.size.xs,
+    fontWeight: TYPOGRAPHY.fontWeightToString(TYPOGRAPHY.semiBold),
+    letterSpacing: TYPOGRAPHY.letterSpacing,
+    color: COLORS.white,
+  },
+  statLabel: {
+    fontFamily: TYPOGRAPHY.fontFamily,
+    fontSize: TYPOGRAPHY.size.xs,
+    fontWeight: TYPOGRAPHY.fontWeightToString(TYPOGRAPHY.medium),
+    letterSpacing: TYPOGRAPHY.letterSpacing,
+    color: COLORS.greyMid,
+  },
+  editProfileBtn: {
+    backgroundColor: COLORS.lighterBackground,
+    borderWidth: 0,
+    borderRadius: 12,
+    paddingVertical: 14,
+    paddingHorizontal: 16,
+    width: '100%',
+    alignItems: 'center',
+  },
+  editProfileBtnText: {
+    fontFamily: TYPOGRAPHY.fontFamily,
+    fontSize: TYPOGRAPHY.size.sm,
+    fontWeight: TYPOGRAPHY.fontWeightToString(TYPOGRAPHY.semiBold),
+    letterSpacing: TYPOGRAPHY.letterSpacing,
+    color: COLORS.greyMid,
+  },
+}); 

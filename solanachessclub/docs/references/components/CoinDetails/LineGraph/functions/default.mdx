@@ -1,0 +1,125 @@
+---
+title: "Function: LineGraph()"
+description: "> **LineGraph**(`props`, `deprecatedLegacyContext`?): `ReactNode`"
+---
+
+[**solana-social-kit**](../../../../README.mdx)
+
+***
+
+# Function: LineGraph()
+
+> **LineGraph**(`props`, `deprecatedLegacyContext`?): `ReactNode`
+
+Defined in: [src/components/CoinDetails/CoinDetailTopSection/LineGraph.tsx:18](https://github.com/SendArcade/solana-app-kit/blob/bd4b3556b/src/components/CoinDetails/CoinDetailTopSection/LineGraph.tsx#L18)
+
+A reusable line chart component based on `react-native-chart-kit`.
+
+## Parameters
+
+### props
+
+[**LineGraphProps**](../interfaces/LineGraphProps.mdx)
+
+### deprecatedLegacyContext?
+
+`any`  
+**Deprecated**  
+See [React Docs](https://legacy.reactjs.org/docs/legacy-context.html#referencing-context-in-lifecycle-methods)
+
+## Returns
+
+`ReactNode`
+
+## Component
+
+## Description
+
+LineGraph displays a simple line chart of price data over time, including optional markers for a "user execution" price/time. It uses `react-native-chart-kit` behind the scenes and optionally draws the user’s avatar on the execution marker.
+
+## Example
+
+```tsx
+<LineGraph
+  data={[1.01, 1.02, 0.99, 1.05]}
+  timestamps={[1692300000000, 1692303000000, 1692306000000, 1692309000000]}
+  executionPrice={1.0}
+  executionTimestamp={1692305000000}
+  userAvatar={{ uri: 'https://example.com/avatar.png' }}
+/>
+```
+
+---
+title: "Interface: LineGraphProps"
+description: "Defined in: [src/components/CoinDetails/CoinDetailTopSection/LineGraph.tsx:10](https://github.com/SendArcade/solana-app-kit/blob/bd4b3556b/src/components/CoinDetails/CoinDetailTopSection/LineGraph.tsx#L10)"
+---
+
+[**solana-social-kit**](../../../../README.mdx)
+
+***
+
+# Interface: LineGraphProps
+
+Defined in: [src/components/CoinDetails/CoinDetailTopSection/LineGraph.tsx:10](https://github.com/SendArcade/solana-app-kit/blob/bd4b3556b/src/components/CoinDetails/CoinDetailTopSection/LineGraph.tsx#L10)
+
+Props for the LineGraph component
+
+## Hierarchy
+
+- **LineGraphProps**
+
+## Properties
+
+### data
+
+> **data**: `number[]`
+
+Array of data points for the line chart.
+
+***
+
+### width?
+
+> `optional` **width**: `number`
+
+Optional chart width; defaults to device width - 32.
+
+***
+
+### executionPrice?
+
+> `optional` **executionPrice**: `number`
+
+If set, draws a special marker on the chart at this price level.
+
+***
+
+### executionTimestamp?
+
+> `optional` **executionTimestamp**: `number`
+
+If set alongside timestamps, positions the marker in time as well.
+
+***
+
+### timestamps?
+
+> `optional` **timestamps**: `number[]`
+
+An array of timestamps (ms) corresponding to each data point.
+
+***
+
+### executionColor?
+
+> `optional` **executionColor**: `string`
+
+Optional color for the execution marker.
+
+***
+
+### userAvatar?
+
+> `optional` **userAvatar**: `any`
+
+If provided, draws the user’s avatar at the execution marker instead of a circle.

@@ -1,0 +1,62 @@
+---
+title: "Function: default()"
+description: "> **default**(`__namedParameters`): `Element`"
+---
+
+[**solana-social-kit**](../../../../README.mdx)
+
+***
+
+[solana-social-kit](../../../../README.mdx) / [components/thread/SelectTokenModal](../README.mdx) / default
+
+# Function: default()
+
+> **default**(`__namedParameters`): `Element`
+
+Defined in: [src/components/thread/trade/SelectTokenModal.tsx:69](https://github.com/SendArcade/solana-app-kit/blob/main/src/components/thread/trade/SelectTokenModal.tsx#L69)
+
+A modal component for selecting tokens from a list of verified tokens
+
+## Parameters
+
+### \_\_namedParameters
+
+`SelectTokenModalProps`:
+- `visible`: Whether the modal is visible
+- `onClose`: Callback fired when the modal is closed
+- `onTokenSelected`: Callback fired when a token is selected
+
+## Returns
+
+`Element`
+
+## Description
+
+SelectTokenModal provides a searchable interface for selecting tokens from a list
+of verified tokens fetched from Jupiter's API. It fetches the list of verified tokens
+when the modal becomes visible, and allows users to search and filter the tokens.
+
+Key functions:
+- `fetchTokens()`: Fetches the list of verified tokens from Jupiter's API
+- `filteredTokens`: Memoized computation of tokens filtered by search input
+- `renderItem()`: Renders a single token item in the list
+
+Features:
+- Live search with filtering by symbol, name, or address
+- Display of token logos with fallback for missing images
+- Clean token information presentation with symbol and name
+- Loading indicator during API requests
+- Modal with proper open/close handling
+
+## Example
+
+```tsx
+<SelectTokenModal
+  visible={showTokenModal}
+  onClose={() => setShowTokenModal(false)}
+  onTokenSelected={(token) => {
+    setSelectedToken(token);
+    updateTradeAmount(token);
+  }}
+/>
+```

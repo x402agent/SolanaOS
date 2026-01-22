@@ -1,0 +1,41 @@
+{
+  "name": "solana-chess-full",
+  "version": "1.0.0",
+  "description": "Full-stack Solana Chess with real-time multiplayer, leaderboards, lobby chat, and Ralph Wiggum AI agents",
+  "type": "module",
+  "scripts": {
+    "dev": "convex dev & vite",
+    "build": "convex deploy && vite build",
+    "preview": "vite preview",
+    "convex:dev": "convex dev",
+    "convex:deploy": "convex deploy",
+    "agent:train": "tsx agents/ralph-wiggum-loop.ts",
+    "agent:langchain": "tsx agents/langchain-chess-agent.ts"
+  },
+  "dependencies": {
+    "@anthropic-ai/claude-agent-sdk": "^0.2.0",
+    "@langchain/anthropic": "^0.3.0",
+    "@langchain/core": "^0.3.0",
+    "@solana/web3.js": "^1.87.6",
+    "chess.js": "^1.0.0-beta.8",
+    "convex": "^1.10.0",
+    "langchain": "^0.3.0",
+    "langsmith": "^0.2.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "socket.io-client": "^4.7.4",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "@types/react": "^18.2.43",
+    "@types/react-dom": "^18.2.17",
+    "@vitejs/plugin-react": "^4.2.1",
+    "autoprefixer": "^10.4.16",
+    "postcss": "^8.4.32",
+    "tailwindcss": "^3.4.0",
+    "tsx": "^4.7.0",
+    "typescript": "^5.3.3",
+    "vite": "^5.0.8"
+  }
+}

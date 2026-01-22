@@ -1,0 +1,236 @@
+import { StyleSheet, Dimensions } from 'react-native';
+import COLORS from '@/assets/colors';
+import TYPOGRAPHY from '@/assets/typography';
+
+const { width, height } = Dimensions.get('window');
+
+// Calculate tab bar height for padding
+export const TAB_BAR_HEIGHT = 20;
+
+export const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: COLORS.background,
+  },
+  keyboardAvoidingContainer: {
+    flex: 1,
+  },
+  innerContainer: {
+    flex: 1,
+    justifyContent: 'space-between',
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    backgroundColor: COLORS.background,
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgba(255, 255, 255, 0.1)',
+    shadowColor: COLORS.black,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 4,
+  },
+  headerLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
+  },
+  backButton: {
+    padding: 8,
+    marginRight: 12,
+    borderRadius: 20,
+    backgroundColor: COLORS.darkerBackground,
+    width: 40,
+    height: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  titleContainer: {
+    flex: 1,
+  },
+  titleText: {
+    color: COLORS.white,
+    fontSize: TYPOGRAPHY.size.lg,
+    fontWeight: TYPOGRAPHY.fontWeightToString(TYPOGRAPHY.bold),
+    fontFamily: TYPOGRAPHY.fontFamily,
+  },
+  subtitleText: {
+    color: COLORS.greyMid,
+    fontSize: TYPOGRAPHY.size.sm,
+    fontFamily: TYPOGRAPHY.fontFamily,
+    marginTop: 2,
+  },
+  messagesContainer: {
+    paddingHorizontal: 8,
+    paddingTop: 12,
+    paddingBottom: 20,
+    flexGrow: 1,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 40,
+  },
+  loadingText: {
+    color: COLORS.greyMid,
+    marginTop: 12,
+    fontSize: TYPOGRAPHY.size.md,
+    fontFamily: TYPOGRAPHY.fontFamily,
+  },
+  emptyContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 40,
+  },
+  emptyText: {
+    color: COLORS.white,
+    fontSize: TYPOGRAPHY.size.xl,
+    fontWeight: TYPOGRAPHY.fontWeightToString(TYPOGRAPHY.bold),
+    fontFamily: TYPOGRAPHY.fontFamily,
+    textAlign: 'center',
+  },
+  emptySubtext: {
+    color: COLORS.greyMid,
+    marginTop: 12,
+    fontSize: TYPOGRAPHY.size.md,
+    fontFamily: TYPOGRAPHY.fontFamily,
+    textAlign: 'center',
+    lineHeight: 20,
+  },
+  composerContainer: {
+    paddingHorizontal: 16,
+    backgroundColor: COLORS.background,
+    borderTopWidth: 1,
+    borderTopColor: 'rgba(255, 255, 255, 0.1)',
+    shadowColor: COLORS.black,
+    shadowOffset: { width: 0, height: -4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 8,
+  },
+  messageBubble: {
+    maxWidth: '85%',
+    padding: 16,
+    borderRadius: 20,
+    marginBottom: 8,
+    shadowColor: COLORS.black,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.15,
+    shadowRadius: 8,
+    elevation: 4,
+  },
+  currentUserBubble: {
+    backgroundColor: COLORS.brandBlue,
+    alignSelf: 'flex-end',
+    borderBottomRightRadius: 6,
+    shadowColor: COLORS.brandBlue,
+    shadowOpacity: 0.3,
+  },
+  otherUserBubble: {
+    backgroundColor: COLORS.lighterBackground,
+    alignSelf: 'flex-start',
+    borderBottomLeftRadius: 6,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.1)',
+  },
+  messageText: {
+    color: COLORS.white,
+    fontSize: TYPOGRAPHY.size.md,
+    fontFamily: TYPOGRAPHY.fontFamily,
+    lineHeight: 20,
+  },
+  messageTime: {
+    fontSize: TYPOGRAPHY.size.xs,
+    color: 'rgba(255, 255, 255, 0.6)',
+    alignSelf: 'flex-end',
+    marginTop: 6,
+    fontFamily: TYPOGRAPHY.fontFamily,
+  },
+  tabBarSpacer: {
+    width: '100%',
+  },
+  // Reply styling
+  messageWrapper: {
+    marginBottom: 12,
+    position: 'relative' as const,
+  },
+  replyMessageWrapper: {
+    marginLeft: 20,
+  },
+  replyIndicator: {
+    position: 'absolute' as const,
+    left: -12,
+    top: 12,
+    width: 3,
+    height: '80%',
+    backgroundColor: 'rgba(50, 212, 222, 0.5)',
+    borderRadius: 2,
+  },
+  // Error handling styles
+  errorContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 40,
+  },
+  errorText: {
+    color: COLORS.errorRed,
+    fontSize: TYPOGRAPHY.size.md,
+    textAlign: 'center',
+    marginBottom: 20,
+    fontFamily: TYPOGRAPHY.fontFamily,
+    lineHeight: 22,
+  },
+  retryButton: {
+    backgroundColor: COLORS.brandBlue,
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 12,
+    shadowColor: COLORS.brandBlue,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 6,
+  },
+  retryButtonText: {
+    color: COLORS.white,
+    fontSize: TYPOGRAPHY.size.md,
+    fontWeight: TYPOGRAPHY.fontWeightToString(TYPOGRAPHY.semiBold),
+    fontFamily: TYPOGRAPHY.fontFamily,
+  },
+  // Decorative elements
+  decorCircle1: {
+    position: 'absolute',
+    top: -50,
+    right: -50,
+    width: 200,
+    height: 200,
+    borderRadius: 100,
+    backgroundColor: 'rgba(50, 212, 222, 0.05)',
+    opacity: 0.6,
+  },
+  decorCircle2: {
+    position: 'absolute',
+    bottom: -100,
+    left: -100,
+    width: 300,
+    height: 300,
+    borderRadius: 150,
+    backgroundColor: 'rgba(50, 212, 222, 0.03)',
+    opacity: 0.4,
+  },
+  glow1: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    height: 200,
+    opacity: 0.3,
+  },
+});

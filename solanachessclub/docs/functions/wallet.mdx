@@ -1,0 +1,46 @@
+# Wallet Providers
+
+## Overview
+The `services/walletProviders` folder contains logic for multiple wallet services, with the `useAuth` hook determining which provider to use based on configuration.
+
+## Supported Providers
+
+### 🔐 Privy
+- Social login options
+- Email authentication
+- Wallet creation and recovery
+- Transaction signing
+
+### 🌐 Dynamic
+- Multi-chain support
+- Embedded wallet creation
+- Social authentication
+- Key management
+
+### 🔑 Turnkey
+- Enhanced security features
+- Key management
+- MPC capabilities
+- Recovery options
+
+## Integration
+
+### 🧩 Provider Architecture
+Each provider implements standard interfaces:
+- Initialization
+- Login/logout flows
+- Signature generation
+- State management
+
+### 🔄 useAuth Hook
+Central authentication logic:
+- Selects appropriate provider based on config
+- Dispatches Redux actions
+- Manages auth state
+- Provides consistent API regardless of provider
+
+### ⚙️ Configuration
+- Provider selection via config
+- Feature toggles
+- Network settings
+- Debug options

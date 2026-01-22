@@ -1,0 +1,59 @@
+---
+title: "Function: default()"
+description: "> **default**(`__namedParameters`): `Element`"
+---
+
+[**solana-social-kit**](../../../../../README.mdx)
+
+***
+
+[solana-social-kit](../../../../../README.mdx) / [components/thread/sections/SectionNftListing](../README.mdx) / default
+
+# Function: default()
+
+> **default**(`__namedParameters`): `Element`
+
+Defined in: [src/components/thread/sections/SectionNftListing.tsx:49](https://github.com/SendArcade/solana-app-kit/blob/bd4b3556b8f469c27ebb06f4df65b3a36b43ba3b/src/components/thread/sections/SectionNftListing.tsx#L49)
+
+A component that renders an NFT listing card in a post section
+
+## Parameters
+
+### \_\_namedParameters
+
+`SectionNftListingProps`
+
+## Returns
+
+`Element`
+
+## Component
+
+## Description
+
+SectionNftListing displays detailed information about an NFT listing in a post.
+It fetches additional NFT data from the Tensor API and shows the NFT's image,
+name, collection, price, last sale, and rarity information. The component
+handles loading states and errors gracefully.
+
+Features:
+- NFT image display
+- Collection information
+- Price and last sale data
+- Rarity ranking
+- Loading states
+- Error handling
+- Responsive layout
+
+## Example
+
+```tsx
+<SectionNftListing
+  listingData={{
+    mint: "mint_address_here",
+    name: "Cool NFT #123",
+    owner: "wallet_address_here",
+    priceSol: 1.5
+  }}
+/>
+```

@@ -1,0 +1,47 @@
+---
+title: "Function: buyTokenViaPumpfun()"
+description: "Purchase tokens via Pump.fun or Raydium based on token availability"
+---
+
+[**solana-social-kit**](../../../../README.mdx)
+
+***
+
+[solana-social-kit](../../../../README.mdx) / [services/pumpfun/pumpfunService](../README.mdx) / buyTokenViaPumpfun
+
+# Function: buyTokenViaPumpfun()
+
+> **buyTokenViaPumpfun**(`params`): `Promise<{ success: boolean; txId: string }>`
+
+Defined in: [src/services/pumpfun/pumpfunService.ts:181](https://github.com/SendArcade/solana-app-kit/blob/main/src/services/pumpfun/pumpfunService.ts#L181)
+
+Buys tokens using either Pump.fun or Raydium DEX automatically.
+This function first checks if the token is available on Raydium, and if so, uses Raydium's swap API.
+Otherwise, it falls back to using Pump.fun's bonding curve.
+
+## Parameters
+```
+| Parameter | Type | Description |
+| :------ | :------ | :------ |
+| `params` | `Object` | Parameters for token purchase |
+| `params.buyerPublicKey` | `string` | Public key of the buyer wallet |
+| `params.tokenAddress` | `string` | Mint address of the token to buy |
+| `params.solAmount` | `number` | Amount of SOL to spend |
+| `params.solanaWallet` | `any` | Privy wallet instance for signing transactions |
+```
+## Returns
+
+| Type | Description |
+| :------ | :------ |
+| `Promise<{ success: boolean; txId: string }>` | Transaction result with signature |
+
+## Example
+
+```typescript
+const { txId, success } = await buyTokenViaPumpfun({
+  buyerPublicKey: wallet.publicKey,
+  tokenAddress: "5tMi5XcfuLBzxjPZ5RzPUgbcbGNnUQnBkRoqP9DP5gGF",
+  solAmount: 0.1,
+  solanaWallet: wallet
+});
+```

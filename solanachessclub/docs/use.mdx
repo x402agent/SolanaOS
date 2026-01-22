@@ -1,0 +1,159 @@
+# How Developers Use It
+
+## Integration Steps
+
+### 1. Installation
+Install the library in a React Native or Expo application:
+```bash
+yarn add solana-app-kit
+# or
+npm install solana-app-kit
+```
+
+### 2. Configuration
+Configure the authentication provider in your application:
+
+```javascript
+// In your app's configuration
+import { CustomizationProvider } from 'solana-app-kit';
+
+const myConfig = {
+  auth: {
+    provider: 'privy', // or 'dynamic', 'turnkey'
+    // other auth settings...
+  },
+  // additional configuration...
+};
+
+// In your App.tsx or equivalent
+function App() {
+  return (
+    <CustomizationProvider config={myConfig}>
+      {/* Your app components */}
+    </CustomizationProvider>
+  );
+}
+```
+
+### 3. Component Usage
+Render the library's prebuilt screens and components:
+
+```javascript
+import { Thread } from 'solana-app-kit';
+
+function MyFeedScreen() {
+  // Get user data from Redux or your application state
+  const currentUser = { /* ...user data... */ };
+  
+  return (
+    <Thread 
+      rootPosts={myPosts} 
+      currentUser={currentUser} 
+    />
+  );
+}
+```
+
+### 4. Theme Customization
+Optionally override default theming or inject custom backgrounds:
+
+```javascript
+import { Thread } from 'solana-app-kit';
+
+function MyCustomizedFeed() {
+  const themeOverrides = {
+    colors: {
+      primary: '#3498db',
+      background: '#f5f5f5',
+      // other color overrides...
+    },
+    spacing: {
+      // custom spacing values...
+    },
+    // other theme properties...
+  };
+  
+  return (
+    <Thread 
+      rootPosts={myPosts} 
+      currentUser={currentUser}
+      themeOverrides={themeOverrides} 
+    />
+  );
+}
+```
+
+### 5. Service Utilization
+Use the included services for on-chain operations or built-in screens:
+
+```javascript
+import { pumpfunService, PumpfunScreen, NftScreen } from 'solana-app-kit';
+
+// Using services directly
+async function buyToken() {
+  try {
+    const result = await pumpfunService.buyTokenViaPumpfun({
+      // transaction parameters...
+    });
+    // Handle result
+  } catch (error) {
+    // Handle error
+  }
+}
+
+// Or use pre-built screens
+function MyApp() {
+  return (
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen name="PumpFun" component={PumpfunScreen} />
+        <Stack.Screen name="NFTs" component={NftScreen} />
+        {/* Other screens */}
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+}
+```
+
+### 6. State Management Integration
+Extend the Redux store with our pre-built slices:
+
+```javascript
+import { combineReducers } from '@reduxjs/toolkit';
+import { authReducer, threadReducer, transactionReducer } from 'solana-app-kit';
+
+// Use existing reducers
+const rootReducer = combineReducers({
+  auth: authReducer,
+  thread: threadReducer,
+  transaction: transactionReducer,
+  // Add your own reducers
+  myCustomFeature: myCustomReducer,
+});
+
+// Create your store with the combined reducers
+const store = configureStore({
+  reducer: rootReducer,
+  // other store configuration...
+});
+```
+
+### 7. Authentication State Management
+
+The auth reducer provides several functions for managing user authentication:
+
+```javascript
+import { loginSuccess, logoutSuccess, updateUsername, updateProfilePic } from 'solana-app-kit';
+
+// Handle login success
+dispatch(loginSuccess(userData));
+
+// Update user profile
+dispatch(updateUsername({ userId: 'user123', newUsername: 'newName' }));
+dispatch(updateProfilePic('https://example.com/new-profile-pic.jpg'));
+
+// Handle logout
+dispatch(logoutSuccess());
+```
+
+The library's state management modules offer typical patterns for storing user data, thread posts, transaction configurations, and other state management needs.

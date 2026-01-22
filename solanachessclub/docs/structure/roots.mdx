@@ -1,0 +1,21 @@
+# Root Files
+
+## 🚀 App.tsx
+The primary entry point for the Expo application:
+- Initializes providers:
+  - Redux store
+  - Navigation container
+  - Authentication providers
+- Configures wallet connections:
+  - Dynamic
+  - Privy
+- Merges custom configuration from `CustomizationProvider`
+- Sets up the application's root component structure
+
+## 📋 index.js
+Application registration and configuration:
+- Sets up necessary polyfills:
+  - `fast-text-encoding`
+  - `global.Buffer`
+- Registers the root component with Expo
+- Entry point for the React Native bundler

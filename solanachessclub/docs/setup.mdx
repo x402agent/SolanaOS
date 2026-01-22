@@ -1,0 +1,35 @@
+# Setup & Installation
+
+* **Install Xcode from the App Store**
+* **Clone the directory**
+  ```
+  git clone ...
+  cd solana-app-kit
+  ```
+* **Install dependencies**
+  ```
+  yarn install
+  ```
+* **Put your .env in both root and server folders (.env.local for client code)**
+* **Start Metro**
+  ```
+  yarn start --clear
+  ```
+  Or just
+  ```
+  yarn start
+  ```
+  Note: `--clear` removes caches—avoid running it too often to prevent slow builds.
+
+## If You Still Face Issues
+
+* In a normal terminal:
+  ```
+  sudo gem install cocoapods
+  pod --version
+  ```
+* Then navigate to the ios folder:
+  ```
+  cd ios
+  pod install
+  ```

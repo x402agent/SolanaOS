@@ -1,0 +1,32 @@
+# src/services
+
+Higher-level logic integrating with external APIs and wallet connections.
+
+## Service Categories
+
+### 🚀 pumpfun/pumpfunService.ts
+Token management via Pump.fun:
+- `createAndBuyTokenViaPumpfun`
+- `buyTokenViaPumpfun`
+- `sellTokenViaPumpfun`
+
+These functions handle:
+- Uploading metadata
+- Connecting to the PumpFunSDK
+- Bridging to Raydium for tokens not on Pump.fun
+
+### 💰 tokenMill/tokenMillService.ts
+"Token Mill" operations:
+- Creating markets with custom bonding curve
+- Staking functionality
+- Vesting options
+- Swapping mechanisms
+- Other token operations
+
+### 👛 walletProviders/
+Multiple wallet integration options:
+- `dynamic.ts`
+- `privy.ts`
+- `turnkey.ts`
+
+Each implements different wallet flows (init, login, sign, etc.), abstracting provider specifics so the app can just call `useAuth`.

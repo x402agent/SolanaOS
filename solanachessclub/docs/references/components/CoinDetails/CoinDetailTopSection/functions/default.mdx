@@ -1,0 +1,107 @@
+---
+title: "Function: CoinDetailTopSection()"
+description: "> **CoinDetailTopSection**(`props`, `deprecatedLegacyContext`?): `ReactNode`"
+---
+
+[**solana-social-kit**](../../../../README.mdx)
+
+***
+
+# Function: CoinDetailTopSection()
+
+> **CoinDetailTopSection**(`props`, `deprecatedLegacyContext`?): `ReactNode`
+
+Defined in: [src/components/CoinDetails/CoinDetailTopSection/CoinDetailTopSection.tsx:28](https://github.com/SendArcade/solana-app-kit/blob/bd4b3556b/src/components/CoinDetails/CoinDetailTopSection/CoinDetailTopSection.tsx#L28)
+
+A top-level component for coin details.  
+It includes a search bar, chart, stats, tweets, etc.
+
+## Parameters
+
+### props
+
+[**CoinDetailTopSectionProps**](../interfaces/CoinDetailTopSectionProps.mdx)
+
+### deprecatedLegacyContext?
+
+`any`  
+**Deprecated**  
+See [React Docs](https://legacy.reactjs.org/docs/legacy-context.html#referencing-context-in-lifecycle-methods)
+
+## Returns
+
+`ReactNode`
+
+## Component
+
+## Description
+
+CoinDetailTopSection provides a container that includes:
+- A search bar for switching coins
+- Display of the current coin's price, change, and chart
+- Market stats (Market Cap, FDV, etc.)
+- Example tweet data
+- Buttons (Swap, Send)
+
+## Example
+
+```tsx
+<CoinDetailTopSection
+  tweetData={[
+    {
+      username: 'Alice',
+      handle: '@alice',
+      time: '2h',
+      tweetContent: 'Check out $SEND!',
+      quoteCount: 5,
+      retweetCount: 10,
+      reactionCount: 100,
+      avatar: {uri: 'https://example.com/avatar.png'},
+    },
+  ]}
+/>
+```
+
+---
+title: "Interface: CoinDetailTopSectionProps"
+description: "Defined in: [src/components/CoinDetails/CoinDetailTopSection/CoinDetailTopSection.tsx:11](https://github.com/SendArcade/solana-app-kit/blob/bd4b3556b/src/components/CoinDetails/CoinDetailTopSection/CoinDetailTopSection.tsx#L11)"
+---
+
+[**solana-social-kit**](../../../../README.mdx)
+
+***
+
+# Interface: CoinDetailTopSectionProps
+
+Defined in: [src/components/CoinDetails/CoinDetailTopSection/CoinDetailTopSection.tsx:11](https://github.com/SendArcade/solana-app-kit/blob/bd4b3556b/src/components/CoinDetails/CoinDetailTopSection/CoinDetailTopSection.tsx#L11)
+
+Props for the CoinDetailTopSection component
+
+## Hierarchy
+
+- **CoinDetailTopSectionProps**
+
+## Properties
+
+### tweetData
+
+> **tweetData**: `Array`\{
+  username: string;
+  handle: string;
+  time: string;
+  tweetContent: string;
+  quoteCount: number;
+  retweetCount: number;
+  reactionCount: number;
+  avatar: any;
+}\
+
+Array of data representing tweets. These are displayed in the bottom portion of the section.
+
+***
+
+### customStyles?
+
+> `optional` **customStyles**: `CoinDetailTopSectionCustomStyles`
+
+Optional style overrides for the top container.

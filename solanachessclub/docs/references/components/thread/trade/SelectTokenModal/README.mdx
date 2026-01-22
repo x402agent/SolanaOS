@@ -1,0 +1,43 @@
+---
+title: "components/thread/SelectTokenModal"
+description: "A modal component for selecting tokens from a list of verified tokens"
+---
+
+[**solana-social-kit**](../../../README.mdx)
+
+***
+
+[solana-social-kit](../../../README.mdx) / components/thread/SelectTokenModal
+
+# SelectTokenModal Component
+
+The SelectTokenModal provides a searchable interface for selecting tokens from a list of verified tokens fetched from Jupiter's API.
+
+## Overview
+
+- Displays a searchable list of verified tokens
+- Fetches token data from Jupiter API
+- Supports filtering by symbol, name, or address
+- Shows token logos and details
+- Handles loading states
+- Features responsive UI with clean styling
+
+## Usage
+
+```tsx
+import SelectTokenModal, { TokenInfo } from 'path/to/components/thread/trade/SelectTokenModal';
+
+<SelectTokenModal
+  visible={showTokenModal}
+  onClose={() => setShowTokenModal(false)}
+  onTokenSelected={(token) => setSelectedToken(token)}
+/>
+```
+
+## Interfaces
+
+- [TokenInfo](interfaces/TokenInfo.mdx) - Information about a token
+
+## Functions
+
+- [default](functions/default.mdx) - Main component implementation

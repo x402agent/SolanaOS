@@ -1,0 +1,114 @@
+---
+title: "Function: getMergedWalletTheme()"
+description: "> **getMergedWalletTheme**(`userTheme`?): `object`"
+---
+
+[**solana-social-kit**](../../../../README.mdx)
+
+***
+
+[solana-social-kit](../../../../README.mdx) / [components/wallet/wallet.styles](../README.mdx) / getMergedWalletTheme
+
+# Function: getMergedWalletTheme()
+
+> **getMergedWalletTheme**(`userTheme`?): `object`
+
+Defined in: [src/components/wallet/wallet.styles.ts:21](https://github.com/SendArcade/solana-app-kit/blob/bd4b3556b8f469c27ebb06f4df65b3a36b43ba3b/src/components/wallet/wallet.styles.ts#L21)
+
+Merges a user-provided theme with the default wallet theme
+
+## Parameters
+
+### userTheme?
+
+`Partial`\<\{ `--wallet-bg-primary`: `string`; `--wallet-bg-secondary`: `string`; `--wallet-border-color`: `string`; `--wallet-button-bg`: `string`; `--wallet-button-padding`: `number`; `--wallet-button-text-color`: `string`; `--wallet-container-padding`: `number`; `--wallet-font-size`: `number`; `--wallet-input-border-color`: `string`; `--wallet-input-text-color`: `string`; `--wallet-text-primary`: `string`; `--wallet-text-secondary`: `string`; \}\>
+
+Optional user-provided theme overrides
+
+## Returns
+
+`object`
+
+The merged theme object
+
+### --wallet-bg-primary
+
+> **--wallet-bg-primary**: `string` = `'#FFFFFF'`
+
+Primary background color for the wallet container
+
+### --wallet-bg-secondary
+
+> **--wallet-bg-secondary**: `string` = `'#F2F3F5'`
+
+Secondary background color for UI elements like buttons
+
+### --wallet-border-color
+
+> **--wallet-border-color**: `string` = `'#EDEFF3'`
+
+Border color for UI elements
+
+### --wallet-button-bg
+
+> **--wallet-button-bg**: `string` = `'#2B8EF0'`
+
+Background color for primary action buttons
+
+### --wallet-button-padding
+
+> **--wallet-button-padding**: `number` = `12`
+
+Vertical padding for buttons
+
+### --wallet-button-text-color
+
+> **--wallet-button-text-color**: `string` = `'#FFFFFF'`
+
+Text color for primary action buttons
+
+### --wallet-container-padding
+
+> **--wallet-container-padding**: `number` = `16`
+
+Padding for the main container
+
+### --wallet-font-size
+
+> **--wallet-font-size**: `number` = `14`
+
+Base font size for text elements
+
+### --wallet-input-border-color
+
+> **--wallet-input-border-color**: `string` = `'#E0E0E0'`
+
+Border color for input fields
+
+### --wallet-input-text-color
+
+> **--wallet-input-text-color**: `string` = `'#232324'`
+
+Text color for input fields
+
+### --wallet-text-primary
+
+> **--wallet-text-primary**: `string` = `'#232324'`
+
+Primary text color for main content
+
+### --wallet-text-secondary
+
+> **--wallet-text-secondary**: `string` = `'#434445'`
+
+Secondary text color for supporting content
+
+## Example
+
+```typescript
+const customTheme = {
+  '--wallet-bg-primary': '#000000',
+  '--wallet-text-primary': '#ffffff'
+};
+const mergedTheme = getMergedWalletTheme(customTheme);
+```

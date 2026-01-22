@@ -1,0 +1,62 @@
+
+---
+title: "Function: createAndBuyTokenViaPumpfun()"
+description: "Create a new token and immediately purchase it on Pump.fun"
+---
+
+[**solana-social-kit**](../../../../README.mdx)
+
+***
+
+[solana-social-kit](../../../../README.mdx) / [services/pumpfun/pumpfunService](../README.mdx) / createAndBuyTokenViaPumpfun
+
+# Function: createAndBuyTokenViaPumpfun()
+
+> **createAndBuyTokenViaPumpfun**(`params`): `Promise<{ success: boolean; txId: string; mintPublicKey: string }>`
+
+Defined in: [src/services/pumpfun/pumpfunService.ts:35](https://github.com/SendArcade/solana-app-kit/blob/main/src/services/pumpfun/pumpfunService.ts#L35)
+
+Creates a new token and optionally buys it in a single transaction.
+This function handles both token creation and initial liquidity provision:
+1. Uploads token metadata and image to the server
+2. Creates a new token with specified name, symbol, and metadata
+3. Optionally buys the token to establish initial price
+
+## Parameters
+```
+| Parameter | Type | Description |
+| :------ | :------ | :------ |
+| `params` | `Object` | Parameters for token creation and purchase |
+| `params.userPublicKey` | `string` | Public key of the creator wallet |
+| `params.tokenName` | `string` | Name for the new token |
+| `params.tokenSymbol` | `string` | Symbol for the new token |
+| `params.description` | `string` | Description of the token |
+| `params.twitter?` | `string` | Optional Twitter handle |
+| `params.telegram?` | `string` | Optional Telegram group link |
+| `params.website?` | `string` | Optional website URL |
+| `params.imageUri` | `string` | URI to token image |
+| `params.solAmount` | `number` | Amount of SOL to spend in initial buy |
+| `params.slippageBasisPoints?` | `bigint` | Optional slippage tolerance (default 500 = 5%) |
+| `params.solanaWallet` | `any` | Privy wallet instance for signing transactions |
+```
+## Returns
+```
+| Type | Description |
+| :------ | :------ |
+| `Promise<{ success: boolean; txId: string; mintPublicKey: string }>` | Transaction result with signature and new token mint address |
+```
+## Example
+
+```typescript
+const result = await createAndBuyTokenViaPumpfun({
+  userPublicKey: wallet.publicKey,
+  tokenName: "My Test Token",
+  tokenSymbol: "TEST",
+  description: "A token for testing",
+  imageUri: "file:///data/user/0/com.example/cache/ImagePicker/image.png",
+  solAmount: 0.1,
+  solanaWallet: wallet
+});
+
+console.log(`Created token: ${result.mintPublicKey}`);
+```

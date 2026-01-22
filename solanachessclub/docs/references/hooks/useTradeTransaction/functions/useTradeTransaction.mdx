@@ -1,0 +1,77 @@
+title: "Function: useTradeTransaction()"
+description: "Hook to handle Solana trade transactions for both Privy & MWA wallets"
+---
+
+[**solana-social-kit**](../../../README.mdx)
+
+***
+
+[solana-social-kit](../../../README.mdx) / [hooks/useTradeTransaction](../README.mdx) / useTradeTransaction
+
+# Function: useTradeTransaction()
+
+```tsx
+useTradeTransaction(): { 
+  sendTrade: (mode: 'priority' | 'jito', recipient: string, amountSol: number) => Promise<void>; 
+  replicateJupiterTrade: (tradeData: TradeData, mode: 'priority' | 'jito') => Promise<void>;
+}
+```
+
+Defined in: [src/hooks/useTradeTransaction.ts:33](https://github.com/SendArcade/solana-app-kit/blob/main/src/hooks/useTradeTransaction.ts#L33)
+
+Hook to handle trade transactions for both Privy & Mobile Wallet Adapter (MWA). Provides functions to:
+1. Send direct SOL transfers with priority or Jito bundle transactions
+2. Replicate Jupiter swap trades with provided trade data
+
+## Returns
+
+Object with the following methods:
+
+### sendTrade()
+
+```tsx
+sendTrade: (mode: 'priority' | 'jito', recipient: string, amountSol: number) => Promise<void>
+```
+
+Sends a SOL transfer transaction using either priority fee or Jito bundle transaction.
+
+#### Parameters
+
+| Parameter | Type                    | Description                          |
+| :-------- | :---------------------- | :----------------------------------- |
+| mode      | `'priority' \| 'jito'`  | Transaction mode (priority fee or Jito bundle) |
+| recipient | string                  | Recipient wallet address             |
+| amountSol | number                  | Amount of SOL to send                |
+
+### replicateJupiterTrade()
+
+```tsx
+replicateJupiterTrade: (tradeData: TradeData, mode: 'priority' | 'jito') => Promise<void>
+```
+
+Replicates a Jupiter swap with the given trade data.
+
+#### Parameters
+
+| Parameter | Type       | Description                                  |
+| :-------- | :--------- | :------------------------------------------- |
+| tradeData | TradeData  | Object containing trade parameters           |
+| mode      | `'priority' \| 'jito'` | Transaction mode (priority fee or Jito bundle) |
+
+##### TradeData Properties
+```
+| Property              | Type   | Description                           |
+| :-------------------- | :----- | :------------------------------------ |
+| inputMint?            | string | Input token mint address              |
+| outputMint?           | string | Output token mint address             |
+| inputAmountLamports?  | string | Input amount in lamports              |
+| outputAmountLamports? | string | Output amount in lamports             |
+| token1Avatar?         | any    | Input token avatar                    |
+| token1Name?           | string | Input token name                      |
+| token1PriceUsd?       | string | Input token price in USD              |
+| token2Avatar?         | any    | Output token avatar                   |
+| token2Name?           | string | Output token name                     |
+| token2PriceUsd?       | string | Output token price in USD             |
+| token2PriceSol?       | string | Output token price in SOL             |
+| aggregator?           | string | Aggregator used for the swap          |
+```

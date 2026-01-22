@@ -1,0 +1,95 @@
+---
+title: "Function: default()"
+description: "> **default**(`props`): `Element`"
+---
+
+[**solana-social-kit**](../../../../../README.mdx)
+
+***
+
+[solana-social-kit](../../../../../README.mdx) / [components/profile](../README.mdx) / default
+
+# Function: default()
+
+> **default**(`props`): `Element`
+
+Defined in: [src/components/Profile/profile.tsx](https://github.com/SendArcade/solana-app-kit/blob/main/src/components/Profile/profile.tsx)
+
+A top-level Profile screen component that fetches user data, displays profile info, posts, and NFTs.
+
+## Parameters
+
+### props
+
+```ts
+interface ProfileProps {
+  isOwnProfile?: boolean;
+  user: {
+    address: string;
+    profilePicUrl?: string;
+    username?: string;
+  };
+  posts?: ThreadPost[];
+  nfts?: NftItem[];
+  loadingNfts?: boolean;
+  fetchNftsError?: string | null;
+  containerStyle?: object;
+}
+```
+
+## Returns
+
+`Element`
+
+## Component
+
+## Description
+
+`Profile` is a higher-level component that manages the user's overall profile data and view. It handles:
+- Fetching additional profile data (username, avatar)
+- Managing followers/following
+- Merging post data
+- Merging NFT data (or default fetch)
+- Rendering `ProfileView` to display the final UI
+
+**Features**:
+- Optional local or remote image picking for avatar
+- NFT-based avatar selection
+- Username editing
+- Follow/unfollow logic
+
+## Example
+
+```tsx
+<Profile
+  isOwnProfile={true}
+  user={{ address: 'YourWalletAddressHere' }}
+/>
+```
+
+### (C) `profile.style` docs
+
+**File**: `docs/references/components/Profile/profile.style/README.mdx`
+
+---
+title: "components/profile.style"
+description: "Documentation for components/profile.style"
+---
+
+[**solana-social-kit**](../../../README.mdx)
+
+***
+
+[solana-social-kit](../../../README.mdx) / components/profile.style
+
+# components/profile.style
+
+This file exports style objects used in `Profile.tsx` for modals, confirmations, etc. It includes:
+
+- `styles.container`
+- `modalStyles.overlay`, `modalStyles.optionContainer`, ...
+- `confirmModalStyles.overlay`, ...
+- `inlineConfirmStyles.container`, ...
+- `editNameModalStyles.overlay`, ...
+
+They help control layout for picking avatars, editing the username, and confirming changes.

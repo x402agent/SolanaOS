@@ -1,0 +1,208 @@
+import {StyleSheet} from 'react-native';
+
+export const PumpfunBuyStyles = StyleSheet.create({
+  sectionTitle: {
+    fontSize: 20,
+    fontWeight: '700',
+    marginBottom: 12,
+    color: '#333',
+  },
+  label: {
+    fontSize: 14,
+    fontWeight: '600',
+    marginVertical: 6,
+    color: '#555',
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 8,
+    padding: 10,
+    backgroundColor: '#fafafa',
+    marginBottom: 12,
+  },
+  pasteButton: {
+    backgroundColor: '#007AFF',
+    paddingHorizontal: 14,
+    paddingVertical: 10,
+    borderRadius: 8,
+    alignSelf: 'flex-start',
+    marginBottom: 12,
+  },
+  pasteButtonText: {
+    color: '#fff',
+    fontWeight: '600',
+  },
+  buyButton: {
+    marginTop: 16,
+    backgroundColor: '#28a745',
+    borderRadius: 8,
+    padding: 14,
+    alignItems: 'center',
+  },
+  buyButtonText: {
+    color: '#fff',
+    fontWeight: '700',
+    fontSize: 16,
+  },
+  statusText: {
+    backgroundColor: '#f8f8f8',
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+    borderRadius: 6,
+    marginBottom: 12,
+    color: '#333',
+    fontSize: 14,
+    textAlign: 'center',
+  },
+});
+
+export const PumpfunSellStyles = StyleSheet.create({
+  sectionTitle: {
+    fontSize: 20,
+    fontWeight: '700',
+    marginBottom: 12,
+    color: '#333',
+  },
+  label: {
+    fontSize: 14,
+    fontWeight: '600',
+    marginBottom: 6,
+    color: '#555',
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 8,
+    padding: 10,
+    backgroundColor: '#fafafa',
+    marginBottom: 12,
+  },
+  sellButton: {
+    marginTop: 16,
+    backgroundColor: '#dc3545',
+    borderRadius: 8,
+    padding: 14,
+    alignItems: 'center',
+  },
+  sellButtonText: {
+    color: '#fff',
+    fontWeight: '700',
+    fontSize: 16,
+  },
+  maxButton: {
+    backgroundColor: '#ffc107',
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 8,
+    alignSelf: 'flex-start',
+    marginBottom: 12,
+  },
+  maxButtonText: {
+    color: '#fff',
+    fontWeight: '600',
+    fontSize: 12,
+  },
+  feeEstimate: {
+    fontStyle: 'italic',
+    fontSize: 12,
+    color: '#666',
+    marginBottom: 12,
+  },
+  statusText: {
+    backgroundColor: '#f8f8f8',
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+    borderRadius: 6,
+    marginBottom: 12,
+    color: '#333',
+    fontSize: 14,
+    textAlign: 'center',
+  },
+});
+
+export const PumpfunLaunchStyles = StyleSheet.create({
+  header: {
+    fontSize: 20,
+    fontWeight: '800',
+    marginBottom: 20,
+    textAlign: 'center',
+    color: '#333',
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: '#ddd',
+    borderRadius: 8,
+    padding: 12,
+    backgroundColor: '#f9f9f9',
+    marginBottom: 12,
+  },
+  imageButton: {
+    backgroundColor: '#0070FF',
+    padding: 12,
+    borderRadius: 8,
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  imageButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  imagePreview: {
+    width: 100,
+    height: 100,
+    alignSelf: 'center',
+    marginBottom: 16,
+    borderRadius: 8,
+  },
+  launchButton: {
+    backgroundColor: '#0070FF',
+    padding: 14,
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+  launchButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  statusText: {
+    marginVertical: 16,
+    fontWeight: '500',
+    textAlign: 'center',
+    color: '#0070FF',
+  },
+  verificationSection: {
+    backgroundColor: '#f5f8ff',
+    padding: 16,
+    borderRadius: 8,
+    marginBottom: 16,
+    borderWidth: 1,
+    borderColor: '#e0e7ff',
+  },
+  verificationTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+    marginBottom: 12,
+    color: '#333',
+  },
+  switchRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  switchLabel: {
+    fontSize: 14,
+    color: '#444',
+    flex: 1,
+    paddingRight: 8,
+  },
+  verificationNote: {
+    fontSize: 12,
+    color: '#666',
+    fontStyle: 'italic',
+    marginTop: 8,
+  },
+});

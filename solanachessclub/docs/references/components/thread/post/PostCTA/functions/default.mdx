@@ -1,0 +1,109 @@
+---
+title: "Function: default()"
+description: "> **default**(`__namedParameters`): `Element`"
+---
+
+[**solana-social-kit**](../../../../README.mdx)
+
+***
+
+[solana-social-kit](../../../../README.mdx) / [components/thread/PostCTA](../README.mdx) / default
+
+# Function: default()
+
+> **default**(`__namedParameters`): `Element`
+
+A component that displays call-to-action buttons for posts with trade or NFT content.
+
+## Parameters
+
+### \_\_namedParameters
+
+`PostCTAProps`
+
+```typescript
+interface PostCTAProps {
+  /** The post data to display the CTA for */
+  post: ThreadPost;
+  /** Theme overrides for customizing appearance */
+  themeOverrides?: Partial<Record<string, any>>;
+  /** Style overrides for specific components */
+  styleOverrides?: {
+    container?: StyleProp<ViewStyle>;
+    button?: StyleProp<ViewStyle>;
+    buttonLabel?: StyleProp<TextStyle>;
+  };
+  /** User-provided stylesheet overrides */
+  userStyleSheet?: {
+    container?: StyleProp<ViewStyle>;
+    button?: StyleProp<ViewStyle>;
+    buttonLabel?: StyleProp<TextStyle>;
+  };
+}
+```
+
+## Returns
+
+`Element`
+
+## Component Details
+
+### Key Functions
+
+1. **getPostSectionType**
+   ```typescript
+   function getPostSectionType(post: ThreadPost): 'trade' | 'nft' | 'collection' | null
+   ```
+   Determines the type of CTA to display based on the post's sections.
+
+2. **getTradeData**
+   ```typescript
+   function getTradeData(post: ThreadPost): TradeData | null
+   ```
+   Extracts trade data from a post's TEXT_TRADE section.
+
+3. **handleBuyListedNft**
+   ```typescript
+   async function handleBuyListedNft(): Promise<void>
+   ```
+   Handles the NFT purchase process including transaction creation and signing.
+
+4. **handleBuyCollectionFloor**
+   ```typescript
+   async function handleBuyCollectionFloor(): Promise<void>
+   ```
+   Handles the purchase of floor NFT from a collection.
+
+### Features
+
+- Automatic CTA type detection
+- Integrated wallet connection checks
+- Transaction status feedback
+- Error handling and user notifications
+- Loading state management
+- Modal-based interfaces for trades and confirmations
+
+## Example
+
+```tsx
+<PostCTA
+  post={{
+    id: '123',
+    sections: [{
+      type: 'TEXT_TRADE',
+      tradeData: {
+        inputMint: 'SOL',
+        outputMint: 'USDC',
+        inputSymbol: 'SOL',
+        outputSymbol: 'USDC'
+      }
+    }]
+  }}
+  themeOverrides={{
+    '--primary-color': '#1D9BF0'
+  }}
+  styleOverrides={{
+    button: { backgroundColor: '#1D9BF0' }
+  }}
+/>
+```

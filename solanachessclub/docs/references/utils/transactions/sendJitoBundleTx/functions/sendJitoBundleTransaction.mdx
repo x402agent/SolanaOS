@@ -1,0 +1,50 @@
+---
+title: "Function: sendJitoBundleTransaction()"
+description: "> **sendJitoBundleTransaction**(`provider`, `feeTier`, `instructions`, `walletPublicKey`, `connection`, `feeMapping`): `Promise`\<`string`\>"
+---
+
+[**solana-social-kit**](../../../../README.mdx)
+
+***
+
+[solana-social-kit](../../../../README.mdx) / [utils/transactions/sendJitoBundleTx](../README.mdx) / sendJitoBundleTransaction
+
+# Function: sendJitoBundleTransaction()
+
+> **sendJitoBundleTransaction**(`provider`, `feeTier`, `instructions`, `walletPublicKey`, `connection`, `feeMapping`): `Promise`\<`string`\>
+
+Defined in: [src/utils/transactions/sendJitoBundleTx.ts:29](https://github.com/SendArcade/solana-app-kit/blob/bd4b3556b8f469c27ebb06f4df65b3a36b43ba3b/src/utils/transactions/sendJitoBundleTx.ts#L29)
+
+For Jito bundling, we cannot do a typical "signAndSendTransaction" because
+we must push multiple transactions to the block engine. Instead we do the partial
+signature flow with `signTransaction`, then we call `sendJitoBundle`.
+
+## Parameters
+
+### provider
+
+`any`
+
+### feeTier
+
+`"low"` | `"medium"` | `"high"` | `"very-high"`
+
+### instructions
+
+`TransactionInstruction`[]
+
+### walletPublicKey
+
+`PublicKey`
+
+### connection
+
+`Connection`
+
+### feeMapping
+
+`Record`\<`string`, `number`\>
+
+## Returns
+
+`Promise`\<`string`\>

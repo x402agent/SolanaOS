@@ -1,0 +1,22 @@
+# Repository Structure
+
+The **solana-app-kit** repository is organized into these main parts:
+
+## 📁 Main Directories
+
+1. **`android/`** and **`ios/`** - Standard Native directories for React Native</span>. They contain platform-specific configuration, build scripts, Gradle/Xcode files, images, launch icons, etc.
+
+2. **`server/`** - A simple server (Express/TypeScript)</span> containing APIs for:
+   * 🔄 Jupiter/Raydium swap integration
+   * 📤 Uploading NFT metadata
+   * 🗃️ Database migrations (Knex)
+   * 📝 Program IDs & wrappers for on-chain instructions (token_mill, jupiterSwap, etc.)
+   * 🎨 Pumpfun metadata upload
+
+3. **`src/`** - The core library code</span>, which includes all React Native components, hooks, services, Redux slices, types, and utilities. This is where the majority of library functionality resides.
+
+4. **Root files** (`App.tsx`, `index.js`, `package.json`, `metro.config.js`, etc.) - Basic React Native project configuration</span>, bundler config, Babel setup, and scripts.
+
+---
+
+### 🔍 Coming Next: Details of the src/ directory structure

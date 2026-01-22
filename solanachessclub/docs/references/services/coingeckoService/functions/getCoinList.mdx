@@ -1,0 +1,57 @@
+---
+title: "Function: getCoinList()"
+description: "Fetch the full coin list from CoinGecko API"
+---
+
+[**solana-social-kit**](../../../README.mdx)
+
+***
+
+[solana-social-kit](../../../README.mdx) / [services/coingeckoService](../README.mdx) / getCoinList
+
+# Function: getCoinList()
+
+> **getCoinList**(): `Promise<Array<{ id: string; symbol: string; name: string }>>`
+
+Defined in: [src/services/coingeckoService.ts:15](https://github.com/SendArcade/solana-app-kit/blob/main/src/services/coingeckoService.ts#L15)
+
+Fetches the complete list of cryptocurrencies from the CoinGecko API.
+This function returns a comprehensive list of coins with their basic information.
+
+**Note**: The raw list can be large (thousands of coins), so be mindful of performance when using this data.
+
+## Parameters
+
+This function does not accept any parameters.
+
+## Returns
+
+| Type | Description |
+| :------ | :------ |
+| `Promise<Array<{ id: string; symbol: string; name: string }>>` | Array of coin objects with id, symbol, and name properties |
+
+## Errors
+
+- Throws error if the API request fails
+- Throws error if the response is not a valid array
+
+## Example
+
+```typescript
+import { getCoinList } from 'services/coingeckoService';
+
+async function fetchCoins() {
+  try {
+    const coins = await getCoinList();
+    console.log(`Loaded ${coins.length} coins`);
+    
+    // Example of filtering coins
+    const solanaRelated = coins.filter(coin => 
+      coin.name.toLowerCase().includes('solana') ||
+      coin.symbol.toLowerCase().includes('sol')
+    );
+  } catch (error) {
+    console.error('Failed to fetch coin list:', error);
+  }
+}
+``` 

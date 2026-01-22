@@ -1,0 +1,71 @@
+---
+title: "Function: uploadProfileAvatar()"
+description: "Upload a profile avatar image for a specific user"
+---
+
+[**solana-social-kit**](../../../README.mdx)
+
+***
+
+[solana-social-kit](../../../README.mdx) / [services/profileService](../README.mdx) / uploadProfileAvatar
+
+# Function: uploadProfileAvatar()
+
+> **uploadProfileAvatar**(`userWallet`: string, `localFileUri`: string): `Promise<string>`
+
+Defined in: [src/services/profileService.ts:14](https://github.com/SendArcade/solana-app-kit/blob/main/src/services/profileService.ts#L14)
+
+Uploads a profile avatar image for a given user to the server. This function handles the multipart/form-data
+request required for file uploads and returns the remote URL where the avatar can be accessed.
+
+## Parameters
+```
+| Parameter | Type | Description |
+| :------ | :------ | :------ |
+| `userWallet` | `string` | The user's wallet address (unique ID) |
+| `localFileUri` | `string` | Local file URI of the image to upload |
+```
+## Returns
+```
+| Type | Description |
+| :------ | :------ |
+| `Promise<string>` | The remote URL where the uploaded avatar can be accessed |
+```
+## Errors
+
+- Throws error if any required parameters are missing
+- Throws error if the server request fails
+- Throws error if the server returns an unsuccessful response
+
+## Example
+
+```typescript
+import { uploadProfileAvatar } from 'services/profileService';
+import * as ImagePicker from 'expo-image-picker';
+
+async function selectAndUploadAvatar(userWalletAddress: string) {
+  try {
+    // Pick an image from the device
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 0.8,
+    });
+    
+    if (!result.canceled && result.assets && result.assets.length > 0) {
+      const selectedImageUri = result.assets[0].uri;
+      
+      // Upload the selected image as profile avatar
+      const avatarUrl = await uploadProfileAvatar(userWalletAddress, selectedImageUri);
+      console.log('Avatar uploaded successfully:', avatarUrl);
+      
+      // You can now update your UI or state with the new avatar URL
+      return avatarUrl;
+    }
+  } catch (error) {
+    console.error('Failed to upload avatar:', error);
+    throw error;
+  }
+}
+```

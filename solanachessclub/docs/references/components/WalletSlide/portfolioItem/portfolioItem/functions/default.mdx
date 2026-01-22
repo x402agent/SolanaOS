@@ -1,0 +1,65 @@
+---
+title: "Function: default()"
+description: "> **default**(`props`, `deprecatedLegacyContext`?): `ReactNode`"
+---
+
+[**solana-social-kit**](../../../../../README.mdx)
+
+***
+
+[solana-social-kit](../../../../../README.mdx) / [components/WalletSlide/portfolioItem/portfolioItem](../README.mdx) / default
+
+# Function: default()
+
+> **default**(`props`, `deprecatedLegacyContext`?): `ReactNode`
+
+Defined in: [src/components/WalletSlide/portfolioItem/portfolioItem.tsx:49](https://github.com/SendArcade/solana-app-kit/blob/bd4b3556b8f469c27ebb06f4df65b3a36b43ba3b/src/components/WalletSlide/portfolioItem/portfolioItem.tsx#L49)
+
+A component that displays individual token information in a portfolio
+
+## Parameters
+
+### props
+
+`PortfolioItemProps`
+
+### deprecatedLegacyContext?
+
+`any`
+
+**Deprecated**
+
+**See**
+
+[React Docs](https://legacy.reactjs.org/docs/legacy-context.html#referencing-context-in-lifecycle-methods)
+
+## Returns
+
+`ReactNode`
+
+## Component
+
+## Description
+
+PortfolioItem is a reusable component that displays detailed information
+about a single token in a user's portfolio. It shows:
+- Token icon/logo
+- Token name with verification badge
+- Token amount
+- USD value
+- Profit/loss information
+
+The component is designed to be used in a list of portfolio items,
+providing a consistent and clean layout for token information.
+
+## Example
+
+```tsx
+<PortfolioItem
+  imagePath={require('./token-icon.png')}
+  tokenName="Solana"
+  tokenAmount="123.45"
+  usdValue="$1,234.56"
+  profit="+12.34%"
+/>
+```

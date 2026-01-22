@@ -1,0 +1,33 @@
+---
+title: "Function: useFetchTokens()"
+description: "Hook for fetching token accounts for a Solana wallet address"
+---
+
+[**solana-social-kit**](../../../README.mdx)
+
+***
+
+[solana-social-kit](../../../README.mdx) / [hooks/useFetchTokens](../README.mdx) / useFetchTokens
+
+# Function: useFetchTokens()
+
+> **useFetchTokens**(walletAddress?: string): `{ tokens: TokenEntry[]; loading: boolean; error: string | null; }`
+
+Defined in: [src/hooks/useFetchTokens.ts:4](https://github.com/SendArcade/solana-app-kit/blob/main/src/hooks/useFetchTokens.ts#L4)
+
+A React hook that fetches token accounts for a given Solana wallet address.
+The hook automatically refetches when the wallet address changes.
+
+## Parameters
+
+| Parameter | Type | Description |
+| :------ | :------ | :------ |
+| `walletAddress?` | `string` | The Solana wallet address to fetch tokens for |
+
+## Returns
+
+| Property | Type | Description |
+| :------ | :------ | :------ |
+| `tokens` | `TokenEntry[]` | Array of token accounts with their metadata |
+| `loading` | `boolean` | Indicates if tokens are currently being fetched |
+| `error` | `string` \| `null` | Error message if the fetch operation failed | 

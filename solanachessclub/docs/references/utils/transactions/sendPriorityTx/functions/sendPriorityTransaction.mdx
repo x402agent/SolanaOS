@@ -1,0 +1,46 @@
+---
+title: "Function: sendPriorityTransaction()"
+description: "> **sendPriorityTransaction**(`provider`, `feeTier`, `instructions`, `connection`, `walletPublicKey`, `feeMapping`): `Promise`\<`string`\>"
+---
+
+[**solana-social-kit**](../../../../README.mdx)
+
+***
+
+[solana-social-kit](../../../../README.mdx) / [utils/transactions/sendPriorityTx](../README.mdx) / sendPriorityTransaction
+
+# Function: sendPriorityTransaction()
+
+> **sendPriorityTransaction**(`provider`, `feeTier`, `instructions`, `connection`, `walletPublicKey`, `feeMapping`): `Promise`\<`string`\>
+
+Defined in: [src/utils/transactions/sendPriorityTx.ts:12](https://github.com/SendArcade/solana-app-kit/blob/bd4b3556b8f469c27ebb06f4df65b3a36b43ba3b/src/utils/transactions/sendPriorityTx.ts#L12)
+
+## Parameters
+
+### provider
+
+`any`
+
+### feeTier
+
+`"low"` | `"medium"` | `"high"` | `"very-high"`
+
+### instructions
+
+`TransactionInstruction`[]
+
+### connection
+
+`Connection`
+
+### walletPublicKey
+
+`PublicKey`
+
+### feeMapping
+
+`Record`\<`string`, `number`\>
+
+## Returns
+
+`Promise`\<`string`\>

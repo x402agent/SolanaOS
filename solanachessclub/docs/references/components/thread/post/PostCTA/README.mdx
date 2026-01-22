@@ -1,0 +1,44 @@
+---
+title: "components/thread/PostCTA"
+description: "A component that displays call-to-action buttons for posts with trade or NFT content"
+---
+
+[**solana-social-kit**](../../../README.mdx)
+
+***
+
+[solana-social-kit](../../../README.mdx) / components/thread/PostCTA
+
+# PostCTA Component
+
+The PostCTA component renders appropriate call-to-action buttons based on the post's content type, specializing in trade and NFT interactions.
+
+## Overview
+
+- Dynamically displays CTAs based on post content (trade, NFT, collection)
+- Provides "Copy Trade" functionality for trade posts
+- Offers NFT purchase integration for NFT listings
+- Handles collection floor NFT purchases
+- Manages loading states and error handling
+- Integrates with Solana wallet for transactions
+- Customizable through theme and style overrides
+
+## Usage
+
+```tsx
+import PostCTA from 'path/to/components/thread/post/PostCTA';
+
+<PostCTA 
+  post={postData}
+  themeOverrides={customTheme}
+  styleOverrides={{
+    button: { backgroundColor: '#1D9BF0' },
+    buttonLabel: { color: 'white' }
+  }}
+  userStyleSheet={userDefinedStyles}
+/>
+```
+
+## Functions
+
+- [default](functions/default.mdx) - Main component implementation

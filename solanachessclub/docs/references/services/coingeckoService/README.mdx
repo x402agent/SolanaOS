@@ -1,0 +1,27 @@
+---
+title: "services/coingeckoService"
+description: "Service for accessing cryptocurrency data from CoinGecko API"
+---
+
+[**solana-social-kit**](../../README.mdx)
+
+***
+
+[solana-social-kit](../../README.mdx) / services/coingeckoService
+
+# services/coingeckoService
+
+A collection of asynchronous functions to interface with the CoinGecko API. This service enables fetching cryptocurrency data including coin listings, market data, and OHLC (Open-High-Low-Close) price charts. All fetch logic resides in this service to keep business logic separate from hooks and components.
+
+## Features
+
+- Fetch comprehensive coin listings from CoinGecko
+- Retrieve detailed market data for specific coins
+- Access historical price data in various timeframes
+- Error handling for API responses
+
+## Functions
+
+- [getCoinList](functions/getCoinList.mdx) - Fetch the full list of coins from CoinGecko
+- [getCoinMarkets](functions/getCoinMarkets.mdx) - Fetch market data for a specific coin
+- [getCoinOHLC](functions/getCoinOHLC.mdx) - Fetch OHLC price data for a specific coin 

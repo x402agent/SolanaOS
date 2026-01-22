@@ -1,0 +1,137 @@
+---
+title: "Function: createWalletStyles()"
+description: "> **createWalletStyles**(`theme`, `overrideStyles`?, `userStyleSheet`?): `object`"
+---
+
+[**solana-social-kit**](../../../../README.mdx)
+
+***
+
+[solana-social-kit](../../../../README.mdx) / [components/wallet/wallet.styles](../README.mdx) / createWalletStyles
+
+# Function: createWalletStyles()
+
+> **createWalletStyles**(`theme`, `overrideStyles`?, `userStyleSheet`?): `object`
+
+Defined in: [src/components/wallet/wallet.styles.ts:63](https://github.com/SendArcade/solana-app-kit/blob/bd4b3556b8f469c27ebb06f4df65b3a36b43ba3b/src/components/wallet/wallet.styles.ts#L63)
+
+Creates a complete set of wallet styles by merging multiple style sources
+
+## Parameters
+
+### theme
+
+The merged theme object
+
+#### --wallet-bg-primary
+
+`string` = `'#FFFFFF'`
+
+Primary background color for the wallet container
+
+#### --wallet-bg-secondary
+
+`string` = `'#F2F3F5'`
+
+Secondary background color for UI elements like buttons
+
+#### --wallet-border-color
+
+`string` = `'#EDEFF3'`
+
+Border color for UI elements
+
+#### --wallet-button-bg
+
+`string` = `'#2B8EF0'`
+
+Background color for primary action buttons
+
+#### --wallet-button-padding
+
+`number` = `12`
+
+Vertical padding for buttons
+
+#### --wallet-button-text-color
+
+`string` = `'#FFFFFF'`
+
+Text color for primary action buttons
+
+#### --wallet-container-padding
+
+`number` = `16`
+
+Padding for the main container
+
+#### --wallet-font-size
+
+`number` = `14`
+
+Base font size for text elements
+
+#### --wallet-input-border-color
+
+`string` = `'#E0E0E0'`
+
+Border color for input fields
+
+#### --wallet-input-text-color
+
+`string` = `'#232324'`
+
+Text color for input fields
+
+#### --wallet-text-primary
+
+`string` = `'#232324'`
+
+Primary text color for main content
+
+#### --wallet-text-secondary
+
+`string` = `'#434445'`
+
+Secondary text color for supporting content
+
+### overrideStyles?
+
+Optional explicit style overrides
+
+### userStyleSheet?
+
+Optional user-provided style sheet
+
+## Returns
+
+`object`
+
+The final merged styles object
+
+## Description
+
+This function creates a complete set of wallet styles by merging styles from
+multiple sources in the following order:
+1. Default wallet theme
+2. Optional user-provided theme
+3. Base wallet styles
+4. Optional user style sheet
+5. Explicit override styles
+
+The resulting styles object includes styles for:
+- Container layout
+- Headers and text
+- Provider buttons
+- Connect button
+- Input fields
+- Status text
+
+## Example
+
+```typescript
+const theme = getMergedWalletTheme();
+const styles = createWalletStyles(theme, {
+  container: { backgroundColor: '#000' }
+});
+```

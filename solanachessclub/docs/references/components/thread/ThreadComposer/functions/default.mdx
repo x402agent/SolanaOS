@@ -1,0 +1,55 @@
+---
+title: "Function: default()"
+description: "> **default**(`__namedParameters`): `Element`"
+---
+
+[**solana-social-kit**](../../../../README.mdx)
+
+***
+
+[solana-social-kit](../../../../README.mdx) / [components/thread/ThreadComposer](../README.mdx) / default
+
+# Function: default()
+
+> **default**(`__namedParameters`): `Element`
+
+Defined in: [src/components/thread/ThreadComposer.tsx:79](https://github.com/SendArcade/solana-app-kit/blob/bd4b3556b8f469c27ebb06f4df65b3a36b43ba3b/src/components/thread/ThreadComposer.tsx#L79)
+
+A component for composing new posts and replies in a thread
+
+## Parameters
+
+### \_\_namedParameters
+
+`ThreadComposerProps`
+
+## Returns
+
+`Element`
+
+## Component
+
+## Description
+
+ThreadComposer provides a rich text editor for creating new posts and replies in a thread.
+It supports text input, image attachments, and NFT listings. The component handles both
+root-level posts and nested replies, with appropriate styling and behavior for each case.
+
+Features:
+- Text input with placeholder text
+- Image attachment support
+- NFT listing integration
+- Reply composition
+- Offline fallback support
+- Customizable theming
+
+## Example
+
+```tsx
+<ThreadComposer
+  currentUser={user}
+  parentId="post-123" // Optional, for replies
+  onPostCreated={() => refetchPosts()}
+  themeOverrides={{ '--primary-color': '#1D9BF0' }}
+/>
+```

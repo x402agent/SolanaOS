@@ -1,0 +1,55 @@
+---
+title: "Function: default()"
+description: "> **default**(`__namedParameters`): `Element`"
+---
+
+[**solana-social-kit**](../../../../../README.mdx)
+
+***
+
+[solana-social-kit](../../../../../README.mdx) / [components/thread/sections/SectionPoll](../README.mdx) / default
+
+# Function: default()
+
+> **default**(`__namedParameters`): `Element`
+
+Defined in: [src/components/thread/sections/SectionPoll.tsx:42](https://github.com/SendArcade/solana-app-kit/blob/bd4b3556b8f469c27ebb06f4df65b3a36b43ba3b/src/components/thread/sections/SectionPoll.tsx#L42)
+
+A component that renders a poll in a post section
+
+## Parameters
+
+### \_\_namedParameters
+
+`SectionPollProps`
+
+## Returns
+
+`Element`
+
+## Component
+
+## Description
+
+SectionPoll displays a poll with a question and multiple options in a post.
+Each option shows the number of votes it has received, and the entire poll
+is displayed in a styled container with a light background.
+
+Features:
+- Question display
+- Multiple options support
+- Vote count display
+- Consistent styling
+- Missing data handling
+
+## Example
+
+```tsx
+<SectionPoll
+  pollData={{
+    question: "What's your favorite color?",
+    options: ["Red", "Blue", "Green"],
+    votes: [10, 15, 8]
+  }}
+/>
+```

@@ -1,0 +1,9 @@
+ignoredBuiltDependencies:
+  - bcrypt
+
+onlyBuiltDependencies:
+  - bigint-buffer
+  - bufferutil
+  - react-native-inappbrowser-reborn
+  - sharp
+  - utf-8-validate

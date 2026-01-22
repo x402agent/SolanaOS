@@ -1,0 +1,20 @@
+# src/config
+
+Central place for configuration settings and constants.
+
+## Key Files
+
+### ⚙️ constants.ts
+Key environment-based constants:
+- Jupiter endpoints
+- Raydium endpoints
+- Public keys (wSOL mint, default tip accounts, etc.)
+
+### 📤 index.ts
+Exports default configs:
+- `DefaultAuthConfig`
+- `DefaultTransactionConfig`
+- `DefaultMockDataConfig`
+- Merges them in `DefaultCustomizationConfig`
+
+> **Note:** The user can override these to customize provider settings or network fees.

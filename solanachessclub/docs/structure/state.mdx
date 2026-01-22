@@ -1,0 +1,69 @@
+# State Management
+
+Solana App Kit provides a comprehensive state management solution using Redux Toolkit. Our state modules are designed to be modular, allowing you to import only what you need.
+
+## Auth State
+
+The auth state slice handles user authentication, profiles, and session management.
+
+### Structure
+
+```typescript
+interface AuthState {
+  isLoggedIn: boolean;
+  user: {
+    id?: string;
+    username?: string;
+    profilePicture?: string;
+    walletAddress?: string;
+    // other user properties
+  };
+  loading: boolean;
+  error: string | null;
+}
+```
+
+### Key Functions
+
+- `loginSuccess` - Updates state after successful authentication
+- `logoutSuccess` - Clears user data on logout
+- `fetchUserProfile` - Async thunk for retrieving user profile data
+- `updateUsername` - Updates the user's username in the database
+- `updateProfilePic` - Updates the user's profile picture
+
+### Usage
+
+```javascript
+import { useDispatch, useSelector } from 'react-redux';
+import { 
+  loginSuccess, 
+  logoutSuccess, 
+  updateUsername, 
+  updateProfilePic 
+} from 'solana-app-kit';
+
+// In your component
+const dispatch = useDispatch();
+const { user, isLoggedIn } = useSelector(state => state.auth);
+
+// Update username
+const changeUsername = () => {
+  dispatch(updateUsername({ 
+    userId: user.id, 
+    newUsername: 'newUsername' 
+  }));
+};
+
+// Update profile picture
+const changeProfilePic = (imageUrl) => {
+  dispatch(updateProfilePic(imageUrl));
+};
+```
+
+## Other State Slices
+
+- **Thread State** - Manages social posting, comments, and engagement
+- **Transaction State** - Handles pending and completed blockchain transactions
+- **Wallet State** - Manages wallet connections and token balances
+
+See individual state module documentation for more details on each slice.

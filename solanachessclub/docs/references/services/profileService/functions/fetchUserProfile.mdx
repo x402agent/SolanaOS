@@ -1,0 +1,70 @@
+---
+title: "Function: fetchUserProfile()"
+description: "Fetch a user's complete profile information"
+---
+
+[**solana-social-kit**](../../../README.mdx)
+
+***
+
+[solana-social-kit](../../../README.mdx) / [services/profileService](../README.mdx) / fetchUserProfile
+
+# Function: fetchUserProfile()
+
+> **fetchUserProfile**(`userId`: string): `Promise<{ url: string; username: string; attachmentData: any }>`
+
+Defined in: [src/services/profileService.ts:114](https://github.com/SendArcade/solana-app-kit/blob/main/src/services/profileService.ts#L114)
+
+Retrieves a user's complete profile information from the server. This function fetches profile details
+including profile image URL, username, and any additional attachment data associated with the user.
+
+## Parameters
+```
+| Parameter | Type | Description |
+| :------ | :------ | :------ |
+| `userId` | `string` | The user's wallet address or unique ID |
+```
+## Returns
+
+| Type | Description |
+| :------ | :------ |
+| `Promise<{ url: string; username: string; attachmentData: any }>` | Object containing the user's profile information |
+
+### Return Object Properties
+
+- `url`: URL to the user's profile image
+- `username`: The user's display name
+- `attachmentData`: Additional profile data (varies based on implementation)
+
+## Errors
+
+- Throws an error if the profile fetch request fails
+
+## Example
+
+```typescript
+import { fetchUserProfile } from 'services/profileService';
+
+async function loadAndDisplayUserProfile(walletAddress: string) {
+  try {
+    const profileData = await fetchUserProfile(walletAddress);
+    
+    console.log(`Username: ${profileData.username}`);
+    console.log(`Profile Image: ${profileData.url}`);
+    
+    // Example of using the profile data in a React component
+    return (
+      <View>
+        <Image source={{ uri: profileData.url }} style={styles.avatar} />
+        <Text style={styles.username}>{profileData.username}</Text>
+        {profileData.attachmentData.bio && (
+          <Text style={styles.bio}>{profileData.attachmentData.bio}</Text>
+        )}
+      </View>
+    );
+  } catch (error) {
+    console.error('Error loading user profile:', error);
+    // Handle the error or show a default profile
+  }
+}
+```

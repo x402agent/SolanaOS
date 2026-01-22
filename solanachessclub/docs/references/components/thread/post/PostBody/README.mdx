@@ -1,0 +1,49 @@
+---
+title: "components/thread/PostBody"
+description: "A component for rendering multi-section post content"
+---
+
+[**solana-social-kit**](../../../README.mdx)
+
+***
+
+[solana-social-kit](../../../README.mdx) / components/thread/PostBody
+
+# PostBody Component
+
+The PostBody component renders the content sections of a thread post, supporting multiple types of content including text, images, videos, polls, trades, and NFT listings.
+
+## Overview
+
+- Renders multiple content sections within a post
+- Delegates rendering to specialized section components
+- Supports customizable styling
+- Optimized with React.memo for better performance
+- Configurable theme and style overrides
+
+## Section Types
+
+The component can render the following section types:
+- Text only content
+- Text with images
+- Text with videos
+- Trading information
+- Polls
+- NFT listings
+
+## Usage
+
+```tsx
+import PostBody from 'path/to/components/thread/post/PostBody';
+
+<PostBody 
+  post={postData}
+  themeOverrides={customTheme}
+  styleOverrides={customStyles}
+  externalRefreshTrigger={refreshCounter}
+/>
+```
+
+## Functions
+
+- [default](functions/default.mdx) - Main component implementation

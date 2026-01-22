@@ -1,0 +1,49 @@
+{
+  "expo": {
+    "name": "Solana App Kit",
+    "slug": "solana-app-kit",
+    "scheme": "solanaappkit",
+    "version": "0.0.1",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "android": {
+      "package": "com.example.solanaappkit",
+      "adaptiveIcon": {
+        "backgroundColor": "#ffffff"
+      },
+      "permissions": [
+        "android.permission.RECORD_AUDIO"
+      ]
+    },
+    "ios": {
+      "bundleIdentifier": "com.example.solanaappkit",
+      "infoPlist": {
+        "NSPhotoLibraryUsageDescription": "We need access to your photos to let you pick images."
+      }
+    },
+    "plugins": [
+      "expo-secure-store",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "We need access to your photos to let you pick images."
+        }
+      ],
+      [
+        "expo-dev-client",
+        {
+          "launchMode": "most-recent"
+        }
+      ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "YOUR_PROJECT_ID_HERE"
+      }
+    },
+    "owner": "YOUR_OWNER_HERE"
+  }
+} 

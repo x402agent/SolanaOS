@@ -1,0 +1,45 @@
+---
+title: "components/thread/TradeModal"
+description: "A modal component for executing token trades and sharing them on the feed"
+---
+
+[**solana-social-kit**](../../../README.mdx)
+
+***
+
+[solana-social-kit](../../../README.mdx) / components/thread/TradeModal
+
+# TradeModal Component
+
+The TradeModal component provides an interface for users to execute token trades on Solana and share them on the social feed.
+
+## Overview
+
+- Handles two main flows:
+  - Swap & Share (execute token trade and post a summary)
+  - Pick an existing transaction signature & share it
+- Provides token selection interface with Jupiter integration
+- Features interactive UI with loading states and error handling
+- Includes a confirmation modal for sharing trades
+- Implements Solana wallet integration for transaction signing
+- Supports customizable token selection
+
+## Usage
+
+```tsx
+import TradeModal from 'path/to/components/thread/trade/TradeModal';
+
+<TradeModal
+  visible={showTradeModal}
+  onClose={() => setShowTradeModal(false)}
+  currentUser={userObject}
+  onPostCreated={handlePostCreated}
+  initialInputToken={solToken}
+  initialOutputToken={usdcToken}
+  disableTabs={false}
+/>
+```
+
+## Functions
+
+- [default](functions/default.mdx) - Main component implementation

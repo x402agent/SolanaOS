@@ -1,0 +1,41 @@
+---
+title: "components/thread/PostFooter"
+description: "A component for rendering the footer section of a thread post with interaction controls"
+---
+
+[**solana-social-kit**](../../../README.mdx)
+
+***
+
+[solana-social-kit](../../../README.mdx) / components/thread/PostFooter
+
+# PostFooter Component
+
+The PostFooter component renders the bottom section of a thread post, providing various interaction controls and displaying engagement metrics.
+
+## Overview
+
+- Displays comment, retweet, and reaction counts
+- Provides interactive buttons for user engagement
+- Features an emoji reaction selector
+- Includes bookmark functionality
+- Integrates with Redux for state management
+- Opens a retweet modal for sharing content
+- Customizable through theme and style overrides
+
+## Usage
+
+```tsx
+import PostFooter from 'path/to/components/thread/post/PostFooter';
+
+<PostFooter 
+  post={postData}
+  onPressComment={handleComment}
+  themeOverrides={customTheme}
+  styleOverrides={customStyles}
+/>
+```
+
+## Functions
+
+- [default](functions/default.mdx) - Main component implementation

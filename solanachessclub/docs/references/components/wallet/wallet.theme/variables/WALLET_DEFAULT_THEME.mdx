@@ -1,0 +1,116 @@
+---
+title: "Variable: WALLET\_DEFAULT\_THEME"
+description: "> `const` **WALLET\_DEFAULT\_THEME**: `object`"
+---
+
+[**solana-social-kit**](../../../../README.mdx)
+
+***
+
+[solana-social-kit](../../../../README.mdx) / [components/wallet/wallet.theme](../README.mdx) / WALLET\_DEFAULT\_THEME
+
+# Variable: WALLET\_DEFAULT\_THEME
+
+> `const` **WALLET\_DEFAULT\_THEME**: `object`
+
+Defined in: [src/components/wallet/wallet.theme.ts:28](https://github.com/SendArcade/solana-app-kit/blob/bd4b3556b8f469c27ebb06f4df65b3a36b43ba3b/src/components/wallet/wallet.theme.ts#L28)
+
+Default theme configuration for the wallet component
+
+## Type declaration
+
+### --wallet-bg-primary
+
+> **--wallet-bg-primary**: `string` = `'#FFFFFF'`
+
+Primary background color for the wallet container
+
+### --wallet-bg-secondary
+
+> **--wallet-bg-secondary**: `string` = `'#F2F3F5'`
+
+Secondary background color for UI elements like buttons
+
+### --wallet-border-color
+
+> **--wallet-border-color**: `string` = `'#EDEFF3'`
+
+Border color for UI elements
+
+### --wallet-button-bg
+
+> **--wallet-button-bg**: `string` = `'#2B8EF0'`
+
+Background color for primary action buttons
+
+### --wallet-button-padding
+
+> **--wallet-button-padding**: `number` = `12`
+
+Vertical padding for buttons
+
+### --wallet-button-text-color
+
+> **--wallet-button-text-color**: `string` = `'#FFFFFF'`
+
+Text color for primary action buttons
+
+### --wallet-container-padding
+
+> **--wallet-container-padding**: `number` = `16`
+
+Padding for the main container
+
+### --wallet-font-size
+
+> **--wallet-font-size**: `number` = `14`
+
+Base font size for text elements
+
+### --wallet-input-border-color
+
+> **--wallet-input-border-color**: `string` = `'#E0E0E0'`
+
+Border color for input fields
+
+### --wallet-input-text-color
+
+> **--wallet-input-text-color**: `string` = `'#232324'`
+
+Text color for input fields
+
+### --wallet-text-primary
+
+> **--wallet-text-primary**: `string` = `'#232324'`
+
+Primary text color for main content
+
+### --wallet-text-secondary
+
+> **--wallet-text-secondary**: `string` = `'#434445'`
+
+Secondary text color for supporting content
+
+## Description
+
+WALLET_DEFAULT_THEME defines the default visual styling for the wallet component.
+It uses CSS custom properties (variables) to define various aspects of the UI,
+making it easy to customize the appearance while maintaining consistency.
+
+The theme includes:
+- Background colors for different UI elements
+- Text colors for various content types
+- Border and input field styling
+- Button appearance
+- Spacing and sizing measurements
+
+## Example
+
+```typescript
+// Override specific theme values
+const customTheme = {
+  ...WALLET_DEFAULT_THEME,
+  '--wallet-bg-primary': '#000000',
+  '--wallet-text-primary': '#ffffff'
+};
+```

@@ -1,0 +1,55 @@
+---
+title: "Function: default()"
+description: "> **default**(`__namedParameters`): `Element`"
+---
+
+[**solana-social-kit**](../../../../README.mdx)
+
+***
+
+[solana-social-kit](../../../../README.mdx) / [components/thread/ThreadItem](../README.mdx) / default
+
+# Function: default()
+
+> **default**(`__namedParameters`): `Element`
+
+Defined in: [src/components/thread/ThreadItem.tsx:64](https://github.com/SendArcade/solana-app-kit/blob/bd4b3556b8f469c27ebb06f4df65b3a36b43ba3b/src/components/thread/ThreadItem.tsx#L64)
+
+A component that renders an individual post within a thread
+
+## Parameters
+
+### \_\_namedParameters
+
+`ThreadItemProps`
+
+## Returns
+
+`Element`
+
+## Component
+
+## Description
+
+ThreadItem displays a single post with its replies in a threaded discussion.
+It handles post interactions like replying, deleting, and showing nested responses.
+The component supports customizable styling and themes.
+
+Features:
+- Displays post content with author information
+- Shows nested replies
+- Handles post deletion
+- Supports reply composition
+- Customizable appearance through themes
+
+## Example
+
+```tsx
+<ThreadItem
+  post={postData}
+  currentUser={user}
+  rootPosts={allPosts}
+  depth={0}
+  onPressPost={handlePostPress}
+/>
+```

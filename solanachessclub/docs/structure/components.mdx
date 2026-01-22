@@ -1,0 +1,57 @@
+# src/components
+
+This directory houses reusable React Native UI components organized into logical subfolders.
+
+## Component Subfolders
+
+### 📱 BlinkRequestCard
+Example of a UI card that was used for Dialect "blink" requests.
+
+### 👤 otherProfile
+Renders a user's profile with:
+- Top navigation
+- ProfileInfo
+- Slider of posts
+- Other profile-related UI elements
+
+### 🚀 pumpfun
+React components for integrating the Pump.fun token lifecycle:
+- `PumpfunBuySection`
+- `PumpfunSellSection`
+- `PumpfunLaunchSection`
+- Other components handling token operations
+
+### 💬 thread
+The largest subfolder containing all code for a "Thread" or "Post" system:
+
+| File/Folder | Description |
+|-------------|-------------|
+| `Thread.tsx` | Renders a list of root posts, optional composer, and sub-threads |
+| `ThreadItem.tsx` | One post or "thread item," including PostHeader, PostFooter, recursion for replies |
+| `PostHeader`, `PostBody`, `PostFooter`, `PostCTA` | Breaks out post sections (header with avatar, main body with text/images, etc.) |
+| `thread.types.ts` | Types for post sections, user data, trades, polls |
+| `sections/` | Files like `SectionTextOnly`, `SectionNftListing`, `SectionPoll` that display particular types of content |
+| `TradeModal.tsx` | Specialized modal replicating Jupiter swap transactions for demonstration/copy trading |
+| `thread.styles.ts` and `thread.theme.ts` | Define theming & styling utilities |
+
+### 💰 tokenMill
+UI with integration of "Token Mill" features:
+- Create markets
+- Staking
+- Vesting
+- Custom bonding curve configurations
+
+### 📊 TradeCard
+A read-only card showing input token → output token, used for "copy trade" functionality.
+
+## Notable Shared Components
+
+### ✏️ ThreadComposer.tsx
+Lets a user type a new post or reply, with features for:
+- Image picking
+- NFT listing
+- Trade sharing
+- Other interactive elements
+
+### 💱 TradeCard.tsx
+Takes trade data (input symbol, output symbol, aggregator info, etc.) and displays it as a styled "swap preview" card.

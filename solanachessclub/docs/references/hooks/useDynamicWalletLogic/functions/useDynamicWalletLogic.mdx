@@ -1,0 +1,82 @@
+---
+title: "Function: useDynamicWalletLogic()"
+description: "> **useDynamicWalletLogic**(): `object`"
+---
+
+[**solana-social-kit**](../../../README.mdx)
+
+***
+
+[solana-social-kit](../../../README.mdx) / [hooks/useDynamicWalletLogic](../README.mdx) / useDynamicWalletLogic
+
+# Function: useDynamicWalletLogic()
+
+> **useDynamicWalletLogic**(): `object`
+
+Defined in: [src/hooks/useDynamicWalletLogic.ts:5](https://github.com/SendArcade/solana-app-kit/blob/bd4b3556b8f469c27ebb06f4df65b3a36b43ba3b/src/hooks/useDynamicWalletLogic.ts#L5)
+
+## Returns
+
+`object`
+
+### handleDynamicLogin()
+
+> **handleDynamicLogin**: (`__namedParameters`) => `Promise`\<`void`\>
+
+#### Parameters
+
+##### \_\_namedParameters
+
+###### loginMethod?
+
+`"email"` \| `"sms"` \| `"google"` = `'email'`
+
+###### setStatusMessage?
+
+(`msg`) => `void`
+
+#### Returns
+
+`Promise`\<`void`\>
+
+### handleDynamicLogout()
+
+> **handleDynamicLogout**: (`setStatusMessage`?) => `Promise`\<`void`\>
+
+#### Parameters
+
+##### setStatusMessage?
+
+(`msg`) => `void`
+
+#### Returns
+
+`Promise`\<`void`\>
+
+### monitorDynamicWallet()
+
+> **monitorDynamicWallet**: (`__namedParameters`) => `Promise`\<`void`\>
+
+#### Parameters
+
+##### \_\_namedParameters
+
+###### onWalletConnected?
+
+(`info`) => `void`
+
+###### setStatusMessage?
+
+(`msg`) => `void`
+
+#### Returns
+
+`Promise`\<`void`\>
+
+### user
+
+> **user**: `any`
+
+### walletAddress
+
+> **walletAddress**: `null` \| `string`

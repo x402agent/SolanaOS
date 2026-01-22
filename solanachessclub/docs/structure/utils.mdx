@@ -1,0 +1,32 @@
+# src/utils
+
+General-purpose helpers and utility functions.
+
+## Utility Categories
+
+### 🚀 pumpfun/pumpfunUtils.ts
+Pump.fun integration utilities:
+- Setting up the AnchorProvider
+- Bridging to Raydium or Pumpfun buy/sell instructions
+- Helper methods for token operations
+
+### 💱 transactions/
+Transaction processing utilities:
+
+| File | Purpose |
+|------|---------|
+| `sendPriorityTx.ts` | Uses `ComputeBudgetProgram.setComputeUnitPrice` for a single sign+send |
+| `sendJitoBundleTx.ts` | Sends versioned transactions to Jito's block engine |
+| `jitoBundling.ts` | Contains logic to create a "bundle" of transactions for Jito |
+
+### 🔄 common/fetch.ts
+Network and data utilities:
+- Implements retry logic
+- Methods to fetch user's token accounts
+- SOL balance retrieval
+- Other data fetching operations
+
+### 🧩 polyfills.ts
+Compatibility utilities:
+- Fallback for `structuredClone` if needed
+- Other polyfills as required

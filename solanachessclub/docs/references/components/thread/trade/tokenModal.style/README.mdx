@@ -1,0 +1,43 @@
+---
+title: "components/thread/tokenModal.style"
+description: "StyleSheet for the SelectTokenModal component"
+---
+
+[**solana-social-kit**](../../../README.mdx)
+
+***
+
+[solana-social-kit](../../../README.mdx) / components/thread/tokenModal.style
+
+# tokenModal.style
+
+A stylesheet for the SelectTokenModal component, providing styling for the token selection interface.
+
+## Overview
+
+- Modal overlay and container styling
+- Title and search input formatting
+- Token list item layout and appearance
+- Token logo and text presentation
+- Close button design
+- Responsive layout with proper spacing
+
+## Usage
+
+```tsx
+import tokenModalStyles from 'path/to/components/thread/trade/tokenModal.style';
+
+<View style={tokenModalStyles.modalContainer}>
+  <Text style={tokenModalStyles.modalTitle}>Select a Token</Text>
+  <TouchableOpacity style={tokenModalStyles.tokenItem}>
+    <View style={tokenModalStyles.tokenItemContent}>
+      <Image style={tokenModalStyles.tokenLogo} />
+      <Text style={tokenModalStyles.tokenSymbol}>SOL</Text>
+    </View>
+  </TouchableOpacity>
+</View>
+```
+
+## Variables
+
+- [default](variables/default.mdx) - Default exported StyleSheet

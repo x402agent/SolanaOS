@@ -1,0 +1,74 @@
+---
+title: "Function: default()"
+description: "> **default**(`props`): `Element`"
+---
+
+[**solana-social-kit**](../../../../../README.mdx)
+
+***
+
+[solana-social-kit](../../../../../README.mdx) / [components/ProfileView](../README.mdx) / default
+
+# Function: default()
+
+> **default**(`props`): `Element`
+
+Defined in: [src/components/Profile/ProfileView.tsx](https://github.com/SendArcade/solana-app-kit/blob/main/src/components/Profile/ProfileView.tsx)
+
+A layout component that combines `ProfileInfo` and a tabbed slider view.
+
+## Parameters
+
+```ts
+interface ProfileViewProps {
+  isOwnProfile: boolean;
+  user: UserProfileData;
+  myPosts: ThreadPost[];
+  myNFTs: NftItem[];
+  loadingNfts: boolean;
+  fetchNftsError: string | null;
+  onAvatarPress?: () => void;
+  onEditProfile?: () => void;
+  amIFollowing?: boolean;
+  areTheyFollowingMe?: boolean;
+  onFollowPress?: () => void;
+  onUnfollowPress?: () => void;
+  followersCount?: number;
+  followingCount?: number;
+  onPressFollowers?: () => void;
+  onPressFollowing?: () => void;
+  onPressPost?: (post: ThreadPost) => void;
+  containerStyle?: StyleProp<ViewStyle>;
+}
+```
+
+## Returns
+
+`Element`
+
+## Component
+
+## Description
+
+`ProfileView` is a presentational component that arranges:
+- The top portion (ProfileInfo)
+- The bottom portion (SwipeTabs for posts, collectibles, actions)
+
+This is meant to be a lightweight wrapper that you can embed in your own screens if you already have user data, or as part of the higher-level `Profile` component.
+
+## Example
+
+```tsx
+<ProfileView
+  isOwnProfile={true}
+  user={{
+    address: '0x1234...',
+    profilePicUrl: 'https://example.com/avatar.png',
+    username: 'Alice'
+  }}
+  myPosts={allPosts}
+  myNFTs={allNfts}
+  loadingNfts={false}
+  fetchNftsError={null}
+/>
+```

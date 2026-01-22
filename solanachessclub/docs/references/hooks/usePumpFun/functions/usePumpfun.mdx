@@ -1,0 +1,106 @@
+---
+title: "Function: usePumpfun()"
+description: "> **usePumpfun**(): `object`"
+---
+
+[**solana-social-kit**](../../../README.mdx)
+
+***
+
+[solana-social-kit](../../../README.mdx) / [hooks/usePumpFun](../README.mdx) / usePumpfun
+
+# Function: usePumpfun()
+
+> **usePumpfun**(): `object`
+
+Defined in: [src/hooks/usePumpFun.ts:15](https://github.com/SendArcade/solana-app-kit/blob/bd4b3556b8f469c27ebb06f4df65b3a36b43ba3b/src/hooks/usePumpFun.ts#L15)
+
+usePumpfun hook: centralizes buy, sell, and launch logic for Pumpfun tokens.
+
+## Returns
+
+`object`
+
+### buyToken()
+
+> **buyToken**: (`__namedParameters`) => `Promise`\<`void`\>
+
+#### Parameters
+
+##### \_\_namedParameters
+
+###### solAmount
+
+`number`
+
+###### tokenAddress
+
+`string`
+
+#### Returns
+
+`Promise`\<`void`\>
+
+### launchToken()
+
+> **launchToken**: (`__namedParameters`) => `Promise`\<`void`\>
+
+#### Parameters
+
+##### \_\_namedParameters
+
+###### description?
+
+`string` = `''`
+
+###### imageUri
+
+`string`
+
+###### solAmount
+
+`number`
+
+###### telegram?
+
+`string` = `''`
+
+###### tokenName
+
+`string`
+
+###### tokenSymbol
+
+`string`
+
+###### twitter?
+
+`string` = `''`
+
+###### website?
+
+`string` = `''`
+
+#### Returns
+
+`Promise`\<`void`\>
+
+### sellToken()
+
+> **sellToken**: (`__namedParameters`) => `Promise`\<`void`\>
+
+#### Parameters
+
+##### \_\_namedParameters
+
+###### tokenAddress
+
+`string`
+
+###### tokenAmount
+
+`number`
+
+#### Returns
+
+`Promise`\<`void`\>

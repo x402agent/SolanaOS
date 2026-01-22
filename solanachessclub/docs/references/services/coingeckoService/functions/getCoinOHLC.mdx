@@ -1,0 +1,74 @@
+---
+title: "Function: getCoinOHLC()"
+description: "Fetch OHLC price data for a specific coin from CoinGecko API"
+---
+
+[**solana-social-kit**](../../../README.mdx)
+
+***
+
+[solana-social-kit](../../../README.mdx) / [services/coingeckoService](../README.mdx) / getCoinOHLC
+
+# Function: getCoinOHLC()
+
+> **getCoinOHLC**(`coinId`: string, `days`: string): `Promise<Array<number[]>>`
+
+Defined in: [src/services/coingeckoService.ts:66](https://github.com/SendArcade/solana-app-kit/blob/main/src/services/coingeckoService.ts#L66)
+
+Fetches OHLC (Open-High-Low-Close) price data for a specific cryptocurrency over a given time period.
+This function is primarily used for generating price charts and tracking price movements over time.
+
+## Parameters
+
+| Parameter | Type | Description |
+| :------ | :------ | :------ |
+| `coinId` | `string` | CoinGecko coin ID (e.g., 'bitcoin', 'ethereum', 'solana') |
+| `days` | `string` | Time period for data. Accepted values: '1', '7', '14', '30', '90', '180', '365', 'max' |
+
+## Returns
+
+| Type | Description |
+| :------ | :------ |
+| `Promise<Array<number[]>>` | Array of OHLC data points, where each data point is an array of numbers |
+
+### Return Data Format
+
+Each item in the returned array is an array with the following structure:
+`[timestamp, open, high, low, close]`
+
+- `timestamp`: Unix timestamp in milliseconds
+- `open`: Opening price for the period
+- `high`: Highest price during the period
+- `low`: Lowest price during the period
+- `close`: Closing price for the period
+
+## Errors
+
+- Throws error if the API request fails (e.g., 404 for non-existent coin)
+- Throws error if the response is not a valid array
+
+## Example
+
+```typescript
+import { getCoinOHLC } from 'services/coingeckoService';
+
+async function fetchBitcoinChart() {
+  try {
+    // Get 30-day OHLC data for Bitcoin
+    const ohlcData = await getCoinOHLC('bitcoin', '30');
+    
+    // Extract closing prices and timestamps for a chart
+    const timestamps = ohlcData.map(item => item[0]);
+    const closingPrices = ohlcData.map(item => item[4]);
+    
+    // Calculate price change over the period
+    const startPrice = closingPrices[0];
+    const endPrice = closingPrices[closingPrices.length - 1];
+    const percentChange = ((endPrice - startPrice) / startPrice) * 100;
+    
+    console.log(`Bitcoin 30-day change: ${percentChange.toFixed(2)}%`);
+  } catch (error) {
+    console.error('Failed to fetch Bitcoin OHLC data:', error);
+  }
+}
+``` 

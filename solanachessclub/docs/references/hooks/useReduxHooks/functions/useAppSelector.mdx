@@ -1,0 +1,60 @@
+---
+title: "Function: useAppSelector()"
+description: "## Call Signature"
+---
+
+[**solana-social-kit**](../../../README.mdx)
+
+***
+
+[solana-social-kit](../../../README.mdx) / [hooks/useReduxHooks](../README.mdx) / useAppSelector
+
+# Function: useAppSelector()
+
+## Call Signature
+
+> **useAppSelector**\<`TSelected`\>(`selector`, `equalityFn`?): `TSelected`
+
+Defined in: [src/hooks/useReduxHooks.ts:5](https://github.com/SendArcade/solana-app-kit/blob/bd4b3556b8f469c27ebb06f4df65b3a36b43ba3b/src/hooks/useReduxHooks.ts#L5)
+
+### Type Parameters
+
+• **TSelected**
+
+### Parameters
+
+#### selector
+
+(`state`) => `TSelected`
+
+#### equalityFn?
+
+`EqualityFn`\<`NoInfer`\<`TSelected`\>\>
+
+### Returns
+
+`TSelected`
+
+## Call Signature
+
+> **useAppSelector**\<`Selected`\>(`selector`, `options`?): `Selected`
+
+Defined in: [src/hooks/useReduxHooks.ts:5](https://github.com/SendArcade/solana-app-kit/blob/bd4b3556b8f469c27ebb06f4df65b3a36b43ba3b/src/hooks/useReduxHooks.ts#L5)
+
+### Type Parameters
+
+• **Selected** = `unknown`
+
+### Parameters
+
+#### selector
+
+(`state`) => `Selected`
+
+#### options?
+
+`UseSelectorOptions`\<`Selected`\>
+
+### Returns
+
+`Selected`

@@ -1,0 +1,84 @@
+---
+title: "Function: useCoingecko()"
+description: "A unified hook that fetches and manages cryptocurrency data from CoinGecko"
+---
+
+[**solana-social-kit**](../../../README.mdx)
+
+***
+
+[solana-social-kit](../../../README.mdx) / [hooks/useCoingecko](../README.mdx) / useCoingecko
+
+# Function: useCoingecko()
+
+> **useCoingecko**(): `{
+>   coinList: Array<{ id: string; symbol: string; name: string }>;
+>   loadingCoinList: boolean;
+>   coinListError: string | null;
+>   searchResults: Array<{ id: string; symbol: string; name: string }>;
+>   searchCoins: (query: string) => void;
+>   fetchCoinList: () => Promise<void>;
+>   selectedCoinId: string;
+>   setSelectedCoinId: (id: string) => void;
+>   timeframe: Timeframe;
+>   setTimeframe: (tf: Timeframe) => void;
+>   marketCap: number;
+>   liquidityScore: number;
+>   fdv: number;
+>   graphData: number[];
+>   timestamps: number[];
+>   timeframePrice: number;
+>   timeframeChangeUsd: number;
+>   timeframeChangePercent: number;
+>   loadingMarketData: boolean;
+>   loadingOHLC: boolean;
+>   coinError: string | null;
+>   refreshCoinData: () => Promise<void>;
+> }`
+
+Defined in: [src/hooks/useCoingecko.ts:21](https://github.com/SendArcade/solana-app-kit/blob/main/src/hooks/useCoingecko.ts#L21)
+
+A unified hook that:
+1) Fetches and caches the full CoinGecko coin list (with local searching)
+2) Allows selecting a single coin to fetch market data (market cap, FDV, liquidity, etc)
+3) Fetches OHLC data for that coin in a chosen timeframe
+
+All fetch logic is delegated to `coingeckoService`.
+
+## Returns
+
+Object containing:
+
+### Coin List Searching
+- **coinList**: Array of coins with id, symbol, and name
+- **loadingCoinList**: Boolean indicating if coin list is loading
+- **coinListError**: Error message if coin list fetch failed
+- **searchResults**: Results after searching through coinList
+- **searchCoins**: Function to search coins by name or symbol
+- **fetchCoinList**: Function to manually refresh the coin list
+
+### Single Coin Selection
+- **selectedCoinId**: Current selected coin ID
+- **setSelectedCoinId**: Function to change selected coin
+- **timeframe**: Current timeframe for OHLC data
+- **setTimeframe**: Function to change timeframe
+
+### Market Data
+- **marketCap**: Market capitalization of selected coin
+- **liquidityScore**: Liquidity score (volume/market cap ratio)
+- **fdv**: Fully diluted valuation
+
+### OHLC Data
+- **graphData**: Array of price data points
+- **timestamps**: Array of timestamps for each data point
+- **timeframePrice**: Current price in selected timeframe
+- **timeframeChangeUsd**: Price change in USD
+- **timeframeChangePercent**: Price change in percentage
+
+### Status
+- **loadingMarketData**: Boolean indicating if market data is loading
+- **loadingOHLC**: Boolean indicating if OHLC data is loading
+- **coinError**: Error message for coin data fetching
+
+### Actions
+- **refreshCoinData**: Function to manually refresh coin data 

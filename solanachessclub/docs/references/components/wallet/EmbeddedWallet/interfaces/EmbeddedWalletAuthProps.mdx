@@ -1,0 +1,57 @@
+---
+title: "Interface: EmbeddedWalletAuthProps"
+description: "Defined in: [src/components/wallet/EmbeddedWallet.tsx:12](https://github.com/SendArcade/solana-app-kit/blob/bd4b3556b8f469c27ebb06f4df65b3a36b43ba3b/src/components/wallet/EmbeddedWallet.tsx#L12)"
+---
+
+[**solana-social-kit**](../../../../README.mdx)
+
+***
+
+[solana-social-kit](../../../../README.mdx) / [components/wallet/EmbeddedWallet](../README.mdx) / EmbeddedWalletAuthProps
+
+# Interface: EmbeddedWalletAuthProps
+
+Defined in: [src/components/wallet/EmbeddedWallet.tsx:12](https://github.com/SendArcade/solana-app-kit/blob/bd4b3556b8f469c27ebb06f4df65b3a36b43ba3b/src/components/wallet/EmbeddedWallet.tsx#L12)
+
+Props for the EmbeddedWalletAuth component
+ EmbeddedWalletAuthProps
+
+## Properties
+
+### authMode?
+
+> `optional` **authMode**: `"login"` \| `"signup"`
+
+Defined in: [src/components/wallet/EmbeddedWallet.tsx:21](https://github.com/SendArcade/solana-app-kit/blob/bd4b3556b8f469c27ebb06f4df65b3a36b43ba3b/src/components/wallet/EmbeddedWallet.tsx#L21)
+
+The authentication mode to use (defaults to 'login')
+
+***
+
+### onWalletConnected()
+
+> **onWalletConnected**: (`info`) => `void`
+
+Defined in: [src/components/wallet/EmbeddedWallet.tsx:14](https://github.com/SendArcade/solana-app-kit/blob/bd4b3556b8f469c27ebb06f4df65b3a36b43ba3b/src/components/wallet/EmbeddedWallet.tsx#L14)
+
+Callback function that receives wallet connection information
+
+#### Parameters
+
+##### info
+
+###### address
+
+`string`
+
+The connected wallet's public key
+
+###### provider
+
+`"privy"` \| `"dynamic"` \| `"turnkey"`
+
+The authentication provider used
+
+#### Returns
+
+`void`

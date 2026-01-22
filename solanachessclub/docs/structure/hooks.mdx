@@ -1,0 +1,39 @@
+# src/hooks
+
+Custom React hooks to abstract logic across the application.
+
+## Available Hooks
+
+### 🔐 useAuth.ts
+Central login logic for connecting via Privy, Dynamic, or Turnkey:
+- Dispatches Redux actions for `loginSuccess` or `logoutSuccess`
+- Manages authentication state
+
+### 🚀 usePumpfun.ts
+Wraps Pump.fun's token functions:
+- Buy token functionality
+- Sell token functionality
+- Launch token functionality
+- Error handling
+
+### 💱 useTradeTransaction.ts
+Example hooking into transaction processing:
+- Jito integration
+- Priority fee transactions
+- Replicates Jupiter trades if needed
+
+### 🔄 useReduxHooks.ts
+Shorthand for typed Redux hooks:
+- `useAppSelector`
+- `useAppDispatch`
+
+### 🖼️ useFetchNFTs.ts
+NFT management:
+- Retrieves the user's NFTs from Tensor API
+- Handles loading states
+- Manages error states
+
+### 🧭 useAppNavigation.ts
+Navigation utilities:
+- Creates a navigation ref for global navigation
+- Provides typed usage of stack/tab navigation

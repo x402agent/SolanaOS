@@ -1,0 +1,56 @@
+---
+title: "Function: default()"
+description: "> **default**(`__namedParameters`): `Element`"
+---
+
+[**solana-social-kit**](../../../../README.mdx)
+
+***
+
+[solana-social-kit](../../../../README.mdx) / [components/tokenMill/BondingCurveCard](../README.mdx) / default
+
+# Function: default()
+
+> **default**(`__namedParameters`): `Element`
+
+Defined in: [src/components/tokenMill/BondingCurveCard.tsx:56](https://github.com/SendArcade/solana-app-kit/blob/bd4b3556b8f469c27ebb06f4df65b3a36b43ba3b/src/components/tokenMill/BondingCurveCard.tsx#L56)
+
+A component for configuring and setting bonding curves for token markets
+
+## Parameters
+
+### \_\_namedParameters
+
+`BondingCurveCardProps`
+
+## Returns
+
+`Element`
+
+## Component
+
+## Description
+
+BondingCurveCard provides an interface for configuring and setting bonding curves
+for token markets. It combines a configurator component for setting ask and bid
+prices with functionality to commit these settings to the blockchain.
+
+Features:
+- Bonding curve configuration
+- Ask and bid price management
+- On-chain curve setting
+- Loading state handling
+- Error handling
+- Customizable styling
+
+## Example
+
+```tsx
+<BondingCurveCard
+  marketAddress="market_address_here"
+  connection={solanaConnection}
+  publicKey={userPublicKey}
+  solanaWallet={wallet}
+  setLoading={setIsLoading}
+/>
+```

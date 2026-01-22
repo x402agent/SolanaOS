@@ -1,0 +1,95 @@
+
+---
+title: "Function: default()"
+description: "> **default**(`props`): `Element`"
+---
+
+[**solana-app-kit**](../../../../../README.mdx)
+
+***
+
+[solana-social-kit](../../../../../README.mdx) / [components/ProfileInfo/profileInfo](../README.mdx) / default
+
+# Function: default()
+
+> **default**(`props`): `Element`
+
+Defined in: [src/components/Profile/ProfileInfo/profileInfo.tsx](https://github.com/SendArcade/solana-app-kit/blob/main/src/components/Profile/ProfileInfo/profileInfo.tsx)
+
+A component that displays a user’s profile image, name, wallet handle, follower/following stats, and optional buy/perks info.
+
+## Parameters
+
+### props
+
+```ts
+interface ProfileInfoProps {
+  profilePicUrl: string;
+  username: string;
+  userWallet: string;
+  isOwnProfile: boolean;
+  onAvatarPress?: () => void;
+  onEditProfile?: () => void;
+  bioText?: string;
+  amIFollowing?: boolean;
+  areTheyFollowingMe?: boolean;
+  onFollowPress?: () => void;
+  onUnfollowPress?: () => void;
+  followersCount?: number;
+  followingCount?: number;
+  onPressFollowers?: () => void;
+  onPressFollowing?: () => void;
+}
+```
+
+## Returns
+
+`Element`
+
+## Component
+
+## Description
+
+ProfileInfo is used to display key profile details for a given user:
+- **Avatar** (with editable option if it’s the user's own profile)
+- **Username** and short wallet handle
+- **Bio text**
+- **Follow/Unfollow logic** (if viewing another’s profile)
+- **Optional Buy and Perks components**
+
+## Example
+
+```tsx
+<ProfileInfo
+  profilePicUrl="https://example.com/avatar.png"
+  username="Alice"
+  userWallet="xxxxxx..."
+  isOwnProfile={false}
+  amIFollowing={true}
+  areTheyFollowingMe={false}
+  onFollowPress={() => {}}
+  onUnfollowPress={() => {}}
+/>
+```
+
+
+### (C) `profileInfo.style` docs
+
+**File**: `docs/references/components/Profile/ProfileInfo/profileInfo.style/README.mdx`
+
+---
+title: "components/ProfileInfo/profileInfo.style"
+description: "## Variables"
+---
+
+[**solana-social-kit**](../../../README.mdx)
+
+***
+
+[solana-social-kit](../../../README.mdx) / components/ProfileInfo/profileInfo.style
+
+# components/ProfileInfo/profileInfo.style
+
+## Variables
+
+- [styles](variables/styles.mdx)

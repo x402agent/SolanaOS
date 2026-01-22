@@ -1,0 +1,26 @@
+# src/screens
+
+Organizes sample UI screens for the application.
+
+## Screen Organization
+
+### 📂 Common/
+Basic application flows:
+- `IntroScreen` & `LoginScreen` — initial landing and login flows
+- `SearchScreen` — multi-button menu showcasing different sub-screens (Blink, PumpFun, TokenMill, NFT, Chat)
+- `pumpfunScreen`, `TokenMillScreen`, `NftScreen` — specialized flows for buying/selling tokens or NFTs
+- `PlatformSelectionScreen` — letting user pick between "threads," "insta," "chats," etc.
+
+### 📂 SampleUI/Threads/
+Thread-based interface samples:
+- `HomeScreen`, `FeedScreen`, `NotificationsScreen`, `ProfileScreen`, etc.
+- `CoinDetailPage` folder with sub-pages:
+  - `TopScreen`
+  - `LatestScreen`
+  - `PeopleScreen`
+  - `PhotosScreen`
+  - `VideosScreen`
+
+### 📂 SampleUI/Chat/
+Messaging interfaces:
+- `ChatScreen` shows the implementation of thread components (`ThreadComposer`, `PostBody`, `PostCTA`, etc.) in a chat-like interface

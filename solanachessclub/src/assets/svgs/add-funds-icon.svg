@@ -1,0 +1,10 @@
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Wallet base -->
+  <path d="M18 7.2H6C4.89543 7.2 4 8.09543 4 9.2V16.8C4 17.9046 4.89543 18.8 6 18.8H18C19.1046 18.8 20 17.9046 20 16.8V9.2C20 8.09543 19.1046 7.2 18 7.2Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  
+  <!-- Wallet top -->
+  <path d="M16 7.2V5.2C16 4.88174 15.8736 4.57652 15.6485 4.35147C15.4235 4.12643 15.1183 4 14.8 4H6C5.46957 4 4.96086 4.21071 4.58579 4.58579C4.21071 4.96086 4 5.46957 4 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  
+  <!-- Card slot -->
+  <path d="M20 13H16C15.4477 13 15 12.5523 15 12C15 11.4477 15.4477 11 16 11H20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg> 

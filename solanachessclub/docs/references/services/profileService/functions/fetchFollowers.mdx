@@ -1,0 +1,61 @@
+---
+title: "Function: fetchFollowers()"
+description: "Fetch the list of followers for a specific user"
+---
+
+[**solana-social-kit**](../../../README.mdx)
+
+***
+
+[solana-social-kit](../../../README.mdx) / [services/profileService](../README.mdx) / fetchFollowers
+
+# Function: fetchFollowers()
+
+> **fetchFollowers**(`userId`: string): `Promise<any[]>`
+
+Defined in: [src/services/profileService.ts:43](https://github.com/SendArcade/solana-app-kit/blob/main/src/services/profileService.ts#L43)
+
+Fetches a list of users who follow the specified user. This function retrieves the follower
+data from the server, allowing applications to display social connections between users.
+
+## Parameters
+```
+| Parameter | Type | Description |
+| :------ | :------ | :------ |
+| `userId` | `string` | The user's wallet address or unique ID |
+```
+## Returns
+```
+| Type | Description |
+| :------ | :------ |
+| `Promise<any[]>` | Array of follower objects, each representing a user who follows the specified user |
+```
+
+## Behavior
+
+- Returns an empty array if the server URL is not configured
+- Returns an empty array if the server returns an unsuccessful response
+- Logs warnings to the console on errors but does not throw exceptions
+
+## Example
+
+```typescript
+import { fetchFollowers } from 'services/profileService';
+
+async function displayUserFollowers(walletAddress: string) {
+  try {
+    const followers = await fetchFollowers(walletAddress);
+    console.log(`${walletAddress} has ${followers.length} followers`);
+    
+    // Example of displaying followers
+    followers.forEach(follower => {
+      console.log(`- ${follower.displayName || follower.id}`);
+    });
+    
+    return followers;
+  } catch (error) {
+    console.warn('Error retrieving followers:', error);
+    return [];
+  }
+}
+```

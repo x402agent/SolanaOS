@@ -1,0 +1,37 @@
+---
+title: "Function: signAndSendBase64Tx()"
+description: "> **signAndSendBase64Tx**(`base64Tx`, `connection`, `provider`): `Promise`\<`string`\>"
+---
+
+[**solana-social-kit**](../../../../README.mdx)
+
+***
+
+[solana-social-kit](../../../../README.mdx) / [utils/transactions/transactionUtils](../README.mdx) / signAndSendBase64Tx
+
+# Function: signAndSendBase64Tx()
+
+> **signAndSendBase64Tx**(`base64Tx`, `connection`, `provider`): `Promise`\<`string`\>
+
+Defined in: [src/utils/transactions/transactionUtils.ts:40](https://github.com/SendArcade/solana-app-kit/blob/bd4b3556b8f469c27ebb06f4df65b3a36b43ba3b/src/utils/transactions/transactionUtils.ts#L40)
+
+Takes a base64-encoded transaction (could be legacy or versioned),
+deserializes it, and then uses Privy provider to sign+send.
+
+## Parameters
+
+### base64Tx
+
+`string`
+
+### connection
+
+`Connection`
+
+### provider
+
+`any`
+
+## Returns
+
+`Promise`\<`string`\>

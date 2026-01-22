@@ -1,0 +1,79 @@
+---
+title: "Function: CoinDetailSearchBar()"
+description: "> **CoinDetailSearchBar**(`props`, `deprecatedLegacyContext`?): `ReactNode`"
+---
+
+[**solana-social-kit**](../../../../README.mdx)
+
+***
+
+# Function: CoinDetailSearchBar()
+
+> **CoinDetailSearchBar**(`props`, `deprecatedLegacyContext`?): `ReactNode`
+
+Defined in: [src/components/CoinDetails/CoinDetailSearchBar/CoinDetailSearchBar.tsx:59](https://github.com/SendArcade/solana-app-kit/blob/bd4b3556b/src/components/CoinDetails/CoinDetailSearchBar/CoinDetailSearchBar.tsx#L59)
+
+A search bar that displays autocomplete suggestions for coins, along with coin icons.
+
+## Parameters
+
+### props
+
+[**CoinDetailSearchBarProps**](../interfaces/CoinDetailSearchBarProps.mdx)
+
+### deprecatedLegacyContext?
+
+`any`  
+**Deprecated**  
+See [React Docs](https://legacy.reactjs.org/docs/legacy-context.html#referencing-context-in-lifecycle-methods)
+
+## Returns
+
+`ReactNode`
+
+## Component
+
+## Description
+
+CoinDetailSearchBar is a form component that allows users to search for coins by name or symbol. It fetches search results from the Coingecko API and displays a dropdown list with coin icons.
+
+## Example
+
+```tsx
+<CoinDetailSearchBar onSelectCoinId={(coinId) => console.log(coinId)} />
+```
+
+---
+title: "Interface: CoinDetailSearchBarProps"
+description: "Defined in: [src/components/CoinDetails/CoinDetailSearchBar/CoinDetailSearchBar.tsx:28](https://github.com/SendArcade/solana-app-kit/blob/bd4b3556b/src/components/CoinDetails/CoinDetailSearchBar/CoinDetailSearchBar.tsx#L28)"
+---
+
+[**solana-social-kit**](../../../../README.mdx)
+
+***
+
+# Interface: CoinDetailSearchBarProps
+
+Defined in: [src/components/CoinDetails/CoinDetailSearchBar/CoinDetailSearchBar.tsx:28](https://github.com/SendArcade/solana-app-kit/blob/bd4b3556b/src/components/CoinDetails/CoinDetailSearchBar/CoinDetailSearchBar.tsx#L28)
+
+Props for the CoinDetailSearchBar component
+
+## Hierarchy
+
+- **CoinDetailSearchBarProps**
+
+## Properties
+
+### onSelectCoinId
+
+> **onSelectCoinId**: (`coinId`: `string`) => `void`
+
+Callback to notify the parent when a coin is selected.
+
+***
+
+### customStyles?
+
+> `optional` **customStyles**: [CoinDetailSearchBarCustomStyles](CoinDetailSearchBarCustomStyles.mdx)
+
+Optional custom styles for the input, dropdown, etc.

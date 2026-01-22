@@ -1,0 +1,70 @@
+---
+title: "Function: getCoinMarkets()"
+description: "Fetch market data for a specific coin from CoinGecko API"
+---
+
+[**solana-social-kit**](../../../README.mdx)
+
+***
+
+[solana-social-kit](../../../README.mdx) / [services/coingeckoService](../README.mdx) / getCoinMarkets
+
+# Function: getCoinMarkets()
+
+> **getCoinMarkets**(`coinId`: string): `Promise<any>`
+
+Defined in: [src/services/coingeckoService.ts:41](https://github.com/SendArcade/solana-app-kit/blob/main/src/services/coingeckoService.ts#L41)
+
+Fetches detailed market data for a specific cryptocurrency from the CoinGecko API.
+This function retrieves current price, market cap, fully diluted valuation, 
+trading volume, and more for a specific coin.
+
+Typically used for the "coin detail" screen or when detailed information about a single
+cryptocurrency is needed.
+
+## Parameters
+
+| Parameter | Type | Description |
+| :------ | :------ | :------ |
+| `coinId` | `string` | CoinGecko coin ID (e.g., 'bitcoin', 'ethereum', 'solana') |
+
+## Returns
+
+| Type | Description |
+| :------ | :------ |
+| `Promise<any>` | Object containing market data for the requested coin |
+
+### Return Object Properties
+
+The returned object includes numerous properties such as:
+- `current_price`: Current price in USD
+- `market_cap`: Market capitalization in USD
+- `fully_diluted_valuation`: Fully diluted valuation
+- `total_volume`: 24h trading volume
+- `high_24h`: 24h high price
+- `low_24h`: 24h low price
+- `price_change_percentage_24h`: 24h price change percentage
+- `image`: Icon image URL
+- And many more
+
+## Errors
+
+- Throws error if the API request fails (e.g., 404 for non-existent coin)
+- Throws error if no market data is available for the specified coin
+
+## Example
+
+```typescript
+import { getCoinMarkets } from 'services/coingeckoService';
+
+async function fetchSolanaMarketData() {
+  try {
+    const solanaData = await getCoinMarkets('solana');
+    console.log(`Current Solana price: $${solanaData.current_price}`);
+    console.log(`Market Cap: $${solanaData.market_cap.toLocaleString()}`);
+    console.log(`24h Change: ${solanaData.price_change_percentage_24h.toFixed(2)}%`);
+  } catch (error) {
+    console.error('Failed to fetch Solana market data:', error);
+  }
+}
+```
