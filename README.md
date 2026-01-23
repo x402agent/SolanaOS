@@ -627,6 +627,417 @@ The blockchain deserves an interface as sophisticated as its capabilities.
 Solana OS delivers that interface.
 
 Welcome to the future.
+🚀 Solana OS - The Ultimate Blockchain Desktop Environment
+Solana OS Version License
+
+Solana OS is a revolutionary blockchain-native desktop environment that brings the entire Solana ecosystem to your fingertips. Built with modern web technologies, it provides a familiar desktop experience while seamlessly integrating with decentralized applications, trading platforms, and blockchain utilities.
+
+🌟 Overview
+Solana OS transforms your browser into a powerful blockchain workstation, featuring:
+
+Desktop Environment: Windows 95-inspired interface with modern functionality
+Integrated Applications: Native support for trading, NFTs, token management, and more
+AI-Powered Tools: Terminagent AI assistant and creative applications
+Web Browser: SolBrowser with built-in Solana ecosystem integration
+Development Tools: Code editor, documentation hub, and debugging utilities
+Creative Suite: Paint studio and AI art generation tools
+🖥️ Desktop Environment
+Core Features
+Draggable Windows: Multi-window support with minimize, maximize, and close controls
+Start Menu: Windows 95-style menu with organized application categories
+Taskbar: Real-time application management and system status
+Desktop Icons: Quick access to frequently used applications
+Animated Background: Dynamic particle effects for visual appeal
+Window Management
+Multi-tasking: Run multiple applications simultaneously
+Window States: Minimize apps to taskbar, maximize to fullscreen
+Z-Index Management: Click to bring windows to front
+Smart Positioning: Automatic cascade positioning for new windows
+📱 Built-in Applications
+🔥 SPL & NFT Burner
+Purpose: Permanently remove unwanted tokens and NFTs from your wallet
+
+Features:
+
+SPL token burning with confirmation dialogs
+NFT burning with metadata verification
+Batch operations for multiple items
+Transaction history and receipts
+Safety checks to prevent accidental burns
+How to Use:
+
+Connect your Solana wallet
+Select tokens or NFTs to burn
+Review the burn summary
+Confirm the transaction
+Monitor transaction status
+💧 Raydium Swap
+Purpose: Decentralized token swapping on Raydium DEX
+
+Features:
+
+Real-time price quotes
+Slippage tolerance settings
+Price impact warnings
+Token search and selection
+Transaction history
+How to Use:
+
+Connect your wallet
+Select input and output tokens
+Enter swap amount
+Review slippage and fees
+Execute the swap
+🧠 Terminagent AI
+Purpose: AI-powered blockchain assistant and automation
+
+Features:
+
+Natural language command processing
+Blockchain query assistance
+Transaction analysis and insights
+Smart contract interaction guidance
+Market data and analysis
+How to Use:
+
+Open the terminal interface
+Type natural language commands
+Ask questions about Solana or DeFi
+Request transaction analysis
+Get market insights and recommendations
+📊 Solana Stocks
+Purpose: Traditional stock market integration with crypto correlation
+
+Features:
+
+Real-time stock prices
+Crypto-stock correlation analysis
+Portfolio tracking
+Market news integration
+Technical analysis tools
+How to Use:
+
+Search for stock symbols
+View real-time prices and charts
+Compare with crypto market movements
+Set up watchlists
+Read market news and analysis
+📚 Documentation Hub
+Purpose: Comprehensive documentation browser and learning center
+
+Features:
+
+Interactive documentation viewer
+Search across all documentation
+Bookmark important sections
+Code examples and tutorials
+API reference guides
+How to Use:
+
+Browse documentation categories
+Use search to find specific topics
+Follow guided tutorials
+Bookmark useful references
+Copy code examples
+✨ Vibe Code Studio
+Purpose: Integrated development environment for Solana development
+
+Features:
+
+Syntax highlighting for Rust and JavaScript
+Solana program development tools
+Built-in compiler and debugger
+Project templates
+Version control integration
+How to Use:
+
+Create or open a project
+Write Solana programs in Rust
+Use built-in templates
+Compile and test programs
+Deploy to Solana network
+🎮 Flappy Bird
+Purpose: Blockchain-integrated gaming with SOL rewards
+
+Features:
+
+Classic Flappy Bird gameplay
+Solana wallet integration
+Leaderboard with SOL rewards
+NFT character unlocks
+Tournament modes
+How to Use:
+
+Connect your wallet
+Start playing the game
+Earn points and climb leaderboards
+Compete in tournaments
+Claim SOL rewards
+🪙 Solana Coin Flip
+Purpose: Provably fair gambling with Switchboard VRF
+
+Features:
+
+Provably fair randomness
+Switchboard VRF integration
+Multiple bet sizes
+Win/loss statistics
+Transparent on-chain verification
+How to Use:
+
+Connect your wallet
+Choose bet amount
+Select heads or tails
+Confirm transaction
+View results and winnings
+🔥 FIRE Scrape
+Purpose: Advanced web scraping with FireCrawl integration
+
+Features:
+
+Single URL scraping
+Batch URL processing
+Content search across sites
+Data export options
+Rate limiting and proxies
+How to Use:
+
+Enter target URLs
+Configure scraping parameters
+Start scraping process
+Review extracted data
+Export results
+🎨 Paint Studio
+Purpose: Digital art creation with blockchain integration
+
+Features:
+
+Drawing tools and brushes
+Layer management
+Color palette and gradients
+Save to IPFS
+NFT minting integration
+How to Use:
+
+Select drawing tools
+Create digital artwork
+Use layers for complex compositions
+Save to IPFS
+Mint as NFT
+✨ AI Art Generator
+Purpose: Transform sketches into AI-generated masterpieces
+
+Features:
+
+Drawing canvas for sketches
+AI image enhancement
+Style transfer options
+Prompt engineering tools
+Direct NFT minting
+How to Use:
+
+Draw a basic sketch
+Add descriptive prompts
+Select art style
+Generate AI artwork
+Mint as NFT
+🌐 SolBrowser
+Purpose: Solana ecosystem-optimized web browser
+
+Features:
+
+Built-in wallet integration
+Solana dApp bookmarks
+Quick trading access
+DeFi protocol shortcuts
+Secure transaction handling
+How to Use:
+
+Navigate using the address bar
+Access Solana ecosystem bookmarks
+Use quick action buttons
+Connect wallet for dApp interaction
+Browse securely with built-in protections
+🎯 Quick Start Guide
+System Requirements
+Modern web browser (Chrome, Firefox, Safari, Edge)
+Active internet connection
+Solana wallet (Phantom, Solflare, etc.)
+Minimum 4GB RAM recommended
+Installation
+Clone or download the Solana OS repository
+Install dependencies: npm install
+Start the development server: npm run dev
+Open your browser to http://localhost:3000
+Connect your Solana wallet when prompted
+First Steps
+Connect Wallet: Click the wallet icon to connect your Solana wallet
+Explore Desktop: Click desktop icons to launch applications
+Open Start Menu: Click the "Start" button for all available programs
+Launch Browser: Open SolBrowser to access the Solana ecosystem
+Try Trading: Use Raydium Swap to trade tokens
+Ask AI: Open Terminagent for blockchain assistance
+🔧 Configuration
+Environment Variables
+# API Keys
+VITE_GEMINI_API_KEY=your_gemini_api_key
+VITE_HELIUS_API_KEY=your_helius_api_key
+VITE_FIRECRAWL_API_KEY=your_firecrawl_api_key
+
+# Network Configuration
+VITE_SOLANA_NETWORK=mainnet-beta
+VITE_RPC_URL=https://api.mainnet-beta.solana.com
+
+# Feature Flags
+VITE_ENABLE_DEVTOOLS=true
+VITE_ENABLE_ANALYTICS=false
+Wallet Configuration
+Supported wallets:
+
+Phantom
+Solflare
+Slope
+Glow
+Backpack
+Network Settings
+Mainnet: Production Solana network
+Devnet: Development and testing
+Testnet: Public testing environment
+Localnet: Local Solana validator
+🛠️ Development
+Technology Stack
+Frontend: React 18, TypeScript, Tailwind CSS
+Animation: Framer Motion
+Blockchain: Solana Web3.js, Anchor Framework
+AI Integration: Google Gemini API
+Build Tool: Vite
+Package Manager: npm/yarn
+Architecture
+solana-os/
+├── components/          # React components
+│   ├── desktop/        # Desktop environment
+│   ├── apps/           # Individual applications
+│   └── ui/             # Reusable UI components
+├── services/           # API and blockchain services
+├── utils/              # Utility functions
+├── types/              # TypeScript definitions
+├── docs/               # Documentation
+└── public/             # Static assets
+Adding New Applications
+Create component in components/apps/
+Add icon component
+Register in desktop configuration
+Update type definitions
+Add to Start menu
+API Integration
+All applications use a centralized service layer for:
+
+Blockchain interactions
+External API calls
+Error handling
+Caching strategies
+🔐 Security
+Wallet Security
+Private keys never leave your browser
+Secure connection requirements
+Transaction confirmation dialogs
+Automatic session timeouts
+Data Protection
+No personal data storage
+Encrypted API communications
+Secure random number generation
+CORS protection
+Best Practices
+Always verify transaction details
+Use hardware wallets when possible
+Keep software updated
+Monitor account activity
+🌍 Solana Ecosystem Integration
+Supported Protocols
+Jupiter: Token swapping aggregator
+Raydium: Automated market maker
+Orca: Decentralized exchange
+Magic Eden: NFT marketplace
+Marinade: Liquid staking
+Drift: Perpetual trading
+Mango: Margin trading
+RPC Endpoints
+Helius (Primary)
+Alchemy
+QuickNode
+Triton
+GenesysGo
+Developer Tools
+Solana Explorer integration
+Transaction simulation
+Program deployment
+Account monitoring
+📊 Analytics and Monitoring
+Performance Metrics
+Application load times
+Transaction success rates
+User interaction analytics
+Error tracking and reporting
+System Health
+RPC endpoint status
+API response times
+Wallet connection status
+Network congestion monitoring
+🤝 Contributing
+We welcome contributions from the community! Please see our Contributing Guide for details.
+
+Development Setup
+git clone https://github.com/yourusername/solana-os
+cd solana-os
+npm install
+npm run dev
+Code Standards
+TypeScript strict mode
+ESLint configuration
+Prettier formatting
+Comprehensive testing
+Documentation requirements
+📄 License
+Solana OS is open-source software licensed under the MIT License. See LICENSE for details.
+
+🙏 Acknowledgments
+Solana Foundation for the incredible blockchain platform
+Raydium team for DEX integration
+Jupiter for swap aggregation
+Helius for RPC infrastructure
+All contributors and community members
+📞 Support
+Documentation: Solana OS Docs
+Discord: Join our community
+Twitter: @SolanaOS
+GitHub Issues: Report bugs
+Built with ❤️ for the Solana ecosystem
+
+Transform your browser into a blockchain powerhouse with Solana OS
+
+About
+The Official Github of the Solana OS, The first Solana Operating System on or off chain.
+
+Resources
+ Readme
+ Activity
+Stars
+ 0 stars
+Watchers
+ 0 watching
+Forks
+ 1 fork
+Releases
+No releases published
+Create a new release
+Packages
+No packages published
+Publish your first package
+Footer
+© 2026 GitHub, Inc.
+Footer navigation
+Terms
+Privacy
 
 ---
 
