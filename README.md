@@ -147,36 +147,52 @@ The self-improving AI loop that powers everything:
 ### Prerequisites
 - Node.js 18+
 - pnpm (recommended) or npm
+- PostgreSQL (for backend)
 - A Solana wallet (Phantom, Solflare, Backpack)
 
 ### Installation
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-username/SolanaOS.git
+git clone https://github.com/x402agent/SolanaOS.git
 cd SolanaOS
 
-# Install dependencies for web frontend
-cd solana-os-web
-npm install
+# Copy environment configuration
+cp .env.example .env
+
+# Configure your environment variables
+# See .env.example for required variables
+
+# Install dependencies
+pnpm install
 
 # Start development server
-npm run dev
+pnpm dev
 ```
 
 ### Environment Variables
 
-Create a `.env` file in the project root:
+Copy `.env.example` to `.env` and configure:
 
 ```env
-# API Keys
-VITE_HELIUS_API_KEY=your_helius_api_key
-VITE_OPENAI_API_KEY=your_openai_api_key
-VITE_BIRDEYE_API_KEY=your_birdeye_api_key
+# Solana Network
+CLUSTER=devnet
+HELIUS_API_KEY=your_helius_api_key
+RPC_URL=https://api.devnet.solana.com
 
-# Network Configuration
-VITE_SOLANA_NETWORK=mainnet-beta
-VITE_RPC_URL=https://api.mainnet-beta.solana.com
+# $OS Token
+OS_TOKEN_MINT=DrU9M6SUaXWua49zeaHQWJuwMpcZ4jMDRT3J5Ywpump
+
+# Authentication (REQUIRED - no defaults)
+ADMIN_USERNAME=your_admin_user
+ADMIN_PASSWORD_HASH=your_bcrypt_hash
+JWT_SECRET=your_32_char_secret
+
+# Database
+DATABASE_URL=postgresql://user:pass@localhost:5432/solana_os
+
+# AI Services
+OPENAI_API_KEY=your_openai_api_key
 ```
 
 ---
@@ -185,31 +201,30 @@ VITE_RPC_URL=https://api.mainnet-beta.solana.com
 
 ```
 SolanaOS/
-├── solana-os-web/              # Web Frontend (React + Vite)
-│   ├── src/
-│   │   ├── components/
-│   │   │   ├── desktop/        # Desktop environment components
-│   │   │   ├── apps/           # Individual applications
-│   │   │   └── ui/             # Reusable UI components
-│   │   ├── hooks/              # Custom React hooks
-│   │   ├── services/           # API and blockchain services
-│   │   ├── store/              # State management
-│   │   └── types/              # TypeScript definitions
-│   └── package.json
+├── src/
+│   ├── components/         # UI components
+│   │   ├── desktop/        # Desktop environment
+│   │   ├── apps/           # Built-in applications
+│   │   └── ui/             # Reusable components
+│   ├── modules/            # Feature modules
+│   │   ├── solana-agent-kit/   # AI agent integration
+│   │   ├── wallet-providers/   # Wallet connections
+│   │   ├── token-mill/         # Token creation
+│   │   └── dex/                # DEX integrations
+│   ├── services/           # API & blockchain services
+│   ├── hooks/              # React hooks
+│   └── types/              # TypeScript definitions
 │
-├── solanachessclub/            # Mobile App (React Native + Expo)
-│   ├── src/
-│   │   ├── modules/            # Feature modules
-│   │   ├── shared/             # Shared utilities
-│   │   └── core/               # Core components
-│   └── package.json
+├── server/
+│   ├── routes/             # API endpoints
+│   │   └── os-token/       # $OS token & deployment APIs
+│   ├── service/            # Business logic
+│   │   └── os-token/       # Token & rewards services
+│   └── db/                 # Database migrations
 │
-└── solanachessclub/server/     # Backend (Node.js + Express)
-    ├── src/
-    │   ├── routes/             # API endpoints
-    │   ├── service/            # Business logic
-    │   └── utils/              # Helper functions
-    └── package.json
+├── .env.example            # Environment template
+├── SOLANA_DEV_GUIDE.md     # Developer documentation
+└── README.md
 ```
 
 ---

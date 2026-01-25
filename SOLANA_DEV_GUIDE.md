@@ -27,11 +27,10 @@ Welcome to Solana OS - the blockchain-native operating system for building, depl
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-org/SolanaOS.git
+git clone https://github.com/x402agent/SolanaOS.git
 cd SolanaOS
 
 # Install dependencies
-cd solanachessclub
 pnpm install
 
 # Copy environment configuration
@@ -41,7 +40,6 @@ cp .env.example .env
 nano .env
 
 # Start development server
-cd server
 pnpm dev
 ```
 
