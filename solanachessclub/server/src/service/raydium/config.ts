@@ -7,23 +7,18 @@ import {Connection, Keypair, clusterApiUrl, Cluster, PublicKey} from '@solana/we
 import {TOKEN_PROGRAM_ID, TOKEN_2022_PROGRAM_ID} from '@solana/spl-token';
 import bs58 from 'bs58';
 
-// Generate a temporary keypair for development purposes
-// In production, you would use a securely stored private key from environment variables
-// export const owner: Keypair = Keypair.fromSecretKey(
-//   bs58.decode(process.env.WALLET_PRIVATE_KEY || '<YOUR_WALLET_SECRET_KEY>'),
-// );
 // Use user's public key passed from the client
+// SECURITY: No hardcoded wallet addresses - must be provided by caller
 export const getUserWallet = (publicKey: string): PublicKey => {
+  if (!publicKey) {
+    throw new Error('[RaydiumConfig] Public key is required - no default wallet fallback for security');
+  }
   try {
     return new PublicKey(publicKey);
   } catch (error) {
-    console.error('[RaydiumConfig] Invalid user public key, using default');
-    // Fall back to a default public key only for development
-    return new PublicKey("87iu7KKDcZbghdgqJBbNFMFHFHCrRcBqbtXTcd1n3tzG");
+    throw new Error(`[RaydiumConfig] Invalid public key provided: ${publicKey}`);
   }
 };
-// Remove the hardcoded owner and make it a function parameter
-// export const owner: PublicKey = new PublicKey("87iu7KKDcZbghdgqJBbNFMFHFHCrRcBqbtXTcd1n3tzG");
 
 // Use environment variable for RPC URL or fall back to default
 export const connection = new Connection(
@@ -40,8 +35,11 @@ const cluster: 'mainnet' | 'devnet' =
   process.env.SOLANA_CLUSTER === 'devnet' ? 'devnet' : 'mainnet';
 
 let raydium: Raydium | undefined;
-export const initSdk = async (userPublicKey?: string, params?: {loadToken?: boolean}) => {
-  const owner = userPublicKey ? getUserWallet(userPublicKey) : new PublicKey("87iu7KKDcZbghdgqJBbNFMFHFHCrRcBqbtXTcd1n3tzG");
+export const initSdk = async (userPublicKey: string, params?: {loadToken?: boolean}) => {
+  if (!userPublicKey) {
+    throw new Error('[RaydiumConfig] userPublicKey is required to initialize SDK');
+  }
+  const owner = getUserWallet(userPublicKey);
   if (raydium) return raydium;
   if (connection.rpcEndpoint === clusterApiUrl('mainnet-beta'))
     console.warn(
@@ -77,18 +75,22 @@ export const initSdk = async (userPublicKey?: string, params?: {loadToken?: bool
   return raydium;
 };
 
-export const fetchTokenAccountData = async () => {
-  const solAccountResp = await connection.getAccountInfo(getUserWallet("87iu7KKDcZbghdgqJBbNFMFHFHCrRcBqbtXTcd1n3tzG"));
+export const fetchTokenAccountData = async (userPublicKey: string) => {
+  if (!userPublicKey) {
+    throw new Error('[RaydiumConfig] userPublicKey is required to fetch token account data');
+  }
+  const ownerPubkey = getUserWallet(userPublicKey);
+  const solAccountResp = await connection.getAccountInfo(ownerPubkey);
   const tokenAccountResp = await connection.getTokenAccountsByOwner(
-    getUserWallet("87iu7KKDcZbghdgqJBbNFMFHFHCrRcBqbtXTcd1n3tzG"),
+    ownerPubkey,
     {programId: TOKEN_PROGRAM_ID},
   );
   const token2022Req = await connection.getTokenAccountsByOwner(
-    getUserWallet("87iu7KKDcZbghdgqJBbNFMFHFHCrRcBqbtXTcd1n3tzG"),
+    ownerPubkey,
     {programId: TOKEN_2022_PROGRAM_ID},
   );
   const tokenAccountData = parseTokenAccountResp({
-    owner: getUserWallet("87iu7KKDcZbghdgqJBbNFMFHFHCrRcBqbtXTcd1n3tzG"),
+    owner: ownerPubkey,
     solAccountResp,
     tokenAccountResp: {
       context: tokenAccountResp.context,

@@ -75,7 +75,23 @@ yarn-error.log
 
 .expo
 .bundle
+
+# Environment files - NEVER commit these
+.env
 .env.local
+.env.development
+.env.staging
+.env.production
+.env.*.local
+*.env
+
+# Private keys and secrets
+*.pem
+*.key
+*.secret
+*private*.json
+wallet*.json
+keypair*.json
 
 # Cursor IDE
 .cursor/

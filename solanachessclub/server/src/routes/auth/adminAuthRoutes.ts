@@ -4,10 +4,20 @@ import bcrypt from 'bcrypt';
 
 const router = express.Router();
 
-// Admin credentials (in production, store these securely in environment variables)
-const ADMIN_USERNAME = process.env.ADMIN_USERNAME || 'SendTeam';
-const ADMIN_PASSWORD_HASH = process.env.ADMIN_PASSWORD_HASH || '$2b$10$04Ink2Z9YrB4QtDfc.eGKu6RLjEUWTz./82eQ65ov0BSksObBsCvG'; // 'appkit@123'
-const JWT_SECRET = process.env.JWT_SECRET || 'your-super-secret-jwt-key-change-this-in-production';
+// Admin credentials - MUST be set via environment variables
+// No fallback values for security - server will fail if not configured
+const ADMIN_USERNAME = process.env.ADMIN_USERNAME;
+const ADMIN_PASSWORD_HASH = process.env.ADMIN_PASSWORD_HASH;
+const JWT_SECRET = process.env.JWT_SECRET;
+
+// Validate required environment variables on startup
+if (!ADMIN_USERNAME || !ADMIN_PASSWORD_HASH || !JWT_SECRET) {
+  console.error('[SECURITY] Missing required auth environment variables:');
+  if (!ADMIN_USERNAME) console.error('  - ADMIN_USERNAME is not set');
+  if (!ADMIN_PASSWORD_HASH) console.error('  - ADMIN_PASSWORD_HASH is not set');
+  if (!JWT_SECRET) console.error('  - JWT_SECRET is not set');
+  console.error('[SECURITY] Please configure these in your .env file. See .env.example for reference.');
+}
 
 // Login endpoint
 router.post('/admin/login', async (req: any, res: any) => {

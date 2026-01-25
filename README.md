@@ -77,6 +77,35 @@ Our tools must evolve from applications we use to intelligence that extends us.
 
 ---
 
+## $OS Token - Developer Rewards
+
+The **$OS token** powers the Solana OS ecosystem. Hold $OS to earn SOL rewards and deploy agents/apps.
+
+| Token Info | Value |
+|------------|-------|
+| **Symbol** | $OS |
+| **Mint** | `DrU9M6SUaXWua49zeaHQWJuwMpcZ4jMDRT3J5Ywpump` |
+| **Network** | Solana Mainnet |
+
+### Developer Reward Tiers
+
+| Tier | Min $OS | SOL Multiplier | Discount | Agents | Apps |
+|------|---------|----------------|----------|--------|------|
+| Explorer | 1,000 | 1x | 0% | 1 | 1 |
+| Builder | 10,000 | 1.5x | 10% | 5 | 3 |
+| Architect | 50,000 | 2x | 25% | 20 | 10 |
+| Visionary | 100,000 | 3x | 50% | Unlimited | Unlimited |
+
+**How it works:**
+1. **Hold $OS** - Get a tier based on your holdings
+2. **Deploy** - Create agents and apps using $OS
+3. **Earn SOL** - 30% of platform fees distributed to holders
+4. **Ship & Earn More** - Activity bonuses for active developers
+
+See [SOLANA_DEV_GUIDE.md](SOLANA_DEV_GUIDE.md) for full documentation.
+
+---
+
 ## Features
 
 ### Desktop Environment

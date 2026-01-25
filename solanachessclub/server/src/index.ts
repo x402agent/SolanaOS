@@ -32,6 +32,7 @@ import raydiumLaunchpadRoutes from './routes/raydium/launchpad.routes';
 import nftRoutes from './routes/nft';
 import notificationRoutes from './routes/notifications/notificationRoutes';
 import luloRouter from './routes/lulo';
+import osTokenRouter from './routes/os-token/osTokenRoutes';
 
 const app = express();
 app.use(express.json({ limit: '10mb' }));
@@ -213,6 +214,7 @@ app.use('/api/meteora', meteoraDBCRouter);
 app.use('/api/nft', nftRoutes);
 app.use('/api/notifications', notificationRoutes);
 app.use('/api/lulo', luloRouter);
+app.use('/api/os-token', osTokenRouter);
 
 // app.post('/api/build-compressed-nft-listing-tx', async (req: any, res: any) => {
 //   try {
