@@ -22,6 +22,16 @@ jobs:
           go-version: '1.25'
           cache: true
 
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: 'ui/package-lock.json'
+
+      - name: Build Control UI
+        run: cd ui && npm ci && npm run build
+
       - name: Build
         run: go build -v ./...
 
@@ -60,5 +70,5 @@ jobs:
           ! grep -rn "sk-or-v1-\|hch-v3-\|AKIA[0-9A-Z]\{16\}" \
             --include="*.go" --include="*.ts" --include="*.js" \
             --include="*.json" --include="*.yaml" --include="*.yml" \
-            . || (echo "⚠️ Potential secrets found!" && exit 1)
-          echo "✅ No hardcoded secrets detected"
+            . || (echo "Potential secrets found!" && exit 1)
+          echo "No hardcoded secrets detected"
