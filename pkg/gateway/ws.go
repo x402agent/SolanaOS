@@ -585,6 +585,35 @@ func (b *Bridge) handleWSRequest(writeJSON func(map[string]any), id, method stri
 			"payload": map[string]any{"ok": true},
 		})
 
+	case "models.list":
+		writeJSON(map[string]any{
+			"type": "res",
+			"id":   id,
+			"ok":   true,
+			"payload": map[string]any{
+				"models": []any{
+					map[string]any{
+						"id":       "ollama/minimax-m2.7:cloud",
+						"provider": "ollama",
+						"name":     "MiniMax M2.7",
+						"active":   b.llm != nil && b.llm.IsConfigured(),
+					},
+				},
+			},
+		})
+
+	case "last-heartbeat":
+		writeJSON(map[string]any{
+			"type": "res",
+			"id":   id,
+			"ok":   true,
+			"payload": map[string]any{
+				"daemon":    "alive",
+				"updatedAt": time.Now().UTC().Format(time.RFC3339),
+				"uptime":    time.Since(b.startedAt).Round(time.Second).String(),
+			},
+		})
+
 	case "exec.approvals.get", "exec.approvals.node.get":
 		writeJSON(map[string]any{
 			"type": "res",
