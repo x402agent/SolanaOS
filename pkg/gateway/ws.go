@@ -374,17 +374,18 @@ func (b *Bridge) handleWSRequest(writeJSON func(map[string]any), id, method stri
 		})
 
 	case "config.get":
+		cfgPath, cfgRaw, cfgParsed, cfgHash := b.loadConfigFile()
 		writeJSON(map[string]any{
 			"type": "res",
 			"id":   id,
 			"ok":   true,
 			"payload": map[string]any{
-				"path":   "~/.solanaos/solanaos.json",
+				"path":   cfgPath,
 				"exists": true,
-				"raw":    "{}",
-				"hash":   "empty",
+				"raw":    cfgRaw,
+				"hash":   cfgHash,
 				"valid":  true,
-				"config": map[string]any{},
+				"config": cfgParsed,
 				"issues": []any{},
 			},
 		})
@@ -395,13 +396,67 @@ func (b *Bridge) handleWSRequest(writeJSON func(map[string]any), id, method stri
 			"id":   id,
 			"ok":   true,
 			"payload": map[string]any{
-				"schema":  map[string]any{},
 				"version": "3.1.0",
 				"uiHints": map[string]any{},
+				"schema": map[string]any{
+					"type": "object",
+					"properties": map[string]any{
+						"llm": map[string]any{
+							"type":  "object",
+							"title": "LLM Provider",
+							"properties": map[string]any{
+								"provider":        map[string]any{"type": "string", "title": "Provider", "enum": []string{"openrouter", "anthropic", "xai", "ollama"}, "default": "ollama"},
+								"openrouter_key":  map[string]any{"type": "string", "title": "OpenRouter API Key"},
+								"anthropic_key":   map[string]any{"type": "string", "title": "Anthropic API Key"},
+								"xai_key":         map[string]any{"type": "string", "title": "xAI API Key"},
+								"ollama_model":    map[string]any{"type": "string", "title": "Ollama Model", "default": "minimax-m2.7:cloud"},
+								"ollama_base_url": map[string]any{"type": "string", "title": "Ollama Base URL", "default": "http://127.0.0.1:11434"},
+							},
+						},
+						"solana": map[string]any{
+							"type":  "object",
+							"title": "Solana",
+							"properties": map[string]any{
+								"rpc_url":                map[string]any{"type": "string", "title": "RPC URL"},
+								"solana_tracker_api_key":  map[string]any{"type": "string", "title": "SolanaTracker API Key"},
+								"helius_api_key":          map[string]any{"type": "string", "title": "Helius API Key"},
+								"birdeye_api_key":         map[string]any{"type": "string", "title": "Birdeye API Key"},
+							},
+						},
+						"telegram": map[string]any{
+							"type":  "object",
+							"title": "Telegram",
+							"properties": map[string]any{
+								"bot_token":   map[string]any{"type": "string", "title": "Bot Token"},
+								"chat_id":     map[string]any{"type": "string", "title": "Chat ID"},
+							},
+						},
+						"gateway": map[string]any{
+							"type":  "object",
+							"title": "Gateway",
+							"properties": map[string]any{
+								"port":      map[string]any{"type": "integer", "title": "Port", "default": 18790},
+								"bind_addr": map[string]any{"type": "string", "title": "Bind Address", "default": "0.0.0.0"},
+							},
+						},
+					},
+				},
 			},
 		})
 
-	case "config.set", "config.patch", "config.apply", "update.run":
+	case "config.set":
+		raw, _ := params["raw"].(string)
+		if raw != "" {
+			b.saveConfigFile(raw)
+		}
+		writeJSON(map[string]any{
+			"type":    "res",
+			"id":      id,
+			"ok":      true,
+			"payload": map[string]any{"ok": true},
+		})
+
+	case "config.patch", "config.apply", "update.run":
 		writeJSON(map[string]any{
 			"type":    "res",
 			"id":      id,

@@ -11,11 +11,14 @@ import (
 	"bufio"
 	"context"
 	"crypto/rand"
+	"crypto/sha256"
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
 	"log"
 	"net"
+	"os"
+	"path/filepath"
 	"strings"
 	"sync"
 	"time"
@@ -61,6 +64,40 @@ type LLMProvider interface {
 // SetLLM attaches an LLM provider for chat inference.
 func (b *Bridge) SetLLM(provider LLMProvider) {
 	b.llm = provider
+}
+
+// configFilePath returns the path to solanaos.json.
+func configFilePath() string {
+	home, _ := os.UserHomeDir()
+	return filepath.Join(home, ".nanosolana", "solanaos.json")
+}
+
+// loadConfigFile reads the config file and returns path, raw JSON, parsed map, and hash.
+func (b *Bridge) loadConfigFile() (string, string, map[string]any, string) {
+	path := configFilePath()
+	data, err := os.ReadFile(path)
+	if err != nil {
+		// Create default config if missing
+		_ = os.MkdirAll(filepath.Dir(path), 0o755)
+		data = []byte("{}")
+		_ = os.WriteFile(path, data, 0o644)
+	}
+	raw := string(data)
+	h := sha256.Sum256(data)
+	hash := hex.EncodeToString(h[:8])
+	var parsed map[string]any
+	if err := json.Unmarshal(data, &parsed); err != nil {
+		parsed = map[string]any{}
+	}
+	return path, raw, parsed, hash
+}
+
+// saveConfigFile writes raw JSON to the config file.
+func (b *Bridge) saveConfigFile(raw string) {
+	path := configFilePath()
+	_ = os.MkdirAll(filepath.Dir(path), 0o755)
+	_ = os.WriteFile(path, []byte(raw), 0o644)
+	b.logf("📝 Config saved: %s", path)
 }
 
 type connectedNode struct {
