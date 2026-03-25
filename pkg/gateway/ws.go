@@ -348,7 +348,7 @@ func (b *Bridge) handleWSRequest(writeJSON func(map[string]any), id, method stri
 				"content": message,
 				"ts":      time.Now().UnixMilli(),
 			})
-			ctx, cancel := context.WithTimeout(context.Background(), 60*time.Second)
+			ctx, cancel := context.WithTimeout(context.Background(), 300*time.Second)
 			defer cancel()
 
 			// Ingest user message into Honcho memory (async, non-blocking)
@@ -401,6 +401,8 @@ func (b *Bridge) handleWSRequest(writeJSON func(map[string]any), id, method stri
 			} else {
 				b.logf("💬 chat.send: LLM replied (%d chars)", len(reply))
 			}
+			// Strip <think>...</think> reasoning blocks and special tokens from response
+			reply = stripThinkingTags(reply)
 			// Store assistant reply
 			b.appendChatMessage(sessionKey, map[string]any{
 				"role":    "assistant",
@@ -929,6 +931,33 @@ func (b *Bridge) handleNodeInvokeRequest(params map[string]any) invokeResponse {
 			},
 		}
 	}
+}
+
+// stripThinkingTags removes <think>...</think> blocks and special tokens from LLM output.
+func stripThinkingTags(s string) string {
+	// Remove <think>...</think> blocks (reasoning models like Qwen/DeepSeek)
+	for {
+		start := strings.Index(s, "<think>")
+		if start == -1 {
+			break
+		}
+		end := strings.Index(s, "</think>")
+		if end == -1 {
+			// Unclosed <think> — remove from <think> to end
+			s = s[:start]
+			break
+		}
+		s = s[:start] + s[end+len("</think>"):]
+	}
+	// Remove special tokens
+	for _, tok := range []string{"<|endoftext|>", "<|im_end|>", "<|im_start|>"} {
+		s = strings.ReplaceAll(s, tok, "")
+	}
+	// Remove repeated user/assistant prompt leakage
+	if idx := strings.Index(s, "<|im_start|>"); idx != -1 {
+		s = s[:idx]
+	}
+	return strings.TrimSpace(s)
 }
 
 func generateWSNonce() string {
