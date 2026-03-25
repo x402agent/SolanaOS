@@ -7,7 +7,7 @@ description: Full SolanaOS operator skill — install the runtime, query Solana 
 
 Autonomous operator runtime for Solana trading, research, wallets, and hardware control.
 
-**Repo**: [github.com/x402agent/Solana-Os-Go](https://github.com/x402agent/Solana-Os-Go)
+**Repo**: [github.com/x402agent/SolanaOS](https://github.com/x402agent/SolanaOS)
 **Hub**: [seeker.solanaos.net](https://seeker.solanaos.net)
 **Souls**: [souls.solanaos.net](https://souls.solanaos.net)
 **Docs**: [go.solanaos.net](https://go.solanaos.net)
@@ -17,7 +17,7 @@ Autonomous operator runtime for Solana trading, research, wallets, and hardware 
 ```bash
 npx solanaos-cli install
 # or
-git clone https://github.com/x402agent/Solana-Os-Go.git && cd Solana-Os-Go && make build
+git clone https://github.com/x402agent/SolanaOS.git && cd solanaos && make build
 ```
 
 After install: `solanaos daemon` starts everything.

@@ -6,8 +6,8 @@ Thanks for contributing to SolanaOS. This repository is the public source for th
 
 ```bash
 # 1. Fork and clone
-git clone https://github.com/x402agent/Solana-Os-Go.git
-cd Solana-Os-Go
+git clone https://github.com/x402agent/SolanaOS.git
+cd solanaos
 
 # 2. Set up your environment
 cp .env.example .env
@@ -26,7 +26,7 @@ make test
 ## 📁 Project Structure
 
 ```
-Solana-Os-Go/
+solanaos/
 ├── main.go                # CLI entry (cobra commands)
 ├── pkg/                   # Core packages — most contributions go here
 │   ├── agent/             # OODA trading loop
@@ -112,7 +112,7 @@ Look for issues labeled `good first issue` — these are excellent starting poin
 
 ## ❓ Questions?
 
-- Open a [Discussion](https://github.com/x402agent/Solana-Os-Go/discussions)
+- Open a [Discussion](https://github.com/x402agent/SolanaOS/discussions)
 - Tag maintainers in your PR for review
 
 **Build clean. Ship small. Stay operator-grade.**

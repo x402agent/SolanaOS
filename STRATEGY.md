@@ -6,7 +6,7 @@ Scope: Solana meme spot, Hyperliquid perps, Aster perps
 
 ## Canonical Links
 
-- Repo: [github.com/x402agent/Solana-Os-Go](https://github.com/x402agent/Solana-Os-Go)
+- Repo: [github.com/x402agent/SolanaOS](https://github.com/x402agent/SolanaOS)
 - SolanaOS Hub: [seeker.solanaos.net](https://seeker.solanaos.net)
 - Souls Library: [souls.solanaos.net](https://souls.solanaos.net)
 - SOUL document: [SOUL.md](SOUL.md)

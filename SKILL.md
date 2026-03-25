@@ -53,7 +53,7 @@ One ~10MB Go binary (`solanaos`) that combines:
 
 | | |
 | --- | --- |
-| Repo | [github.com/x402agent/Solana-Os-Go](https://github.com/x402agent/Solana-Os-Go) |
+| Repo | [github.com/x402agent/SolanaOS](https://github.com/x402agent/SolanaOS) |
 | Hub | [seeker.solanaos.net](https://seeker.solanaos.net) |
 | Souls | [souls.solanaos.net](https://souls.solanaos.net) |
 | Docs | [go.solanaos.net](https://go.solanaos.net) |
@@ -65,7 +65,7 @@ One ~10MB Go binary (`solanaos`) that combines:
 ## Install
 
 ```bash
-git clone https://github.com/x402agent/Solana-Os-Go solanaos
+git clone https://github.com/x402agent/SolanaOS solanaos
 cd solanaos
 ```
 
@@ -295,4 +295,4 @@ After install: solanaos status && solanaos solana wallet && solanaos pet
 ---
 
 *SolanaOS v2.0.0 · 8BIT Labs · MIT*
-*github.com/x402agent/Solana-Os-Go · seeker.solanaos.net · go.solanaos.net*
+*github.com/x402agent/SolanaOS · seeker.solanaos.net · go.solanaos.net*

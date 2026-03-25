@@ -34,7 +34,7 @@ The agent should verify these exist before proceeding:
 ## Step 1 — Clone the Repo
 
 ```bash
-git clone https://github.com/x402agent/Solana-Os-Go nanosolana
+git clone https://github.com/x402agent/SolanaOS nanosolana
 cd nanosolana
 ```
 
@@ -292,7 +292,7 @@ launchctl kickstart -k gui/$(id -u)/com.nanosolana.daemon
 If you want an AI agent to do the entire setup automatically, paste this:
 
 ```
-Read skill.md in the Solana-Os-Go project root.
+Read skill.md in the SolanaOS project root.
 Follow every step in order.
 My .env values are:
   HELIUS_API_KEY=...

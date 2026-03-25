@@ -34,7 +34,7 @@ If you already have SolanaOS installed via CLI or npm, the app auto-imports the 
 ### 2. CLI install
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/x402agent/Solana-Os-Go/newnew/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/x402agent/SolanaOS/newnew/install.sh | bash
 cat ~/.nanosolana/connect/setup-code.txt
 ```
 
@@ -60,7 +60,7 @@ The setup code is the same payload used by Android onboarding and browser-based 
 - Dashboard: https://seeker.solanaos.net/dashboard
 - Strategy Builder: https://seeker.solanaos.net/strategy
 - Docs: https://go.solanaos.net
-- GitHub: https://github.com/x402agent/Solana-Os-Go
+- GitHub: https://github.com/x402agent/SolanaOS
 
 ## Build from source
 

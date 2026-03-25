@@ -440,9 +440,9 @@ import (
     "context"
     "fmt"
 
-    "github.com/x402agent/Solana-Os-Go/pkg/bus"
-    "github.com/x402agent/Solana-Os-Go/pkg/channels"
-    "github.com/x402agent/Solana-Os-Go/pkg/config"
+    "github.com/x402agent/SolanaOS/pkg/bus"
+    "github.com/x402agent/SolanaOS/pkg/channels"
+    "github.com/x402agent/SolanaOS/pkg/config"
 )
 
 type Channel struct {
