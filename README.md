@@ -110,6 +110,8 @@ This README is the GitHub front door. Use it to install, explore the live surfac
 - Adding a messaging platform: [docs/adding-a-messaging-platform.md](docs/adding-a-messaging-platform.md)
 - Hardware guide: [docs/HARDWARE.md](docs/HARDWARE.md)
 - Troubleshooting: [docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md)
+- Control UI (Lit + Vite): [ui/](ui/) — browser-based control panel embedded in the Go binary
+- SolanaOS Office (3D workspace): [Claw3D-main/](Claw3D-main/) — deployed at [office.solanaos.net](https://office.solanaos.net)
 - Control API: [docs/control-api.md](docs/control-api.md)
 - Fly deployment: [docs/fly-deployment.md](docs/fly-deployment.md)
 - Agent Wallet API: [services/agent-wallet/](services/agent-wallet/) (one-shot bootstrap, MCP server, Privy, E2B)
@@ -133,6 +135,8 @@ This README is the GitHub front door. Use it to install, explore the live surfac
 | **Skill Creator** | [/create](https://seeker.solanaos.net/create) | Build SKILL.md files with guided wizard |
 | **Private Chat** | [/chat](https://seeker.solanaos.net/chat) | Wallet-to-wallet encrypted private messaging with Honcho persistent memory |
 | **IPFS Hub** | [/ipfs](https://seeker.solanaos.net/ipfs) | Private IPFS file storage per wallet, mesh sync, mainnet deploy pipeline |
+| **SolanaOS Control UI** | `solanaos server` → `localhost:7777` | Lit + Vite browser control panel: chat, status, config, debug, cron, sessions, skills, channels, logs |
+| **SolanaOS Office** | [office.solanaos.net](https://office.solanaos.net) | 3D retro office workspace with Solana market terminal (Birdeye), agent chat, skills marketplace |
 | **Android App** | Solana Seeker | Mobile control surface with MWA wallet |
 | **CLI** | `npx @nanosolana/nanohub` | Install, search, publish skills from terminal |
 
