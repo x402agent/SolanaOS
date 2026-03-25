@@ -803,7 +803,7 @@ export const AgentSettingsPanel = ({
                   <AlertTriangle className="mt-0.5 h-3.5 w-3.5 shrink-0" aria-hidden="true" />
                   <div className="space-y-1">
                     <div className="font-medium">Advanced users only.</div>
-                    <div>Open the full SolanaOS Control UI outside Studio.</div>
+                    <div>Open the full SolanaOS Office UI outside Studio.</div>
                     <div>Changes there can break agent behavior or put Studio out of sync.</div>
                   </div>
                 </div>

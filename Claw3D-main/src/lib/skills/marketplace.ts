@@ -216,7 +216,7 @@ export const buildSkillMarketplaceCollections = (
 
   const claw3d = entries.filter((entry) => getPackagedSkillBySkillKey(entry.skill.skillKey));
   if (claw3d.length > 0) {
-    collections.push({ id: "claw3d", label: "Claw3D", entries: claw3d });
+    collections.push({ id: "claw3d", label: "SolanaOS Office", entries: claw3d });
   }
 
   const installed = entries.filter((entry) => entry.readiness === "ready" || entry.skill.disabled);
