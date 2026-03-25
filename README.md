@@ -1,0 +1,1296 @@
+<div align="center">
+
+```
+   _____       __                        ____  _____
+  / ___/____  / /___ _____  ____ _     / __ \/ ___/
+  \__ \/ __ \/ / __ `/ __ \/ __ `/    / / / /\__ \
+ ___/ / /_/ / / /_/ / / / / /_/ /    / /_/ /___/ /
+/____/\____/_/\__,_/_/ /_/\__,_/     \____//____/
+                S O L A N A O S
+```
+
+# SolanaOS
+
+### The Solana Computer For Traders, Operators, And Builders
+
+Autonomous local-first runtime for Solana trading, research, wallets, automation, agent memory, Seeker/mobile control, and hardware-aware workflows.
+
+**Pure Go · <10MB binary · Telegram-native · Seeker-ready · Solana developer tooling included**
+
+<p>
+  <a href="https://github.com/x402agent/Solana-Os-Go"><img src="https://img.shields.io/badge/GitHub-Solana--Os--Go-111827?style=for-the-badge&logo=github&logoColor=white" alt="GitHub repo"></a>
+  <a href="https://seeker.solanaos.net"><img src="https://img.shields.io/badge/Hub-seeker.solanaos.net-14F195?style=for-the-badge&logo=solana&logoColor=white" alt="SolanaOS Hub"></a>
+  <a href="https://souls.solanaos.net"><img src="https://img.shields.io/badge/Souls-souls.solanaos.net-00D4FF?style=for-the-badge&logo=solana&logoColor=white" alt="SolanaOS Souls"></a>
+  <a href="https://go.solanaos.net"><img src="https://img.shields.io/badge/Docs-go.solanaos.net-FF7A18?style=for-the-badge&logo=gitbook&logoColor=white" alt="Docs"></a>
+</p>
+
+<p>
+  <a href="https://www.npmjs.com/package/solanaos-computer"><img src="https://img.shields.io/badge/npm-solanaos--computer-CB3837?style=flat&logo=npm&logoColor=white" alt="solanaos-computer"></a>
+  <a href="https://www.npmjs.com/package/solanaos-cli"><img src="https://img.shields.io/badge/npm-solanaos--cli-CB3837?style=flat&logo=npm&logoColor=white" alt="solanaos-cli"></a>
+  <a href="https://www.npmjs.com/package/nanosolana-cli"><img src="https://img.shields.io/badge/npm-nanosolana--cli-CB3837?style=flat&logo=npm&logoColor=white" alt="nanosolana-cli"></a>
+  <a href="https://www.npmjs.com/package/@nanosolana/nanohub"><img src="https://img.shields.io/badge/npm-@nanosolana%2Fnanohub-CB3837?style=flat&logo=npm&logoColor=white" alt="@nanosolana/nanohub"></a>
+</p>
+
+<p>
+  <img src="https://img.shields.io/badge/Go-1.25+-00ADD8?style=flat&logo=go&logoColor=white" alt="Go">
+  <img src="https://img.shields.io/badge/Solana-Seeker%20%2B%20Mobile-9945FF?style=flat&logo=solana&logoColor=white" alt="Solana">
+  <img src="https://img.shields.io/badge/SolanaTracker-RPC%20%2B%20Datastream-00D1FF?style=flat" alt="SolanaTracker">
+  <img src="https://img.shields.io/badge/OpenRouter-Mimo%20%2B%20Omni-7C3AED?style=flat" alt="OpenRouter">
+  <img src="https://img.shields.io/badge/xAI-Grok%20Search%20%2B%20Voice-111827?style=flat" alt="xAI">
+  <img src="https://img.shields.io/badge/Honcho-v3%20Memory-0EA5E9?style=flat" alt="Honcho">
+  <img src="https://img.shields.io/badge/Phantom-Connect%20SDK-AB9FF2?style=flat" alt="Phantom">
+  <img src="https://img.shields.io/badge/x402-Payment%20Protocol-FF6B35?style=flat" alt="x402">
+  <img src="https://img.shields.io/badge/license-MIT-green?style=flat" alt="License">
+</p>
+
+<p>
+  <a href="https://solanaos.net">Launch Page</a> ·
+  <a href="https://seeker.solanaos.net/mobile">Mobile dApp</a> ·
+  <a href="https://seeker.solanaos.net/dashboard">Dashboard</a> ·
+  <a href="https://seeker.solanaos.net/mining">Mining</a> ·
+  <a href="https://seeker.solanaos.net/strategy">Strategy</a> ·
+  <a href="https://seeker.solanaos.net/create">Create Skill</a> ·
+  <a href="https://seeker.solanaos.net/chat">Chat</a> ·
+  <a href="https://seeker.solanaos.net/skills">Skills</a> ·
+  <a href="https://souls.solanaos.net">Souls</a>
+</p>
+<p>
+  <a href="https://seeker.solanaos.net/setup/gateway">Gateway</a> ·
+  <a href="https://seeker.solanaos.net/setup/telegram">Telegram</a> ·
+  <a href="https://seeker.solanaos.net/setup/metaplex">Metaplex</a> ·
+  <a href="https://seeker.solanaos.net/setup/mining">Mining</a> ·
+  <a href="https://seeker.solanaos.net/setup/extension">Chrome Extension</a>
+</p>
+
+</div>
+
+SolanaOS is a public Solana operator stack built around a compact Go runtime and a set of web, mobile, and skill surfaces. It is designed for people who want one system to:
+
+- run an autonomous local trading and research runtime
+- connect wallets, Seeker devices, Telegram, and browser/mobile control surfaces
+- expose a gateway for skills, tools, and remote agent control
+- publish reusable skills and SOUL profiles to a public Solana-native hub
+
+SolanaOS combines:
+
+- an OODA trading loop for spot, swaps, and perp workflows
+- a memory stack with local vault learning plus Honcho v3 session memory
+- a multi-surface control plane across Telegram, SolanaOS Control, Chrome, macOS, Android, and web
+- real Solana infrastructure using SolanaTracker RPC/Datastream, Jupiter, Hyperliquid, Aster, and x402
+- an optional hardware layer for Arduino Modulino sensors and physical controls
+
+This repository is the public source of truth for SolanaOS. It includes the Go runtime, gateway tooling, Android surfaces, skills, npm installer packages, and the SolanaOS Hub frontend.
+
+This README is the GitHub front door. Use it to install, explore the live surfaces, and understand how the repo is organized.
+
+## Why Solana Developers Care
+
+| If you want to... | Use SolanaOS for... |
+| --- | --- |
+| ship a local-first Solana agent | Go runtime + gateway + Telegram + wallet control |
+| distribute reusable agent workflows | `@nanosolana/nanohub` + the public Hub registry |
+| build Seeker/mobile wallet experiences | Android app + Mobile Wallet Adapter + Phantom + pairing flow |
+| experiment with agent identity | [`SOUL.md`](SOUL.md) + Souls registry + strategy docs |
+| connect research, execution, and memory | SolanaTracker, Jupiter, Hyperliquid, Aster, Honcho, x402 |
+
+## Start Here
+
+- Public repo: [github.com/x402agent/Solana-Os-Go](https://github.com/x402agent/Solana-Os-Go)
+- Launch page: [solanaos.net](https://solanaos.net)
+- Live Hub: [seeker.solanaos.net](https://seeker.solanaos.net)
+- Soul library: [souls.solanaos.net](https://souls.solanaos.net)
+- Hosted docs: [go.solanaos.net](https://go.solanaos.net)
+- Short landing page: [docs/LANDING.md](docs/LANDING.md)
+- Release notes: [docs/RELEASE-2026-03-v2.md](docs/RELEASE-2026-03-v2.md)
+- Honcho memory integration: [docs/honcho-integration.md](docs/honcho-integration.md)
+- Command cheat sheet: [docs/command-cheatsheet.md](docs/command-cheatsheet.md)
+- NotebookLM pack: [docs/notebooklm-pack.md](docs/notebooklm-pack.md)
+- Adding a messaging platform: [docs/adding-a-messaging-platform.md](docs/adding-a-messaging-platform.md)
+- Hardware guide: [docs/HARDWARE.md](docs/HARDWARE.md)
+- Troubleshooting: [docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md)
+- Control API: [docs/control-api.md](docs/control-api.md)
+- Fly deployment: [docs/fly-deployment.md](docs/fly-deployment.md)
+- SolanaOS identity prompt: [SOUL.md](SOUL.md)
+- Trading playbook: [strategy.md](strategy.md)
+
+## Live Surfaces
+
+| Surface | URL | What |
+| --- | --- | --- |
+| **Launch Page** | [solanaos.net](https://solanaos.net) | Live launch surface with terminal boot sequence and direct links into the mobile dapp, dashboard, and skills |
+| **Mobile dApp** | [/mobile](https://seeker.solanaos.net/mobile) | Public Seeker experience page covering pairing, Solana, Grok, chat, voice, ORE, canvas, and settings |
+| **SolanaOS Hub** | [seeker.solanaos.net](https://seeker.solanaos.net) | Skill registry, agent factory, dashboard, Seeker pairing |
+| **SolanaOS Souls** | [souls.solanaos.net](https://souls.solanaos.net) | SOUL.md library for agent system prompts |
+| **Hosted Docs** | [go.solanaos.net](https://go.solanaos.net) | Public docs and install/reference material |
+| **Dashboard** | [/dashboard](https://seeker.solanaos.net/dashboard) | Live art feed, agent factory, wallet connect, Seeker pairing |
+| **Mining** | [/mining](https://seeker.solanaos.net/mining) | BitAxe fleet dashboard with OODA auto-tuning and TamaGOchi pets |
+| **Strategy Builder** | [/strategy](https://seeker.solanaos.net/strategy) | Configure multi-venue trading parameters, export strategy.md |
+| **Skill Creator** | [/create](https://seeker.solanaos.net/create) | Build SKILL.md files with guided wizard |
+| **Private Chat** | [/chat](https://seeker.solanaos.net/chat) | Wallet-to-wallet encrypted private messaging with Honcho persistent memory |
+| **IPFS Hub** | [/ipfs](https://seeker.solanaos.net/ipfs) | Private IPFS file storage per wallet, mesh sync, mainnet deploy pipeline |
+| **Android App** | Solana Seeker | Mobile control surface with MWA wallet |
+| **CLI** | `npx @nanosolana/nanohub` | Install, search, publish skills from terminal |
+
+### Setup Guides
+
+| Guide | URL | What |
+| --- | --- | --- |
+| **Gateway** | [/setup/gateway](https://seeker.solanaos.net/setup/gateway) | Install the Go binary, configure .env, connect hardware, start gateway |
+| **Telegram Bot** | [/setup/telegram](https://seeker.solanaos.net/setup/telegram) | Create bot via BotFather, get chat ID, configure, test |
+| **Metaplex Agent** | [/setup/metaplex](https://seeker.solanaos.net/setup/metaplex) | Install Metaplex Skill, register on 014 Registry, delegate execution |
+| **BitAxe Mining** | [/setup/mining](https://seeker.solanaos.net/setup/mining) | Local-first Bitaxe setup, Seeker pairing, optional standalone MawdAxe |
+| **Chrome Extension** | [/setup/extension](https://seeker.solanaos.net/setup/extension) | Load unpacked extension, connect to gateway, 5-tab control surface |
+
+## Packages
+
+```bash
+# Public Hub CLI — search, install, publish skills
+npx @nanosolana/nanohub --help
+
+# One-shot installer — binary + web + daemon
+npx solanaos-computer@latest install --with-web
+
+# Compatibility CLI aliases
+npx solanaos-cli@latest --help
+npx nanosolana-cli@latest --help
+```
+
+| Package | Purpose |
+| --- | --- |
+| [`solanaos-computer`](https://www.npmjs.com/package/solanaos-computer) | Main one-shot installer |
+| [`solanaos-cli`](https://www.npmjs.com/package/solanaos-cli) | Primary CLI package alias |
+| [`nanosolana-cli`](https://www.npmjs.com/package/nanosolana-cli) | Compatibility installer alias |
+| [`@nanosolana/nanohub`](https://www.npmjs.com/package/@nanosolana/nanohub) | Skill registry CLI |
+
+### Authentication
+
+The Hub supports four sign-in methods:
+
+- **GitHub OAuth** — developer identity, linked to Convex user
+- **Phantom Connect** — Solana wallet via Phantom SDK (Google, Apple, extension)
+- **Seeker Pairing** — QR deep-link from the Android app, wallet-backed session
+- **Mobile Wallet Adapter** — Android Chrome users connect via installed wallet app
+
+All methods link to the same Convex user record. Phantom wallets auto-link to GitHub accounts when both are connected.
+
+### Published Skills
+
+The SolanaOS skill is published to the Hub and can be installed by any AI agent:
+
+```bash
+npx @nanosolana/nanohub install solanaos
+```
+
+Browse all 80+ skills at [seeker.solanaos.net/skills](https://seeker.solanaos.net/skills).
+
+### Go Packages (pkg/)
+
+| Package | What |
+| --- | --- |
+| `pkg/agent/` | OODA loop, context compression, smart routing, insights, redaction, model metadata |
+| `pkg/acp/` | ACP JSON-RPC server for VS Code/Cursor editor integration |
+| `pkg/honcho/` | Honcho v3 client — sessions, peers, conclusions, dialectic, dreams |
+| `pkg/memory/` | Epistemological vault interface, Honcho adapter, ClawVault local memory |
+| `pkg/solana/` | SolanaTracker RPC/Datastream, Jupiter swaps, SolanaTracker swap API |
+| `pkg/trading/` | Unified trading engine (Hyperliquid + Aster) with risk validation |
+| `pkg/blockchain/` | On-chain queries with USD pricing — wallets, tokens, research |
+| `pkg/hyperliquid/` | Hyperliquid perps — positions, orders, fills, leverage, WebSocket |
+| `pkg/aster/` | Aster perps — account, positions, income, orders |
+| `pkg/tailscale/` | Mesh networking — gateway on both local and Tailscale interfaces |
+| `pkg/daemon/` | Daemon orchestrator — wires everything together |
+| `pkg/config/` | Config loader — env vars, JSON, defaults |
+| `pkg/skills/` | Skills manager — install, search, inject into LLM context |
+| `pkg/tamagochi/` | TamaGOchi companion state driven by trading P&L |
+| `pkg/hardware/` | Arduino Modulino I2C — LEDs, buzzer, knob, IMU, ToF |
+| `pkg/x402/` | x402 payment protocol — USDC-gated APIs |
+| `pkg/gateway/` | Gateway API server with memory, trading, chat endpoints |
+| `pkg/pinata/` | Pinata Private IPFS Hub — upload, list, access links, groups, mesh sync, mainnet deploy |
+
+### Architecture
+
+```
+solanaos.net ─── Launch page (animated preview)
+     │
+seeker.solanaos.net (Netlify SSR + Convex)
+     ├── /launch ──── Live terminal launch surface with product entry CTAs
+     ├── /mobile ──── Public Seeker mobile dapp walkthrough
+     ├── /dashboard ── Art feed, 8004 agent factory, Seeker pairing
+     ├── /mining ───── BitAxe fleet dashboard (connects to MawdAxe API)
+     ├── /strategy ─── Multi-venue parameter builder → strategy.md
+     ├── /create ───── Skill creator wizard → SKILL.md
+     ├── /skills ───── Browse 80+ agent skills
+     ├── /chat ──────── Private wallet-to-wallet chat with Honcho memory
+     ├── /ipfs ──────── Private IPFS hub — files, groups, deploy, mesh sync
+     ├── /upload ───── Publish skills to registry
+     ├── /import ───── Import from GitHub URL
+     ├── /setup/* ──── Gateway, Telegram, Metaplex, Mining, Extension guides
+     └── /auth/* ───── GitHub OAuth + Phantom Connect + MWA
+          ↕ Convex (artful-frog-940)
+               ├── Users, agents, pairing sessions, gallery
+               ├── Skills, souls, search embeddings
+               ├── Private chat threads + messages (Honcho-backed memory)
+               └── GitHub OAuth + Phantom auth + wallet linking
+
+souls.solanaos.net ─── SOUL.md library (same deployment, dual-mode)
+
+Local Operator Machine
+     ├── solanaos daemon (Go binary, <10MB)
+     │    ├── OODA trading loop (spot + perps)
+     │    ├── Telegram bot (60+ commands)
+     │    │    ├── Image understanding (Grok Vision)
+     │    │    ├── Auto-detect Solana contract addresses
+     │    │    ├── Natural language token queries
+     │    │    └── Remote control (Claude Code)
+     │    ├── Gateway API (port 18790)
+     │    └── Honcho v3 + vault memory
+     ├── Web Backend (port 18800)
+     │    ├── Control console UI
+     │    ├── Setup code generation (QR)
+     │    └── Proxies to gateway + control API
+     ├── MawdAxe (port 8420)
+     │    ├── BitAxe fleet OODA loop
+     │    ├── REST API + SSE live stream
+     │    └── TamaGOchi pet system
+     ├── Control API (port 7777)
+     │    └── Wallet, status, chat, tools
+     └── Chrome Extension
+          └── Wallet, Seeker, Miner, Chat, Tools tabs
+```
+
+Public routes include `/`, `/launch`, `/mobile`, `/solanaos`, and `/pair`. Authenticated routes still require GitHub, Phantom wallet, or Seeker pairing. The web backend runs locally and generates setup codes for clients to connect through the gateway.
+
+## Repo Map
+
+This monorepo contains product code, client apps, deployment config, registry metadata, bundled skills, and a few local-only cache/build folders. If you are reading the repo for the first time, the main product code lives in `cmd/`, `pkg/`, `apps/`, `nanohub/`, `docs/`, `scripts/`, `skills/`, and `src/`.
+
+### Top-level directories and files
+
+| Path | What it is |
+| --- | --- |
+| `.agents/` | Local agent workflow config used by Codex-style development in this repo. |
+| `.agents/skills/` | Repo-local installed skill definitions used by the agent tooling layer. |
+| `.github/` | GitHub repo config, ownership, and CI/CD automation. |
+| `.github/workflows/` | Actions workflows including npm release, TruffleHog secret scanning, protected paths, and launch-readiness verification. |
+| `.gocache-local/` | Local Go build cache for isolated or sandboxed builds and tests. Not product source. |
+| `.gomodcache-local/` | Local Go module cache for isolated dependency downloads. Not product source. |
+| `.netlify/` | Local Netlify runtime/build state used during Netlify-oriented frontend work. |
+| `.vscode/` | Workspace editor settings for local development. |
+| `.vscode/settings.json` | VS Code workspace settings file for this repo. |
+| `acp_registry/` | ACP registry metadata published from this repo. |
+| `acp_registry/agent.json` | SolanaOS agent registry descriptor. |
+| `apps/` | User-facing applications layered on top of the runtime. |
+| `apps/android/` | Solana Seeker Android app with onboarding, wallet pairing, chat, Grok, ORE, voice, and runtime controls. |
+| `apps/macos/` | Native macOS menu bar app and packaging/build files. |
+| `apps/dapp-publishing-main/` | Dapp publishing workspace/vendor subtree used by related ecosystem tooling. |
+| `chrome-extension/` | Chrome extension popup/background code, icons, manifest, and UI assets. |
+| `cmd/` | Go binary entrypoints such as `solanaos`, gateway API, control API, and TUI programs. |
+| `docs/` | Deployment docs, hardware docs, reference material, examples, release notes, and protocol guides. |
+| `internal/` | Internal Go-only packages that are not meant to be imported outside this module. |
+| `mawdbot-bitaxe/` | Standalone BitAxe service/dashboard with its own Go module, Dockerfiles, migrations, and web UI. |
+| `nanohub/` | Public web product: launch page, mobile dapp page, dashboard, registry, pairing flow, and Netlify/Convex app. |
+| `node_modules/` | Root JavaScript dependency install tree. Generated locally. Not canonical source. |
+| `npm/` | npm package workspaces such as `solanaos`, installers, and compatibility aliases. |
+| `pkg/` | Core Go library surface: runtime, gateway, Solana, trading, memory, control API, voice, hardware, x402, and integrations. |
+| `scripts/` | Build, packaging, deployment, install, and helper scripts across the monorepo. |
+| `skills/` | Bundled publishable `SKILL.md` packages surfaced through NanoHub and agent workflows. |
+| `src/` | Shared TypeScript utilities, schemas, and agent-facing code outside the `nanohub` app itself. |
+
+### What to read first
+
+1. `README.md`, `strategy.md`, `SOUL.md`, and `docs/` for the product and operator model.
+2. `cmd/` to see the binaries and how the system is launched.
+3. `pkg/` to understand the real runtime, gateway, Solana, memory, and trading internals.
+4. `nanohub/` for the public web surfaces, Netlify deployment path, mobile dapp page, and pairing funnel.
+5. `apps/android/`, `apps/macos/`, and `chrome-extension/` for the user-facing clients.
+6. `skills/`, `acp_registry/`, and `.agents/` for the distribution and agent-tooling layers.
+
+## Public Links
+
+| Category | Link |
+| --- | --- |
+| Repo | [github.com/x402agent/Solana-Os-Go](https://github.com/x402agent/Solana-Os-Go) |
+| Launch | [solanaos.net](https://solanaos.net) |
+| Hub | [seeker.solanaos.net](https://seeker.solanaos.net) |
+| Souls | [souls.solanaos.net](https://souls.solanaos.net) |
+| Docs | [go.solanaos.net](https://go.solanaos.net) |
+| Dashboard | [seeker.solanaos.net/dashboard](https://seeker.solanaos.net/dashboard) |
+| Mining | [seeker.solanaos.net/mining](https://seeker.solanaos.net/mining) |
+| Strategy | [seeker.solanaos.net/strategy](https://seeker.solanaos.net/strategy) |
+| Skill Creator | [seeker.solanaos.net/create](https://seeker.solanaos.net/create) |
+| Skills | [seeker.solanaos.net/skills](https://seeker.solanaos.net/skills) |
+| Chat | [seeker.solanaos.net/chat](https://seeker.solanaos.net/chat) |
+| Gateway setup | [seeker.solanaos.net/setup/gateway](https://seeker.solanaos.net/setup/gateway) |
+| Telegram setup | [seeker.solanaos.net/setup/telegram](https://seeker.solanaos.net/setup/telegram) |
+| Metaplex setup | [seeker.solanaos.net/setup/metaplex](https://seeker.solanaos.net/setup/metaplex) |
+| Mining setup | [seeker.solanaos.net/setup/mining](https://seeker.solanaos.net/setup/mining) |
+| Extension setup | [seeker.solanaos.net/setup/extension](https://seeker.solanaos.net/setup/extension) |
+
+## Public Repo Notes
+
+- Primary public repo: `https://github.com/x402agent/Solana-Os-Go`
+- Primary binary / CLI name: `solanaos`
+- Compatibility alias: `nanosolana`
+- Secrets belong in `.env` or deployment environment variables only
+
+## IPFS Hub + Mainnet Deployment Pipeline
+
+SolanaOS includes a Private IPFS Hub powered by Pinata that provides per-wallet file storage and a full mainnet deployment pipeline for registering agents as Solana NFTs.
+
+### Architecture
+
+```
+Upload (any surface)
+  ├── Web Hub (/ipfs) ─── Convex auth + wallet connect
+  ├── Go daemon ───────── pkg/pinata/ client
+  ├── Seeker mobile ───── presigned URLs, camera capture
+  ├── Android app ─────── localhost bridge (/api/ipfs/*)
+  └── Mesh nodes ──────── Tailscale + BLE auto-sync
+
+Pinata Private IPFS
+  ├── Wallet-scoped groups (wallet:{addr})
+  ├── GitHub-scoped groups (github:{user})
+  ├── Device-scoped groups (device:{id})
+  └── Keyvalue filtering (solana_wallet, github_user, device_id)
+
+Convex (real-time tracking)
+  ├── ipfsFiles — per-file tracking with identity + sync state
+  ├── ipfsGroups — group-to-identity mapping
+  └── ipfsAccessLog — temporary access link audit trail
+
+Mainnet Deploy
+  ├── Pin metadata to Private IPFS (8004-compatible format)
+  ├── Pin NFT metadata to Private IPFS (Metaplex Core format)
+  ├── Register on-chain via 8004 SDK → asset + ATOM reputation
+  ├── Register on-chain via Metaplex mpl-core → NFT + identity PDA
+  └── Mesh-sync deployment info to all Tailscale/BLE nodes
+```
+
+### API Endpoints
+
+| Method | Path | What |
+| --- | --- | --- |
+| `GET` | `/api/v1/ipfs/files?wallet=...` | List files by wallet, GitHub, or device |
+| `GET` | `/api/v1/ipfs/files/:cid` | Get file by CID |
+| `GET` | `/api/v1/ipfs/stats?wallet=...` | Storage stats per wallet |
+| `GET` | `/api/v1/ipfs/groups?wallet=...` | List IPFS groups per wallet |
+| `POST` | `/api/v1/ipfs/track` | Record an uploaded file |
+| `POST` | `/api/v1/ipfs/access` | Log access link creation |
+| `POST` | `/api/v1/ipfs/deploy` | Deploy agent to Solana mainnet (8004 + Metaplex) |
+| `POST` | `/api/v1/ipfs/delete` | Remove tracked file |
+
+### Environment Variables
+
+```bash
+PINATA_API_KEY=          # Pinata API key
+PINATA_API_SECRET=       # Pinata API secret
+PINATA_JWT=              # Pinata JWT (preferred auth)
+PINATA_GATEWAY=          # Your gateway domain (e.g. your-gateway.mypinata.cloud)
+PINATA_MESH_SYNC=true    # Auto-sync files across Tailscale/BLE mesh
+```
+
+### Go Usage
+
+```go
+import "github.com/x402agent/Solana-Os-Go/pkg/pinata"
+
+hub := pinata.NewHub(pinata.Config{JWT: os.Getenv("PINATA_JWT"), Gateway: os.Getenv("PINATA_GATEWAY")})
+mesh := pinata.NewMeshSync(hub)
+deployer := pinata.NewDeployer(hub, mesh)
+
+// Upload per-wallet
+result, _ := hub.UploadForWallet(ctx, walletAddr, "data.json", reader, nil)
+
+// Recall with temporary URL
+url, _ := hub.RecallFile(ctx, result.CID, 300)
+
+// Deploy to mainnet
+deployResult, _ := deployer.Deploy(ctx, pinata.DeployConfig{
+    WalletAddress: walletAddr,
+    Mode:          pinata.DeployModeDual,
+    Cluster:       "mainnet-beta",
+    Name:          "My Agent",
+    ATOMEnabled:   true,
+    MeshSync:      true,
+})
+```
+
+## What Changed In v3
+
+### Remote Control — Drive Your Mac From Telegram
+
+SolanaOS now supports **Claude Code Remote Control** from Telegram. Start a `claude remote-control` server on your Mac and send natural language commands from your phone.
+
+- `/remote start` — start a Claude remote-control server on your local machine
+- `/remote <instruction>` — execute any command in natural language (e.g. `/remote check disk usage`, `/remote open Safari and go to github.com`, `/remote find all Python files modified today`)
+- `/remote status` / `/remote stop` / `/remote list` — manage sessions
+- Natural language triggers: "control my mac", "remote control", "use my computer"
+- Auto-starts a session if you send a command without one running
+- Full environment access: filesystem, tools, MCP servers, project config
+
+### Image Understanding — Grok Vision From Telegram
+
+Send any image to the Telegram bot and get AI-powered analysis using **xAI Grok Vision**.
+
+- **Send a photo with no caption** — auto-describes the image in detail
+- **Send a photo with a question** — answers your question about the image (e.g. "what breed is this dog?")
+- **Send a photo with `/vision`** — explicit vision mode
+- `/vision <url> [question]` — analyze an image by URL
+- Supports compressed photos and document-mode images (JPEG/PNG)
+- Uses the xAI Responses API with `input_image` type
+
+### Auto-Detect Solana Contract Addresses
+
+Paste any Solana mint address into the Telegram chat and get **instant realtime token data** from Solana Tracker.
+
+- Paste `6p6xgHyF7AeE6TZkSmFsko444wqoP15icUSqi2jfGiPN` → instantly returns price, market cap, liquidity, holders, risk score, 24h change, pool info
+- Works for any base58 address (32-44 chars) — no slash command needed
+- Powered by SolanaTracker Data API
+
+### Natural Language Token Queries
+
+Ask about any token in plain English and get live data:
+
+- "what is TRUMP" / "price of BONK" / "tell me about WIF" / "check POPCAT"
+- "lookup SOL" / "research PENGU" / "analyze JUP" / "info on RENDER"
+- 20+ query prefixes supported
+- Exact symbol match → full token info with price, MC, liquidity, holders, risk, 24h change
+- Multiple matches → shows top 5 results with key metrics
+- Falls through to LLM for conversational follow-up
+
+### New Telegram Commands
+
+| Command | What |
+| --- | --- |
+| `/remote` | Remote control your Mac via Claude Code |
+| `/remote start` | Start Claude remote-control server |
+| `/remote send <instruction>` | Send natural language command to your Mac |
+| `/remote stop` | Stop remote session |
+| `/vision` | Analyze images with Grok Vision |
+
+### Previous Changes (v2)
+
+- SolanaTracker is now the default RPC provider, with Helius as fallback.
+- SolanaTracker Datastream support is live for real-time token, wallet, holder, price, sniper, insider, and pool feeds.
+- Honcho v3 memory is integrated for session summaries, peer context, and durable trading conclusions.
+- Telegram now exposes the unified memory and perp surface directly, including `/positions`, `/dream`, `/profile`, and `/card`.
+- Spot `/buy` and `/sell` now prefer SolanaTracker swap execution in Telegram when `SOLANA_TRACKER_API_KEY` is configured, with the older on-chain path kept as fallback.
+- NanoHub ACP registry sync now resolves against the linked Solana wallet and GitHub-backed Hub user instead of creating split identities.
+- Mining and extension setup now have first-class Hub pages at `/mining`, `/setup/mining`, and `/setup/extension`.
+- OpenRouter `xiaomi/mimo-v2-pro` is wired in as the dedicated Mimo reasoning path.
+- Grok image and video generation are available in Telegram, including natural-language routing for media requests.
+- The web UI, extension, and docs were updated around the SolanaOS branding and current runtime surfaces.
+
+## What SolanaOS Includes
+
+| Area | What it does |
+| --- | --- |
+| Runtime | OODA loop, strategy engine, wallet state, heartbeats, automation |
+| Solana | SolanaTracker RPC/WSS/Datastream, SolanaTracker swap, Jupiter fallback, Helius DAS |
+| Memory | Honcho v3 dialectic + local vault + Convex cloud. KNOWN/LEARNED/INFERRED tiers |
+| Agent | Context compression, smart model routing, insights extraction, prompt caching, redaction |
+| LLMs | OpenRouter, xAI/Grok (vision + image gen + video), Anthropic/Claude Code, Ollama/DeepSolana, Mimo reasoning |
+| Trading | Spot (natural language + auto-detect contract addresses), Hyperliquid perps, Aster perps, multi-venue strategy |
+| Channels | Telegram (60+ commands + image understanding + remote control), Chrome extension, macOS, Android Seeker, web gateway |
+| Remote Control | Claude Code remote-control server, Telegram-driven Mac control, natural language dispatch |
+| Vision | Grok Vision image understanding from Telegram photos, URL-based analysis, auto-detect photo messages |
+| Editor | ACP server for VS Code, Cursor, Zed integration (12 Solana tools) |
+| Hub | Skills registry, agent factory, strategy builder, skill creator, mining dashboard, private chat |
+| Mining | MawdAxe BitAxe fleet management with OODA auto-tuning + TamaGOchi pets |
+| Payments | x402 paywall and facilitator proxy |
+| Hardware | Arduino Modulino LEDs, buzzer, buttons, knob, IMU, thermo, ToF |
+| Security | TruffleHog scanning, secret redaction, auth gate on Hub |
+
+## Quick Start
+
+### Recommended install
+
+```bash
+npx solanaos-computer@latest install --with-web
+cd ~/solanaos
+$EDITOR .env
+~/.nanosolana/bin/solanaos version
+~/.nanosolana/bin/solanaos gateway setup-code
+~/.nanosolana/bin/solanaos daemon
+```
+
+Primary command names:
+
+- `solanaos` is the primary binary and CLI name
+- `nanosolana` remains available as a compatibility alias
+
+Compatibility npm packages still exist:
+
+- `solanaos-computer`
+- `solanaos-cli`
+- `nanosolana-cli`
+
+### Fast local dev path
+
+```bash
+git clone https://github.com/x402agent/Solana-Os-Go.git
+cd Solana-Os-Go
+cp .env.example .env
+make build
+./build/solanaos version
+./build/solanaos status
+./build/solanaos daemon
+```
+
+### Minimum useful `.env`
+
+```bash
+# SolanaTracker
+SOLANA_TRACKER_API_KEY=your-key
+SOLANA_TRACKER_RPC_URL=https://rpc-mainnet.solanatracker.io/?api_key=your-key
+SOLANA_TRACKER_WSS_URL=wss://rpc-mainnet.solanatracker.io/?api_key=your-key
+SOLANA_TRACKER_DATA_API_KEY=your-data-key
+
+# LLM
+OPENROUTER_API_KEY=sk-or-v1-...
+OPENROUTER_MODEL=minimax/minimax-m2.7
+OPENROUTER_OMNI_MODEL=xiaomi/mimo-v2-pro
+OPENROUTER_MIMO_MODEL=xiaomi/mimo-v2-pro
+LLM_PROVIDER=openrouter
+
+# Telegram
+TELEGRAM_BOT_TOKEN=...
+TELEGRAM_ID=123456789
+
+# Honcho
+HONCHO_ENABLED=true
+HONCHO_API_KEY=hch-v3-...
+# Optional override if self-hosting; production default is already api.honcho.dev
+HONCHO_BASE_URL=https://api.honcho.dev
+HONCHO_WORKSPACE_ID=solanaos
+HONCHO_AGENT_PEER_ID=solanaos-agent
+HONCHO_SESSION_STRATEGY=per-chat
+HONCHO_DIALECTIC_ENABLED=true
+
+# Optional Helius fallback
+HELIUS_API_KEY=...
+HELIUS_RPC_URL=https://mainnet.helius-rpc.com/?api-key=...
+```
+
+### Smoke test
+
+```bash
+./build/solanaos solana wallet
+./build/solanaos status
+./build/solanaos gateway setup-code
+./build/solanaos daemon
+```
+
+### Solana Seeker pairing
+
+For Android/Seeker onboarding, generate or reprint the shared gateway setup code:
+
+```bash
+~/.nanosolana/bin/solanaos gateway start
+~/.nanosolana/bin/solanaos gateway setup-code
+cat ~/.nanosolana/connect/setup-code.txt
+```
+
+If Seeker should connect over LAN/manual host instead of Tailscale, start the bridge with `~/.nanosolana/bin/solanaos gateway start --no-tailscale`. If you moved the bridge off the default raw native port, use `~/.nanosolana/bin/solanaos gateway start --port <port>` and regenerate `~/.nanosolana/connect/setup-code.txt`.
+
+Use the printed code or `~/.nanosolana/connect/setup-code.txt` in:
+
+- Solana Seeker onboarding
+- the Connect tab setup code field
+
+The one-shot installer already writes the bundle to `~/.nanosolana/connect/`, and `solanaos gateway start` now prints the setup code path on launch.
+
+## Daily Operator Commands
+
+Full grouped CLI, Telegram, and NanoHub reference:
+[docs/command-cheatsheet.md](docs/command-cheatsheet.md)
+
+```bash
+./build/solanaos daemon
+./build/solanaos ooda --sim --interval 30
+./build/solanaos pet
+./build/solanaos solana health
+./build/solanaos nanobot
+./build/solanaos gateway start
+./build/solanaos gateway setup-code
+./build/solanaos menubar
+```
+
+Web console:
+
+```bash
+./build/solanaos-web --no-browser
+```
+
+## Release Hygiene
+
+Before pushing the repo publicly, verify:
+
+- `.env`, private keys, and deployment tokens are not tracked
+- local caches like `.gocache`, `.gomodcache`, `.gopath`, and `.netlify` are not tracked
+- compiled binaries and APKs are attached to GitHub releases, not committed to the repo root
+- npm packages pack cleanly with `npm run pack:npm`
+- installer URLs and docs point at the public repo
+
+## Telegram Control
+
+Set `TELEGRAM_BOT_TOKEN` and optionally `TELEGRAM_ID` to lock the bot to your account. The daemon auto-registers commands on startup.
+
+For the full grouped command set, including Hyperliquid, Aster, memory, skills, and NanoHub workflows, see [docs/command-cheatsheet.md](docs/command-cheatsheet.md).
+
+### Slash Commands
+
+**Core:**
+`/status`, `/wallet`, `/pet`, `/trending`, `/scanner`, `/ooda`, `/sim`, `/live`, `/strategy`, `/version`
+
+**Spot Trading:**
+`/buy <symbol|mint> <amount_sol>`, `/sell <symbol|mint> <amount|pct%|all>`, `/swap`, `/price <token>`, `/research <mint>`
+
+**Hyperliquid Perps:**
+`/hl`, `/hl_positions`, `/hl_open <symbol> <side> [size] [leverage]`, `/hl_close <symbol>`, `/hl_orders`, `/hl_fills`, `/hl_candles`, `/positions`
+
+**Aster Perps:**
+`/aster`, `/aster_positions`, `/aster_open <symbol> <side>`, `/aster_close <symbol>`, `/aster_trades`, `/aster_income`
+
+**Memory (Honcho v3):**
+`/memory`, `/recall <query>`, `/remember <fact>`, `/ask_memory <question>`, `/forget <query>`, `/dream`, `/profile`, `/card`
+
+**Honcho Admin:**
+`/honcho_status`, `/honcho_context`, `/honcho_sessions`, `/honcho_summaries`, `/honcho_search <query>`, `/honcho_messages`, `/honcho_conclusions`
+
+**Skills & Media:**
+`/skills`, `/skill <name>`, `/skill_find <query>`, `/mimo <prompt>`, `/web <query>`, `/xsearch <query>`, `/image <prompt>`, `/video <prompt>`
+
+### Natural Language Trading
+
+SolanaOS understands trading intent from plain English — no slash commands needed:
+
+**Spot buys** (prefers SolanaTracker swap, falls back to the legacy on-chain route if needed):
+```
+buy 0.5 SOL worth of BONK
+ape into WIF with 1 sol
+snipe that new token with 0.1
+yolo 2 sol into PENGU
+grab some MEW
+```
+
+**Spot sells:**
+```
+sell all my BONK
+dump half my WIF
+paper hand MEW
+exit my position in JUP
+```
+
+**Hyperliquid perps:**
+```
+long BTC on HL with 5x
+short ETH 3x
+close my BTC position
+show my HL positions
+```
+
+**Aster perps:**
+```
+long SOL on aster
+close btc on aster
+show aster positions
+what's my aster pnl
+```
+
+**Filtered out (NOT executed):**
+```
+should I buy BONK?           → treated as question, not trade
+what do you think about WIF? → research, not execution
+price of SOL                 → lookup, not trade
+research this token          → analysis, not execution
+```
+
+The system distinguishes execution intent from research questions using verb detection and question filtering. Simulated mode (`/sim`) previews trades; live mode (`/live`) signs and lands the transaction on-chain. When `SOLANA_TRACKER_API_KEY`, `SOLANA_TRACKER_RPC_URL`, and `SOLANA_TRACKER_WSS_URL` are configured, Telegram spot flows use SolanaTracker for swap building, priority fees, and RPC transport.
+
+## Memory
+
+SolanaOS has two memory layers:
+
+### Local memory
+
+- recursive vault capture
+- searchable user model and learned facts
+- transparent learning status and memory search commands
+
+### Honcho v3
+
+- session summaries
+- peer representations
+- durable conclusions about user behavior and trading preferences
+- session recall inside Telegram and prompt enrichment inside the daemon
+
+Recommended Honcho env:
+
+```bash
+HONCHO_ENABLED=true
+HONCHO_API_KEY=hch-v3-...
+HONCHO_WORKSPACE_ID=solanaos
+HONCHO_AGENT_PEER_ID=solanaos-agent
+HONCHO_BASE_URL=https://api.honcho.dev
+HONCHO_SESSION_STRATEGY=per-chat
+HONCHO_DIALECTIC_ENABLED=true
+```
+
+Useful Telegram memory commands:
+
+```text
+/memory
+/recall what risk preferences have I shown?
+/remember I prefer spot only by default
+/ask_memory what kind of trader am I?
+/forget perps
+/honcho_context
+/honcho_sessions
+/honcho_summaries
+/honcho_search risk tolerance
+/honcho_messages
+/honcho_conclusions
+/dream
+/profile
+/card
+```
+
+## Private Chat
+
+SolanaOS Hub includes a real-time private chat system at [/chat](https://seeker.solanaos.net/chat) for wallet-to-wallet messaging between authenticated Hub users.
+
+### Features
+
+- **Dual auth** — sign in with Solana wallet (Phantom, Seeker, MWA) or GitHub OAuth
+- **Identity bar** — shows your GitHub `@handle` or wallet address with a live online indicator
+- **Real-time sync** — Convex reactive queries push new messages instantly to all connected clients
+- **Honcho persistent memory** — every message is ingested into Honcho v3 in the background for cross-session reasoning about user context
+- **Thread-based** — conversations are organized as 1:1 threads between wallet addresses
+- **Animated UI** — fade-in, slide-up, and bubble animations on messages, threads, and page transitions
+- **Deduplication** — client-generated message IDs prevent duplicate sends on retry
+
+### How it works
+
+```text
+User A (wallet or GitHub)           User B (wallet or GitHub)
+        │                                    │
+        ├──── sendMessage mutation ──────────►│
+        │         │                          │
+        │    ┌────▼────┐                     │
+        │    │ Convex   │◄── useQuery ───────┤
+        │    │ Database │    (real-time)      │
+        │    └────┬────┘                     │
+        │         │                          │
+        │    ctx.scheduler.runAfter(0)       │
+        │         │                          │
+        │    ┌────▼────┐                     │
+        │    │ Honcho   │                    │
+        │    │ v3 API   │ ── background reasoning
+        │    └─────────┘     (peers, sessions, conclusions)
+```
+
+### Convex backend
+
+| Function | Type | What |
+| --- | --- | --- |
+| `chat.listThreads` | query | List conversations for a wallet, enriched with peer display names |
+| `chat.listMessages` | query | Real-time message subscription per thread (newest 100) |
+| `chat.sendMessage` | mutation | Send a message, auto-create thread, schedule Honcho ingestion |
+| `chat.getOrCreateThread` | mutation | Start a conversation with any Solana wallet address |
+| `chat.getThread` | query | Get thread metadata |
+| `chat.findThread` | query | Check if a thread exists between two wallets |
+| `honcho.ingestMessage` | action | Send message to Honcho v3 for background reasoning |
+| `honcho.getContextForUser` | action | Query Honcho for synthesized insights about a user |
+
+### Honcho integration
+
+Every chat message is asynchronously ingested into Honcho v3 via a scheduled Convex action. This means:
+
+- Each wallet becomes a Honcho **peer** (`wallet:<address>`)
+- Each thread becomes a Honcho **session** (`thread:<id>`)
+- Honcho's reasoning engine processes messages in the background to build durable conclusions about users
+- These conclusions persist across sessions and can be queried for personalized context
+
+### Environment
+
+```bash
+# Set on Convex deployment (already configured)
+HONCHO_API_KEY=hch-v3-...
+```
+
+## Models
+
+SolanaOS can talk to several model providers:
+
+- OpenRouter
+- xAI / Grok
+- Anthropic
+- Ollama
+
+Current notable paths:
+
+- `OPENROUTER_MODEL` for general OpenRouter chat
+- `OPENROUTER_OMNI_MODEL` for omni/multimodal routing
+- `OPENROUTER_MIMO_MODEL=xiaomi/mimo-v2-pro` for `/mimo`
+- `XAI_IMAGE_MODEL` for `/image`
+- `XAI_VIDEO_MODEL` for `/video`
+- `OLLAMA_MODEL=minimax-m2.7:cloud` for local fallback and `/deepsolana`
+
+## Trading Stack
+
+### Solana
+
+- SolanaTracker RPC and WSS are the default
+- SolanaTracker Datastream powers real-time websocket feeds
+- SolanaTracker powers Telegram swap build-and-send flows when configured
+- The legacy Jupiter/on-chain execution path remains available as fallback
+- Helius remains the fallback provider for DAS and fallback RPC paths
+
+### Perps
+
+- Hyperliquid support for balance, positions, orders, fills, leverage, candles, and websocket-driven triggers
+- Aster support for account, positions, orders, income, and natural-language Telegram routing
+
+### Startup pump launch
+
+Optional one-time launch on daemon boot:
+
+```bash
+PUMP_LAUNCH_ENABLED=true
+PUMP_LAUNCH_CONFIRM=launch
+PUMP_LAUNCH_MODE=once_only
+PUMP_LAUNCH_NAME=SolanaOS
+PUMP_LAUNCH_SYMBOL=NANO
+```
+
+The daemon persists launch state and refuses to relaunch in `once_only` mode unless you intentionally reset it.
+
+### Pump.fun Token Scanner
+
+Automated pipeline that scans pump.fun for the top 100 trending tokens, classifies them by trading tiers, and sends Telegram alerts.
+
+**Data Sources:**
+
+| Source | Access | What It Provides |
+|--------|--------|-----------------|
+| pump.fun/board | Chrome computer use (local only — API blocked by Cloudflare) | Live board data, bonding %, ages |
+| GeckoTerminal | Free API, no key | PumpSwap pools sorted by 24h tx count, FDV, liquidity |
+| Solana Tracker | `SOLANA_TRACKER_API_KEY` | Trending tokens, holders, buy/sell pressure, curvePercentage |
+| Helius RPC | `HELIUS_API_KEY` | On-chain bonding curve state via `@nirholas/pump-sdk` |
+| DexScreener | Free API, no key | Price, MC, volume, pairs (fallback) |
+
+**Scanner Scripts (committed to `scripts/`):**
+
+| Script | Purpose |
+|--------|---------|
+| `scripts/pump-scanner.sh` | Shell wrapper — loads `.env`, calls `pump_scanner.py`, commits + pushes |
+| `scripts/pump_scanner.py` | Python orchestrator — GeckoTerminal (5 pages) + Solana Tracker trending + per-token enrichment |
+| `scripts/pump-bonding.mjs` | Node.js on-chain enricher — `OnlinePumpSdk.fetchBondingCurveSummary()` + `getGraduationProgress()` via Helius RPC |
+
+**Run manually:**
+```bash
+bash scripts/pump-scanner.sh
+```
+
+**Pipeline flow:**
+1. GeckoTerminal `pumpswap/pools` x 5 pages = 100 graduated tokens (sorted by 24h tx count, no auth)
+2. Solana Tracker `/tokens/trending` → `curvePercentage`, `pool.graduated`, `pool.market`
+3. Solana Tracker `/tokens/{mint}` per-token enrichment for top 30
+4. `pump-bonding.mjs` (Helius on-chain) for tokens still missing bonding% — batches 4 concurrent RPC calls, 400ms between batches
+5. Writes `pump.md` → sends Telegram digest → commits and pushes
+
+**Token classification (from `trade.md`):**
+
+| Tier | Criteria | Strategy |
+|------|----------|----------|
+| 1 Fresh Snipers | Age ≤ 15min | 0.05 SOL, fast flip |
+| 2 Near-Graduation | Bonding ≥ 75% | Ride graduation pump |
+| 3 Micro-Cap | MC < $10K | Speculative |
+| 4 Mid-Cap | MC $10K–$100K | Trend-follow |
+| 5 Large-Cap | MC > $100K | Scalps on dips |
+
+**Scheduling (three tracks):**
+
+```
+:00  Remote trigger    → GeckoTerminal + Solana Tracker → pump.md → Telegram → git push
+:30  Local skill/CLI   → Chrome computer use OR pump-scanner.sh → pump.md → Telegram
+:00  Remote trigger again...
+```
+
+- **Remote Trigger** (hourly): Claude Code dispatch `trig_01KUywkkCQVJeqvzDbrK82Vj` — runs in cloud, no browser
+- **Local Computer Use**: `pumpfun-token-scanner` skill — Chrome browser automation on local Mac
+- **CLI**: `bash scripts/pump-scanner.sh` — standalone, cron-friendly
+
+**Note on `pump-bonding.mjs`:** The SDK files from `pump-fun-sdk-main 4/src/` (analytics.ts, bondingCurve.ts, fees.ts, onlineSdk.ts) are bundled compiled in `@nirholas/pump-sdk` under `scripts/node_modules`. Same exports: `OnlinePumpSdk`, `getGraduationProgress`, `calculateBuyPriceImpact`, `getTokenPrice`, `computeFeesBps`.
+
+### On-Chain Agent Registration (8004 + Metaplex)
+
+The pump.fun scanner agent can be registered on-chain via the [8004 Trustless Agent Registry](https://github.com/QuantuLabs/8004-solana-ts) and Metaplex Core NFTs. This gives the scanner a verifiable on-chain identity with ATOM reputation scoring.
+
+**Register the scanner agent:**
+```bash
+node scripts/register-scanner-agent.mjs
+```
+
+**What happens:**
+1. Builds scanner-specific metadata (name, description, services, skills, domains)
+2. Pins metadata to IPFS via Pinata
+3. Registers on the 8004 agent registry with ATOM enabled
+4. Sets on-chain metadata (scanner_type, pipeline, endpoints)
+5. Syncs to the nanohub Convex backend
+6. Saves state to `~/.nanosolana/registry/scanner-agent.json`
+
+**Required env vars:**
+```
+SOLANA_PRIVATE_KEY=<JSON array of secret key bytes>
+HELIUS_RPC_URL=<Solana RPC>
+PINATA_JWT=<Pinata JWT for IPFS>
+```
+
+**8004 features used:**
+- `registerAgent()` — creates on-chain agent identity as Core NFT
+- `setAgentWallet()` — binds operational wallet
+- `setMetadata()` — stores scanner config on-chain
+- `giveFeedback()` / `getSummary()` — ATOM reputation engine
+- Trust tiers: Unrated → Bronze → Silver → Gold → Platinum
+
+**Nanohub integration:**
+- `/st/agent-registry?asset=<address>` — edge function returning agent reputation from 8004 indexer
+- `AgentStatus` component in the Pump Scanner tab shows live trust tier + ATOM score
+- `nanosolanaAgentReputation` Convex table stores periodic reputation snapshots
+
+## Agent Registration (Metaplex 014)
+
+Register your agent on-chain as a Metaplex NFT with a single command:
+
+```bash
+solanaos solana register
+```
+
+What happens:
+1. Loads your agent wallet (auto-generated on first boot)
+2. Checks for existing registration (won't double-register)
+3. Auto-detects skills from your `.env` (OODA, SolanaTracker, Aster, etc.)
+4. Registers on Solana devnet as a Metaplex 014 NFT (gasless, auto-airdrop)
+5. Saves the registration result locally
+6. Prints the Solana Explorer link
+
+```text
+⛓️  SolanaOS Agent Registration
+
+  Agent:   AAqkn72V...
+  Skills:  [ooda-trading, solana-tracker-data, aster-perps]
+  Network: devnet (gasless)
+
+  ✅ Agent registered on-chain!
+
+  Mint:     5Kz8...
+  Tx:       3Qfx...
+  Explorer: https://explorer.solana.com/address/5Kz8...?cluster=devnet
+```
+
+### Three ways to create an agent
+
+| Method | Command / URL | What happens |
+| --- | --- | --- |
+| **CLI** | `solanaos solana register` | One command, zero cost, auto-detects skills |
+| **Hub** | [seeker.solanaos.net/dashboard](https://seeker.solanaos.net/dashboard) → "Create Devnet Agent" | Web form, saves to Convex with GitHub + wallet identity |
+| **Metaplex SDK** | [seeker.solanaos.net/setup/metaplex](https://seeker.solanaos.net/setup/metaplex) | Full guide: install Metaplex Skill, register identity, set up executive, delegate execution |
+
+### What gets saved
+
+Every agent is stored in Convex with:
+- `userId` — linked to your GitHub account
+- `ownerWalletAddress` — from Phantom Connect or Seeker pairing
+- `metaplexAssetAddress` — on-chain NFT mint address
+- `metaplexIdentityPda` — discoverable PDA for the agent
+- `metaplexRegistered` — boolean flag
+- `registryMode` — `8004`, `metaplex`, or `dual`
+- Services array — web, A2A, MCP endpoints (ERC-8004 format)
+
+### Verify on-chain
+
+```bash
+solanaos solana registry    # show registered agents
+```
+
+Or check the Solana Explorer directly with the mint address.
+
+## macOS Menu Bar App
+
+A lightweight native menu bar companion that connects to your local SolanaOS daemon and all Hub surfaces.
+
+### Build & Install
+
+```bash
+cd apps/macos
+bash build-menubar.sh
+```
+
+This compiles the standalone Swift file (no Xcode project needed) and creates `SolanaOS Menu Bar.app`.
+
+### Run
+
+```bash
+open "apps/macos/SolanaOS Menu Bar.app"
+```
+
+### Install to Applications
+
+```bash
+cp -r "apps/macos/SolanaOS Menu Bar.app" /Applications/
+```
+
+### Auto-start on login
+
+```bash
+osascript -e 'tell application "System Events" to make login item at end with properties {path:"/Applications/SolanaOS Menu Bar.app", hidden:true}'
+```
+
+### What it shows
+
+| Icon | Meaning |
+| --- | --- |
+| ◎ | Daemon running |
+| ◌ | Daemon starting |
+| ⚠︎ | Daemon offline |
+
+Status line: `daemon status · ooda mode · watchlist count · honcho on/off`
+
+### Menu items
+
+**Local:** Control panel (`:7777`), Wallet, Chat
+
+**Hub:** Dashboard, Mining Fleet, Strategy Builder, Skills Registry, Agent Directory, Create Skill, Souls Library
+
+**Setup Guides:** Gateway, Telegram, Metaplex, BitAxe Mining, Chrome Extension
+
+**Seeker:** Reveal/copy setup code, reveal connect bundle
+
+**System:** GitHub, Terminal, Quit
+
+## Control Surfaces
+
+| Surface | Notes |
+| --- | --- |
+| SolanaOS Control | Local wallet/chat/tools UI, usually on `127.0.0.1:7777` |
+| Web console | Local or Tailscale-served browser UI |
+| Telegram | Main operator bot surface |
+| Chrome extension | Popup wallet/chat/tools plus Seeker pairing |
+| macOS app | Menu bar control surface |
+| Android | SolanaOS Seeker app and gateway pairing |
+| SolanaOS Hub | Registry and skills marketplace at `seeker.solanaos.net` |
+
+## Hardware
+
+The runtime can run software-only or attach to Arduino Modulino hardware over I2C.
+
+Supported sensors and controls:
+
+- Pixels
+- Buzzer
+- Buttons
+- Knob
+- IMU
+- Thermo
+- ToF distance
+
+Supported targets:
+
+- NVIDIA Orin Nano
+- Raspberry Pi
+- RISC-V Linux boards
+- x86 Linux
+- macOS and Windows in stub mode
+
+See [docs/HARDWARE.md](docs/HARDWARE.md).
+
+## x402
+
+SolanaOS includes x402 payment support for crypto-gated APIs.
+
+Main pieces:
+
+- facilitator proxy
+- SVM signer
+- configurable paywall middleware
+- multi-chain config surface
+
+Minimal enablement:
+
+```bash
+X402_PAYWALL_ENABLED=true
+./build/solanaos daemon
+```
+
+## Docs Map
+
+Use the short README for orientation and these docs for depth:
+
+- [docs/LANDING.md](docs/LANDING.md): short product/landing copy
+- [docs/RELEASE-2026-03-v2.md](docs/RELEASE-2026-03-v2.md): current release summary
+- [docs/command-cheatsheet.md](docs/command-cheatsheet.md): grouped CLI, Telegram, and NanoHub commands
+- [docs/notebooklm-pack.md](docs/notebooklm-pack.md): NotebookLM source pack generation and prompt
+- [docs/HARDWARE.md](docs/HARDWARE.md): hardware deploy and wiring
+- [docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md): runtime issues and recovery
+- [docs/control-api.md](docs/control-api.md): SolanaOS Control API
+- [docs/cli-guide.md](docs/cli-guide.md): broader CLI usage
+- [docs/deployment.md](docs/deployment.md): deployment patterns
+
+Hosted:
+
+- Docs: `https://go.solanaos.net`
+- Hub: `https://seeker.solanaos.net`
+
+## Build And Deploy
+
+### Local build
+
+```bash
+make build
+make test
+```
+
+### Common targets
+
+```bash
+make orin
+make rpi
+make riscv
+make macos
+make docker
+make cross
+```
+
+### Docker
+
+```bash
+docker build -t solanaos .
+docker run --env-file .env \
+  -v "$HOME/.config/solana/id.json:/root/.config/solana/id.json:ro" \
+  solanaos
+```
+
+### Fly.io
+
+Relevant files:
+
+- `Dockerfile.fly`
+- `scripts/fly-start.sh`
+- `fly.toml`
+
+The Fly path is intended for persistent daemon state plus the web console. Start with research, memory, and Telegram before enabling live keys.
+
+## Repo Layout
+
+This is the trimmed map of the repo:
+
+```text
+nanosolana-go/
+├── main.go
+├── cmd/
+│   ├── mawdbot/              # primary CLI entrypoint package
+│   └── mawdbot-tui/          # TUI launcher package
+├── pkg/
+│   ├── daemon/               # daemon orchestration
+│   ├── agent/                # OODA loop
+│   ├── nanobot/              # SolanaOS Control
+│   ├── solana/               # Solana clients and tx helpers
+│   ├── onchain/              # swap / chain engine
+│   ├── hyperliquid/          # Hyperliquid perps
+│   ├── memory/               # local memory
+│   ├── honcho/               # Honcho client
+│   ├── gateway/              # native gateway
+│   ├── hardware/             # Modulino drivers
+│   └── x402/                 # payment stack
+├── skills/                   # bundled skills
+├── docs/                     # markdown docs
+├── docs-site/                # static docs site
+├── chrome-extension/         # browser extension
+├── apps/
+│   ├── macos/
+│   └── android/
+├── nanohub/                  # SolanaOS Hub app
+├── npm/
+│   ├── solanaos/
+│   ├── solanaos-installer/
+│   └── mawdbot-installer/
+└── build/
+```
+
+Notes:
+
+- `solanaos` is the runtime name users should see first
+- some package and directory names still keep compatibility-era naming
+- `nanosolana` remains a supported alias
+
+## Configuration Notes
+
+Environment loading order:
+
+- current working directory `.env`
+- executable directory `.env`
+- parent of executable directory `.env`
+- `~/.nanosolana/.env`
+
+Useful overrides:
+
+- `SOLANAOS_HOME`
+- `SOLANAOS_CONFIG`
+- `SOLANAOS_ENV_FILE`
+- `SOLANAOS_SOUL_PATH`
+- `SOLANAOS_SKILLS_DIR`
+
+Compatibility aliases remain supported:
+
+- `NANOSOLANA_HOME`
+- `NANOSOLANA_CONFIG`
+- `NANOSOLANA_ENV_FILE`
+- `NANOSOLANA_SOUL_PATH`
+- `NANOSOLANA_SKILLS_DIR`
+
+## Security
+
+- no API keys should be committed
+- `.env` stays local
+- generated wallets are stored under the runtime home with restrictive permissions
+- only public addresses should appear in logs
+
+See [SECURITY.md](SECURITY.md).
+
+## Contributing
+
+```bash
+git checkout -b feature/my-change
+make build
+make test
+git commit -m "Add my change"
+```
+
+See [CONTRIBUTING.md](CONTRIBUTING.md).
+
+## License
+
+MIT. See [LICENSE](LICENSE).
+
+---
+
+## Vision
+
+> **The next billion blockchain transactions will be executed by AI agents, not humans clicking buttons.**
+
+SolanaOS is building toward a world where any AI agent can launch, trade, and manage tokens through natural language — where fee revenue flows autonomously to agent wallets, where agent fleets coordinate across protocols through shared memory and skills, and where epistemological reasoning becomes the competitive moat that separates agents that adapt from agents that don't.
+
+See [docs/vision.md](docs/vision.md) for the full thesis.
+
+---
+
+<div align="center">
+
+**SolanaOS · Local-first Solana infrastructure in one binary**
+
+**Built by [8BIT Labs](https://github.com/x402agent) · Powered by Go · Memory by [Honcho](https://honcho.dev) · Paid via [x402](https://x402.org)**
+
+[GitHub](https://github.com/x402agent/Solana-Os-Go) · [Hub](https://seeker.solanaos.net) · [Souls](https://souls.solanaos.net) · [Docs](https://go.solanaos.net) · [Launch](https://solanaos.net)
+
+</div>

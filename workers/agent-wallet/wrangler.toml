@@ -1,0 +1,21 @@
+name = "nanosolana-agent-wallet"
+main = "src/index.ts"
+compatibility_date = "2025-12-01"
+compatibility_flags = ["nodejs_compat"]
+account_id = "2f5db575118d15ec19000e13282201bc"
+
+[vars]
+ENVIRONMENT = "production"
+
+[[kv_namespaces]]
+binding = "VAULT_KV"
+id = "afbd7eb77b9e4733a114b97be303edef"
+
+# Secrets (set via `wrangler secret put`):
+# VAULT_PASSPHRASE
+# WALLET_API_KEY
+# SOLANA_RPC_URL
+# PRIVY_APP_ID
+# PRIVY_APP_SECRET
+# PRIVY_AUTH_KEY_ID
+# E2B_API_KEY

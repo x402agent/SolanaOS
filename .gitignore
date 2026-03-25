@@ -1,0 +1,202 @@
+# ── Build artifacts ───────────────────────────────────────────────────
+build/
+dist/
+.cache/
+.tmp-*/
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+.env
+# ── Go ────────────────────────────────────────────────────────────────
+*.test
+*.out
+vendor/
+publishing
+.env.local
+.env
+# ── Environment / Secrets ─────────────────────────────────────────────
+.env
+.env.*
+!.env.example
+!**/.env.*.example
+
+# ── OS files ──────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# ── IDE ───────────────────────────────────────────────────────────────
+.idea/
+.vscode/
+*.code-workspace
+
+# ── Local agent/editor state ─────────────────────────────────────────
+.agent/
+.augment/
+.claude/
+.codebuddy/
+.commandcode/
+!.agents/
+!.agents/**
+
+# ── Android local build state ─────────────────────────────────────────
+apps/android/local.properties
+apps/android/release-signing.properties
+apps/android/*.jks
+apps/android/*.keystore
+apps/android/.signing/
+apps/android/.gradle/
+apps/android/.gradle-user/
+apps/android/.kotlin/
+apps/android/app/build/
+apps/android/benchmark/build/
+
+# Vendored reference repos in Android (not our code)
+apps/android/OreMiner-master/
+apps/android/solana-pay-android-sample-main/
+apps/android/.gradle-user/
+apps/android/.gradle/
+apps/android/apps/android/.gradle-user/
+apps/android/apps/android/.gradle/
+apps/android/apps/
+apps/macos/.build/
+apps/dapp-publishing-main/node_modules/
+
+# ── Node (scripts/web) ───────────────────────────────────────────────
+node_modules/
+scripts/node_modules/
+web/frontend/node_modules/
+docs/docs-site/node_modules/
+.npm-cache/
+
+# ── Docker ────────────────────────────────────────────────────────────
+docker-compose.override.yml
+
+# ── SolanaOS runtime data ────────────────────────────────────────────
+# (these live in ~/.nanosolana/, not in the repo)
+
+# ── Go caches / local module state ───────────────────────────────────
+.gocache/
+.gocache-controlapi/
+.gocache-local/
+.gocache-release/
+.gomodcache/
+.gopath/
+
+# ── Local website / deployment state ─────────────────────────────────
+web/backend/.env
+web/frontend/.netlify/
+web/frontend/dist/
+docs/docs-site/.netlify/
+docs/docs-site/dist/
+docs/*.new
+nanohub/.netlify/
+nanohub/.output/
+nanohub/.tanstack/
+nanohub/dist/
+nanohub/node_modules/
+nanohub/coverage/
+nanohub/playwright-report/
+nanohub/test-results/
+
+# ── Local database / sqlite state ────────────────────────────────────
+*.db
+*.sqlite
+*.sqlite3
+*.db-shm
+*.db-wal
+
+# ── Binary artifacts ─────────────────────────────────────────────────
+*.apk
+/mawdbot
+/nanosolana
+/nanosolana-go
+/nanosolana-new
+/solanaos
+/solanaos-control-api
+/gateway-api
+/backend
+mawdbot-bitaxe/bin/mawdaxe
+mawdbot-bitaxe/.gocache-verify-root/
+mawdbot-bitaxe/integrated/.gomodcache-verify/
+mawdbot-bitaxe/integrated/*.log
+
+# ── Local screenshot / export clutter at repo root ───────────────────
+/4DDC9F6B-8941-419A-8D96-82BCDB1B5BF9_1_105_c.jpeg
+/F0EE3FA6-4242-4AA8-9D2E-7D43CB5D1F93.png
+
+# ── Source deps (bundled for reference, not shipped) ──────────────────
+solana-go-main/
+mawdbot-go/
+picoclaw/
+x402-go-main/
+.claude/worktrees/agitated-proskuriakova
+
+# Local Netlify folder
+.netlify
+
+# ── Private / internal directories (NOT for public GitHub) ──────────
+# These contain private keys, internal tools, reference code, or personal data.
+
+# Hermes agent reference (copied for study, not shipped)
+hermes-agent-main/
+
+# Python agent/ACP adapter (Hermes copies, replaced by Go in pkg/acp/)
+agent/
+acp_adapter/
+
+# Private solanaos-memory standalone module (merged into pkg/)
+solanaos-memory/
+
+# Web frontend/backend (local dev server, not for public repo)
+web/
+
+# MawdAxe mining fleet (separate project, has its own .env)
+mawdbot-bitaxe/
+
+# Solana dApp Store publishing config (contains addresses + keys)
+publishing/
+
+# Android signing keys
+apps/android/.signing/
+*.jks
+*.keystore
+
+# Duplicate ACP registry copy
+acp_registry copy/
+
+# Compiled binaries at repo root (should be in GitHub Releases)
+/Solana-Os-Go
+/solanaos
+/mawdbot-tui
+/solanaos-control-api
+/SeekerClaw-*.apk
+
+# Screenshots at repo root
+*.jpeg
+*.png
+!**/icons/*.png
+!**/design/*.png
+!**/assets/*.png
+!**/public/*.png
+!**/media/*.png
+
+# Reference/vendored source repos
+solana-go-main/
+mawdbot-go/
+picoclaw/
+x402-go-main/
+
+# Stale planning docs
+program.md
+solanaos-blockchain-SKILL.md
+solana-tracker/
+
+# Pump.fun scan raw API data (ephemeral, regenerated each run)
+page_*.json
+bonding.json
+trending.json

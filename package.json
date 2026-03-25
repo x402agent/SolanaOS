@@ -1,0 +1,32 @@
+{
+  "name": "solanaos-monorepo",
+  "private": true,
+  "description": "Root npm workspace for SolanaOS public installer packages",
+  "workspaces": [
+    "npm/solanaos",
+    "npm/solanaos-installer",
+    "npm/mawdbot-installer"
+  ],
+  "scripts": {
+    "install:one-shot": "node npm/solanaos/bin/solanaos.mjs install",
+    "install:one-shot:web": "node npm/solanaos/bin/solanaos.mjs install --with-web",
+    "pack:solanaos": "npm pack ./npm/solanaos",
+    "pack:solanaos:dry": "npm pack --dry-run ./npm/solanaos",
+    "pack:solanaos-cli": "npm pack ./npm/solanaos-installer",
+    "pack:solanaos-cli:dry": "npm pack --dry-run ./npm/solanaos-installer",
+    "pack:compat": "npm pack ./npm/mawdbot-installer",
+    "pack:compat:dry": "npm pack --dry-run ./npm/mawdbot-installer",
+    "version:npm": "node scripts/release-npm.mjs version",
+    "publish:npm": "node scripts/release-npm.mjs publish",
+    "release:npm": "node scripts/release-npm.mjs release",
+    "pack:npm": "node scripts/release-npm.mjs pack"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "@sentry/node": "^10.45.0",
+    "netlify-cli": "^24.5.0",
+    "solanaos-cli": "^2.0.0"
+  }
+}

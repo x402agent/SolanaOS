@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SolanaOS — Hardware Deployment Guide</title>
+  <meta name="description"
+    content="Deploy SolanaOS on NVIDIA Orin Nano, Raspberry Pi, RISC-V, and x86. Full setup guide: I2C HAL, Arduino Modulino wiring, systemd service, Docker, and monitoring." />
+  <meta name="theme-color" content="#020208" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;700&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="/style.css" />
+  <link rel="stylesheet" href="/guide.css" />
+</head>
+
+<body>
+  <!-- Navigation -->
+  <nav class="nav" id="nav">
+    <div class="nav-inner">
+      <a href="/" class="nav-brand">
+        <span class="nav-logo">🖥️</span>
+        <span class="nav-title">SolanaOS</span>
+      </a>
+      <div class="nav-links" id="navLinks">
+        <a href="/">Home</a>
+        <a href="/guide">Guide</a>
+        <a href="/hardware" class="active">Hardware</a>
+        <a href="/console">Console</a>
+        <a href="/hub">SolanaOS Hub</a>
+        <a href="https://github.com/x402agent/Solana-Os-Go" target="_blank" class="nav-github">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
+          </svg>
+        </a>
+      </div>
+      <button class="nav-toggle" id="navToggle" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="guide-hero">
+    <div class="hero-bg">
+      <div class="hero-grid"></div>
+      <div class="hero-glow hero-glow-1"></div>
+      <div class="hero-glow hero-glow-2"></div>
+    </div>
+    <div class="guide-hero-content">
+      <h1>Hardware Deployment Guide</h1>
+      <p class="guide-tagline">NVIDIA Orin Nano · Raspberry Pi · RISC-V · Docker</p>
+      <p class="guide-desc">Deploy the SolanaOS computer on real hardware using the build-tag HAL. One binary runs identically on
+        a $50 Pi or a $500 Orin Nano — or silently stubs on macOS for development.</p>
+      <div class="guide-links">
+        <a href="#hal" class="guide-link">HAL Architecture</a>
+        <span class="guide-link-sep">·</span>
+        <a href="#boards" class="guide-link">Supported Boards</a>
+        <span class="guide-link-sep">·</span>
+        <a href="#orin" class="guide-link">Orin Nano</a>
+        <span class="guide-link-sep">·</span>
+        <a href="#rpi" class="guide-link">Raspberry Pi</a>
+        <span class="guide-link-sep">·</span>
+        <a href="#wiring" class="guide-link">Wiring</a>
+        <span class="guide-link-sep">·</span>
+        <a href="#docker" class="guide-link">Docker</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- HAL Architecture -->
+  <section class="guide-section" id="hal">
+    <div class="container">
+      <h2 class="guide-h2">🔩 Hardware Abstraction Layer (HAL)</h2>
+      <p>SolanaOS uses a build-tag HAL so the same binary runs on real hardware or in simulation. Build tags are
+        <strong>automatic</strong> — <code>go build</code> on Linux links <code>hal_linux.go</code>, everywhere else
+        gets <code>hal_stub.go</code>.
+      </p>
+
+      <div class="terminal" style="margin: 32px 0" data-animate>
+        <div class="terminal-header">
+          <div class="terminal-dots"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span></div>
+          <span class="terminal-title">HAL Stack</span>
+        </div>
+        <div class="terminal-body">
+          <pre><span class="t-dim">┌────────────────────────────────────────────────┐
+│        SolanaOS Runtime (OODA Loop)             │
+├────────────────────────────────────────────────┤
+│          DeviceManager (pkg/hardware)           │
+│  Modulino drivers · Event routing · Mapping    │
+├────────────────────────────────────────────────┤
+│             HAL Interface (internal/hal)        │
+│   Bus · Device · GPIO · PWM · Platform         │
+├──────────────────┬─────────────────────────────┤
+│  hal_linux.go    │     hal_stub.go             │
+│  (periph.io)     │     (synthetic data)        │
+│  Real I2C/GPIO   │     Logs + mock sensors     │
+│  Orin/RPi/RISCV  │     macOS/Windows/CI        │
+└──────────────────┴─────────────────────────────┘</span></pre>
+        </div>
+      </div>
+
+      <div class="stack-grid" style="margin-top: 0" data-animate>
+        <div class="stack-card">
+          <div class="stack-icon">🐧</div>
+          <h4>hal_linux.go</h4>
+          <ul>
+            <li><span class="stack-dot green"></span>periph.io I2C driver</li>
+            <li><span class="stack-dot green"></span>Real GPIO + PWM</li>
+            <li><span class="stack-dot green"></span>Orin / RPi / RISC-V</li>
+            <li><span class="stack-dot green"></span>/dev/i2c-1 direct access</li>
+          </ul>
+        </div>
+        <div class="stack-card">
+          <div class="stack-icon">🧪</div>
+          <h4>hal_stub.go</h4>
+          <ul>
+            <li><span class="stack-dot purple"></span>Synthetic sensor data</li>
+            <li><span class="stack-dot purple"></span>Log-only GPIO</li>
+            <li><span class="stack-dot purple"></span>macOS / Windows / CI</li>
+            <li><span class="stack-dot purple"></span>No hardware needed</li>
+          </ul>
+        </div>
+        <div class="stack-card">
+          <div class="stack-icon">⚙️</div>
+          <h4>Build Commands</h4>
+          <ul>
+            <li><span class="stack-dot teal"></span><code>make build</code> — macOS stub</li>
+            <li><span class="stack-dot teal"></span><code>make orin</code> — NVIDIA Orin</li>
+            <li><span class="stack-dot teal"></span><code>make rpi</code> — Raspberry Pi</li>
+            <li><span class="stack-dot teal"></span><code>make riscv</code> — RISC-V</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Supported Boards -->
+  <section class="guide-section guide-section-dark" id="boards">
+    <div class="container">
+      <h2 class="guide-h2">📋 Supported Boards</h2>
+      <div class="guide-table-wrap" data-animate>
+        <table class="guide-table">
+          <thead>
+            <tr>
+              <th>Board</th>
+              <th>Arch</th>
+              <th>Build Target</th>
+              <th>I2C</th>
+              <th>GPIO</th>
+              <th>Notes</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>NVIDIA Orin Nano</strong></td>
+              <td><code>arm64</code></td>
+              <td><code>make orin</code></td>
+              <td class="td-check">✓</td>
+              <td class="td-check">✓</td>
+              <td>Primary target, /dev/i2c-1</td>
+            </tr>
+            <tr>
+              <td><strong>NVIDIA Orin NX</strong></td>
+              <td><code>arm64</code></td>
+              <td><code>make orin</code></td>
+              <td class="td-check">✓</td>
+              <td class="td-check">✓</td>
+              <td>Same as Nano</td>
+            </tr>
+            <tr>
+              <td><strong>Raspberry Pi 5</strong></td>
+              <td><code>arm64</code></td>
+              <td><code>make rpi</code></td>
+              <td class="td-check">✓</td>
+              <td class="td-check">✓</td>
+              <td>/dev/i2c-1</td>
+            </tr>
+            <tr>
+              <td><strong>Raspberry Pi 4B</strong></td>
+              <td><code>arm64</code></td>
+              <td><code>make rpi</code></td>
+              <td class="td-check">✓</td>
+              <td class="td-check">✓</td>
+              <td>/dev/i2c-1</td>
+            </tr>
+            <tr>
+              <td><strong>Raspberry Pi Zero 2W</strong></td>
+              <td><code>arm64</code></td>
+              <td><code>make rpi</code></td>
+              <td class="td-check">✓</td>
+              <td class="td-check">✓</td>
+              <td>Low RAM, works fine</td>
+            </tr>
+            <tr>
+              <td><strong>Raspberry Pi Zero W</strong></td>
+              <td><code>armv6</code></td>
+              <td><code>make rpi-armv6</code></td>
+              <td class="td-check">✓</td>
+              <td class="td-check">✓</td>
+              <td>Limited CPU</td>
+            </tr>
+            <tr>
+              <td><strong>StarFive VisionFive 2</strong></td>
+              <td><code>riscv64</code></td>
+              <td><code>make riscv</code></td>
+              <td class="td-check">✓</td>
+              <td class="td-check">✓</td>
+              <td>Experimental</td>
+            </tr>
+            <tr>
+              <td><strong>BeagleBone AI-64</strong></td>
+              <td><code>arm64</code></td>
+              <td><code>make orin</code></td>
+              <td class="td-check">✓</td>
+              <td class="td-check">✓</td>
+              <td>TI TDA4VM</td>
+            </tr>
+            <tr>
+              <td><strong>x86 Server</strong></td>
+              <td><code>amd64</code></td>
+              <td><code>make linux-amd64</code></td>
+              <td class="td-x">✗</td>
+              <td class="td-x">✗</td>
+              <td>Software-only</td>
+            </tr>
+            <tr>
+              <td><strong>Mac (dev)</strong></td>
+              <td><code>arm64/amd64</code></td>
+              <td><code>make build</code></td>
+              <td class="td-x">✗</td>
+              <td class="td-x">✗</td>
+              <td>Stub mode</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- NVIDIA Orin Nano -->
+  <section class="guide-section" id="orin">
+    <div class="container">
+      <h2 class="guide-h2">🟢 NVIDIA Orin Nano Setup</h2>
+
+      <div class="step-card" data-animate>
+        <div class="step-num">1</div>
+        <h3>Flash &amp; Boot</h3>
+        <div class="terminal terminal-sm">
+          <div class="terminal-body">
+            <pre><span class="t-dim"># Flash JetPack 6.x via SDK Manager or SD card image</span>
+<span class="t-dim"># Boot into Ubuntu desktop, connect via SSH</span></pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="step-card" data-animate>
+        <div class="step-num">2</div>
+        <h3>Enable I2C</h3>
+        <div class="terminal terminal-sm">
+          <div class="terminal-body">
+            <pre><span class="t-dim"># Check I2C buses</span>
+ls /dev/i2c-*
+
+<span class="t-dim"># If not present, enable in device tree</span>
+sudo /opt/nvidia/jetson-io/jetson-io.py
+<span class="t-dim"># Select "Configure Jetson 40pin Header" → Enable I2C</span>
+
+<span class="t-dim"># Install tools</span>
+sudo apt install -y i2c-tools
+
+<span class="t-dim"># Test — you should see your Modulino addresses</span>
+sudo i2cdetect -y 1</pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="step-card" data-animate>
+        <div class="step-num">3</div>
+        <h3>Deploy SolanaOS</h3>
+        <div class="terminal terminal-sm">
+          <div class="terminal-body">
+            <pre><span class="t-dim"># On your dev machine:</span>
+make orin
+scp build/nanosolana-orin user@orin-nano:~/
+
+<span class="t-dim"># On the Orin Nano:</span>
+chmod +x ~/nanosolana-orin
+sudo mv nanosolana-orin /usr/local/bin/nanosolana
+
+<span class="t-dim"># Add user to i2c group (logout/login after)</span>
+sudo usermod -aG i2c $USER
+
+<span class="t-dim"># Initialize, configure, scan</span>
+nanosolana onboard
+cp .env.example .env
+nano .env
+
+nanosolana hardware scan
+nanosolana hardware test</pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="step-card" data-animate>
+        <div class="step-num">4</div>
+        <h3>Systemd Service</h3>
+        <div class="terminal terminal-sm">
+          <div class="terminal-body">
+            <pre>sudo tee /etc/systemd/system/nanosolana.service &lt;&lt; 'EOF'
+[Unit]
+Description=SolanaOS Runtime
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=solanaos
+Group=i2c
+WorkingDirectory=/home/solanaos/Solana-Os-Go
+EnvironmentFile=/home/solanaos/Solana-Os-Go/.env
+ExecStart=/usr/local/bin/solanaos ooda --interval 60
+Restart=always
+RestartSec=10
+
+# Security
+NoNewPrivileges=true
+ProtectSystem=strict
+ReadWritePaths=/home/nanosolana
+PrivateTmp=true
+
+# Device access
+SupplementaryGroups=i2c
+DeviceAllow=/dev/i2c-1 rw
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+sudo systemctl daemon-reload
+sudo systemctl enable nanosolana
+sudo systemctl start nanosolana
+sudo journalctl -u nanosolana -f</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Raspberry Pi -->
+  <section class="guide-section guide-section-dark" id="rpi">
+    <div class="container">
+      <h2 class="guide-h2">🍓 Raspberry Pi Setup</h2>
+
+      <div class="step-card" data-animate>
+        <div class="step-num">1</div>
+        <h3>Enable I2C</h3>
+        <div class="terminal terminal-sm">
+          <div class="terminal-body">
+            <pre>sudo raspi-config
+<span class="t-dim"># Interface Options → I2C → Enable</span>
+
+sudo apt install -y i2c-tools
+sudo i2cdetect -y 1</pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="step-card" data-animate>
+        <div class="step-num">2</div>
+        <h3>Deploy</h3>
+        <div class="terminal terminal-sm">
+          <div class="terminal-body">
+            <pre><span class="t-dim"># On your dev machine:</span>
+make rpi
+scp build/nanosolana-rpi pi@raspberrypi:~/nanosolana</pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="step-card" data-animate>
+        <div class="step-num">3</div>
+        <h3>Wiring (Qwiic)</h3>
+        <p>Connect Modulino nodes to the RPi's I2C pins:</p>
+        <div class="hw-wiring-grid">
+          <div class="hw-wire-row"><span class="hw-wire-pin">SDA</span><span class="hw-wire-desc">GPIO 2 — Pin 3</span></div>
+          <div class="hw-wire-row"><span class="hw-wire-pin">SCL</span><span class="hw-wire-desc">GPIO 3 — Pin 5</span></div>
+          <div class="hw-wire-row"><span class="hw-wire-pin">3.3V</span><span class="hw-wire-desc">Pin 1</span></div>
+          <div class="hw-wire-row"><span class="hw-wire-pin">GND</span><span class="hw-wire-desc">Pin 6</span></div>
+        </div>
+        <p style="margin-top: 12px; color: var(--text-muted); font-size: 0.9rem">Or use a Qwiic HAT / breakout for plug-and-play daisy-chaining.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Arduino Modulino Wiring -->
+  <section class="guide-section" id="wiring">
+    <div class="container">
+      <h2 class="guide-h2">🔌 Arduino Modulino® Wiring</h2>
+      <p>All Modulino nodes connect via <strong>Qwiic</strong> (I2C daisy-chain). No soldering required.</p>
+
+      <div class="terminal" style="margin: 32px 0" data-animate>
+        <div class="terminal-header">
+          <div class="terminal-dots"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span></div>
+          <span class="terminal-title">Qwiic daisy-chain</span>
+        </div>
+        <div class="terminal-body">
+          <pre><span class="t-green">[Orin Nano / RPi]</span>
+     │
+     │ Qwiic Cable
+     ▼
+<span class="t-teal">┌──────────┐</span>   Qwiic   <span class="t-teal">┌──────────┐</span>   Qwiic   <span class="t-teal">┌──────────┐</span>
+<span class="t-teal">│ Distance │</span> ─────────► <span class="t-teal">│ Movement │</span> ─────────► <span class="t-teal">│  Thermo  │</span>
+<span class="t-teal">│  0x29    │</span>            <span class="t-teal">│  0x6A    │</span>            <span class="t-teal">│  0x44    │</span>
+<span class="t-teal">└──────────┘</span>            <span class="t-teal">└──────────┘</span>            <span class="t-teal">└──────────┘</span>
+                                                      │
+     ┌────────────────────────────────────────────────┘
+     │ Qwiic
+     ▼
+<span class="t-purple">┌──────────┐</span>   Qwiic   <span class="t-purple">┌──────────┐</span>   Qwiic   <span class="t-purple">┌──────────┐</span>
+<span class="t-purple">│  Pixels  │</span> ─────────► <span class="t-purple">│  Buzzer  │</span> ─────────► <span class="t-purple">│ Buttons  │</span>
+<span class="t-purple">│  0x6C    │</span>            <span class="t-purple">│  0x3C    │</span>            <span class="t-purple">│  0x7C    │</span>
+<span class="t-purple">└──────────┘</span>            <span class="t-purple">└──────────┘</span>            <span class="t-purple">└──────────┘</span>
+     │ Qwiic
+     ▼
+<span class="t-amber">┌──────────┐</span>
+<span class="t-amber">│   Knob   │</span>
+<span class="t-amber">│  0x76    │</span>
+<span class="t-amber">└──────────┘</span></pre>
+        </div>
+      </div>
+
+      <h3 class="guide-h3" style="margin-top: 48px">Hardware ↔ Agent Mapping</h3>
+      <div class="guide-table-wrap" data-animate>
+        <table class="guide-table">
+          <thead>
+            <tr><th>Sensor</th><th>Agent Integration</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Distance</strong> <code>0x29</code></td>
+              <td>Proximity alert — pause trades if someone is near the hardware</td>
+            </tr>
+            <tr>
+              <td><strong>Movement</strong> <code>0x6A</code></td>
+              <td>Vibration/tilt detection — emergency stop on physical disturbance</td>
+            </tr>
+            <tr>
+              <td><strong>Thermo</strong> <code>0x44</code></td>
+              <td>Thermal throttle — reduce activity if board overheating</td>
+            </tr>
+            <tr>
+              <td><strong>Knob</strong> <code>0x76</code></td>
+              <td>Live strategy tuning — maps to position_size, stop_loss, or RSI threshold</td>
+            </tr>
+            <tr>
+              <td><strong>Buttons</strong> <code>0x7C</code></td>
+              <td>A = force cycle · B = toggle simulate · C = checkpoint vault</td>
+            </tr>
+            <tr>
+              <td><strong>Pixels</strong> <code>0x6C</code></td>
+              <td>OODA phase display (teal→purple→amber→green) + signal strength bar</td>
+            </tr>
+            <tr>
+              <td><strong>Buzzer</strong> <code>0x3C</code></td>
+              <td>Trade alerts (rising tone) · error alerts (low tone)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- Docker -->
+  <section class="guide-section guide-section-dark" id="docker">
+    <div class="container">
+      <h2 class="guide-h2">🐳 Docker with Hardware Access</h2>
+
+      <div class="steps-grid">
+        <div class="step-card" data-animate>
+          <div class="step-num">1</div>
+          <h3>Build Image</h3>
+          <div class="terminal terminal-sm">
+            <div class="terminal-body">
+              <pre>docker build -t nanosolana .</pre>
+            </div>
+          </div>
+        </div>
+
+        <div class="step-card" data-animate>
+          <div class="step-num">2</div>
+          <h3>Run with I2C</h3>
+          <div class="terminal terminal-sm">
+            <div class="terminal-body">
+              <pre>docker run --rm \
+  --device /dev/i2c-1 \
+  --env-file .env \
+  nanosolana ooda --interval 60</pre>
+            </div>
+          </div>
+        </div>
+
+        <div class="step-card" data-animate>
+          <div class="step-num">3</div>
+          <h3>Full Hardware Access</h3>
+          <div class="terminal terminal-sm">
+            <div class="terminal-body">
+              <pre>docker run --rm \
+  --privileged \
+  --env-file .env \
+  nanosolana ooda --interval 60</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Monitoring -->
+  <section class="guide-section" id="monitoring">
+    <div class="container">
+      <h2 class="guide-h2">📊 Monitoring</h2>
+
+      <div class="terminal" data-animate>
+        <div class="terminal-header">
+          <div class="terminal-dots"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span></div>
+          <span class="terminal-title">monitoring commands</span>
+        </div>
+        <div class="terminal-body">
+          <pre><span class="t-dim"># Live sensor stream</span>
+<span class="t-green">$</span> solanaos hardware monitor
+
+<span class="t-dim"># System status</span>
+<span class="t-green">$</span> solanaos status
+
+<span class="t-dim"># Logs (systemd)</span>
+<span class="t-green">$</span> journalctl -u solanaos -f --no-pager
+
+<span class="t-dim"># Resource usage (should be &lt;10MB RSS)</span>
+<span class="t-green">$</span> ps aux | grep solanaos</pre>
+        </div>
+      </div>
+
+      <div class="stack-grid" style="margin-top: 48px" data-animate>
+        <div class="stack-card">
+          <div class="stack-icon">💾</div>
+          <h4>Resource Budget</h4>
+          <ul>
+            <li><span class="stack-dot green"></span>Binary: ~9.6 MB</li>
+            <li><span class="stack-dot green"></span>RAM: &lt;10 MB RSS</li>
+            <li><span class="stack-dot green"></span>Boot: &lt;1 second</li>
+            <li><span class="stack-dot green"></span>CPU: idle ~0%</li>
+          </ul>
+        </div>
+        <div class="stack-card">
+          <div class="stack-icon">🔒</div>
+          <h4>systemd Security</h4>
+          <ul>
+            <li><span class="stack-dot purple"></span>NoNewPrivileges</li>
+            <li><span class="stack-dot purple"></span>ProtectSystem=strict</li>
+            <li><span class="stack-dot purple"></span>PrivateTmp</li>
+            <li><span class="stack-dot purple"></span>DeviceAllow /dev/i2c-1</li>
+          </ul>
+        </div>
+        <div class="stack-card">
+          <div class="stack-icon">🌡️</div>
+          <h4>Sensor Thresholds</h4>
+          <ul>
+            <li><span class="stack-dot teal"></span>Proximity &lt;5cm — wake cycle</li>
+            <li><span class="stack-dot teal"></span>Tilt detected — pause trades</li>
+            <li><span class="stack-dot teal"></span>Temp overheating — throttle</li>
+            <li><span class="stack-dot teal"></span>Knob turn — adjust RSI</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="guide-section guide-section-dark">
+    <div class="container">
+      <div class="cta-section" data-animate>
+        <h3>Ready to deploy on hardware?</h3>
+        <div class="cta-actions">
+          <a href="https://github.com/x402agent/Solana-Os-Go" target="_blank" class="btn btn-primary btn-lg">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
+            </svg>
+            <span>View on GitHub</span>
+          </a>
+          <a href="/guide" class="btn btn-secondary btn-lg">Full Guide</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <span class="footer-logo">🐹</span>
+          <span>SolanaOS Companion</span>
+        </div>
+        <div class="footer-links">
+          <a href="https://github.com/x402agent/Solana-Os-Go" target="_blank">GitHub</a>
+          <a href="/guide">Guide</a>
+          <a href="/hardware">Hardware</a>
+          <a href="https://x402.org" target="_blank">x402.org</a>
+        </div>
+        <div class="footer-copy">
+          Built by SolanaOS Labs · Powered by Go on Solana · x402 Protocol · MIT License
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script type="module" src="/main.js"></script>
+</body>
+
+</html>

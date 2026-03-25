@@ -1,0 +1,15 @@
+{
+  "mcpServers": {
+    "nanosolana-agent-wallet": {
+      "command": "npx",
+      "args": ["tsx", "index.ts"],
+      "cwd": "./services/agent-wallet/mcp",
+      "env": {
+        "WALLET_API_URL": "http://localhost:8420/v1",
+        "WALLET_API_KEY": ""
+      },
+      "disabled": false,
+      "autoApprove": []
+    }
+  }
+}

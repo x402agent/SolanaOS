@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SolanaOS — Set Up Your Agent</title>
+  <meta name="description"
+    content="One command to deploy your autonomous Solana trading agent. 10MB binary. Agentic wallet. On-chain registry.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700;800;900&family=Orbitron:wght@400;600;700;900&display=swap"
+    rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box
+    }
+
+    html {
+      scroll-behavior: smooth
+    }
+
+    :root {
+      --sol-green: #14F195;
+      --sol-purple: #9945FF;
+      --sol-blue: #00D4FF;
+      --sol-amber: #FFAA00;
+      --bg: #020208;
+      --bg2: #0A0A14;
+      --bg3: #10101C;
+      --border: #1A1A2E;
+      --text: #E8ECF4;
+      --dim: #4A5568;
+      --font-mono: 'JetBrains Mono', monospace;
+      --font-sans: 'Inter', system-ui, sans-serif;
+      --font-display: 'Orbitron', sans-serif
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-sans);
+      font-size: 15px;
+      line-height: 1.6;
+      min-height: 100vh;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased
+    }
+
+    ::-webkit-scrollbar {
+      width: 4px
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--sol-green);
+      border-radius: 2px
+    }
+
+    a {
+      color: var(--sol-green);
+      text-decoration: none
+    }
+
+    a:hover {
+      text-decoration: underline
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px)
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0)
+      }
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        opacity: 1
+      }
+
+      50% {
+        opacity: .5
+      }
+    }
+
+    @keyframes glow {
+
+      0%,
+      100% {
+        box-shadow: 0 0 20px #14F19520
+      }
+
+      50% {
+        box-shadow: 0 0 40px #14F19540
+      }
+    }
+
+    @keyframes gradientShift {
+      0% {
+        background-position: 0% 50%
+      }
+
+      50% {
+        background-position: 100% 50%
+      }
+
+      100% {
+        background-position: 0% 50%
+      }
+    }
+
+    /* ─ Layout ─ */
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 0 24px
+    }
+
+    section {
+      padding: 60px 0
+    }
+
+    .hero {
+      padding: 120px 0 60px;
+      text-align: center;
+      position: relative;
+      overflow: hidden
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 50% 30%, #14F19508 0%, transparent 60%);
+      pointer-events: none
+    }
+
+    /* ─ Badge ─ */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 16px;
+      background: #14F19510;
+      border: 1px solid #14F19530;
+      border-radius: 100px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--sol-green);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 20px
+    }
+
+    .badge-dot {
+      width: 6px;
+      height: 6px;
+      background: var(--sol-green);
+      border-radius: 50%;
+      animation: pulse 2s ease-in-out infinite
+    }
+
+    /* ─ Hero ─ */
+    .hero h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 900;
+      line-height: 1.15;
+      margin-bottom: 16px
+    }
+
+    .hero h1 .grad {
+      background: linear-gradient(135deg, var(--sol-green), var(--sol-blue), var(--sol-purple));
+      background-size: 200% 200%;
+      animation: gradientShift 6s ease infinite;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text
+    }
+
+    .hero p {
+      color: #8892A8;
+      font-size: 1.05rem;
+      max-width: 600px;
+      margin: 0 auto 36px;
+      animation: fadeIn 0.8s ease-out 0.3s forwards;
+      opacity: 0
+    }
+
+    /* ─ Install Block ─ */
+    .install {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      animation: glow 4s ease-in-out infinite;
+      margin-bottom: 40px
+    }
+
+    .install-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 20px;
+      background: var(--bg3);
+      border-bottom: 1px solid var(--border)
+    }
+
+    .install-header span {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--dim)
+    }
+
+    .install-dots {
+      display: flex;
+      gap: 6px
+    }
+
+    .install-dots span {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%
+    }
+
+    .install-dots span:nth-child(1) {
+      background: #FF4060
+    }
+
+    .install-dots span:nth-child(2) {
+      background: #FFAA00
+    }
+
+    .install-dots span:nth-child(3) {
+      background: #14F195
+    }
+
+    .install-body {
+      padding: 24px;
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      line-height: 2
+    }
+
+    .install-body .comment {
+      color: var(--dim)
+    }
+
+    .install-body .cmd {
+      color: var(--sol-green)
+    }
+
+    .copy-btn {
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--dim);
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      padding: 5px 14px;
+      cursor: pointer;
+      transition: all 0.2s
+    }
+
+    .copy-btn:hover {
+      color: var(--sol-green);
+      border-color: var(--sol-green)
+    }
+
+    .copy-btn.copied {
+      color: var(--sol-green);
+      border-color: var(--sol-green)
+    }
+
+    /* ─ Steps ─ */
+    .steps {
+      display: grid;
+      gap: 16px;
+      margin-bottom: 40px
+    }
+
+    .step {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+      padding: 20px;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      transition: all 0.3s
+    }
+
+    .step:hover {
+      border-color: #14F19530;
+      transform: translateY(-2px)
+    }
+
+    .step-num {
+      flex-shrink: 0;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, var(--sol-green), var(--sol-purple));
+      border-radius: 8px;
+      font-family: var(--font-display);
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: #020208
+    }
+
+    .step h3 {
+      font-family: var(--font-display);
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--sol-green);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 4px
+    }
+
+    .step p {
+      color: #8892A8;
+      font-size: 0.88rem
+    }
+
+    .step code {
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      color: var(--sol-amber);
+      background: #FFAA0010;
+      padding: 2px 6px;
+      border-radius: 4px
+    }
+
+    /* ─ Features ─ */
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+      margin-top: 40px
+    }
+
+    .feat {
+      padding: 20px;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      text-align: center;
+      transition: all 0.3s
+    }
+
+    .feat:hover {
+      border-color: #14F19530;
+      transform: translateY(-3px)
+    }
+
+    .feat-icon {
+      font-size: 1.6rem;
+      margin-bottom: 8px
+    }
+
+    .feat h4 {
+      font-family: var(--font-display);
+      font-size: 0.65rem;
+      color: var(--sol-green);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 6px
+    }
+
+    .feat p {
+      color: #8892A8;
+      font-size: 0.82rem
+    }
+
+    /* ─ Skill Publish ─ */
+    .skill-publish {
+      margin-top: 24px;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden
+    }
+
+    .skill-publish .install-header {
+      border-bottom: 1px solid var(--border)
+    }
+
+    .skill-publish .install-body {
+      padding: 20px 24px
+    }
+
+    .skill-note {
+      margin-top: 12px;
+      color: #8892A8;
+      font-size: 0.86rem
+    }
+
+    .skill-note code {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--sol-amber);
+      background: #FFAA0010;
+      padding: 2px 6px;
+      border-radius: 4px
+    }
+
+    /* ─ Footer ─ */
+    footer {
+      padding: 40px 0;
+      border-top: 1px solid var(--border);
+      text-align: center;
+      color: var(--dim);
+      font-size: 0.8rem
+    }
+
+    footer a {
+      color: var(--dim)
+    }
+
+    footer a:hover {
+      color: var(--sol-green)
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      margin-top: 12px
+    }
+
+    @media(max-width:600px) {
+      .hero {
+        padding: 80px 0 40px
+      }
+
+      section {
+        padding: 40px 0
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <section class="hero">
+    <div class="container">
+      <div class="badge">
+        <span class="badge-dot"></span>
+        Live on Solana Mainnet
+      </div>
+      <h1>
+        <span class="grad">Set Up Your</span><br>SolanaOS Agent
+      </h1>
+      <p>One command. 10MB binary. Agentic wallet. On-chain intelligence.</p>
+
+      <!-- Install Block -->
+      <div class="install" id="install">
+        <div class="install-header">
+          <div class="install-dots"><span></span><span></span><span></span></div>
+          <span>terminal</span>
+          <button class="copy-btn" onclick="copyInstall()" id="copyBtn">Copy</button>
+        </div>
+        <div class="install-body">
+          <div><span class="comment"># One-shot install</span></div>
+          <div><span class="cmd">curl -fsSL https://raw.githubusercontent.com/x402agent/Solana-Os-Go/newnew/install.sh |
+              bash</span></div>
+          <div></div>
+          <div><span class="comment"># With web console</span></div>
+          <div><span class="cmd">curl -fsSL https://raw.githubusercontent.com/x402agent/Solana-Os-Go/newnew/install.sh |
+              bash -s -- --with-web</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      <h2
+        style="font-family:var(--font-display);font-size:1.1rem;text-align:center;letter-spacing:2px;margin-bottom:28px;color:var(--sol-green)">
+        PUBLISH YOUR SKILL TO NANOHUB</h2>
+
+      <div class="skill-publish">
+        <div class="install-header">
+          <div class="install-dots"><span></span><span></span><span></span></div>
+          <span>nanohub publish</span>
+          <button class="copy-btn" onclick="copySkillPublish()" id="copySkillBtn">Copy</button>
+        </div>
+        <div class="install-body">
+          <div><span class="comment"># 1) Login to NanoHub</span></div>
+          <div><span class="cmd">npx @solanaos/nanohub login</span></div>
+          <div></div>
+          <div><span class="comment"># 2) Publish a local skill folder (must include SKILL.md)</span></div>
+          <div><span class="cmd">npx @solanaos/nanohub publish ./my-skill --slug my-skill --name "My Skill" --version
+              1.0.0 --tags latest,solana</span></div>
+        </div>
+      </div>
+
+      <p class="skill-note">
+        Requirements: <code>SKILL.md</code> (or <code>skills.md</code>), text files only, semver version.
+        Published skills appear on <a href="https://seeker.solanaos.net" target="_blank"
+          rel="noopener">seeker.solanaos.net</a>.
+      </p>
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      <h2
+        style="font-family:var(--font-display);font-size:1.1rem;text-align:center;letter-spacing:2px;margin-bottom:28px;color:var(--sol-green)">
+        WHAT HAPPENS</h2>
+
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div>
+            <h3>Clone & Build</h3>
+            <p>Downloads the SolanaOS repo and builds the <code>solanaos</code> 10MB binary in Go.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div>
+            <h3>Agentic Wallet</h3>
+            <p>Auto-generates a Solana keypair at <code>~/.nanosolana/wallet/</code> — your agent's on-chain identity.
+            </p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div>
+            <h3>Connect APIs</h3>
+            <p>Add your <code>HELIUS_API_KEY</code> and <code>BIRDEYE_API_KEY</code> to the <code>.env</code> file for
+              live mainnet data.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div>
+            <h3>Start Trading</h3>
+            <p>Run <code>solanaos daemon</code> for the full autonomous OODA loop, or
+              <code>solanaos ooda --sim</code> for paper trading.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="features">
+        <div class="feat">
+          <div class="feat-icon">⛓️</div>
+          <h4>On-Chain Engine</h4>
+          <p>Helius RPC/WSS + Jupiter swaps</p>
+        </div>
+        <div class="feat">
+          <div class="feat-icon">🧠</div>
+          <h4>OODA Loop</h4>
+          <p>RSI/EMA/ATR strategy engine</p>
+        </div>
+        <div class="feat">
+          <div class="feat-icon">🐹</div>
+          <h4>TamaGOchi</h4>
+          <p>Pet soul driven by PnL</p>
+        </div>
+        <div class="feat">
+          <div class="feat-icon">🔑</div>
+          <h4>Agentic Wallet</h4>
+          <p>Auto-gen Solana keypair</p>
+        </div>
+        <div class="feat">
+          <div class="feat-icon">🌐</div>
+          <h4>Native Gateway</h4>
+          <p>Go TCP + Tailscale mesh</p>
+        </div>
+        <div class="feat">
+          <div class="feat-icon">💰</div>
+          <h4>x402 Protocol</h4>
+          <p>Multi-chain USDC paywall</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section style="padding:40px 0">
+    <div class="container" style="text-align:center">
+      <p style="color:var(--dim);font-size:0.9rem;margin-bottom:16px">
+        Full interactive console →
+        <a href="https://go.solanaos.net" target="_blank" rel="noopener">go.solanaos.net</a>
+      </p>
+      <p style="color:var(--dim);font-size:0.9rem">
+        Source code →
+        <a href="https://github.com/x402agent/Solana-Os-Go" target="_blank"
+          rel="noopener">github.com/x402agent/Solana-Os-Go</a>
+      </p>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <p>SolanaOS Labs · Built with Go on Solana · x402 Protocol</p>
+      <p style="margin-top:4px">🐹 A GoBot with a soul</p>
+      <div class="footer-links">
+        <a href="https://github.com/x402agent">GitHub</a>
+        <a href="https://helius.dev">Helius</a>
+        <a href="https://jup.ag">Jupiter</a>
+        <a href="https://go.solanaos.net">Console</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    function copyInstall() {
+      const cmd = 'curl -fsSL https://raw.githubusercontent.com/x402agent/Solana-Os-Go/newnew/install.sh | bash';
+      navigator.clipboard.writeText(cmd).then(() => {
+        const btn = document.getElementById('copyBtn');
+        btn.textContent = 'Copied!';
+        btn.classList.add('copied');
+        setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+      });
+    }
+
+    function copySkillPublish() {
+      const cmd = 'npx @solanaos/nanohub publish ./my-skill --slug my-skill --name "My Skill" --version 1.0.0 --tags latest,solana';
+      navigator.clipboard.writeText(cmd).then(() => {
+        const btn = document.getElementById('copySkillBtn');
+        btn.textContent = 'Copied!';
+        btn.classList.add('copied');
+        setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+      });
+    }
+  </script>
+</body>
+
+</html>

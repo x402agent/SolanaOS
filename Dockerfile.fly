@@ -1,0 +1,79 @@
+# syntax=docker/dockerfile:1
+# ──────────────────────────────────────────────────────────────────────
+# SolanaOS :: Fly.io Image
+# Builds the daemon, the web console, bundled skills, and SOUL.md
+# into a single image that can run on one Fly machine with /data storage.
+# ──────────────────────────────────────────────────────────────────────
+
+FROM golang:1.25.7-alpine AS go-builder
+
+RUN apk add --no-cache git
+
+WORKDIR /src
+COPY go.mod go.sum* ./
+RUN go mod download
+
+COPY main.go hardware.go memory_commands.go ./
+COPY cmd ./cmd
+COPY internal ./internal
+COPY pkg ./pkg
+COPY scripts ./scripts
+COPY skills ./skills
+COPY SOUL.md ./
+COPY .env.example ./
+COPY web/backend ./web/backend
+RUN mkdir -p /src/build && \
+    GOCACHE=/tmp/go-build GOTMPDIR=/tmp GOMODCACHE=/tmp/gomodcache GOPROXY=https://proxy.golang.org,direct \
+    go build -trimpath -ldflags "-s -w" -o /src/build/solanaos .
+RUN mkdir -p /out && \
+    GOCACHE=/tmp/go-build GOTMPDIR=/tmp GOMODCACHE=/tmp/gomodcache GOPROXY=https://proxy.golang.org,direct \
+    go build -trimpath -ldflags "-s -w" -o /out/solanaos-web ./web/backend
+
+FROM node:22-alpine AS frontend-builder
+
+WORKDIR /src/web/frontend
+COPY web/frontend/package.json web/frontend/package-lock.json ./
+RUN npm install
+COPY web/frontend ./
+COPY docs/docs-site /src/docs-site
+RUN npm run build
+
+FROM node:22-alpine AS registry-deps
+
+WORKDIR /opt/solanaos-scripts
+COPY scripts/package.json ./
+RUN npm install --omit=dev --ignore-scripts
+
+FROM alpine:3.21
+
+RUN apk add --no-cache ca-certificates tzdata bash nodejs sqlite
+
+WORKDIR /app
+
+COPY --from=go-builder /src/build/solanaos /app/solanaos
+COPY --from=go-builder /out/solanaos-web /app/solanaos-web
+COPY --from=frontend-builder /src/web/frontend/dist /app/web/frontend/dist
+COPY --from=go-builder /src/scripts /app/scripts
+COPY --from=registry-deps /opt/solanaos-scripts/node_modules /app/scripts/node_modules
+COPY --from=go-builder /src/SOUL.md /app/SOUL.md
+COPY --from=go-builder /src/skills /app/skills
+COPY --from=go-builder /src/.env.example /app/.env.example
+COPY --from=go-builder /src/scripts/fly-start.sh /app/fly-start.sh
+
+RUN chmod +x /app/fly-start.sh && \
+    mkdir -p /data /app/web/frontend && \
+    adduser -D -u 1000 solanaos && chown -R solanaos:solanaos /app /data
+USER solanaos
+
+ENV PORT=18800 \
+    SOLANAOS_HOME=/data/solanaos \
+    SOLANAOS_CONFIG=/data/solanaos/config.json \
+    SOLANA_WALLET_KEY_PATH=/data/solanaos/wallet/agent-wallet.json \
+    SOLANAOS_SOUL_PATH=/app/SOUL.md \
+    SOLANAOS_SKILLS_DIR=/app/skills
+
+VOLUME ["/data"]
+
+EXPOSE 18800
+
+ENTRYPOINT ["/app/fly-start.sh"]

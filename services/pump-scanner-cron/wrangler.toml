@@ -1,0 +1,19 @@
+name = "pump-scanner-cron"
+main = "src/worker.ts"
+compatibility_date = "2024-12-01"
+account_id = "2f5db575118d15ec19000e13282201bc"
+
+[triggers]
+crons = ["*/30 * * * *"]
+
+[vars]
+CONVEX_SITE_URL = "https://artful-frog-940.convex.site"
+GECKO_PAGES = "3"
+SOURCE_TAG = "cloudflare-cron"
+HONCHO_WORKSPACE = "pumpfun-trading"
+
+# Secrets (set via `wrangler secret put`):
+# SOLANA_TRACKER_API_KEY
+# HONCHO_API_KEY
+# TELEGRAM_BOT_TOKEN
+# TELEGRAM_CHAT_ID

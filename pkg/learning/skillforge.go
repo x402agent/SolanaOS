@@ -1,0 +1,225 @@
+package learning
+
+import (
+	"fmt"
+	"os"
+	"path/filepath"
+	"strconv"
+	"strings"
+
+	"github.com/x402agent/Solana-Os-Go/pkg/skills"
+)
+
+type SkillForge struct {
+	workspace string
+	threshold int
+}
+
+func NewSkillForge(workspace string, threshold int) *SkillForge {
+	if threshold <= 0 {
+		threshold = 3
+	}
+	return &SkillForge{
+		workspace: workspace,
+		threshold: threshold,
+	}
+}
+
+func (s *SkillForge) Init() error {
+	if s == nil {
+		return nil
+	}
+	return os.MkdirAll(filepath.Join(s.workspace, "skills"), 0o755)
+}
+
+func (s *SkillForge) Observe(turn TurnRecord, model *UserModel) (*skills.Skill, error) {
+	if s == nil || strings.ToLower(strings.TrimSpace(turn.Role)) != "user" {
+		return nil, nil
+	}
+	intent := strings.TrimSpace(turn.Intent)
+	if intent == "" || model == nil {
+		return nil, nil
+	}
+
+	var count int
+	for _, stat := range model.RecurringIntents {
+		if stat.Name == intent {
+			count = stat.Count
+			break
+		}
+	}
+	if count < s.threshold {
+		return nil, nil
+	}
+
+	skillName := "auto-" + safeSlug(intent)
+	skillDir := filepath.Join(s.workspace, "skills", skillName)
+	if _, err := os.Stat(filepath.Join(skillDir, "SKILL.md")); err == nil {
+		if count%s.threshold != 0 {
+			return nil, nil
+		}
+		skill, err := s.upsertSkill(skillName, intent, model, true)
+		if err != nil {
+			return nil, err
+		}
+		return skill, nil
+	}
+
+	return s.upsertSkill(skillName, intent, model, false)
+}
+
+func (s *SkillForge) List() ([]skills.Skill, error) {
+	if s == nil {
+		return nil, nil
+	}
+	all, err := skills.ListInstalled(s.workspace)
+	if err != nil {
+		return nil, err
+	}
+	filtered := make([]skills.Skill, 0, len(all))
+	for _, skill := range all {
+		if strings.HasPrefix(skill.Name, "auto-") {
+			filtered = append(filtered, skill)
+		}
+	}
+	return filtered, nil
+}
+
+func (s *SkillForge) Reconcile(models []*UserModel) (created, improved int, err error) {
+	if s == nil {
+		return 0, 0, nil
+	}
+	for _, model := range models {
+		if model == nil {
+			continue
+		}
+		for _, stat := range model.RecurringIntents {
+			if stat.Count < s.threshold {
+				continue
+			}
+			skillName := "auto-" + safeSlug(stat.Name)
+			skillPath := filepath.Join(s.workspace, "skills", skillName, "SKILL.md")
+			exists := false
+			if _, statErr := os.Stat(skillPath); statErr == nil {
+				exists = true
+			}
+			if !exists {
+				if _, createErr := s.upsertSkill(skillName, stat.Name, model, false); createErr != nil {
+					return created, improved, createErr
+				}
+				created++
+				continue
+			}
+			if stat.Count%s.threshold == 0 {
+				if _, improveErr := s.upsertSkill(skillName, stat.Name, model, true); improveErr != nil {
+					return created, improved, improveErr
+				}
+				improved++
+			}
+		}
+	}
+	return created, improved, nil
+}
+
+func (s *SkillForge) buildSkillBody(intent string, model *UserModel) string {
+	var b strings.Builder
+	b.WriteString("# Auto Skill\n\n")
+	b.WriteString("## Purpose\n")
+	b.WriteString(fmt.Sprintf("- Optimize repeated `%s` requests for this user.\n\n", humanizeIntent(intent)))
+	b.WriteString("## Working Pattern\n")
+	b.WriteString("- Start with the latest user request and search for similar past sessions.\n")
+	b.WriteString("- Reuse prior successful structure before inventing a new approach.\n")
+	b.WriteString("- Keep output aligned with the user's learned preferences and operating style.\n\n")
+	if model != nil {
+		if len(model.Preferences) > 0 {
+			b.WriteString("## User Preferences\n")
+			for _, item := range limitStrings(model.Preferences, 6) {
+				b.WriteString("- " + item + "\n")
+			}
+			b.WriteString("\n")
+		}
+		if len(model.WorkStyle) > 0 {
+			b.WriteString("## User Work Style\n")
+			for _, item := range limitStrings(model.WorkStyle, 6) {
+				b.WriteString("- " + item + "\n")
+			}
+			b.WriteString("\n")
+		}
+		if len(model.DomainKnowledge) > 0 {
+			b.WriteString("## Domain Context\n")
+			for _, item := range limitStrings(model.DomainKnowledge, 8) {
+				b.WriteString("- " + item + "\n")
+			}
+			b.WriteString("\n")
+		}
+	}
+	b.WriteString("## Maintenance\n")
+	b.WriteString("- This skill was generated from repeated behavior.\n")
+	b.WriteString("- It self-improves whenever repeated usage crosses another threshold window.\n")
+	b.WriteString("- Compatible manifest emitted at `agentskills.json`.\n")
+	b.WriteString("- Edit or delete it if it stops matching the user's actual workflow.\n")
+	return b.String()
+}
+
+func (s *SkillForge) upsertSkill(skillName, intent string, model *UserModel, improving bool) (*skills.Skill, error) {
+	skill := skills.Skill{
+		Name:         skillName,
+		Description:  fmt.Sprintf("Auto-generated workflow for %s", humanizeIntent(intent)),
+		Version:      "1.0.0",
+		Author:       "SolanaOS Learning",
+		Tags:         []string{"auto-generated", "learning", safeSlug(intent), "agentskills.io"},
+		AllowedTools: allowedToolsForIntent(intent),
+		Body:         s.buildSkillBody(intent, model),
+		Source:       "autogenerated",
+	}
+	if improving {
+		if existing, err := s.loadInstalledSkill(skillName); err == nil && strings.TrimSpace(existing.Name) != "" {
+			skill.Version = bumpPatch(existing.Version)
+		}
+		skill.Description = fmt.Sprintf("Self-improving workflow for %s", humanizeIntent(intent))
+	}
+	if err := skills.InstallSkill(s.workspace, skill); err != nil {
+		return nil, err
+	}
+	return &skill, nil
+}
+
+func (s *SkillForge) loadInstalledSkill(name string) (skills.Skill, error) {
+	all, err := skills.ListInstalled(s.workspace)
+	if err != nil {
+		return skills.Skill{}, err
+	}
+	for _, item := range all {
+		if item.Name == name {
+			return item, nil
+		}
+	}
+	return skills.Skill{}, fmt.Errorf("skill not found: %s", name)
+}
+
+func bumpPatch(version string) string {
+	parts := strings.Split(strings.TrimSpace(version), ".")
+	if len(parts) != 3 {
+		return "1.0.1"
+	}
+	patch, err := strconv.Atoi(parts[2])
+	if err != nil {
+		return "1.0.1"
+	}
+	return fmt.Sprintf("%s.%s.%d", parts[0], parts[1], patch+1)
+}
+
+func allowedToolsForIntent(intent string) []string {
+	switch intent {
+	case "trade_execution", "market_analysis", "portfolio_review":
+		return []string{"wallet", "token_data", "chart", "stats"}
+	case "system_design", "skill_creation":
+		return []string{"memory", "skills", "config"}
+	default:
+		return []string{"memory", "skills"}
+	}
+}
+
+func humanizeIntent(intent string) string {
+	return strings.ReplaceAll(intent, "_", " ")
+}

@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "name": "solanaos-agent",
+  "display_name": "SolanaOS Agent",
+  "description": "Autonomous Solana trading and operator runtime with 8004 agent registry, Metaplex NFT identity, Pinata IPFS metadata, SolanaOS Hub and Convex surfaces, Solana Seeker pairing, persistent Honcho memory, multi-venue strategy, wallet control, and hardware integration",
+  "icon": "icon.svg",
+  "distribution": {
+    "type": "command",
+    "command": "solanaos",
+    "args": ["acp"]
+  },
+  "services": [
+    {
+      "type": "mcp",
+      "description": "Model Context Protocol server for editor integration (VS Code, Cursor, Zed)"
+    },
+    {
+      "type": "a2a",
+      "description": "Agent-to-Agent protocol for inter-agent communication and task delegation"
+    }
+  ],
+  "registry": {
+    "protocol": "8004",
+    "program_id": "Ag8004rWo8ao8AUKhLk78iv2nLQpZMyBPXiAh5QLbFiE",
+    "atom_program_id": "AToM1cZNgm8v9PqGi18J2CJvna3YiJzLAx2wLdGVpump",
+    "metadata_storage": "pinata_ipfs",
+    "nft_standard": "metaplex_core",
+    "clusters": ["mainnet-beta", "devnet"],
+    "features": {
+      "atom_reputation": true,
+      "seal_v1": true,
+      "x402_payments": true,
+      "proof_pass": true,
+      "collection_pointer": true,
+      "heartbeat_sync": true
+    }
+  },
+  "capabilities": {
+    "skills": [
+      "advanced_reasoning_planning/strategic_planning",
+      "finance_and_business/finance"
+    ],
+    "domains": [
+      "finance_and_business/finance"
+    ],
+    "x402_support": true
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "name": "SolanaOS Mobile Starter Pack",
+  "siteUrl": "https://seeker.solanaos.net",
+  "skillsUrl": "https://seeker.solanaos.net/solanaos",
+  "skills": [
+    {
+      "slug": "seeker-daemon-ops",
+      "title": "Daemon Ops",
+      "summary": "Run, validate, and recover the SolanaOS Seeker daemon command flow."
+    },
+    {
+      "slug": "session-logs",
+      "title": "Session Logs",
+      "summary": "Search prior agent sessions and recover historical context."
+    },
+    {
+      "slug": "solana-research-brief",
+      "title": "Research Brief",
+      "summary": "Produce compact token research snapshots with market and risk context."
+    },
+    {
+      "slug": "pumpfun-trading",
+      "title": "Pump Trading",
+      "summary": "Reference trade flow for bonding-curve and graduated Pump trading."
+    },
+    {
+      "slug": "github",
+      "title": "GitHub",
+      "summary": "Operate GitHub issues, PRs, checks, and workflow runs from mobile."
+    },
+    {
+      "slug": "summarize",
+      "title": "Summarize",
+      "summary": "Summarize links, files, and videos with a single CLI."
+    },
+    {
+      "slug": "weather",
+      "title": "Weather",
+      "summary": "Fast current conditions and short forecasts."
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+{
+  "apiBase": "https://seeker.solanaos.net",
+  "authBase": "https://seeker.solanaos.net",
+  "minCliVersion": "0.1.0",
+  "registry": "https://seeker.solanaos.net"
+}

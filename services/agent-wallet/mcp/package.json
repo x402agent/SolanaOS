@@ -1,0 +1,22 @@
+{
+  "name": "nanosolana-agent-wallet-mcp",
+  "version": "1.0.0",
+  "description": "MCP server for NanoSolana agent wallet — Solana + EVM vault with E2B deployment",
+  "type": "module",
+  "main": "index.ts",
+  "bin": {
+    "nanosolana-wallet-mcp": "./index.ts"
+  },
+  "scripts": {
+    "start": "npx tsx index.ts",
+    "build": "npx tsc"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "zod": "^3.22.0"
+  },
+  "devDependencies": {
+    "tsx": "^4.0.0",
+    "typescript": "^5.3.0"
+  }
+}

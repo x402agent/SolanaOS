@@ -1,0 +1,47 @@
+{
+  "name": "solanaos-computer",
+  "version": "1.0.2",
+  "description": "Primary SolanaOS npm installer and launcher for the Solana-native trading and operator runtime",
+  "license": "MIT",
+  "type": "module",
+  "bin": {
+    "solanaos": "bin/solanaos.mjs",
+    "solanaos-cli": "bin/solanaos.mjs",
+    "nanosolana": "bin/solanaos.mjs"
+  },
+  "files": [
+    "bin",
+    "README.md"
+  ],
+  "scripts": {
+    "pack:dry": "sh -c 'mkdir -p \"${NPM_VERIFY_HOME:-/tmp/solanaos-npm-home}\" \"${NPM_CONFIG_CACHE:-/tmp/solanaos-npm-cache}\" && HOME=\"${NPM_VERIFY_HOME:-/tmp/solanaos-npm-home}\" NPM_CONFIG_CACHE=\"${NPM_CONFIG_CACHE:-/tmp/solanaos-npm-cache}\" npm pack --dry-run'",
+    "verify": "sh -c 'mkdir -p \"${NPM_VERIFY_HOME:-/tmp/solanaos-npm-home}\" \"${NPM_CONFIG_CACHE:-/tmp/solanaos-npm-cache}\" && HOME=\"${NPM_VERIFY_HOME:-/tmp/solanaos-npm-home}\" NPM_CONFIG_CACHE=\"${NPM_CONFIG_CACHE:-/tmp/solanaos-npm-cache}\" npm pack --dry-run'",
+    "publish:public": "npm publish --access public"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "keywords": [
+    "solana",
+    "solanaos",
+    "nanosolana",
+    "trading",
+    "agent",
+    "helius",
+    "jupiter",
+    "ooda",
+    "ollama"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/x402agent/Solana-Os-Go.git",
+    "directory": "npm/solanaos"
+  },
+  "homepage": "https://go.solanaos.net",
+  "bugs": {
+    "url": "https://github.com/x402agent/Solana-Os-Go/issues"
+  }
+}

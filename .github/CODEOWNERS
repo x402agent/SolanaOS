@@ -1,0 +1,8 @@
+# Sensitive web, app, deploy, and database surfaces require owner review.
+/.github/ @x402agent
+/web/ @x402agent
+/docs/docs-site/ @x402agent
+/mawdbot-bitaxe/web/ @x402agent
+/nanohub/ @x402agent
+/schema.sql @x402agent
+/**/*.sql @x402agent

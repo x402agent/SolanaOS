@@ -1,0 +1,20 @@
+{
+  "name": "mawdbot-launcher",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "dependencies": {
+    "@coral-xyz/anchor": "^0.31.1",
+    "@nirholas/pump-sdk": "^1.28.0",
+    "@pump-fun/agent-payments-sdk": "^3.0.2",
+    "@solana/spl-token": "^0.4.13",
+    "@solana/web3.js": "^1.98.0",
+    "8004-solana": "^0.8.0",
+    "bs58": "^6.0.0",
+    "bn.js": "^5.2.2",
+    "unicode-animations": "^1.0.3"
+  },
+  "overrides": {
+    "bigint-buffer": "^1.1.6"
+  }
+}

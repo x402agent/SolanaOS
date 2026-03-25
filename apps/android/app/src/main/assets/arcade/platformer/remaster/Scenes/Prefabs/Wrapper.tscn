@@ -1,0 +1,26 @@
+[gd_scene load_steps=2 format=3 uid="uid://d3e1cch72jsyh"]
+
+[ext_resource type="Script" uid="uid://s4mhtrkgsrdi" path="res://Scripts/Wrapper.gd" id="1_k5vsa"]
+
+[node name="Wrapper" type="Node"]
+script = ExtResource("1_k5vsa")
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 0
+size_flags_vertical = 8
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="CenterContainer"]
+layout_mode = 2
+
+[node name="SubViewport" type="SubViewport" parent="CenterContainer/SubViewportContainer"]
+handle_input_locally = false
+snap_2d_transforms_to_pixel = true
+snap_2d_vertices_to_pixel = true
+canvas_item_default_texture_filter = 0
+size = Vector2i(256, 240)
+render_target_update_mode = 4

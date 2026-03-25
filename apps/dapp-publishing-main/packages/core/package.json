@@ -1,0 +1,73 @@
+{
+  "name": "@solana-mobile/dapp-store-publishing-tools",
+  "version": "0.16.0",
+  "description": "Core publishing helpers for the Solana Mobile dApp Store release flow",
+  "license": "Apache-2.0",
+  "type": "module",
+  "sideEffects": false,
+  "main": "./lib/index.js",
+  "module": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "engines": {
+    "node": ">=18"
+  },
+  "exports": {
+    ".": {
+      "types": "./lib/index.d.ts",
+      "import": "./lib/index.js",
+      "default": "./lib/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib",
+    "LICENSE",
+    "README.md"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/solana-mobile/dapp-publishing-cli.git",
+    "directory": "packages/core"
+  },
+  "homepage": "https://docs.solanamobile.com/dapp-publishing/intro",
+  "bugs": {
+    "url": "https://github.com/solana-mobile/dapp-publishing-cli/issues"
+  },
+  "keywords": [
+    "solana-mobile",
+    "dapp-store",
+    "publishing",
+    "solana"
+  ],
+  "scripts": {
+    "clean": "shx mkdir -p lib && shx rm -rf lib",
+    "prebuild": "pnpm run clean && pnpm run generate-types",
+    "prepack": "pnpm run prebuild && pnpm run build",
+    "build:js": "swc src -d lib --copy-files",
+    "build:types": "tsc --project tsconfig.json --emitDeclarationOnly --declaration --declarationMap --outDir lib",
+    "build": "pnpm run build:js && pnpm run build:types",
+    "watch": "swc src --out-dir lib -w",
+    "generate-types": "json2ts -i src/schemas -o src/generated"
+  },
+  "devDependencies": {
+    "@types/debug": "^4.1.7",
+    "@types/mime": "^3.0.1",
+    "@types/node-fetch": "^2.6.2",
+    "get-video-dimensions": "^1.0.0",
+    "json-schema-to-typescript": "^11.0.2",
+    "shx": "^0.3.4"
+  },
+  "dependencies": {
+    "@metaplex-foundation/js": "0.20.0",
+    "@solana/web3.js": "^1.98.0",
+    "ajv": "^8.11.0",
+    "axios": "^1.8.4",
+    "chokidar": "^3.5.3",
+    "debug": "^4.3.4",
+    "image-size": "^1.0.2",
+    "mime": "^3.0.0"
+  }
+}

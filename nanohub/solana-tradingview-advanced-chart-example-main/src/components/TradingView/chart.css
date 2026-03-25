@@ -1,0 +1,123 @@
+html.dark {
+  --tv-color-platform-background: #0c0c0e !important;
+  --tv-color-pane-background: #0c0c0e !important;
+  --tv-color-toolbar-button-background-hover: rgba(255,255,255,0.04);
+  --tv-color-toolbar-button-background-expanded: rgba(255,255,255,0.06);
+  --tv-color-toolbar-button-background-active: rgba(255,255,255,0.1);
+  --tv-color-toolbar-button-background-active-hover: rgba(255,255,255,0.12);
+  --tv-color-toolbar-button-text: #55555c;
+  --tv-color-toolbar-button-text-hover: #9a9aa0;
+  --tv-color-toolbar-button-text-active: #e8e8ec;
+  --tv-color-toolbar-button-text-active-hover: #e8e8ec;
+  --tv-color-item-active-text: #e8e8ec;
+  --tv-color-toolbar-toggle-button-background-active: rgba(255,255,255,0.1);
+  --tv-color-toolbar-toggle-button-background-active-hover: rgba(255,255,255,0.15);
+  --tv-color-toolbar-divider-background: #232326;
+  --tv-color-toolbar-background: transparent;
+  --tv-color-popup-background: #111114;
+  --tv-color-popup-element-text: #d4d4d8;
+  --tv-color-popup-element-text-hover: #e8e8ec;
+  --tv-color-popup-element-background-hover: rgba(255,255,255,0.04);
+  --tv-color-popup-element-divider-background: #232326;
+  --tv-color-popup-element-secondary-text: #55555c;
+  --tv-color-input-background: #19191c;
+  --tv-color-input-background-hover: #1e1e22;
+  --tv-color-input-background-active: #19191c;
+  --tv-color-input-text: #d4d4d8;
+  --tv-color-input-placeholder-text: #44444a;
+  --tv-color-input-border: #2a2a2e;
+  --tv-color-input-border-hover: #3a3a40;
+  --tv-color-input-border-active: #9a9aa0;
+  --tv-color-scroll-background: transparent;
+  --tv-color-scroll-thumb-background: rgba(255,255,255,0.08);
+  --tv-color-scroll-thumb-background-hover: rgba(255,255,255,0.12);
+  --tv-color-tooltip-background: #111114;
+  --tv-color-tooltip-text: #d4d4d8;
+}
+
+
+html:not(.dark) {
+  --tv-color-platform-background: #ffffff !important;
+  --tv-color-pane-background: #ffffff !important;
+  --tv-color-toolbar-button-background-hover: rgba(0,0,0,0.04);
+  --tv-color-toolbar-button-background-expanded: rgba(0,0,0,0.06);
+  --tv-color-toolbar-button-background-active: rgba(0,0,0,0.08);
+  --tv-color-toolbar-button-background-active-hover: rgba(0,0,0,0.1);
+  --tv-color-toolbar-button-text: #9a9a9a;
+  --tv-color-toolbar-button-text-hover: #525252;
+  --tv-color-toolbar-button-text-active: #0a0a0a;
+  --tv-color-toolbar-button-text-active-hover: #0a0a0a;
+  --tv-color-item-active-text: #0a0a0a;
+  --tv-color-toolbar-toggle-button-background-active: rgba(0,0,0,0.08);
+  --tv-color-toolbar-toggle-button-background-active-hover: rgba(0,0,0,0.12);
+  --tv-color-toolbar-divider-background: #e0e0e0;
+  --tv-color-toolbar-background: transparent;
+  --tv-color-popup-background: #ffffff;
+  --tv-color-popup-element-text: #1a1a1a;
+  --tv-color-popup-element-text-hover: #0a0a0a;
+  --tv-color-popup-element-background-hover: rgba(0,0,0,0.04);
+  --tv-color-popup-element-divider-background: #e0e0e0;
+  --tv-color-popup-element-secondary-text: #9a9a9a;
+  --tv-color-input-background: #ffffff;
+  --tv-color-input-background-hover: #f9f9f9;
+  --tv-color-input-background-active: #ffffff;
+  --tv-color-input-text: #1a1a1a;
+  --tv-color-input-placeholder-text: #9a9a9a;
+  --tv-color-input-border: #e0e0e0;
+  --tv-color-input-border-hover: #d4d4d4;
+  --tv-color-input-border-active: #525252;
+  --tv-color-scroll-background: transparent;
+  --tv-color-scroll-thumb-background: rgba(0,0,0,0.08);
+  --tv-color-scroll-thumb-background-hover: rgba(0,0,0,0.12);
+  --tv-color-tooltip-background: #ffffff;
+  --tv-color-tooltip-text: #1a1a1a;
+}
+
+#TVChartContainer { width: 100%; height: 100%; }
+iframe[id^="tradingview"] { border: none !important; }
+
+.price-axis, .price-axis-last-value, .pane-legend-line {
+  font-family: "DM Mono", ui-monospace, monospace !important;
+  font-size: 11px !important;
+}
+.time-axis {
+  font-family: "DM Mono", ui-monospace, monospace !important;
+  font-size: 10px !important;
+}
+
+.chart-controls-bar, .tv-header { background: transparent !important; }
+
+.dark .tv-side-toolbar, .dark .tv-chart-drawing-toolbar {
+  background: #0c0c0e !important; border-right: 1px solid #232326 !important;
+}
+html:not(.dark) .tv-side-toolbar, html:not(.dark) .tv-chart-drawing-toolbar {
+  background: #ffffff !important; border-right: 1px solid #e0e0e0 !important;
+}
+
+.dark [class*="menuWrap"], .dark [class*="dropdown"] {
+  background: #111114 !important; border: 1px solid #232326 !important;
+  border-radius: 8px !important; box-shadow: 0 8px 24px rgba(0,0,0,0.5) !important;
+}
+html:not(.dark) [class*="menuWrap"], html:not(.dark) [class*="dropdown"] {
+  background: #ffffff !important; border: 1px solid #e0e0e0 !important;
+  border-radius: 8px !important; box-shadow: 0 4px 16px rgba(0,0,0,0.08) !important;
+}
+
+
+.dark [class*="dialog"] {
+  background: #111114 !important; border: 1px solid #232326 !important;
+  border-radius: 10px !important; box-shadow: 0 16px 48px rgba(0,0,0,0.6) !important;
+}
+html:not(.dark) [class*="dialog"] {
+  background: #ffffff !important; border: 1px solid #e0e0e0 !important;
+  border-radius: 10px !important; box-shadow: 0 8px 32px rgba(0,0,0,0.1) !important;
+}
+
+.dark .study-legend, .dark .pane-legend {
+  background: rgba(12,12,14,0.9) !important; backdrop-filter: blur(8px) !important;
+  border-radius: 6px !important; padding: 4px 8px !important;
+}
+html:not(.dark) .study-legend, html:not(.dark) .pane-legend {
+  background: rgba(255,255,255,0.9) !important; backdrop-filter: blur(8px) !important;
+  border-radius: 6px !important; padding: 4px 8px !important;
+}

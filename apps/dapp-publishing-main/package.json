@@ -1,0 +1,69 @@
+{
+  "name": "dapp-publishing-workspace",
+  "private": true,
+  "packageManager": "pnpm@10.12.1",
+  "engines": {
+    "node": ">=18",
+    "pnpm": ">=10"
+  },
+  "scripts": {
+    "clean": "pnpm --recursive run clean",
+    "build": "pnpm --recursive run prebuild && pnpm --recursive run build",
+    "watch": "pnpm --parallel run watch",
+    "test": "pnpm --filter @solana-mobile/dapp-store-cli test",
+    "pack:core": "pnpm --dir packages/core pack",
+    "pack:cli": "pnpm --dir packages/cli pack",
+    "pack:all": "pnpm run pack:core && pnpm run pack:cli",
+    "release:check": "pnpm run build && pnpm run test && pnpm run pack:all",
+    "fmt": "prettier --write '{*,**/*}.{ts,tsx,js,jsx,json}'",
+    "lint": "prettier --check '{*,**/*}.{ts,tsx,js,jsx,json}' && eslint packages/**",
+    "lint:fix": "pnpm fmt && eslint --fix packages/**",
+    "nuke": "shx rm -rf node_modules pnpm-lock.yaml packages/*/*/node_modules packages/*/*/pnpm-lock.yaml || true",
+    "reinstall": "pnpm nuke && pnpm install"
+  },
+  "devDependencies": {
+    "@swc/cli": "^0.1.62",
+    "@swc/core": "^1.3.56",
+    "@types/node": "^18.6.4",
+    "@typescript-eslint/eslint-plugin": "^5.32.0",
+    "@typescript-eslint/parser": "^5.32.0",
+    "eslint": "^8.25.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-react": "^7.30.1",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-require-extensions": "^0.1.1",
+    "pnpm": "^10.12.1",
+    "prettier": "^2.7.1",
+    "shx": "^0.3.4",
+    "typescript": "^5.6.3"
+  },
+  "pnpm": {
+    "patchedDependencies": {
+      "@solana/web3.js@1.92.1": "patches/@solana__web3.js@1.92.1.patch"
+    },
+    "overrides": {
+      "axios": "^1.8.4",
+      "crypto-js": "^4.2.0",
+      "form-data": "^4.0.2",
+      "fast-xml-parser": "^4.5.3",
+      "ws": "^8.18.1",
+      "elliptic": "^6.6.1",
+      "secp256k1": "^5.0.1",
+      "flatted": "^3.3.3",
+      "socket.io-parser": "^4.2.4",
+      "bigint-buffer": "^1.1.6",
+      "undici": "^7.7.0",
+      "@solana/web3.js": "^1.98.0",
+      "minimatch": "^5.1.6",
+      "lodash": "^4.17.22",
+      "bn.js": "^5.2.2",
+      "ajv": "^8.17.1",
+      "js-yaml": "^4.1.0",
+      "hono": "^4.7.6",
+      "h3": "^2.1.2",
+      "@smithy/config-resolver": "^4.1.4",
+      "tmp": "^0.2.3"
+    }
+  }
+}

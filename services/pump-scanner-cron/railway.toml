@@ -1,0 +1,10 @@
+[build]
+builder = "NIXPACKS"
+
+[deploy]
+startCommand = "python3 scanner_cron.py"
+restartPolicyType = "NEVER"
+
+# Runs every 30 minutes
+[deploy.cron]
+schedule = "*/30 * * * *"

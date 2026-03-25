@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=420,initial-scale=1">
+<title>SolanaOS</title>
+<link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="ext-container">
+    <!-- Header -->
+    <div class="ext-header">
+      <div class="header-left">
+        <div class="status-dot" id="statusDot"></div>
+        <span class="brand">SolanaOS</span>
+      </div>
+      <div class="header-right">
+        <span class="status-text" id="statusText">connecting...</span>
+        <button class="header-btn" id="settingsBtn" title="Settings">⚙️</button>
+        <button class="header-btn" id="popoutBtn" title="Open Full UI">↗</button>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs">
+      <div class="tab active" data-tab="wallet" id="tabWallet">💰 Wallet</div>
+      <div class="tab" data-tab="seeker" id="tabSeeker">📱 Seeker</div>
+      <div class="tab" data-tab="miner" id="tabMiner">⛏ Miner</div>
+      <div class="tab" data-tab="chat" id="tabChat">💬 Chat</div>
+      <div class="tab" data-tab="tools" id="tabTools">🔧 Tools</div>
+    </div>
+
+    <!-- Wallet Tab -->
+    <div class="tab-content active" id="tab-wallet">
+      <div class="wallet-section">
+        <div class="runtime-card">
+          <div class="runtime-row">
+            <div>
+              <div class="runtime-label">Agent Runtime</div>
+              <div class="runtime-title" id="runtimeTitle">Loading...</div>
+            </div>
+            <div class="runtime-pill" id="runtimeModePill">—</div>
+          </div>
+	          <div class="runtime-grid">
+	            <div class="runtime-stat">
+	              <div class="runtime-stat-value" id="runtimeDaemon">—</div>
+              <div class="runtime-stat-label">Daemon</div>
+            </div>
+            <div class="runtime-stat">
+              <div class="runtime-stat-value" id="runtimeMode">—</div>
+              <div class="runtime-stat-label">Mode</div>
+            </div>
+            <div class="runtime-stat">
+              <div class="runtime-stat-value" id="runtimeWatchlist">—</div>
+              <div class="runtime-stat-label">Watchlist</div>
+            </div>
+	            <div class="runtime-stat">
+	              <div class="runtime-stat-value" id="runtimeInterval">—</div>
+	              <div class="runtime-stat-label">Interval</div>
+	            </div>
+	            <div class="runtime-stat">
+	              <div class="runtime-stat-value" id="runtimeOpenPositions">—</div>
+	              <div class="runtime-stat-label">Open</div>
+	            </div>
+	            <div class="runtime-stat">
+	              <div class="runtime-stat-value" id="runtimeClosedTrades">—</div>
+	              <div class="runtime-stat-label">Closed</div>
+	            </div>
+	            <div class="runtime-stat">
+	              <div class="runtime-stat-value" id="runtimeReserve">—</div>
+	              <div class="runtime-stat-label">Reserve</div>
+	            </div>
+	            <div class="runtime-stat">
+	              <div class="runtime-stat-value" id="runtimeSlippage">—</div>
+	              <div class="runtime-stat-label">Slippage</div>
+	            </div>
+	          </div>
+	        </div>
+
+	        <div class="section-label">
+	          <span>📡 Recent OODA Trades</span>
+	        </div>
+	        <div id="oodaTrades">
+	          <div class="empty-state">No OODA trades yet</div>
+	        </div>
+
+	        <!-- Miner Card (shown only when Bitaxe is online) -->
+        <div class="miner-card" id="minerCard" style="display:none;cursor:pointer" title="Click for full fleet view">
+          <div class="miner-header">
+            <div class="miner-title-row">
+              <div class="miner-dot" id="minerDot"></div>
+              <span class="miner-label">⛏ Bitaxe</span>
+              <span class="miner-model" id="minerModel">—</span>
+            </div>
+          </div>
+          <div class="miner-grid">
+            <div class="miner-stat">
+              <div class="miner-stat-value" id="minerHashrate">—</div>
+              <div class="miner-stat-label">Hashrate</div>
+            </div>
+            <div class="miner-stat">
+              <div class="miner-stat-value" id="minerTemp">—</div>
+              <div class="miner-stat-label">Temp</div>
+            </div>
+            <div class="miner-stat">
+              <div class="miner-stat-value" id="minerPower">—</div>
+              <div class="miner-stat-label">Power</div>
+            </div>
+            <div class="miner-stat">
+              <div class="miner-stat-value" id="minerShares">—</div>
+              <div class="miner-stat-label">Shares</div>
+            </div>
+            <div class="miner-stat miner-stat-wide">
+              <div class="miner-stat-value" id="minerEff">—</div>
+              <div class="miner-stat-label">Efficiency</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="wallet-card">
+          <div class="wallet-row">
+            <div>
+              <div class="wallet-balance-label">SOL BALANCE</div>
+              <div class="wallet-balance" id="walletBalance">—</div>
+              <div class="wallet-usd" id="walletUSD"></div>
+            </div>
+            <div class="wallet-network" id="walletNetwork">—</div>
+          </div>
+          <div class="wallet-stats" id="walletStats" style="display:none">
+            <div class="wallet-stat">
+              <div class="wallet-stat-value" id="statSolPrice">—</div>
+              <div class="wallet-stat-label">SOL/USD</div>
+            </div>
+            <div class="wallet-stat">
+              <div class="wallet-stat-value" id="statTotalValue">—</div>
+              <div class="wallet-stat-label">Total USD</div>
+            </div>
+            <div class="wallet-stat">
+              <div class="wallet-stat-value" id="statAssets">—</div>
+              <div class="wallet-stat-label">Assets</div>
+            </div>
+          </div>
+          <div class="wallet-addr" id="walletAddr">
+            <span id="walletAddrText">Loading...</span>
+            <span class="copy-icon">📋</span>
+          </div>
+          <div class="wallet-actions">
+            <button class="wallet-action-btn primary" id="sendToggle">↗ Send SOL</button>
+            <button class="wallet-action-btn" id="refreshBtn">🔄 Refresh</button>
+            <button class="wallet-action-btn" id="explorerBtn">🔍 Explorer</button>
+          </div>
+          <div class="send-form" id="sendForm">
+            <input type="text" id="sendTo" placeholder="Destination address (base58)">
+            <input type="text" id="sendAmount" placeholder="Amount (SOL)">
+            <button id="sendBtn">Send SOL</button>
+          </div>
+        </div>
+
+        <div class="wallet-card" id="swapCard">
+          <div class="wallet-actions">
+            <button class="wallet-action-btn primary" id="swapToggle">⚡ Swap Token</button>
+          </div>
+          <div class="send-form" id="swapForm">
+            <input type="text" id="swapMint" placeholder="Token mint address">
+            <input type="number" id="swapAmount" placeholder="Amount (SOL)" step="0.001" min="0.001">
+            <input type="number" id="swapSlippage" placeholder="Slippage bps (default 100)" value="100" min="10">
+            <div style="display:flex;gap:6px">
+              <button id="swapQuoteBtn" style="flex:1">Get Quote</button>
+              <button id="swapExecBtn" style="flex:1;background:var(--accent-green)">Buy</button>
+            </div>
+            <div class="swap-result" id="swapResult"></div>
+          </div>
+        </div>
+
+        <div class="section-label">
+          <span>🪙 Token Portfolio</span>
+          <button class="refresh-btn" id="tokenRefresh">↻</button>
+        </div>
+        <div id="tokenList">
+          <div class="empty-state">Loading tokens...</div>
+        </div>
+
+        <div class="section-label">
+          <span>📜 Recent Transactions</span>
+          <button class="refresh-btn" id="historyRefresh">↻</button>
+        </div>
+        <div id="txHistory">
+          <div class="empty-state">Loading history...</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Miner Tab -->
+    <div class="tab-content" id="tab-miner">
+      <div class="miner-section">
+        <!-- Fleet Status Bar -->
+        <div class="fleet-status-bar" id="fleetStatusBar">
+          <div class="fleet-status-dot" id="fleetDot"></div>
+          <span class="fleet-status-label" id="fleetStatusLabel">Connecting to MawdAxe...</span>
+          <button class="refresh-btn" id="fleetRefresh" title="Refresh">↻</button>
+        </div>
+
+        <!-- Fleet Aggregate Stats -->
+        <div class="fleet-aggregate" id="fleetAggregate" style="display:none">
+          <div class="fleet-stat">
+            <div class="fleet-stat-value" id="fleetDevices">—</div>
+            <div class="fleet-stat-label">Devices</div>
+          </div>
+          <div class="fleet-stat">
+            <div class="fleet-stat-value" id="fleetHashrate">—</div>
+            <div class="fleet-stat-label">Total GH/s</div>
+          </div>
+          <div class="fleet-stat">
+            <div class="fleet-stat-value" id="fleetAvgTemp">—</div>
+            <div class="fleet-stat-label">Avg Temp</div>
+          </div>
+          <div class="fleet-stat">
+            <div class="fleet-stat-value" id="fleetPower">—</div>
+            <div class="fleet-stat-label">Total W</div>
+          </div>
+          <div class="fleet-stat">
+            <div class="fleet-stat-value" id="fleetShares">—</div>
+            <div class="fleet-stat-label">Shares</div>
+          </div>
+          <div class="fleet-stat">
+            <div class="fleet-stat-value" id="fleetEfficiency">—</div>
+            <div class="fleet-stat-label">GH/W</div>
+          </div>
+        </div>
+
+        <!-- Device Cards -->
+        <div class="section-label" style="margin-top:4px">
+          <span>🦞 Fleet Devices</span>
+        </div>
+        <div id="fleetDeviceList">
+          <div class="empty-state">No devices found</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Seeker Mobile Gateway Tab -->
+    <div class="tab-content" id="tab-seeker">
+      <div class="seeker-section">
+        <div class="seeker-hero">
+          <div class="seeker-hero-icon">📱</div>
+          <div class="seeker-hero-title">Seeker Mobile Gateway</div>
+          <div class="seeker-hero-desc">Connect your Solana Seeker phone to the SolanaOS daemon via the native gateway bridge. Control your trading computer from anywhere.</div>
+        </div>
+
+        <div class="seeker-status" id="seekerStatus">
+          <div class="seeker-status-dot" id="seekerDot"></div>
+          <span class="seeker-status-label" id="seekerStatusLabel">Not connected</span>
+          <span class="seeker-status-badge" id="seekerBadge">offline</span>
+        </div>
+
+        <div class="seeker-connect-card">
+          <div class="seeker-connect-title">Gateway Connection</div>
+          <input class="seeker-input" id="seekerGatewayUrl" type="text" placeholder="Gateway URL (e.g. 192.168.1.x:18790 or ws://seeker:18790)">
+          <select class="seeker-input" id="seekerAuthMode">
+            <option value="auto">Auth Mode: Auto</option>
+            <option value="token">Auth Mode: Shared Token</option>
+            <option value="password">Auth Mode: Password</option>
+          </select>
+          <input class="seeker-input" id="seekerToken" type="password" placeholder="Gateway token or password">
+          <textarea class="seeker-input" id="seekerSetupCode" rows="3" placeholder="Paste ~/.nanosolana/connect/setup-code.txt or solanaos-connect.json (not ~/.nanosolana/node.json)" style="resize:none"></textarea>
+          <button class="seeker-btn" id="seekerConnectBtn">Connect to Gateway</button>
+          <div style="display:flex;gap:6px;margin-top:6px">
+            <button class="seeker-btn seeker-btn-secondary" id="seekerPingBtn" style="flex:1">Ping</button>
+            <button class="seeker-btn seeker-btn-secondary" id="seekerDisconnectBtn" style="flex:1">Disconnect</button>
+          </div>
+          <div class="seeker-connect-hint">
+            Use the same SolanaOS connect bundle as Android and macOS. A setup import can fill both the mobile gateway and the local Control API settings.
+          </div>
+          <div class="seeker-connect-hint">
+            The popup keeps this gateway socket only while the popup is open. If you close the popup, the bridge log may show a disconnect even though the gateway itself is healthy.
+          </div>
+        </div>
+
+        <div class="seeker-info" id="seekerInfo" style="display:none">
+          <div class="seeker-info-card">
+            <div class="seeker-info-value" id="seekerServer">--</div>
+            <div class="seeker-info-label">Server</div>
+          </div>
+          <div class="seeker-info-card">
+            <div class="seeker-info-value" id="seekerMainSession">--</div>
+            <div class="seeker-info-label">Main Session</div>
+          </div>
+          <div class="seeker-info-card">
+            <div class="seeker-info-value" id="seekerAuth">--</div>
+            <div class="seeker-info-label">Auth</div>
+          </div>
+          <div class="seeker-info-card">
+            <div class="seeker-info-value" id="seekerTransport">--</div>
+            <div class="seeker-info-label">Transport</div>
+          </div>
+        </div>
+
+        <div class="seeker-log" id="seekerLog">
+          <div class="log-ok">SolanaOS Seeker Gateway ready</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chat Tab -->
+    <div class="tab-content" id="tab-chat">
+      <div class="chat-section">
+        <div class="chat-messages" id="chatMessages">
+          <div class="msg bot">
+            <div class="sender">SolanaOS</div>
+            Hey! 🤖 I'm SolanaOS, your Solana trading companion. Ask me anything!
+          </div>
+        </div>
+        <div class="typing-indicator" id="typingIndicator">
+          <span></span><span></span><span></span>
+        </div>
+        <div class="chat-input-wrap">
+          <input class="chat-input" id="chatInput" placeholder="Talk to SolanaOS..." autocomplete="off">
+          <button class="send-btn" id="chatSendBtn">
+            <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tools Tab -->
+    <div class="tab-content" id="tab-tools">
+      <div class="tools-section">
+        <button class="tool-btn" data-cmd="solana health">
+          <span class="tool-icon">🩺</span>
+          <div><div class="tool-label">RPC Health</div><div class="tool-desc">Helius and slot health</div></div>
+        </button>
+        <button class="tool-btn" data-cmd="solana trending">
+          <span class="tool-icon">📈</span>
+          <div><div class="tool-label">Trending Tokens</div><div class="tool-desc">Top movers on Solana</div></div>
+        </button>
+        <button class="tool-btn" data-cmd="status">
+          <span class="tool-icon">📊</span>
+          <div><div class="tool-label">System Status</div><div class="tool-desc">Daemon, wallet, workspace</div></div>
+        </button>
+        <button class="tool-btn" data-cmd="solana register">
+          <span class="tool-icon">🆔</span>
+          <div><div class="tool-label">Register On-Chain</div><div class="tool-desc">Mint agent identity NFT</div></div>
+        </button>
+        <button class="tool-btn" data-cmd="pet">
+          <span class="tool-icon">🐹</span>
+          <div><div class="tool-label">TamaGOchi Pet</div><div class="tool-desc">Check your virtual pet</div></div>
+        </button>
+        <div class="tool-output" id="toolOutput"></div>
+      </div>
+    </div>
+
+    <!-- Settings Panel (hidden by default) -->
+    <div class="settings-panel" id="settingsPanel">
+      <div class="settings-header">
+        <span>⚙️ Settings</span>
+        <button class="header-btn" id="settingsClose">✕</button>
+      </div>
+      <div class="settings-body">
+        <label class="setting-label">SolanaOS Server URL</label>
+        <input type="text" class="setting-input" id="settingUrl" placeholder="http://127.0.0.1:7777">
+        <label class="setting-label">SolanaOS Setup Import</label>
+        <textarea class="setting-input" id="settingSetupCode" rows="3" placeholder="Paste ~/.nanosolana/connect/setup-code.txt or solanaos-connect.json (not ~/.nanosolana/node.json)"></textarea>
+        <button class="save-btn" id="importSetupCode">Import Setup Code</button>
+        <label class="setting-label">Gateway Secret</label>
+        <input type="password" class="setting-input" id="settingGatewaySecret" placeholder="Optional bearer token or password">
+        <label class="setting-label">Network</label>
+        <select class="setting-input" id="settingNetwork">
+          <option value="mainnet">Mainnet</option>
+          <option value="devnet">Devnet</option>
+        </select>
+        <label class="setting-label">MawdAxe Server URL</label>
+        <input type="text" class="setting-input" id="settingMawdaxeUrl" placeholder="http://192.168.1.x:8420">
+        <label class="setting-label">MawdAxe API Key</label>
+        <input type="password" class="setting-input" id="settingMawdaxeKey" placeholder="(optional)">
+        <label class="setting-label">OpenRouter API Key</label>
+        <input type="password" class="setting-input" id="settingOrKey" placeholder="sk-or-v1-...">
+        <label class="setting-label">AI Model</label>
+        <input type="text" class="setting-input" id="settingOrModel" placeholder="openai/gpt-5.4-nano" value="openai/gpt-5.4-nano">
+        <button class="save-btn" id="saveSettings">Save Settings</button>
+        <div class="setting-note">Start locally with <code>solanaos nanobot</code>. The shared setup code lives at <code>~/.nanosolana/connect/setup-code.txt</code>.</div>
+      </div>
+    </div>
+
+    <!-- Offline Overlay -->
+    <div class="offline-overlay" id="offlineOverlay">
+      <div class="offline-content">
+        <div class="offline-icon">🤖</div>
+        <div class="offline-title">SolanaOS Offline</div>
+        <div class="offline-desc">Start the SolanaOS server to connect:</div>
+        <code class="offline-cmd">nanosolana nanobot</code>
+        <button class="retry-btn" id="retryBtn">🔄 Retry Connection</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

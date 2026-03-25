@@ -1,0 +1,26 @@
+{
+	"variations": {
+		"SMB1": {
+			"default": {
+				"source": "CastleFlag.png",
+				"rect": [
+					0.0,
+					0.0,
+					16.0,
+					16.0
+				]
+			}
+		},
+		"SMBANN": {
+			"default": {
+				"source": "CastleFlag.png",
+				"rect": [
+					16.0,
+					0.0,
+					16.0,
+					16.0
+				]
+			}
+		}
+	}
+}

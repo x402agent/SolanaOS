@@ -1,0 +1,34 @@
+{
+  "name": "solana-tradingview-chart-example",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Advanced TradingView chart example using the @solana-tracker/data-api SDK — OHLCV candles, holders overlay, market cap mode, trade marks, and real-time streaming.",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "prepare": "next-ws patch"
+  },
+  "dependencies": {
+    "@solana-tracker/data-api": "^0.2.3",
+    "@tailwindcss/postcss": "^4.2.1",
+    "@tanstack/react-query": "^5.95.0",
+    "@tanstack/react-virtual": "^3.13.23",
+    "@types/node": "^25.5.0",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "lucide-react": "^0.577.0",
+    "next": "^16.1.7",
+    "next-ws": "^2.2.2",
+    "postcss": "^8.5.8",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "tailwindcss": "^4.2.1",
+    "typescript": "^5.9.3",
+    "ws": "^8.20.0"
+  },
+  "devDependencies": {
+    "@types/ws": "^8.18.1"
+  }
+}
