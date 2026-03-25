@@ -271,13 +271,62 @@ func (b *Bridge) handleWSRequest(writeJSON func(map[string]any), id, method stri
 		})
 
 	case "chat.send":
+		runID := "run-" + generateShortID()
+		message, _ := params["message"].(string)
+		sessionKey, _ := params["sessionKey"].(string)
 		writeJSON(map[string]any{
 			"type": "res",
 			"id":   id,
 			"ok":   true,
 			"payload": map[string]any{
-				"runId": "run-" + generateShortID(),
+				"runId": runID,
 			},
+		})
+		// Async: run LLM inference and stream the reply back as chat events.
+		go func() {
+			if b.llm == nil || !b.llm.IsConfigured() {
+				writeJSON(map[string]any{
+					"type":  "event",
+					"event": "chat",
+					"payload": map[string]any{
+						"runId":      runID,
+						"sessionKey": sessionKey,
+						"state":      "final",
+						"message": map[string]any{
+							"role": "assistant",
+							"text": "No LLM configured. Set OPENROUTER_API_KEY, XAI_API_KEY, ANTHROPIC_API_KEY, or OLLAMA_MODEL in your .env to enable chat.",
+						},
+					},
+				})
+				return
+			}
+			ctx, cancel := context.WithTimeout(context.Background(), 60*time.Second)
+			defer cancel()
+			reply, err := b.llm.Chat(ctx, sessionKey, message, "")
+			if err != nil {
+				reply = "LLM error: " + err.Error()
+			}
+			writeJSON(map[string]any{
+				"type":  "event",
+				"event": "chat",
+				"payload": map[string]any{
+					"runId":      runID,
+					"sessionKey": sessionKey,
+					"state":      "final",
+					"message": map[string]any{
+						"role": "assistant",
+						"text": reply,
+					},
+				},
+			})
+		}()
+
+	case "chat.abort":
+		writeJSON(map[string]any{
+			"type":    "res",
+			"id":      id,
+			"ok":      true,
+			"payload": map[string]any{"ok": true},
 		})
 
 	case "chat.history":
@@ -288,6 +337,209 @@ func (b *Bridge) handleWSRequest(writeJSON func(map[string]any), id, method stri
 			"payload": map[string]any{
 				"messages": []any{},
 			},
+		})
+
+	case "config.get":
+		writeJSON(map[string]any{
+			"type": "res",
+			"id":   id,
+			"ok":   true,
+			"payload": map[string]any{
+				"path":   "~/.solanaos/solanaos.json",
+				"exists": true,
+				"raw":    "{}",
+				"hash":   "empty",
+				"valid":  true,
+				"config": map[string]any{},
+				"issues": []any{},
+			},
+		})
+
+	case "config.schema":
+		writeJSON(map[string]any{
+			"type": "res",
+			"id":   id,
+			"ok":   true,
+			"payload": map[string]any{
+				"schema":  map[string]any{},
+				"version": "3.1.0",
+				"uiHints": map[string]any{},
+			},
+		})
+
+	case "config.set", "config.patch", "config.apply", "update.run":
+		writeJSON(map[string]any{
+			"type":    "res",
+			"id":      id,
+			"ok":      true,
+			"payload": map[string]any{"ok": true},
+		})
+
+	case "status":
+		writeJSON(map[string]any{
+			"type": "res",
+			"id":   id,
+			"ok":   true,
+			"payload": map[string]any{
+				"daemon":   "alive",
+				"status":   "alive",
+				"oodaMode": "sim",
+				"nodes":    len(b.ConnectedNodes()),
+			},
+		})
+
+	case "system-presence":
+		writeJSON(map[string]any{
+			"type": "res",
+			"id":   id,
+			"ok":   true,
+			"payload": map[string]any{
+				"nodes":   []any{},
+				"status":  map[string]any{"daemon": "alive"},
+				"version": "3.1.0",
+			},
+		})
+
+	case "sessions.list":
+		writeJSON(map[string]any{
+			"type": "res",
+			"id":   id,
+			"ok":   true,
+			"payload": map[string]any{
+				"sessions": []any{},
+			},
+		})
+
+	case "sessions.patch", "sessions.delete":
+		writeJSON(map[string]any{
+			"type":    "res",
+			"id":      id,
+			"ok":      true,
+			"payload": map[string]any{"ok": true},
+		})
+
+	case "agents.list":
+		writeJSON(map[string]any{
+			"type": "res",
+			"id":   id,
+			"ok":   true,
+			"payload": map[string]any{
+				"agents": []any{},
+			},
+		})
+
+	case "agent.identity.get":
+		writeJSON(map[string]any{
+			"type": "res",
+			"id":   id,
+			"ok":   true,
+			"payload": map[string]any{
+				"name":   "SolanaOS",
+				"avatar": nil,
+			},
+		})
+
+	case "skills.status":
+		writeJSON(map[string]any{
+			"type": "res",
+			"id":   id,
+			"ok":   true,
+			"payload": map[string]any{
+				"skills": []any{},
+			},
+		})
+
+	case "skills.update", "skills.install":
+		writeJSON(map[string]any{
+			"type":    "res",
+			"id":      id,
+			"ok":      true,
+			"payload": map[string]any{"ok": true},
+		})
+
+	case "channels.status":
+		writeJSON(map[string]any{
+			"type": "res",
+			"id":   id,
+			"ok":   true,
+			"payload": map[string]any{
+				"channels": map[string]any{},
+			},
+		})
+
+	case "cron.status":
+		writeJSON(map[string]any{
+			"type": "res",
+			"id":   id,
+			"ok":   true,
+			"payload": map[string]any{
+				"enabled": false,
+				"jobs":    []any{},
+			},
+		})
+
+	case "cron.list", "cron.runs":
+		writeJSON(map[string]any{
+			"type": "res",
+			"id":   id,
+			"ok":   true,
+			"payload": map[string]any{
+				"items": []any{},
+			},
+		})
+
+	case "cron.add", "cron.update", "cron.run", "cron.remove":
+		writeJSON(map[string]any{
+			"type":    "res",
+			"id":      id,
+			"ok":      true,
+			"payload": map[string]any{"ok": true},
+		})
+
+	case "logs.tail":
+		writeJSON(map[string]any{
+			"type": "res",
+			"id":   id,
+			"ok":   true,
+			"payload": map[string]any{
+				"entries":  []any{},
+				"hasMore":  false,
+				"newStart": "",
+			},
+		})
+
+	case "device.pair.list":
+		writeJSON(map[string]any{
+			"type": "res",
+			"id":   id,
+			"ok":   true,
+			"payload": map[string]any{
+				"requests": []any{},
+			},
+		})
+
+	case "device.pair.approve", "device.pair.reject", "device.token.rotate", "device.token.revoke":
+		writeJSON(map[string]any{
+			"type":    "res",
+			"id":      id,
+			"ok":      true,
+			"payload": map[string]any{"ok": true},
+		})
+
+	case "web.login.start", "web.login.wait", "channels.logout":
+		writeJSON(map[string]any{
+			"type":    "res",
+			"id":      id,
+			"ok":      true,
+			"payload": map[string]any{"ok": true},
+		})
+
+	case "exec.approval.resolve":
+		writeJSON(map[string]any{
+			"type":    "res",
+			"id":      id,
+			"ok":      true,
+			"payload": map[string]any{"ok": true},
 		})
 
 	case "exec.approvals.get", "exec.approvals.node.get":
@@ -302,9 +554,9 @@ func (b *Bridge) handleWSRequest(writeJSON func(map[string]any), id, method stri
 
 	case "exec.approvals.set", "exec.approvals.node.set":
 		writeJSON(map[string]any{
-			"type": "res",
-			"id":   id,
-			"ok":   true,
+			"type":    "res",
+			"id":      id,
+			"ok":      true,
 			"payload": map[string]any{"ok": true},
 		})
 

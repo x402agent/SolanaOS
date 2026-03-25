@@ -48,6 +48,18 @@ type Bridge struct {
 	authToken string
 	logf      func(string, ...any)
 	cancel    context.CancelFunc
+	llm       LLMProvider // optional chat inference
+}
+
+// LLMProvider allows the gateway to call an LLM for chat.send.
+type LLMProvider interface {
+	IsConfigured() bool
+	Chat(ctx context.Context, sessionID, userMsg, contextStr string) (string, error)
+}
+
+// SetLLM attaches an LLM provider for chat inference.
+func (b *Bridge) SetLLM(provider LLMProvider) {
+	b.llm = provider
 }
 
 type connectedNode struct {
