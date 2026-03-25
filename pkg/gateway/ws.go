@@ -341,6 +341,12 @@ func (b *Bridge) handleWSRequest(writeJSON func(map[string]any), id, method stri
 				return
 			}
 			b.logf("💬 chat.send: calling LLM...")
+			// Store user message
+			b.appendChatMessage(sessionKey, map[string]any{
+				"role":    "user",
+				"content": message,
+				"ts":      time.Now().UnixMilli(),
+			})
 			ctx, cancel := context.WithTimeout(context.Background(), 60*time.Second)
 			defer cancel()
 			skillsContext := ""
@@ -354,6 +360,12 @@ func (b *Bridge) handleWSRequest(writeJSON func(map[string]any), id, method stri
 			} else {
 				b.logf("💬 chat.send: LLM replied (%d chars)", len(reply))
 			}
+			// Store assistant reply
+			b.appendChatMessage(sessionKey, map[string]any{
+				"role":    "assistant",
+				"content": reply,
+				"ts":      time.Now().UnixMilli(),
+			})
 			writeJSON(map[string]any{
 				"type":  "event",
 				"event": "chat",
@@ -378,12 +390,21 @@ func (b *Bridge) handleWSRequest(writeJSON func(map[string]any), id, method stri
 		})
 
 	case "chat.history":
+		historySessionKey, _ := params["sessionKey"].(string)
+		if historySessionKey == "" {
+			historySessionKey = "main"
+		}
+		stored := b.getChatHistory(historySessionKey)
+		msgs := make([]any, 0, len(stored))
+		for _, m := range stored {
+			msgs = append(msgs, m)
+		}
 		writeJSON(map[string]any{
 			"type": "res",
 			"id":   id,
 			"ok":   true,
 			"payload": map[string]any{
-				"messages": []any{},
+				"messages": msgs,
 			},
 		})
 

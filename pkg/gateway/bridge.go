@@ -51,10 +51,11 @@ type Bridge struct {
 	authToken string
 	logf      func(string, ...any)
 	cancel    context.CancelFunc
-	llm        LLMProvider    // optional chat inference
-	skills     SkillsProvider // optional skills catalog
-	startedAt  time.Time
-	reloadLLM  func() LLMProvider // callback to reload LLM from config
+	llm         LLMProvider    // optional chat inference
+	skills      SkillsProvider // optional skills catalog
+	startedAt   time.Time
+	reloadLLM   func() LLMProvider // callback to reload LLM from config
+	chatHistory map[string][]map[string]any // session -> messages
 }
 
 // LLMProvider allows the gateway to call an LLM for chat.send.
@@ -136,6 +137,29 @@ func (b *Bridge) loadConfigFile() (string, string, map[string]any, string) {
 		parsed = map[string]any{}
 	}
 	return path, raw, parsed, hash
+}
+
+// appendChatMessage stores a message in the in-memory chat history.
+func (b *Bridge) appendChatMessage(sessionKey string, msg map[string]any) {
+	b.mu.Lock()
+	defer b.mu.Unlock()
+	if b.chatHistory == nil {
+		b.chatHistory = make(map[string][]map[string]any)
+	}
+	msgs := b.chatHistory[sessionKey]
+	msgs = append(msgs, msg)
+	// Keep last 200 messages per session
+	if len(msgs) > 200 {
+		msgs = msgs[len(msgs)-200:]
+	}
+	b.chatHistory[sessionKey] = msgs
+}
+
+// getChatHistory returns stored messages for a session.
+func (b *Bridge) getChatHistory(sessionKey string) []map[string]any {
+	b.mu.RLock()
+	defer b.mu.RUnlock()
+	return b.chatHistory[sessionKey]
 }
 
 // saveConfigFile writes raw JSON to the config file.
@@ -232,6 +256,7 @@ func (b *Bridge) Start(ctx context.Context) error {
 	ctx, cancel := context.WithCancel(ctx)
 	b.cancel = cancel
 	b.startedAt = time.Now()
+	b.chatHistory = make(map[string][]map[string]any)
 
 	bindAddr := b.resolveBindAddr()
 	addr := fmt.Sprintf("%s:%d", bindAddr, b.cfg.Port)
