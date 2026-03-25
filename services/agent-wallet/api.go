@@ -771,6 +771,18 @@ func parseSOLAmount(amount string) (uint64, error) {
 	return uint64(lamportsInt), nil
 }
 
+// ── Public Vault Accessors (for CLI one-shot bootstrap) ──────────
+
+// ListWallets returns all wallet entries from the vault.
+func (s *Server) ListWallets() []*WalletEntry {
+	return s.vault.ListWallets()
+}
+
+// AddWallet stores a new wallet with encrypted private key in the vault.
+func (s *Server) AddWallet(id, label string, chainType ChainType, chainID int, address string, privateKey []byte) error {
+	return s.vault.AddWallet(id, label, chainType, chainID, address, privateKey)
+}
+
 // ── JSON Helpers ──────────────────────────────────────────────────
 
 func jsonResp(w http.ResponseWriter, data any) {

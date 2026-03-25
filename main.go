@@ -2137,6 +2137,147 @@ func truncate(s string, maxLen int) string {
 	return s
 }
 
+// ── Wallet API Command — one-shot agent wallet bootstrap ──────────────
+
+func NewWalletAPICommand() *cobra.Command {
+	var (
+		port      string
+		label     string
+		chain     string
+		skipSetup bool
+	)
+
+	cmd := &cobra.Command{
+		Use:   "wallet-api",
+		Short: "Start the agent wallet API with one-shot setup",
+		Long: `Bootstraps the agent wallet vault, creates a default wallet if none
+exist, registers the ACP agent.json, and starts the wallet API server.
+
+One command to go from zero to a running agent wallet:
+  solanaos wallet-api
+
+The server exposes REST endpoints for wallet CRUD, balance checks,
+transfers, signing, EVM support, Privy managed wallets, and E2B
+sandbox deployment.`,
+		Example: "solanaos wallet-api\nsolanaos wallet-api --port 8421 --chain solana --label primary",
+		RunE: func(cmd *cobra.Command, args []string) error {
+			// Override port via flag
+			if port != "" {
+				os.Setenv("WALLET_API_PORT", port)
+			}
+
+			cfg := agentwallet.DefaultServerConfig()
+
+			fmt.Printf("%s┌─────────────────────────────────────────────────────┐%s\n", colorDim, colorReset)
+			fmt.Printf("%s│%s  🔐 SolanaOS Agent Wallet · One-Shot Bootstrap      %s│%s\n", colorDim, colorTeal, colorDim, colorReset)
+			fmt.Printf("%s└─────────────────────────────────────────────────────┘%s\n\n", colorDim, colorReset)
+
+			// 1. Initialize the server (vault + RPC connections)
+			srv, err := agentwallet.NewServer(cfg)
+			if err != nil {
+				return fmt.Errorf("init wallet server: %w", err)
+			}
+
+			// 2. Auto-create a default wallet if vault is empty
+			if !skipSetup {
+				wallets := srv.ListWallets()
+				if len(wallets) == 0 {
+					fmt.Printf("  %sNo wallets found — creating default %s wallet...%s\n", colorAmber, chain, colorReset)
+
+					chainType := agentwallet.ChainType(chain)
+					if chainType == "" {
+						chainType = agentwallet.ChainSolana
+					}
+
+					var chainID int
+					var address string
+
+					switch chainType {
+					case agentwallet.ChainSolana:
+						chainID = 900
+						wallet := solanago.NewWallet()
+						pk := wallet.PrivateKey
+						address = wallet.PublicKey().String()
+						id := agentwallet.GenerateID()
+						if label == "" {
+							label = "default"
+						}
+						if err := srv.AddWallet(id, label, agentwallet.ChainSolana, chainID, address, []byte(pk)); err != nil {
+							return fmt.Errorf("create wallet: %w", err)
+						}
+						fmt.Printf("  %s✓%s Solana wallet created\n", colorGreen, colorReset)
+						fmt.Printf("    %sID:%s      %s\n", colorDim, colorReset, id)
+						fmt.Printf("    %sAddress:%s %s\n", colorDim, colorReset, address)
+						fmt.Printf("    %sLabel:%s   %s\n", colorDim, colorReset, label)
+
+					case agentwallet.ChainEVM:
+						chainID = 8453 // Default to Base
+						privKey, addr, err := agentwallet.GenerateEVMKeypair()
+						if err != nil {
+							return fmt.Errorf("generate EVM keypair: %w", err)
+						}
+						address = addr
+						id := agentwallet.GenerateID()
+						if label == "" {
+							label = "default"
+						}
+						privBytes := privKey.D.Bytes()
+						if err := srv.AddWallet(id, label, agentwallet.ChainEVM, chainID, address, privBytes); err != nil {
+							return fmt.Errorf("create wallet: %w", err)
+						}
+						fmt.Printf("  %s✓%s EVM wallet created (Base)\n", colorGreen, colorReset)
+						fmt.Printf("    %sID:%s      %s\n", colorDim, colorReset, id)
+						fmt.Printf("    %sAddress:%s %s\n", colorDim, colorReset, address)
+						fmt.Printf("    %sLabel:%s   %s\n", colorDim, colorReset, label)
+					}
+
+					fmt.Printf("\n  %s⚠ Fund this wallet before transacting.%s\n", colorAmber, colorReset)
+				} else {
+					fmt.Printf("  %s✓%s Vault loaded: %d wallet(s)\n", colorGreen, colorReset, len(wallets))
+					for _, w := range wallets {
+						fmt.Printf("    %s•%s %s (%s) %s\n", colorDim, colorReset, w.Address, w.ChainType, w.Label)
+					}
+				}
+			}
+
+			// 3. Print API info
+			fmt.Printf("\n  %sAPI:%s       http://localhost:%s/v1\n", colorDim, colorReset, cfg.Port)
+			fmt.Printf("  %sHealth:%s    http://localhost:%s/v1/health\n", colorDim, colorReset, cfg.Port)
+			fmt.Printf("  %sWallets:%s   http://localhost:%s/v1/wallets\n", colorDim, colorReset, cfg.Port)
+			if os.Getenv("WALLET_API_KEY") != "" {
+				fmt.Printf("  %sAuth:%s      Bearer token required\n", colorDim, colorReset)
+			} else {
+				fmt.Printf("  %sAuth:%s      %sNone (set WALLET_API_KEY to secure)%s\n", colorDim, colorReset, colorAmber, colorReset)
+			}
+			fmt.Println()
+
+			// 4. Graceful shutdown
+			sigCh := make(chan os.Signal, 1)
+			signal.Notify(sigCh, syscall.SIGINT, syscall.SIGTERM)
+
+			go func() {
+				if err := srv.Start(); err != nil {
+					log.Printf("[WALLET-API] Server stopped: %v", err)
+				}
+			}()
+
+			<-sigCh
+			fmt.Printf("\n  %sShutting down wallet API...%s\n", colorDim, colorReset)
+
+			ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+			defer cancel()
+			return srv.Stop(ctx)
+		},
+	}
+
+	cmd.Flags().StringVar(&port, "port", "", "API port (default: $WALLET_API_PORT or 8421)")
+	cmd.Flags().StringVar(&label, "label", "", "Label for the auto-created wallet (default: 'default')")
+	cmd.Flags().StringVar(&chain, "chain", "solana", "Chain for auto-created wallet: solana or evm")
+	cmd.Flags().BoolVar(&skipSetup, "skip-setup", false, "Skip auto-wallet creation, just start the API")
+
+	return cmd
+}
+
 func main() {
 	config.BootstrapEnv()
 	fmt.Print(banner)
