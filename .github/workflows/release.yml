@@ -1,0 +1,104 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Build ${{ matrix.os }}/${{ matrix.arch }}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - os: linux
+            arch: amd64
+            suffix: linux-amd64
+          - os: linux
+            arch: arm64
+            suffix: linux-arm64
+          - os: darwin
+            arch: amd64
+            suffix: darwin-amd64
+          - os: darwin
+            arch: arm64
+            suffix: darwin-arm64
+          - os: linux
+            arch: riscv64
+            suffix: linux-riscv64
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.25'
+          cache: true
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: 'ui/package-lock.json'
+
+      - name: Build Control UI
+        run: cd ui && npm ci && npm run build
+
+      - name: Build binary
+        env:
+          GOOS: ${{ matrix.os }}
+          GOARCH: ${{ matrix.arch }}
+          CGO_ENABLED: 0
+        run: |
+          VERSION=${GITHUB_REF_NAME}
+          COMMIT=$(git rev-parse --short HEAD)
+          BUILDTIME=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+          MODULE=github.com/x402agent/Solana-Os-Go/pkg/config
+
+          go build -trimpath \
+            -ldflags "-s -w \
+              -X ${MODULE}.Version=${VERSION} \
+              -X ${MODULE}.GitCommit=${COMMIT} \
+              -X ${MODULE}.BuildTime=${BUILDTIME}" \
+            -o solanaos-${{ matrix.suffix }} .
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: solanaos-${{ matrix.suffix }}
+          path: solanaos-${{ matrix.suffix }}
+
+  release:
+    name: Create Release
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: dist/
+
+      - name: Prepare release assets
+        run: |
+          mkdir -p release
+          for dir in dist/*/; do
+            cp "$dir"* release/ 2>/dev/null || true
+          done
+          chmod +x release/solanaos-*
+          cd release && for f in solanaos-*; do sha256sum "$f" >> checksums.txt; done
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          generate_release_notes: true
+          files: |
+            release/solanaos-*
+            release/checksums.txt
