@@ -21,6 +21,7 @@ publishing
 .env.*
 !.env.example
 !**/.env.*.example
+.npmrc
 
 # ── OS files ──────────────────────────────────────────────────────────
 .DS_Store
