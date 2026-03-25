@@ -62,6 +62,35 @@ func (b *Bridge) handleWebSocketConn(ctx context.Context, ws *websocket.Conn) {
 		_ = ws.WriteJSON(frame)
 	}
 
+	// Keepalive: extend read deadline on pong, send pings every 30s.
+	ws.SetReadDeadline(time.Now().Add(90 * time.Second))
+	ws.SetPongHandler(func(string) error {
+		ws.SetReadDeadline(time.Now().Add(90 * time.Second))
+		return nil
+	})
+
+	pingDone := make(chan struct{})
+	go func() {
+		ticker := time.NewTicker(30 * time.Second)
+		defer ticker.Stop()
+		for {
+			select {
+			case <-ticker.C:
+				wsWriteMu.Lock()
+				err := ws.WriteControl(websocket.PingMessage, nil, time.Now().Add(5*time.Second))
+				wsWriteMu.Unlock()
+				if err != nil {
+					return
+				}
+			case <-ctx.Done():
+				return
+			case <-pingDone:
+				return
+			}
+		}
+	}()
+	defer close(pingDone)
+
 	// Send connect challenge nonce.
 	nonce := generateWSNonce()
 	writeJSON(map[string]any{
@@ -86,6 +115,8 @@ func (b *Bridge) handleWebSocketConn(ctx context.Context, ws *websocket.Conn) {
 			}
 			break
 		}
+		// Reset read deadline on every message to keep the connection alive.
+		ws.SetReadDeadline(time.Now().Add(90 * time.Second))
 
 		var frame map[string]any
 		if err := json.Unmarshal(msg, &frame); err != nil {

@@ -2203,6 +2203,8 @@ export function OfficeScreen({
   );
 
   useEffect(() => {
+    // Skip when no agents to avoid infinite re-render from empty object references
+    if (state.agents.length === 0) return;
     const now = Date.now();
     setGymCooldownUntilByAgentId((previous) => {
       const next: Record<string, number> = {};
