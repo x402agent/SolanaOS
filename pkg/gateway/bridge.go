@@ -49,6 +49,7 @@ type Bridge struct {
 	logf      func(string, ...any)
 	cancel    context.CancelFunc
 	llm       LLMProvider // optional chat inference
+	startedAt time.Time
 }
 
 // LLMProvider allows the gateway to call an LLM for chat.send.
@@ -147,6 +148,7 @@ func NewBridge(cfg BridgeConfig, logf func(string, ...any)) *Bridge {
 func (b *Bridge) Start(ctx context.Context) error {
 	ctx, cancel := context.WithCancel(ctx)
 	b.cancel = cancel
+	b.startedAt = time.Now()
 
 	bindAddr := b.resolveBindAddr()
 	addr := fmt.Sprintf("%s:%d", bindAddr, b.cfg.Port)

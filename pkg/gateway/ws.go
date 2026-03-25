@@ -229,11 +229,14 @@ func (b *Bridge) handleWSRequest(writeJSON func(map[string]any), id, method stri
 			"id":   id,
 			"ok":   true,
 			"payload": map[string]any{
-				"daemon":   "alive",
-				"status":   "alive",
-				"oodaMode": "live",
-				"uptime":   time.Since(time.Now().Add(-24 * time.Hour)).Seconds(),
-				"nodes":    len(b.ConnectedNodes()),
+				"daemon":    "alive",
+				"status":    "alive",
+				"oodaMode":  "live",
+				"uptime":    time.Since(b.startedAt).Seconds(),
+				"uptimeStr": time.Since(b.startedAt).Round(time.Second).String(),
+				"nodes":     len(b.ConnectedNodes()),
+				"bridge":    b.BridgeAddr(),
+				"llm":       b.llm != nil && b.llm.IsConfigured(),
 			},
 		})
 	case "node.invoke.request", "node.invoke":
@@ -407,15 +410,24 @@ func (b *Bridge) handleWSRequest(writeJSON func(map[string]any), id, method stri
 		})
 
 	case "status":
+		llmProvider := "none"
+		if b.llm != nil && b.llm.IsConfigured() {
+			llmProvider = "configured"
+		}
 		writeJSON(map[string]any{
 			"type": "res",
 			"id":   id,
 			"ok":   true,
 			"payload": map[string]any{
-				"daemon":   "alive",
-				"status":   "alive",
-				"oodaMode": "sim",
-				"nodes":    len(b.ConnectedNodes()),
+				"daemon":    "alive",
+				"status":    "alive",
+				"oodaMode":  "sim",
+				"nodes":     len(b.ConnectedNodes()),
+				"bridge":    b.BridgeAddr(),
+				"uptime":    time.Since(b.startedAt).Round(time.Second).String(),
+				"startedAt": b.startedAt.UTC().Format(time.RFC3339),
+				"llm":       llmProvider,
+				"version":   "3.1.0",
 			},
 		})
 
