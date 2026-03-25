@@ -308,6 +308,11 @@ func (b *Bridge) handleWSRequest(writeJSON func(map[string]any), id, method stri
 		runID := "run-" + generateShortID()
 		message, _ := params["message"].(string)
 		sessionKey, _ := params["sessionKey"].(string)
+		msgPreview := message
+		if len(msgPreview) > 60 {
+			msgPreview = msgPreview[:60] + "..."
+		}
+		b.logf("💬 chat.send: run=%s session=%s msg=%q", runID, sessionKey, msgPreview)
 		writeJSON(map[string]any{
 			"type": "res",
 			"id":   id,
@@ -316,9 +321,10 @@ func (b *Bridge) handleWSRequest(writeJSON func(map[string]any), id, method stri
 				"runId": runID,
 			},
 		})
-		// Async: run LLM inference and stream the reply back as chat events.
+		// Run LLM inference and send the reply as a chat event.
 		go func() {
 			if b.llm == nil || !b.llm.IsConfigured() {
+				b.logf("💬 chat.send: no LLM configured, sending fallback")
 				writeJSON(map[string]any{
 					"type":  "event",
 					"event": "chat",
@@ -328,12 +334,13 @@ func (b *Bridge) handleWSRequest(writeJSON func(map[string]any), id, method stri
 						"state":      "final",
 						"message": map[string]any{
 							"role": "assistant",
-							"text": "No LLM configured. Set OPENROUTER_API_KEY, XAI_API_KEY, ANTHROPIC_API_KEY, or OLLAMA_MODEL in your .env to enable chat.",
+							"text": "No LLM configured. Set OPENROUTER_API_KEY, XAI_API_KEY, ANTHROPIC_API_KEY, or OLLAMA_MODEL in your .env, then go to Config > Apply to reload.",
 						},
 					},
 				})
 				return
 			}
+			b.logf("💬 chat.send: calling LLM...")
 			ctx, cancel := context.WithTimeout(context.Background(), 60*time.Second)
 			defer cancel()
 			skillsContext := ""
@@ -342,7 +349,10 @@ func (b *Bridge) handleWSRequest(writeJSON func(map[string]any), id, method stri
 			}
 			reply, err := b.llm.Chat(ctx, sessionKey, message, skillsContext)
 			if err != nil {
+				b.logf("💬 chat.send: LLM error: %v", err)
 				reply = "LLM error: " + err.Error()
+			} else {
+				b.logf("💬 chat.send: LLM replied (%d chars)", len(reply))
 			}
 			writeJSON(map[string]any{
 				"type":  "event",
