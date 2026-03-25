@@ -954,7 +954,8 @@ No external dependencies required.`,
 			printGatewaySetupCode(files)
 
 			fmt.Printf("\n%s🖥️  SolanaOS Office: http://%s%s\n", colorTeal, "office.solanaos.net", colorReset)
-			fmt.Printf("%s   Local dev: cd Claw3D-main && npm run dev%s\n\n", colorDim, colorReset)
+			fmt.Printf("%s   Local dev: cd Claw3D-main && npm run dev%s\n", colorDim, colorReset)
+			fmt.Printf("%s🤖 Page Agent: cd page-agent-main && node packages/mcp/src/index.js%s\n\n", colorDim, colorReset)
 
 			<-ctx.Done()
 			bridge.Stop()
