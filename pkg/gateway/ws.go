@@ -131,7 +131,7 @@ func (b *Bridge) handleWebSocketConn(ctx context.Context, ws *websocket.Conn) {
 
 func (b *Bridge) handleWSRequest(writeJSON func(map[string]any), id, method string, params map[string]any, nodeID *string, role *string, authenticated *bool) {
 	switch method {
-	case "connect":
+	case "connect", "hello":
 		client, _ := params["client"].(map[string]any)
 		clientID, _ := client["id"].(string)
 		displayName, _ := client["displayName"].(string)
