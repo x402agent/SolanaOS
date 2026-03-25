@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import { AgentStoreProvider } from "@/features/agents/state/store";
 import { OfficeScreen } from "@/features/office/screens/OfficeScreen";
+import MarketTerminal from "@/features/office/components/MarketTerminal";
 
 const ENABLED_RE = /^(1|true|yes|on)$/i;
 
@@ -34,6 +35,7 @@ export default function OfficePage() {
     <AgentStoreProvider>
       <Suspense fallback={<OfficeLoadingFallback />}>
         <OfficeScreen showSolanaOSConsole={showSolanaOSConsole} />
+        <MarketTerminal />
       </Suspense>
     </AgentStoreProvider>
   );

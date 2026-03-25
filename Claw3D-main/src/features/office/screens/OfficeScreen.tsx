@@ -102,6 +102,7 @@ import {
   type HQSidebarTab,
 } from "@/features/office/components/HQSidebar";
 import { AnalyticsPanel } from "@/features/office/components/panels/AnalyticsPanel";
+import MarketPanel from "@/features/office/components/panels/MarketPanel";
 import { HistoryPanel } from "@/features/office/components/panels/HistoryPanel";
 import { InboxPanel } from "@/features/office/components/panels/InboxPanel";
 import { PlaybooksPanel } from "@/features/office/components/panels/PlaybooksPanel";
@@ -3420,6 +3421,7 @@ export function OfficeScreen({
               }}
             />
           }
+          marketPanel={<MarketPanel />}
         />
       ) : null}
 

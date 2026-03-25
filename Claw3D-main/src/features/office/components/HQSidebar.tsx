@@ -45,9 +45,11 @@ export function HQSidebar({
   historyPanel,
   playbooksPanel,
   analyticsPanel,
+  marketPanel,
 }: HQSidebarProps) {
   const analyticsOnly = activeTab === "analytics";
-  const railOnly = analyticsOnly;
+  const marketOnly = activeTab === "market";
+  const railOnly = analyticsOnly || marketOnly;
   const activePanel =
     activeTab === "inbox"
       ? inboxPanel
@@ -55,7 +57,9 @@ export function HQSidebar({
         ? historyPanel
         : activeTab === "playbooks"
           ? playbooksPanel
-          : analyticsPanel;
+          : activeTab === "market"
+            ? marketPanel
+            : analyticsPanel;
 
   return (
     <aside className="pointer-events-none fixed inset-y-0 right-0 z-20 flex justify-end">
@@ -105,18 +109,41 @@ export function HQSidebar({
             ANALYTICS
           </span>
         </button>
+
+        <button
+          type="button"
+          onClick={() => {
+            onTabChange("market");
+            if (!open) {
+              onToggle();
+            }
+          }}
+          className={`rounded-l-md border border-r-0 px-1.5 py-2.5 font-mono text-[10px] font-semibold tracking-[0.2em] shadow-xl backdrop-blur transition-colors ${
+            marketOnly
+              ? "border-[#14F195]/50 bg-[#061a0d]/95 text-[#14F195]"
+              : "border-[#14F195]/25 bg-[#060d12]/90 text-[#14F195]/80 hover:border-[#14F195]/45 hover:text-[#14F195]"
+          }`}
+          aria-pressed={marketOnly}
+          aria-label="Open market terminal"
+        >
+          <span className="block leading-none [writing-mode:vertical-rl]">
+            MARKET
+          </span>
+        </button>
       </div>
 
       {open ? (
         <div className="pointer-events-auto flex h-full w-56 flex-col border-l border-cyan-500/20 bg-black/85 shadow-2xl backdrop-blur">
           <div className="border-b border-cyan-500/15 px-4 py-3">
             <div className="font-mono text-[10px] font-semibold tracking-[0.32em] text-cyan-300/80">
-              {analyticsOnly ? "ANALYTICS" : "HEADQUARTERS"}
+              {analyticsOnly ? "ANALYTICS" : marketOnly ? "SOLANA MARKET" : "HEADQUARTERS"}
             </div>
             <div className="mt-1 font-mono text-[11px] text-white/45">
               {analyticsOnly
                 ? "Cost, budgets, and performance intelligence."
-                : "Monitor outputs, runs, and schedules."}
+                : marketOnly
+                  ? "Live Solana token prices and trending."
+                  : "Monitor outputs, runs, and schedules."}
             </div>
             {!railOnly && onAddAgent ? (
               <button
