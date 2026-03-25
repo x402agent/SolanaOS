@@ -110,6 +110,9 @@ This README is the GitHub front door. Use it to install, explore the live surfac
 - Troubleshooting: [docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md)
 - Control API: [docs/control-api.md](docs/control-api.md)
 - Fly deployment: [docs/fly-deployment.md](docs/fly-deployment.md)
+- Agent Wallet API: [services/agent-wallet/](services/agent-wallet/) (one-shot bootstrap, MCP server, Privy, E2B)
+- ACP Registry Generator: [acp_registry/generate.mjs](acp_registry/generate.mjs) (interactive agent.json builder)
+- ACP Registry Example: [acp_registry/agent.example.json](acp_registry/agent.example.json)
 - SolanaOS identity prompt: [SOUL.md](SOUL.md)
 - Trading playbook: [strategy.md](strategy.md)
 
@@ -1130,6 +1133,164 @@ Minimal enablement:
 X402_PAYWALL_ENABLED=true
 ./build/solanaos daemon
 ```
+
+## Agent Wallet API
+
+SolanaOS includes a full agent wallet service that manages encrypted Solana + EVM keypairs, exposes a REST API, and optionally integrates with Privy managed wallets and E2B sandbox deployment.
+
+### One-Shot Bootstrap
+
+```bash
+solanaos wallet-api
+```
+
+This single command:
+1. Initializes the AES-256-GCM encrypted vault at `~/.nanosolana/vault/`
+2. Creates a default Solana wallet if no wallets exist
+3. Connects to Solana RPC and any configured EVM chains
+4. Starts the wallet API server on port 8421
+5. Handles graceful shutdown on Ctrl+C
+
+### Flags
+
+```bash
+solanaos wallet-api --port 8421 --chain solana --label primary
+solanaos wallet-api --chain evm --label base-wallet
+solanaos wallet-api --skip-setup  # just start the API, no auto-creation
+```
+
+| Flag | Default | What |
+| --- | --- | --- |
+| `--port` | `$WALLET_API_PORT` or `8421` | HTTP API port |
+| `--chain` | `solana` | Chain for auto-created wallet (`solana` or `evm`) |
+| `--label` | `default` | Friendly name for the wallet |
+| `--skip-setup` | `false` | Skip auto-wallet creation |
+
+### API Endpoints
+
+| Method | Path | What |
+| --- | --- | --- |
+| `POST` | `/v1/wallets` | Create a new wallet (Solana or EVM) |
+| `GET` | `/v1/wallets` | List all wallets |
+| `GET` | `/v1/wallets/{id}` | Get wallet details |
+| `DELETE` | `/v1/wallets/{id}` | Delete a wallet |
+| `GET` | `/v1/wallets/{id}/balance` | Check native token balance |
+| `POST` | `/v1/wallets/{id}/transfer` | Send SOL/ETH/native tokens |
+| `POST` | `/v1/wallets/{id}/transfer-token` | Send ERC-20 tokens |
+| `POST` | `/v1/wallets/{id}/sign` | Sign arbitrary data |
+| `POST` | `/v1/wallets/{id}/pause` | Emergency pause wallet |
+| `POST` | `/v1/wallets/{id}/unpause` | Resume paused wallet |
+| `POST` | `/v1/eth-call` | Read-only EVM contract call |
+| `GET` | `/v1/chains` | List supported chains |
+| `POST` | `/v1/deploy` | Deploy wallet API to E2B sandbox |
+| `GET` | `/v1/deployments` | List active sandbox deployments |
+| `DELETE` | `/v1/deployments/{agent_id}` | Tear down a sandbox |
+| `POST` | `/v1/privy/wallets` | Create Privy-managed wallet |
+| `GET` | `/v1/privy/wallets` | List Privy wallets |
+| `POST` | `/v1/privy/wallets/{id}/sign` | Sign with Privy wallet |
+| `POST` | `/v1/privy/wallets/{id}/send` | Send via Privy wallet |
+| `GET` | `/v1/health` | Health check |
+
+### MCP Server
+
+The wallet also ships as an MCP server for AI agent integration (VS Code, Cursor, Zed):
+
+```json
+{
+  "mcpServers": {
+    "agent-wallet": {
+      "command": "npx",
+      "args": ["tsx", "services/agent-wallet/mcp/index.ts"]
+    }
+  }
+}
+```
+
+MCP tools: `create_wallet`, `list_wallets`, `get_balance`, `transfer`, `transfer_token`, `sign_message`, `pause_wallet`, `unpause_wallet`, `deploy_sandbox`, `teardown_sandbox`, `privy_create_wallet`, `privy_sign`, `privy_send`.
+
+### Docker
+
+```bash
+docker build -f services/agent-wallet/Dockerfile -t agent-wallet .
+docker run --env-file .env -p 8421:8420 agent-wallet
+```
+
+### Environment Variables
+
+```bash
+WALLET_API_PORT=8421          # HTTP port
+WALLET_API_KEY=               # Bearer token for auth (optional)
+VAULT_PASSPHRASE=             # Master encryption key
+SOLANA_RPC_URL=               # Solana RPC endpoint
+EVM_CHAINS=8453:https://...   # chainID:rpcURL pairs
+BASE_RPC_URL=                 # Base chain RPC (shortcut)
+ETH_RPC_URL=                  # Ethereum RPC (shortcut)
+E2B_API_KEY=                  # E2B sandbox deployment
+PRIVY_APP_ID=                 # Privy managed wallets
+PRIVY_APP_SECRET=             # Privy app secret
+```
+
+### Supported Chains
+
+| Chain | ID | Type | Native |
+| --- | --- | --- | --- |
+| Solana | 900 | solana | SOL |
+| Ethereum | 1 | evm | ETH |
+| Base | 8453 | evm | ETH |
+| Arbitrum | 42161 | evm | ETH |
+| Optimism | 10 | evm | ETH |
+| Polygon | 137 | evm | POL |
+| BSC | 56 | evm | BNB |
+| Avalanche | 43114 | evm | AVAX |
+| Zora | 7777777 | evm | ETH |
+| PulseChain | 369 | evm | PLS |
+
+## ACP Registry Generator
+
+The `acp_registry/` directory contains an interactive CLI for generating `agent.json` files for the [8004 Agent Commerce Protocol](https://github.com/QuantuLabs/8004-solana-ts) registry.
+
+### Generate
+
+```bash
+node acp_registry/generate.mjs
+```
+
+The wizard walks through:
+- Agent identity (name, display name, description, icon)
+- Distribution config (command type, args)
+- Services (MCP, A2A, HTTP, WebSocket, gRPC)
+- Registry settings (program IDs, metadata storage, NFT standard, clusters)
+- Feature flags (ATOM reputation, SEAL v1, x402, ProofPass, heartbeat sync)
+- Capabilities (skills from 7 categories, domains, x402 support)
+
+Previews the JSON and writes `agent.json` on confirmation.
+
+### Validate
+
+```bash
+node acp_registry/generate.mjs validate
+node acp_registry/generate.mjs validate path/to/agent.json
+```
+
+Checks required fields: `schema_version`, `name`, `display_name`, `description`, `distribution`, `registry`, `services`, `capabilities`.
+
+### Example
+
+See `acp_registry/agent.example.json` for a complete reference configuration (the SolanaOS agent itself).
+
+### Skill Categories
+
+The generator includes the full 8004 ACP skill catalogue:
+
+| Category | Skills |
+| --- | --- |
+| Advanced Reasoning | strategic planning, problem solving, multi-step reasoning, decision making, risk assessment |
+| Finance & Business | finance, trading, portfolio management, market analysis, DeFi, tokenomics, accounting |
+| Software Development | coding, debugging, code review, architecture, DevOps, smart contracts, web3 |
+| Data & Analytics | data analysis, visualization, machine learning, on-chain analytics, sentiment analysis |
+| Creative | writing, design, content creation, meme generation, marketing, branding |
+| Communication | community management, social media, customer support, translation, moderation |
+| Infrastructure | node operation, validator, RPC provider, indexing, monitoring, security audit |
 
 ## Docs Map
 
