@@ -59,7 +59,7 @@ The setup code is the same payload used by Android onboarding and browser-based 
 - Souls: https://souls.solanaos.net
 - Dashboard: https://seeker.solanaos.net/dashboard
 - Strategy Builder: https://seeker.solanaos.net/strategy
-- Docs: https://go.solanaos.net
+- Docs: https://solanaos.net
 - GitHub: https://github.com/x402agent/SolanaOS
 
 ## Build from source

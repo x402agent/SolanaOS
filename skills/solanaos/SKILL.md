@@ -10,7 +10,7 @@ Autonomous operator runtime for Solana trading, research, wallets, and hardware 
 **Repo**: [github.com/x402agent/SolanaOS](https://github.com/x402agent/SolanaOS)
 **Hub**: [seeker.solanaos.net](https://seeker.solanaos.net)
 **Souls**: [souls.solanaos.net](https://souls.solanaos.net)
-**Docs**: [go.solanaos.net](https://go.solanaos.net)
+**Docs**: [solanaos.net](https://solanaos.net)
 
 ## Install
 

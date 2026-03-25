@@ -21,7 +21,7 @@ Autonomous local-first runtime for Solana trading, research, wallets, automation
   <a href="https://github.com/x402agent/SolanaOS"><img src="https://img.shields.io/badge/GitHub-SolanaOS-111827?style=for-the-badge&logo=github&logoColor=white" alt="GitHub repo"></a>
   <a href="https://seeker.solanaos.net"><img src="https://img.shields.io/badge/Hub-seeker.solanaos.net-14F195?style=for-the-badge&logo=solana&logoColor=white" alt="SolanaOS Hub"></a>
   <a href="https://souls.solanaos.net"><img src="https://img.shields.io/badge/Souls-souls.solanaos.net-00D4FF?style=for-the-badge&logo=solana&logoColor=white" alt="SolanaOS Souls"></a>
-  <a href="https://go.solanaos.net"><img src="https://img.shields.io/badge/Docs-go.solanaos.net-FF7A18?style=for-the-badge&logo=gitbook&logoColor=white" alt="Docs"></a>
+  <a href="https://solanaos.net"><img src="https://img.shields.io/badge/Docs-solanaos.net-FF7A18?style=for-the-badge&logo=gitbook&logoColor=white" alt="Docs"></a>
 </p>
 
 <p>
@@ -99,7 +99,7 @@ This README is the GitHub front door. Use it to install, explore the live surfac
 - Launch page: [solanaos.net](https://solanaos.net)
 - Live Hub: [seeker.solanaos.net](https://seeker.solanaos.net)
 - Soul library: [souls.solanaos.net](https://souls.solanaos.net)
-- Hosted docs: [go.solanaos.net](https://go.solanaos.net)
+- Hosted docs: [solanaos.net](https://solanaos.net)
 - Short landing page: [docs/LANDING.md](docs/LANDING.md)
 - Release notes: [docs/RELEASE-2026-03-v2.md](docs/RELEASE-2026-03-v2.md)
 - Honcho memory integration: [docs/honcho-integration.md](docs/honcho-integration.md)
@@ -121,7 +121,7 @@ This README is the GitHub front door. Use it to install, explore the live surfac
 | **Mobile dApp** | [/mobile](https://seeker.solanaos.net/mobile) | Public Seeker experience page covering pairing, Solana, Grok, chat, voice, ORE, canvas, and settings |
 | **SolanaOS Hub** | [seeker.solanaos.net](https://seeker.solanaos.net) | Skill registry, agent factory, dashboard, Seeker pairing |
 | **SolanaOS Souls** | [souls.solanaos.net](https://souls.solanaos.net) | SOUL.md library for agent system prompts |
-| **Hosted Docs** | [go.solanaos.net](https://go.solanaos.net) | Public docs and install/reference material |
+| **Hosted Docs** | [solanaos.net](https://solanaos.net) | Public docs and install/reference material |
 | **Dashboard** | [/dashboard](https://seeker.solanaos.net/dashboard) | Live art feed, agent factory, wallet connect, Seeker pairing |
 | **Mining** | [/mining](https://seeker.solanaos.net/mining) | BitAxe fleet dashboard with OODA auto-tuning and TamaGOchi pets |
 | **Strategy Builder** | [/strategy](https://seeker.solanaos.net/strategy) | Configure multi-venue trading parameters, export strategy.md |
@@ -312,7 +312,7 @@ This monorepo contains product code, client apps, deployment config, registry me
 | Launch | [solanaos.net](https://solanaos.net) |
 | Hub | [seeker.solanaos.net](https://seeker.solanaos.net) |
 | Souls | [souls.solanaos.net](https://souls.solanaos.net) |
-| Docs | [go.solanaos.net](https://go.solanaos.net) |
+| Docs | [solanaos.net](https://solanaos.net) |
 | Dashboard | [seeker.solanaos.net/dashboard](https://seeker.solanaos.net/dashboard) |
 | Mining | [seeker.solanaos.net/mining](https://seeker.solanaos.net/mining) |
 | Strategy | [seeker.solanaos.net/strategy](https://seeker.solanaos.net/strategy) |
@@ -1139,7 +1139,7 @@ Use the short README for orientation and these docs for depth:
 
 Hosted:
 
-- Docs: `https://go.solanaos.net`
+- Docs: `https://solanaos.net`
 - Hub: `https://seeker.solanaos.net`
 
 ## Build And Deploy
@@ -1291,6 +1291,6 @@ See [docs/vision.md](docs/vision.md) for the full thesis.
 
 **Built by [8BIT Labs](https://github.com/x402agent) · Powered by Go · Memory by [Honcho](https://honcho.dev) · Paid via [x402](https://x402.org)**
 
-[GitHub](https://github.com/x402agent/SolanaOS) · [Hub](https://seeker.solanaos.net) · [Souls](https://souls.solanaos.net) · [Docs](https://go.solanaos.net) · [Launch](https://solanaos.net)
+[GitHub](https://github.com/x402agent/SolanaOS) · [Hub](https://seeker.solanaos.net) · [Souls](https://souls.solanaos.net) · [Docs](https://solanaos.net) · [Launch](https://solanaos.net)
 
 </div>

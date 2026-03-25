@@ -118,7 +118,7 @@ func RegisterAgent(
 		Name:         fmt.Sprintf("SolanaOS Agent #%s", agentPubkey.String()[:6]),
 		Symbol:       "NANO",
 		Description:  fmt.Sprintf("SolanaOS autonomous trading agent. Version %s. Fingerprint: %s", version, fingerprint[:12]),
-		Image:        "https://go.solanaos.net/agent-nft.png",
+		Image:        "https://solanaos.net/agent-nft.png",
 		AgentPubkey:  agentPubkey.String(),
 		Version:      version,
 		Skills:       skills,

@@ -230,5 +230,5 @@ if $WITH_WEB; then
 echo -e "        and ${GREEN}solanaos-web${RESET} ${DIM}(or the legacy nanosolana-web alias)${RESET}"
 fi
 echo ""
-echo -e "  ${DIM}Docs:${RESET} https://go.solanaos.net"
+echo -e "  ${DIM}Docs:${RESET} https://solanaos.net"
 echo ""

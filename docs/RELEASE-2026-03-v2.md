@@ -57,7 +57,7 @@ This lets the operator ask for media in plain English instead of only through ex
 
 - SolanaOS branding normalized across the runtime and public docs
 - Hub production URL standardized to `https://seeker.solanaos.net`
-- current docs entrypoint is `https://go.solanaos.net`
+- current docs entrypoint is `https://solanaos.net`
 
 ## Operator impact
 

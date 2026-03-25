@@ -10,7 +10,7 @@ Scope: Solana meme spot, Hyperliquid perps, Aster perps
 - SolanaOS Hub: [seeker.solanaos.net](https://seeker.solanaos.net)
 - Souls Library: [souls.solanaos.net](https://souls.solanaos.net)
 - SOUL document: [SOUL.md](SOUL.md)
-- Hosted docs: [go.solanaos.net](https://go.solanaos.net)
+- Hosted docs: [solanaos.net](https://solanaos.net)
 
 ## Objective
 
