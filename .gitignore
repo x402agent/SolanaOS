@@ -23,14 +23,14 @@ publishing
 !.env.example
 !**/.env.*.example
 .npmrc
-
+/Users/8bit/solanaos/Claw3D-main
 # ── OS files ──────────────────────────────────────────────────────────
 .DS_Store
 Thumbs.db
 *.swp
 *.swo
 *~
-
+Claw3D-main
 # ── IDE ───────────────────────────────────────────────────────────────
 .idea/
 .vscode/
