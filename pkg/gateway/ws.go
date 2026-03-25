@@ -545,12 +545,26 @@ func (b *Bridge) handleWSRequest(writeJSON func(map[string]any), id, method stri
 		skillsList := []any{}
 		if b.skills != nil {
 			for _, s := range b.skills.All() {
+				emoji := s.Emoji
+				if emoji == "" {
+					emoji = "🔧"
+				}
 				skillsList = append(skillsList, map[string]any{
-					"name":        s.Name,
-					"description": s.Description,
-					"tags":        s.Tags,
-					"emoji":       s.Emoji,
-					"enabled":     true,
+					"name":              s.Name,
+					"description":       s.Description,
+					"source":            "bundled",
+					"filePath":          "skills/" + s.Name + "/SKILL.md",
+					"baseDir":           "skills/" + s.Name,
+					"skillKey":          s.Name,
+					"emoji":             emoji,
+					"always":            false,
+					"disabled":          false,
+					"blockedByAllowlist": false,
+					"eligible":          true,
+					"requirements":      map[string]any{"bins": []any{}, "env": []any{}, "config": []any{}, "os": []any{}},
+					"missing":           map[string]any{"bins": []any{}, "env": []any{}, "config": []any{}, "os": []any{}},
+					"configChecks":      []any{},
+					"install":           []any{},
 				})
 			}
 		}
@@ -559,8 +573,9 @@ func (b *Bridge) handleWSRequest(writeJSON func(map[string]any), id, method stri
 			"id":   id,
 			"ok":   true,
 			"payload": map[string]any{
-				"skills": skillsList,
-				"count":  len(skillsList),
+				"skills":          skillsList,
+				"workspaceDir":    "skills/",
+				"managedSkillsDir": "~/.nanosolana/skills",
 			},
 		})
 
