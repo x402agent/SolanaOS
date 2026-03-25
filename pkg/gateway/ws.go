@@ -588,12 +588,39 @@ func (b *Bridge) handleWSRequest(writeJSON func(map[string]any), id, method stri
 		})
 
 	case "channels.status":
+		_, _, cfgParsed, _ := b.loadConfigFile()
+		channels := map[string]any{}
+		telegramCfg, _ := cfgParsed["telegram"].(map[string]any)
+		if telegramCfg != nil {
+			configured := telegramCfg["bot_token"] != nil && telegramCfg["bot_token"] != ""
+			channels["telegram"] = map[string]any{
+				"configured": configured,
+				"running":    configured,
+				"mode":       "polling",
+			}
+		} else {
+			channels["telegram"] = map[string]any{"configured": false, "running": false}
+		}
+		channels["whatsapp"] = map[string]any{"configured": false, "running": false, "linked": false}
+		channels["discord"] = map[string]any{"configured": false, "running": false}
+		channels["slack"] = map[string]any{"configured": false, "running": false}
+		channels["signal"] = map[string]any{"configured": false, "running": false}
+		channels["nostr"] = map[string]any{"configured": false, "running": false}
+		channels["imessage"] = map[string]any{"configured": false, "running": false}
+		channels["google-chat"] = map[string]any{"configured": false, "running": false}
+		// WebChat is always available via the gateway
+		channels["webchat"] = map[string]any{
+			"configured": true,
+			"running":    true,
+			"mode":       "websocket",
+			"url":        "ws://" + b.BridgeAddr(),
+		}
 		writeJSON(map[string]any{
 			"type": "res",
 			"id":   id,
 			"ok":   true,
 			"payload": map[string]any{
-				"channels": map[string]any{},
+				"channels": channels,
 			},
 		})
 
@@ -656,7 +683,8 @@ func (b *Bridge) handleWSRequest(writeJSON func(map[string]any), id, method stri
 			"payload": map[string]any{"ok": true},
 		})
 
-	case "web.login.start", "web.login.wait", "channels.logout":
+	case "web.login.start", "web.login.wait", "channels.logout",
+		"channels.config.get", "channels.config.set", "channels.probe":
 		writeJSON(map[string]any{
 			"type":    "res",
 			"id":      id,
