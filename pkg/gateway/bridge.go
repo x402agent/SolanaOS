@@ -53,6 +53,7 @@ type Bridge struct {
 	cancel    context.CancelFunc
 	llm         LLMProvider    // optional chat inference
 	skills      SkillsProvider // optional skills catalog
+	honcho      HonchoProvider // optional Honcho memory
 	startedAt   time.Time
 	reloadLLM   func() LLMProvider // callback to reload LLM from config
 	chatHistory map[string][]map[string]any // session -> messages
@@ -106,6 +107,18 @@ type SkillEntry struct {
 // SetSkills attaches a skills provider.
 func (b *Bridge) SetSkills(provider SkillsProvider) {
 	b.skills = provider
+}
+
+// HonchoProvider gives the gateway access to Honcho v3 memory.
+type HonchoProvider interface {
+	IsConfigured() bool
+	IngestMessage(ctx context.Context, sessionID, role, content string) error
+	GetContext(ctx context.Context, sessionID, query string) (string, error)
+}
+
+// SetHoncho attaches a Honcho memory provider.
+func (b *Bridge) SetHoncho(provider HonchoProvider) {
+	b.honcho = provider
 }
 
 // configFilePath returns the path to solanaos.json.

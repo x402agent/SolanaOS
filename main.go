@@ -150,6 +150,43 @@ func (a *skillsAdapter) BuildContext() string {
 	return b.String()
 }
 
+// honchoAdapter bridges pkg/honcho.Client to gw.HonchoProvider.
+type honchoAdapter struct {
+	client *honcho.Client
+}
+
+func (a *honchoAdapter) IsConfigured() bool { return a.client != nil }
+
+func (a *honchoAdapter) IngestMessage(ctx context.Context, sessionID, role, content string) error {
+	if a.client == nil {
+		return nil
+	}
+	_ = a.client.EnsureWorkspace(ctx)
+	peerID := "user"
+	if role == "assistant" {
+		peerID = "solanaos-agent"
+	}
+	_ = a.client.EnsurePeer(ctx, peerID, nil)
+	_ = a.client.EnsureSession(ctx, sessionID, nil)
+	return a.client.AddMessages(ctx, sessionID, []honcho.MessageCreate{
+		{PeerID: peerID, Content: content},
+	})
+}
+
+func (a *honchoAdapter) GetContext(ctx context.Context, sessionID, query string) (string, error) {
+	if a.client == nil {
+		return "", nil
+	}
+	sc, err := a.client.SessionContext(ctx, sessionID, "solanaos-agent", "user", query)
+	if err != nil {
+		return "", err
+	}
+	if sc == nil || sc.Content == "" {
+		return "", nil
+	}
+	return sc.Content, nil
+}
+
 type gatewayConnectFiles struct {
 	BundlePath    string
 	SetupCodePath string
