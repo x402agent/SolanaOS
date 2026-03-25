@@ -12,6 +12,7 @@ import (
 	"encoding/json"
 	"net"
 	"net/http"
+	"os"
 	"strings"
 	"sync"
 	"time"
@@ -349,11 +350,31 @@ func (b *Bridge) handleWSRequest(writeJSON func(map[string]any), id, method stri
 			})
 			ctx, cancel := context.WithTimeout(context.Background(), 60*time.Second)
 			defer cancel()
-			skillsContext := ""
+
+			// Build context: skills + auto-detected Solana token data
+			var contextParts []string
 			if b.skills != nil {
-				skillsContext = b.skills.BuildContext()
+				if sc := b.skills.BuildContext(); sc != "" {
+					contextParts = append(contextParts, sc)
+				}
 			}
-			reply, err := b.llm.Chat(ctx, sessionKey, message, skillsContext)
+
+			// Auto-detect Solana contract address and fetch Birdeye data
+			if addr := detectSolanaAddress(message); addr != "" {
+				apiKey := strings.TrimSpace(os.Getenv("BIRDEYE_API_KEY"))
+				if apiKey != "" {
+					b.logf("💬 Detected Solana address: %s — fetching Birdeye data", addr)
+					if tokenData, err := fetchBirdeyeTokenData(ctx, addr, apiKey); err == nil {
+						contextParts = append(contextParts, "Live token data for "+addr+":\n"+tokenData)
+						b.logf("💬 Birdeye data fetched (%d chars)", len(tokenData))
+					} else {
+						b.logf("💬 Birdeye fetch failed: %v", err)
+					}
+				}
+			}
+
+			combinedContext := strings.Join(contextParts, "\n\n")
+			reply, err := b.llm.Chat(ctx, sessionKey, message, combinedContext)
 			if err != nil {
 				b.logf("💬 chat.send: LLM error: %v", err)
 				reply = "LLM error: " + err.Error()
