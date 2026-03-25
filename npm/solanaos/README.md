@@ -74,7 +74,7 @@ If installed with `--with-web`:
 
 ## Product links
 
-- Docs: https://go.solanaos.net
+- Docs: https://solanaos.net
 - Hub: https://seeker.solanaos.net
 - Souls: https://souls.solanaos.net
 - Strategy Builder: https://seeker.solanaos.net/strategy

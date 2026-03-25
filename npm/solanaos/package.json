@@ -1,6 +1,6 @@
 {
   "name": "solanaos-computer",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Primary SolanaOS npm installer and launcher for the Solana-native trading and operator runtime",
   "license": "MIT",
   "type": "module",

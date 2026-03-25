@@ -56,7 +56,7 @@ nanosolana-web --no-browser
 
 ## Links
 
-- **Docs**: [go.solanaos.net](https://go.solanaos.net)
+- **Docs**: [solanaos.net](https://solanaos.net)
 - **GitHub**: [x402agent/SolanaOS](https://github.com/x402agent/SolanaOS)
 - **Helius**: [helius.dev](https://helius.dev)
 
