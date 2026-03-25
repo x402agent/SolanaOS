@@ -1,5 +1,6 @@
 {
-  "name": "claw3d",
+  "name": "solanaos-office",
+  "description": "3D agent workspace for SolanaOS — manage agents, wallets, and trading from an immersive office at office.solanaos.net",
   "version": "0.1.0",
   "private": true,
   "license": "MIT",

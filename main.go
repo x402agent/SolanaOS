@@ -781,6 +781,9 @@ No external dependencies required.`,
 			fmt.Printf("%sRun:    solanaos node run  --bridge %s%s\n\n", colorDim, bridge.BridgeAddr(), colorReset)
 			printGatewaySetupCode(files)
 
+			fmt.Printf("\n%s🖥️  SolanaOS Office: http://%s%s\n", colorTeal, "office.solanaos.net", colorReset)
+			fmt.Printf("%s   Local dev: cd Claw3D-main && npm run dev%s\n\n", colorDim, colorReset)
+
 			<-ctx.Done()
 			bridge.Stop()
 			return nil
@@ -1557,6 +1560,8 @@ Features:
 			}
 
 			fmt.Fprintf(os.Stderr, "%s🖥️  SolanaOS Server starting on http://%s:%d%s\n", colorGreen, displayHost, port, colorReset)
+			fmt.Fprintf(os.Stderr, "%s🖥️  SolanaOS Office: http://%s%s\n", colorTeal, "office.solanaos.net", colorReset)
+			fmt.Fprintf(os.Stderr, "%s   Local dev: cd Claw3D-main && npm run dev%s\n\n", colorDim, colorReset)
 
 			srv := nanobot.NewServerWithOptions(port, binary, host, !noBrowser)
 			return srv.Start(cmd.Context())

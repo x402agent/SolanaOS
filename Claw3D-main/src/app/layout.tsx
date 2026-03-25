@@ -3,8 +3,8 @@ import { Bebas_Neue, IBM_Plex_Mono, IBM_Plex_Sans } from "next/font/google";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "SolanaOS Control",
-  description: "Operator studio for the SolanaOS gateway — manage agents, wallets, and trading from any device.",
+  title: "SolanaOS Office",
+  description: "3D agent workspace for SolanaOS — manage agents, wallets, and trading from an immersive retro office.",
 };
 
 const display = Bebas_Neue({

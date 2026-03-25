@@ -527,7 +527,7 @@ export default function GatewaySetupPage() {
             onClick={goToOffice}
           >
             <Terminal className="h-4 w-4" />
-            Launch SolanaOS Control
+            Enter SolanaOS Office
           </button>
 
           <div className="mt-3 grid grid-cols-2 gap-2">
@@ -561,7 +561,7 @@ export default function GatewaySetupPage() {
           <p className="text-[11px] text-white/30">
             Need help?{" "}
             <a
-              href="https://go.solanaos.net"
+              href="https://solanaos.net"
               target="_blank"
               rel="noopener noreferrer"
               className="text-[#14F195]/50 hover:text-[#14F195]"
