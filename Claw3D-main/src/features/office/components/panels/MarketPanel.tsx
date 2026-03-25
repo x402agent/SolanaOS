@@ -288,25 +288,31 @@ export default function MarketPanel() {
     }
   }, []);
 
-  /* ---- Fetch all ---- */
-  const fetchAll = useCallback(() => {
-    void fetchPrices();
-    void fetchTrending();
-  }, [fetchPrices, fetchTrending]);
-
   /* ---- Mount + polling ---- */
   useEffect(() => {
-    fetchAll();
-    const interval = setInterval(fetchAll, POLL_INTERVAL_MS);
-    return () => clearInterval(interval);
-  }, [fetchAll]);
+    let active = true;
+    const run = () => {
+      if (!active) return;
+      void fetchPrices();
+      void fetchTrending();
+    };
+    run();
+    const interval = setInterval(run, POLL_INTERVAL_MS);
+    return () => {
+      active = false;
+      clearInterval(interval);
+    };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   /* ---- Retry handler ---- */
   const handleRetry = useCallback(() => {
     setLoadingPrices(true);
     setLoadingTrending(true);
-    fetchAll();
-  }, [fetchAll]);
+    void fetchPrices();
+    void fetchTrending();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   /* ---- Render ---- */
   const hasError = errorPrices || errorTrending;
