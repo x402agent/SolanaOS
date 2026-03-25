@@ -808,6 +808,33 @@ No external dependencies required.`,
 			bridge := gw.NewBridge(bridgeCfg, nil)
 
 			// Attach LLM provider for chat inference.
+			applyConfigEnv := func() {
+				// Read config file and set env vars so llm.New() picks them up.
+				_, _, parsed, _ := bridge.LoadConfigFilePublic()
+				if llmCfg, ok := parsed["llm"].(map[string]any); ok {
+					envMap := map[string]string{
+						"openrouter_key":  "OPENROUTER_API_KEY",
+						"anthropic_key":   "ANTHROPIC_API_KEY",
+						"xai_key":         "XAI_API_KEY",
+						"openai_key":      "OPENAI_API_KEY",
+						"ollama_model":    "OLLAMA_MODEL",
+						"ollama_base_url": "OLLAMA_BASE_URL",
+						"provider":        "LLM_PROVIDER",
+					}
+					for cfgKey, envKey := range envMap {
+						if v, ok := llmCfg[cfgKey].(string); ok && v != "" {
+							os.Setenv(envKey, v)
+						}
+					}
+				}
+				if solanaCfg, ok := parsed["solana"].(map[string]any); ok {
+					if v, ok := solanaCfg["birdeye_api_key"].(string); ok && v != "" {
+						os.Setenv("BIRDEYE_API_KEY", v)
+					}
+				}
+			}
+			applyConfigEnv()
+
 			llmClient := llm.New()
 			if llmClient.IsConfigured() {
 				bridge.SetLLM(llmClient)
@@ -815,6 +842,18 @@ No external dependencies required.`,
 			} else {
 				fmt.Printf("%s⚠️  No LLM configured — chat will be view-only. Set OPENROUTER_API_KEY or similar in .env%s\n", colorAmber, colorReset)
 			}
+
+			// Register reload callback so config.apply can hot-swap the LLM.
+			bridge.SetReloadLLM(func() gw.LLMProvider {
+				applyConfigEnv()
+				client := llm.New()
+				if client.IsConfigured() {
+					log.Printf("[GATEWAY] 🤖 LLM reloaded: %s / %s", client.Provider(), client.Model())
+				} else {
+					log.Printf("[GATEWAY] ⚠️ LLM reload: no provider configured")
+				}
+				return client
+			})
 
 			// Attach skills provider.
 			skillsDir := skills.ResolveSkillsDir()

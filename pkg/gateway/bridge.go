@@ -51,9 +51,10 @@ type Bridge struct {
 	authToken string
 	logf      func(string, ...any)
 	cancel    context.CancelFunc
-	llm       LLMProvider    // optional chat inference
-	skills    SkillsProvider // optional skills catalog
-	startedAt time.Time
+	llm        LLMProvider    // optional chat inference
+	skills     SkillsProvider // optional skills catalog
+	startedAt  time.Time
+	reloadLLM  func() LLMProvider // callback to reload LLM from config
 }
 
 // LLMProvider allows the gateway to call an LLM for chat.send.
@@ -65,6 +66,24 @@ type LLMProvider interface {
 // SetLLM attaches an LLM provider for chat inference.
 func (b *Bridge) SetLLM(provider LLMProvider) {
 	b.llm = provider
+}
+
+// SetReloadLLM registers a callback that creates a fresh LLM from current config.
+func (b *Bridge) SetReloadLLM(fn func() LLMProvider) {
+	b.reloadLLM = fn
+}
+
+// ReloadLLM re-reads config and swaps the LLM provider. Returns the new provider description.
+func (b *Bridge) ReloadLLM() string {
+	if b.reloadLLM == nil {
+		return "no reload callback"
+	}
+	newLLM := b.reloadLLM()
+	b.llm = newLLM
+	if newLLM != nil && newLLM.IsConfigured() {
+		return "reloaded"
+	}
+	return "no LLM configured after reload"
 }
 
 // SkillsProvider gives the gateway access to loaded skills.
@@ -92,6 +111,11 @@ func (b *Bridge) SetSkills(provider SkillsProvider) {
 func configFilePath() string {
 	home, _ := os.UserHomeDir()
 	return filepath.Join(home, ".nanosolana", "solanaos.json")
+}
+
+// LoadConfigFilePublic is the exported version of loadConfigFile.
+func (b *Bridge) LoadConfigFilePublic() (string, string, map[string]any, string) {
+	return b.loadConfigFile()
 }
 
 // loadConfigFile reads the config file and returns path, raw JSON, parsed map, and hash.

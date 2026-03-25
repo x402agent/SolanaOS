@@ -460,12 +460,26 @@ func (b *Bridge) handleWSRequest(writeJSON func(map[string]any), id, method stri
 			"payload": map[string]any{"ok": true},
 		})
 
-	case "config.patch", "config.apply", "update.run":
+	case "config.patch", "update.run":
 		writeJSON(map[string]any{
 			"type":    "res",
 			"id":      id,
 			"ok":      true,
 			"payload": map[string]any{"ok": true},
+		})
+
+	case "config.apply":
+		result := b.ReloadLLM()
+		b.logf("🔄 Config applied — LLM: %s", result)
+		writeJSON(map[string]any{
+			"type": "res",
+			"id":   id,
+			"ok":   true,
+			"payload": map[string]any{
+				"ok":     true,
+				"llm":    result,
+				"reload": true,
+			},
 		})
 
 	case "status":
