@@ -1,8 +1,8 @@
 const MAX_ASSISTANT_NAME = 50;
 const MAX_ASSISTANT_AVATAR = 200;
 
-export const DEFAULT_ASSISTANT_NAME = "SolanaOS";
-export const DEFAULT_ASSISTANT_AVATAR = "⚡";
+export const DEFAULT_ASSISTANT_NAME = "Assistant";
+export const DEFAULT_ASSISTANT_AVATAR = "A";
 
 export type AssistantIdentity = {
   agentId?: string | null;
@@ -12,8 +12,8 @@ export type AssistantIdentity = {
 
 declare global {
   interface Window {
-    __SOLANAOS_ASSISTANT_NAME__?: string;
-    __SOLANAOS_ASSISTANT_AVATAR__?: string;
+    __OPENCLAW_ASSISTANT_NAME__?: string;
+    __OPENCLAW_ASSISTANT_AVATAR__?: string;
   }
 }
 
@@ -46,7 +46,7 @@ export function resolveInjectedAssistantIdentity(): AssistantIdentity {
     return normalizeAssistantIdentity({});
   }
   return normalizeAssistantIdentity({
-    name: window.__SOLANAOS_ASSISTANT_NAME__,
-    avatar: window.__SOLANAOS_ASSISTANT_AVATAR__,
+    name: window.__OPENCLAW_ASSISTANT_NAME__,
+    avatar: window.__OPENCLAW_ASSISTANT_AVATAR__,
   });
 }
