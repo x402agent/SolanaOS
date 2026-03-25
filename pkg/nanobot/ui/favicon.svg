@@ -1,0 +1,16 @@
+<svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="sol-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#9945FF"/>
+      <stop offset="100%" stop-color="#14F195"/>
+    </linearGradient>
+  </defs>
+  <!-- Rounded background -->
+  <rect width="120" height="120" rx="24" fill="#12141a"/>
+  <!-- Solana-style three parallel bars -->
+  <path d="M28 38h64l-12 12H28z" fill="url(#sol-gradient)"/>
+  <path d="M28 54h64L80 66H28z" fill="url(#sol-gradient)" opacity="0.75"/>
+  <path d="M28 70h64l-12 12H28z" fill="url(#sol-gradient)" opacity="0.5"/>
+  <!-- S letter accent -->
+  <text x="60" y="100" text-anchor="middle" font-family="system-ui, sans-serif" font-weight="700" font-size="22" fill="#9945FF" opacity="0.6">OS</text>
+</svg>

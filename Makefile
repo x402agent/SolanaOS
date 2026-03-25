@@ -61,15 +61,22 @@ BIN_TUI   := $(BUILD_DIR)/solanaos-tui
 BIN_SLIM  := $(BUILD_DIR)/solanaos-slim
 BIN_CONTROL_API := $(BUILD_DIR)/solanaos-control-api
 
-.PHONY: all build build-control-api run-control-api test-control-api slim size-report orin tui docker docker-fly clean install test lint deps scan-i2c npm-pack seeker-install seeker-logcat connect-bundle
+.PHONY: all build build-ui build-control-api run-control-api test-control-api slim size-report orin tui docker docker-fly clean install test lint deps scan-i2c npm-pack seeker-install seeker-logcat connect-bundle
 
 # ── Default ───────────────────────────────────────────────────────────
 
 all: build tui
 
+# ── Build Control UI (Vite + Lit) ────────────────────────────────────
+
+build-ui:
+	@echo "⚡ Building SolanaOS Control UI..."
+	@cd ui && npm run build
+	@echo "✓ Control UI built → pkg/nanobot/ui/"
+
 # ── Build for current platform ────────────────────────────────────────
 
-build:
+build: build-ui
 	@echo "⚡ Building SolanaOS binary..."
 	@mkdir -p $(BUILD_DIR)
 	@mkdir -p $(GOCACHE_DIR) $(GOTMPDIR_DIR) $(GOMODCACHE_DIR)
@@ -278,7 +285,8 @@ npm-pack:
 help:
 	@echo "SolanaOS — Makefile targets:"
 	@echo ""
-	@echo "  build       Build for current platform"
+	@echo "  build       Build UI + Go binary for current platform"
+	@echo "  build-ui    Build the Control UI (Vite + Lit)"
 	@echo "  slim        Build slim profile (CGO off, netgo/osusergo tags)"
 	@echo "  size-report Build standard + slim and print size deltas"
 	@echo "  tui         Build TUI launcher"

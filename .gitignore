@@ -1,6 +1,7 @@
 # ── Build artifacts ───────────────────────────────────────────────────
 build/
 dist/
+pkg/nanobot/ui/assets/
 .cache/
 .tmp-*/
 *.exe
