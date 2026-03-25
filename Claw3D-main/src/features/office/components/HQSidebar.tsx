@@ -6,7 +6,8 @@ export type HQSidebarTab =
   | "inbox"
   | "history"
   | "playbooks"
-  | "analytics";
+  | "analytics"
+  | "market";
 
 type HQSidebarProps = {
   open: boolean;
