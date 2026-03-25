@@ -1,0 +1,444 @@
+@config '../tailwind.config.js';
+@import 'tailwindcss';
+@import 'tw-animate-css';
+
+@custom-variant dark (&:is(.dark *));
+
+/* 启用 class-based dark mode for Tailwind v4 */
+@variant dark (.dark &);
+
+:root {
+	--background: oklch(1 0 0);
+	--foreground: oklch(0.145 0 0);
+	/* 主题色渐变 */
+	--theme-color-1: rgb(88, 192, 252);
+	--theme-color-2: rgb(189, 69, 251);
+
+	/* shadcn */
+	--radius: 0.625rem;
+	--card: oklch(1 0 0);
+	--card-foreground: oklch(0.145 0 0);
+	--popover: oklch(1 0 0);
+	--popover-foreground: oklch(0.145 0 0);
+	--primary: oklch(0.205 0 0);
+	--primary-foreground: oklch(0.985 0 0);
+	--secondary: oklch(0.97 0 0);
+	--secondary-foreground: oklch(0.205 0 0);
+	--muted: oklch(0.97 0 0);
+	--muted-foreground: oklch(0.556 0 0);
+	--accent: oklch(0.97 0 0);
+	--accent-foreground: oklch(0.205 0 0);
+	--destructive: oklch(0.577 0.245 27.325);
+	--border: oklch(0.922 0 0);
+	--input: oklch(0.922 0 0);
+	--ring: oklch(0.708 0 0);
+	--chart-1: oklch(0.646 0.222 41.116);
+	--chart-2: oklch(0.6 0.118 184.704);
+	--chart-3: oklch(0.398 0.07 227.392);
+	--chart-4: oklch(0.828 0.189 84.429);
+	--chart-5: oklch(0.769 0.188 70.08);
+	--sidebar: oklch(0.985 0 0);
+	--sidebar-foreground: oklch(0.145 0 0);
+	--sidebar-primary: oklch(0.205 0 0);
+	--sidebar-primary-foreground: oklch(0.985 0 0);
+	--sidebar-accent: oklch(0.97 0 0);
+	--sidebar-accent-foreground: oklch(0.205 0 0);
+	--sidebar-border: oklch(0.922 0 0);
+	--sidebar-ring: oklch(0.708 0 0);
+}
+
+/* class-based dark mode - 应用到 html.dark */
+html.dark,
+:root.dark {
+	--background: #0a0a0a;
+	--foreground: #ededed;
+}
+
+/* 同时支持系统偏好 */
+/* @media (prefers-color-scheme: dark) {
+	html:not(.light),
+	:root:not(.light) {
+		--background: #0a0a0a;
+		--foreground: #ededed;
+	}
+} */
+
+/* 添加 Tailwind 自定义颜色 */
+@theme {
+	--color-background: var(--background);
+	--color-foreground: var(--foreground);
+}
+
+body {
+	background: var(--background);
+	color: var(--foreground);
+	font-family:
+		system-ui,
+		-apple-system,
+		BlinkMacSystemFont,
+		'Segoe UI',
+		Roboto,
+		'Noto Sans',
+		'Liberation Sans',
+		sans-serif,
+		'Apple Color Emoji',
+		'Segoe UI Emoji';
+}
+
+/* 文档正文排版优化 */
+.prose {
+	letter-spacing: 0.01em;
+	font-weight: 380;
+}
+
+.prose p {
+	line-height: 1.6;
+}
+
+/* 标题使用中等字重（相对细体更重，但比默认 bold 更轻） */
+.prose h1,
+.prose h2,
+.prose h3,
+.prose h4,
+.prose h5,
+.prose h6 {
+	font-weight: 480;
+}
+
+/* strong/b 也用中等字重 */
+.prose strong,
+.prose b {
+	font-weight: 480;
+}
+
+/* 确保文档页面标题在暗色模式下可见 - 只针对 prose 内的标题 */
+.prose h1,
+.prose h2,
+.prose h3,
+.prose h4,
+.prose h5,
+.prose h6 {
+	color: rgba(23, 23, 23, 0.85);
+}
+
+.dark .prose h1,
+.dark .prose h2,
+.dark .prose h3,
+.dark .prose h4,
+.dark .prose h5,
+.dark .prose h6 {
+	color: rgba(255, 255, 255, 0.9);
+}
+
+table,
+th,
+td {
+	color: #171717;
+}
+
+.dark table,
+.dark th,
+.dark td {
+	color: #ededed;
+}
+
+/* 文档页深色模式优化 */
+.dark .prose {
+	color: rgba(255, 255, 255, 0.7);
+}
+
+/* @media (prefers-color-scheme: dark) {
+	:root:not(.light) .prose {
+		color: rgba(255, 255, 255, 0.7);
+	}
+} */
+
+.dark .dark\:prose-invert {
+	--tw-prose-body: rgba(255, 255, 255, 0.7);
+	--tw-prose-headings: rgba(255, 255, 255, 0.95);
+	--tw-prose-lead: rgba(255, 255, 255, 0.7);
+	--tw-prose-links: rgba(147, 197, 253, 0.9);
+	--tw-prose-bold: rgba(255, 255, 255, 0.9);
+	--tw-prose-counters: rgba(255, 255, 255, 0.6);
+	--tw-prose-bullets: rgba(255, 255, 255, 0.5);
+	--tw-prose-hr: rgba(255, 255, 255, 0.2);
+	--tw-prose-quotes: rgba(255, 255, 255, 0.8);
+	--tw-prose-quote-borders: rgba(255, 255, 255, 0.3);
+	--tw-prose-captions: rgba(255, 255, 255, 0.6);
+	--tw-prose-code: rgba(255, 255, 255, 0.9);
+	--tw-prose-pre-code: rgba(255, 255, 255, 0.95);
+	--tw-prose-pre-bg: rgba(0, 0, 0, 0.5);
+	--tw-prose-th-borders: rgba(255, 255, 255, 0.3);
+	--tw-prose-td-borders: rgba(255, 255, 255, 0.2);
+}
+
+/* @media (prefers-color-scheme: dark) {
+	:root:not(.light) .dark\:prose-invert {
+		--tw-prose-body: rgba(255, 255, 255, 0.7);
+		--tw-prose-headings: rgba(255, 255, 255, 0.95);
+		--tw-prose-lead: rgba(255, 255, 255, 0.7);
+		--tw-prose-links: rgba(147, 197, 253, 0.9);
+		--tw-prose-bold: rgba(255, 255, 255, 0.9);
+		--tw-prose-counters: rgba(255, 255, 255, 0.6);
+		--tw-prose-bullets: rgba(255, 255, 255, 0.5);
+		--tw-prose-hr: rgba(255, 255, 255, 0.2);
+		--tw-prose-quotes: rgba(255, 255, 255, 0.8);
+		--tw-prose-quote-borders: rgba(255, 255, 255, 0.3);
+		--tw-prose-captions: rgba(255, 255, 255, 0.6);
+		--tw-prose-code: rgba(255, 255, 255, 0.9);
+		--tw-prose-pre-code: rgba(255, 255, 255, 0.95);
+		--tw-prose-pre-bg: rgba(0, 0, 0, 0.5);
+		--tw-prose-th-borders: rgba(255, 255, 255, 0.3);
+		--tw-prose-td-borders: rgba(255, 255, 255, 0.2);
+	}
+} */
+
+/* 标题更清晰 */
+.dark .prose h1,
+.dark .prose h2,
+.dark .prose h3,
+.dark .prose h4 {
+	color: rgba(255, 255, 255, 0.95);
+}
+
+/* @media (prefers-color-scheme: dark) {
+	:root:not(.light) .prose h1,
+	:root:not(.light) .prose h2,
+	:root:not(.light) .prose h3,
+	:root:not(.light) .prose h4 {
+		color: rgba(255, 255, 255, 0.95);
+	}
+} */
+
+/* 链接更清晰 */
+.dark .prose a {
+	color: rgba(147, 197, 253, 0.9);
+}
+
+/* @media (prefers-color-scheme: dark) {
+	:root:not(.light) .prose a {
+		color: rgba(147, 197, 253, 0.9);
+	}
+} */
+
+/* 代码块背景更黑 */
+.dark .prose pre {
+	background-color: rgba(0, 0, 0, 0.6);
+}
+
+/* @media (prefers-color-scheme: dark) {
+	:root:not(.light) .prose pre {
+		background-color: rgba(0, 0, 0, 0.6);
+	}
+} */
+
+/* 表格样式 */
+.dark .prose table {
+	color: rgba(255, 255, 255, 0.7);
+}
+
+/* @media (prefers-color-scheme: dark) {
+	:root:not(.light) .prose table {
+		color: rgba(255, 255, 255, 0.7);
+	}
+} */
+
+.dark .prose thead {
+	color: rgba(255, 255, 255, 0.9);
+	border-bottom-color: rgba(255, 255, 255, 0.3);
+}
+
+/* @media (prefers-color-scheme: dark) {
+	:root:not(.light) .prose thead {
+		color: rgba(255, 255, 255, 0.9);
+		border-bottom-color: rgba(255, 255, 255, 0.3);
+	}
+} */
+
+.dark .prose tbody tr {
+	border-bottom-color: rgba(255, 255, 255, 0.2);
+}
+
+/* @media (prefers-color-scheme: dark) {
+	:root:not(.light) .prose tbody tr {
+		border-bottom-color: rgba(255, 255, 255, 0.2);
+	}
+} */
+
+/* 隐藏滚动条，但保持滚动功能 */
+.scrollbar-hide {
+	-ms-overflow-style: none; /* IE and Edge */
+	scrollbar-width: none; /* Firefox */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+	display: none; /* Chrome, Safari and Opera */
+}
+
+/* shadcn */
+@theme inline {
+	--radius-sm: calc(var(--radius) - 4px);
+	--radius-md: calc(var(--radius) - 2px);
+	--radius-lg: var(--radius);
+	--radius-xl: calc(var(--radius) + 4px);
+	--radius-2xl: calc(var(--radius) + 8px);
+	--radius-3xl: calc(var(--radius) + 12px);
+	--radius-4xl: calc(var(--radius) + 16px);
+	--color-background: var(--background);
+	--color-foreground: var(--foreground);
+	--color-card: var(--card);
+	--color-card-foreground: var(--card-foreground);
+	--color-popover: var(--popover);
+	--color-popover-foreground: var(--popover-foreground);
+	--color-primary: var(--primary);
+	--color-primary-foreground: var(--primary-foreground);
+	--color-secondary: var(--secondary);
+	--color-secondary-foreground: var(--secondary-foreground);
+	--color-muted: var(--muted);
+	--color-muted-foreground: var(--muted-foreground);
+	--color-accent: var(--accent);
+	--color-accent-foreground: var(--accent-foreground);
+	--color-destructive: var(--destructive);
+	--color-border: var(--border);
+	--color-input: var(--input);
+	--color-ring: var(--ring);
+	--color-chart-1: var(--chart-1);
+	--color-chart-2: var(--chart-2);
+	--color-chart-3: var(--chart-3);
+	--color-chart-4: var(--chart-4);
+	--color-chart-5: var(--chart-5);
+	--color-sidebar: var(--sidebar);
+	--color-sidebar-foreground: var(--sidebar-foreground);
+	--color-sidebar-primary: var(--sidebar-primary);
+	--color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+	--color-sidebar-accent: var(--sidebar-accent);
+	--color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+	--color-sidebar-border: var(--sidebar-border);
+	--color-sidebar-ring: var(--sidebar-ring);
+
+	/* magic ui */
+	--animate-blink-cursor: blink-cursor 1.2s step-end infinite;
+	@keyframes blink-cursor {
+		0%,
+		49% {
+			opacity: 1;
+		}
+		50%,
+		100% {
+			opacity: 0;
+		}
+	}
+	--animate-aurora: aurora 8s ease-in-out infinite alternate;
+	@keyframes aurora {
+		0% {
+			background-position: 0% 50%;
+			transform: rotate(-5deg) scale(0.9);
+		}
+		25% {
+			background-position: 50% 100%;
+			transform: rotate(5deg) scale(1.1);
+		}
+		50% {
+			background-position: 100% 50%;
+			transform: rotate(-3deg) scale(0.95);
+		}
+		75% {
+			background-position: 50% 0%;
+			transform: rotate(3deg) scale(1.05);
+		}
+		100% {
+			background-position: 0% 50%;
+			transform: rotate(-5deg) scale(0.9);
+		}
+	}
+	--animate-shiny-text: shiny-text 8s infinite;
+	@keyframes shiny-text {
+		0%,
+		90%,
+		100% {
+			background-position: calc(-100% - var(--shiny-width)) 0;
+		}
+		30%,
+		60% {
+			background-position: calc(100% + var(--shiny-width)) 0;
+		}
+	}
+	--animate-gradient: gradient 8s linear infinite;
+	@keyframes gradient {
+		to {
+			background-position: var(--bg-size, 300%) 0;
+		}
+	}
+	--animate-background-position-spin: background-position-spin 3000ms infinite alternate;
+	@keyframes background-position-spin {
+		0% {
+			background-position: top center;
+		}
+		100% {
+			background-position: bottom center;
+		}
+	}
+	--animate-marquee: marquee var(--duration) infinite linear;
+	--animate-marquee-vertical: marquee-vertical var(--duration) linear infinite;
+	@keyframes marquee {
+		from {
+			transform: translateX(0);
+		}
+		to {
+			transform: translateX(calc(-100% - var(--gap)));
+		}
+	}
+	@keyframes marquee-vertical {
+		from {
+			transform: translateY(0);
+		}
+		to {
+			transform: translateY(calc(-100% - var(--gap)));
+		}
+	}
+}
+
+/* shadcn dark mode */
+.dark {
+	--background: oklch(0.145 0 0);
+	--foreground: oklch(0.985 0 0);
+	--card: oklch(0.205 0 0);
+	--card-foreground: oklch(0.985 0 0);
+	--popover: oklch(0.205 0 0);
+	--popover-foreground: oklch(0.985 0 0);
+	--primary: oklch(0.922 0 0);
+	--primary-foreground: oklch(0.205 0 0);
+	--secondary: oklch(0.269 0 0);
+	--secondary-foreground: oklch(0.985 0 0);
+	--muted: oklch(0.269 0 0);
+	--muted-foreground: oklch(0.708 0 0);
+	--accent: oklch(0.269 0 0);
+	--accent-foreground: oklch(0.985 0 0);
+	--destructive: oklch(0.704 0.191 22.216);
+	--border: oklch(1 0 0 / 10%);
+	--input: oklch(1 0 0 / 15%);
+	--ring: oklch(0.556 0 0);
+	--chart-1: oklch(0.488 0.243 264.376);
+	--chart-2: oklch(0.696 0.17 162.48);
+	--chart-3: oklch(0.769 0.188 70.08);
+	--chart-4: oklch(0.627 0.265 303.9);
+	--chart-5: oklch(0.645 0.246 16.439);
+	--sidebar: oklch(0.205 0 0);
+	--sidebar-foreground: oklch(0.985 0 0);
+	--sidebar-primary: oklch(0.488 0.243 264.376);
+	--sidebar-primary-foreground: oklch(0.985 0 0);
+	--sidebar-accent: oklch(0.269 0 0);
+	--sidebar-accent-foreground: oklch(0.985 0 0);
+	--sidebar-border: oklch(1 0 0 / 10%);
+	--sidebar-ring: oklch(0.556 0 0);
+}
+
+/* shadcn base */
+@layer base {
+	* {
+		@apply border-border outline-ring/50;
+	}
+	body {
+		@apply bg-background text-foreground;
+	}
+}

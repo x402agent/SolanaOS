@@ -1,0 +1,38 @@
+{
+    "name": "@page-agent/ui",
+    "version": "1.6.2",
+    "type": "module",
+    "main": "./dist/lib/page-agent-ui.js",
+    "module": "./dist/lib/page-agent-ui.js",
+    "types": "./dist/lib/index.d.ts",
+    "exports": {
+        ".": {
+            "types": "./dist/lib/index.d.ts",
+            "import": "./dist/lib/page-agent-ui.js",
+            "default": "./dist/lib/page-agent-ui.js"
+        }
+    },
+    "files": [
+        "dist/"
+    ],
+    "description": "UI components for page-agent - Panel and i18n",
+    "keywords": [
+        "page-agent",
+        "ui",
+        "panel",
+        "i18n"
+    ],
+    "author": "Simon<gaomeng1900>",
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/alibaba/page-agent.git",
+        "directory": "packages/ui"
+    },
+    "homepage": "https://alibaba.github.io/page-agent/",
+    "scripts": {
+        "build": "vite build",
+        "prepublishOnly": "node -e \"const fs=require('fs');['LICENSE'].forEach(f=>fs.copyFileSync('../../'+f,f))\"",
+        "postpublish": "node -e \"['LICENSE'].forEach(f=>{try{require('fs').unlinkSync(f)}catch{}})\""
+    }
+}

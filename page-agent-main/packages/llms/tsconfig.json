@@ -1,0 +1,12 @@
+{
+    "extends": "../../tsconfig.base.json",
+    "compilerOptions": {
+        "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.tsbuildinfo",
+        "noEmit": false,
+        "allowImportingTsExtensions": false,
+        "baseUrl": ".",
+        "outDir": "dist"
+    },
+    "include": ["**/*.ts"],
+    "exclude": ["dist", "node_modules"]
+}
