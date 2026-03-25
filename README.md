@@ -330,6 +330,7 @@ This monorepo contains product code, client apps, deployment config, registry me
 | `scripts/` | Build, packaging, deployment, install, and helper scripts across the monorepo. |
 | `skills/` | Bundled publishable `SKILL.md` packages surfaced through NanoHub and agent workflows. |
 | `src/` | Shared TypeScript utilities, schemas, and agent-facing code outside the `nanohub` app itself. |
+| `ui/` | SolanaOS Control UI — Lit + Vite browser panel embedded into the Go binary via `//go:embed`. Chat, status, config, debug, cron, sessions, skills, channels, logs. |
 
 ### What to read first
 
@@ -452,6 +453,42 @@ deployResult, _ := deployer.Deploy(ctx, pinata.DeployConfig{
 ```
 
 ## What Changed In v3
+
+### SolanaOS Control UI
+
+A new browser-based control panel built with **Lit + Vite**, living in `ui/`. The UI is embedded into the Go binary via `//go:embed` and served on port 7777 by the `solanaos server` command (aliases: `nanobot`, `control`). Binds `0.0.0.0` by default for Tailscale/LAN access; use `--local` to restrict to localhost. Proxies WebSocket connections to the gateway on port 18790.
+
+Features: LLM chat, real-time status, config editor, debug panel, cron management, sessions, skills, channels, and live log streaming.
+
+### `solanaos onboard` Command
+
+Interactive setup wizard that configures your SolanaOS instance in one step:
+
+1. Select an LLM provider (Ollama, OpenRouter, Anthropic, xAI, OpenAI) and enter credentials
+2. Enter Solana API keys (SolanaTracker, Birdeye)
+3. Configure Telegram bot (token + chat ID)
+
+Writes everything to `~/.nanosolana/solanaos.json`. Replaces the manual `.env` editing workflow for new users.
+
+### SolanaOS Office (3D Workspace)
+
+A 3D retro office environment adapted from Claw3D, deployed to [office.solanaos.net](https://office.solanaos.net). Rebranded as "SolanaOS HQ" with Solana purple (#9945FF) and green (#14F195). Features a real-time Solana market terminal powered by Birdeye API (`/api/market` with 60-second in-memory cache), agent chat, and a skills marketplace.
+
+### Gateway WebSocket Protocol
+
+Full method implementation for all UI and Office methods: `config.get/set/schema`, `status`, `health`, `system-presence`, `sessions.list`, `agents.list`, `agent.identity.get`, `skills.status`, `channels.status`, `cron.*`, `logs.tail`, `device.pair.*`, `exec.approvals.*`, `models.list`, `last-heartbeat`, `chat.send` (with async LLM inference), `chat.history`, `chat.abort`. WebSocket keepalive: 30-second ping, 90-second read deadline.
+
+### LLM Chat via Gateway
+
+The `chat.send` WebSocket method now routes to any configured LLM provider via the `LLMProvider` interface (Ollama, OpenRouter, Anthropic, xAI). Streams response back as `chat` event.
+
+### Branding Cleanup
+
+All `openclaw` / `OPENCLAW_*` references replaced with `solanaos` / `SOLANAOS_*` in the UI (components, storage keys, env vars, CSS). Office rebranded from Claw3D.
+
+### CI/CD Updates
+
+CI workflow now builds the UI before the Go binary. Cross-platform release workflow triggers on tags. Dependabot configured for gomod, npm, docker, and github-actions. TruffleHog scanning cleaned up.
 
 ### Remote Control — Drive Your Mac From Telegram
 
@@ -876,6 +913,9 @@ SolanaOS can talk to several model providers:
 - xAI / Grok
 - Anthropic
 - Ollama
+- OpenAI
+
+The gateway implements a unified `LLMProvider` interface. When `chat.send` arrives over WebSocket, the gateway routes to the configured provider and streams the response back as `chat` events. The gateway prints `LLM attached: <provider> / <model>` on startup. Provider and model are configured via `~/.nanosolana/solanaos.json` (written by `solanaos onboard`) or environment variables.
 
 Current notable paths:
 
@@ -1418,9 +1458,11 @@ Hosted:
 ### Local build
 
 ```bash
-make build
+make build    # builds UI (cd ui && npm ci && npx vite build) then Go binary with //go:embed
 make test
 ```
+
+`make build` now runs the UI build step first (Vite production build in `ui/`), then compiles the Go binary which embeds the UI dist output. CI workflows also build the UI before the Go binary. A cross-platform release workflow triggers on tags. Dependabot is configured for gomod, npm, docker, and github-actions.
 
 ### Common targets
 
@@ -1462,6 +1504,8 @@ nanosolana-go/
 ├── cmd/
 │   ├── mawdbot/              # primary CLI entrypoint package
 │   └── mawdbot-tui/          # TUI launcher package
+├── ui/                        # Lit + Vite Control UI (//go:embed into binary)
+├── Claw3D-main/               # SolanaOS Office (3D workspace → office.solanaos.net)
 ├── pkg/
 │   ├── daemon/               # daemon orchestration
 │   ├── agent/                # OODA loop
@@ -1504,7 +1548,18 @@ Notes:
 
 ## Configuration Notes
 
-Environment loading order:
+### JSON config (`~/.nanosolana/solanaos.json`)
+
+The gateway and Control UI read/write a structured JSON config file at `~/.nanosolana/solanaos.json`. This file is created by `solanaos onboard` or by editing the Config tab in the Control UI. It contains sections for:
+
+- **LLM** — provider, model, API key (Ollama, OpenRouter, Anthropic, xAI, OpenAI)
+- **Solana** — SolanaTracker API key, Birdeye API key
+- **Telegram** — bot token, chat ID
+- **Gateway** — port, bind address
+
+The config schema is served via the `config.schema` WebSocket method so the UI can render a dynamic editor.
+
+### Environment loading order
 
 - current working directory `.env`
 - executable directory `.env`
