@@ -1,0 +1,120 @@
+# pump-scan-deploy.yml — Triggered when pump.md is updated
+# Pushes token data to Convex, triggers Netlify rebuild, sends Telegram digest
+name: Pump Scanner Deploy
+
+on:
+  push:
+    paths:
+      - 'pump.md'
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      skip_telegram:
+        description: 'Skip Telegram notification'
+        type: boolean
+        default: false
+
+env:
+  CONVEX_SITE_URL: ${{ secrets.CONVEX_SITE_URL }}
+  CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY }}
+  NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+  NETLIFY_BUILD_HOOK_URL: ${{ secrets.NETLIFY_BUILD_HOOK_URL }}
+  NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+  TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+  TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+
+jobs:
+  push-to-convex:
+    name: Push tokens to Convex
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install requests python-dotenv
+
+      - name: Verify pump.md exists
+        run: |
+          if [ ! -f pump.md ]; then
+            echo "❌ pump.md not found"
+            exit 1
+          fi
+          TOKEN_COUNT=$(grep -c "^| [0-9]" pump.md || true)
+          echo "📊 Found $TOKEN_COUNT tokens in pump.md"
+
+      - name: Push to Convex
+        run: |
+          python3 skills/pumpfun-token-scanner/scripts/push_to_convex.py --source github-actions
+        env:
+          CONVEX_SITE_URL: ${{ secrets.CONVEX_SITE_URL }}
+
+  trigger-netlify:
+    name: Trigger Netlify rebuild
+    runs-on: ubuntu-latest
+    needs: push-to-convex
+    if: ${{ env.NETLIFY_BUILD_HOOK_URL != '' }}
+    steps:
+      - name: Trigger Netlify build hook
+        run: |
+          echo "🔨 Triggering Netlify rebuild..."
+          RESPONSE=$(curl -sS -X POST "$NETLIFY_BUILD_HOOK_URL" \
+            -H "Content-Type: application/json" \
+            -d '{"trigger_title": "pump.md updated via GitHub Actions"}' \
+            -w "\n%{http_code}")
+          HTTP_CODE=$(echo "$RESPONSE" | tail -1)
+          if [ "$HTTP_CODE" -ge 200 ] && [ "$HTTP_CODE" -lt 300 ]; then
+            echo "✅ Netlify build triggered (HTTP $HTTP_CODE)"
+          else
+            echo "⚠️ Netlify hook returned HTTP $HTTP_CODE"
+            echo "$RESPONSE"
+          fi
+
+  deploy-convex-functions:
+    name: Deploy Convex functions
+    runs-on: ubuntu-latest
+    needs: push-to-convex
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        working-directory: nanohub
+        run: bun install --frozen-lockfile
+
+      - name: Deploy Convex
+        working-directory: nanohub
+        run: bunx convex deploy --typecheck=disable --yes
+        env:
+          CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY }}
+
+  send-telegram:
+    name: Send Telegram digest
+    runs-on: ubuntu-latest
+    needs: [push-to-convex, trigger-netlify]
+    if: ${{ !inputs.skip_telegram }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install requests python-dotenv
+
+      - name: Send Telegram digest
+        run: |
+          python3 skills/pumpfun-token-scanner/scripts/send_telegram.py
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}

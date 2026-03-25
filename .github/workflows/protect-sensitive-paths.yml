@@ -1,0 +1,52 @@
+name: Protect Sensitive Paths
+
+on:
+  pull_request:
+    paths:
+      - ".github/**"
+      - "web/**"
+      - "docs/docs-site/**"
+      - "mawdbot-bitaxe/web/**"
+      - "nanohub/**"
+      - "schema.sql"
+      - "**/*.sql"
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  guard:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Block Untrusted Actors From Sensitive Paths
+        env:
+          ACTOR: ${{ github.actor }}
+          REPO_OWNER: ${{ github.repository_owner }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+
+          if [ "$ACTOR" = "$REPO_OWNER" ] || [ "$ACTOR" = "x402agent" ] || [ "$ACTOR" = "github-actions[bot]" ]; then
+            echo "Trusted actor: $ACTOR"
+            exit 0
+          fi
+
+          protected_regex='^(\.github/|web/|docs/docs-site/|mawdbot-bitaxe/web/|nanohub/|schema\.sql$|.*\.sql$)'
+          changed="$(git diff --name-only "$BASE_SHA" "$HEAD_SHA" | grep -E "$protected_regex" || true)"
+
+          if [ -n "$changed" ]; then
+            echo "Untrusted actor '$ACTOR' modified protected paths:"
+            echo "$changed"
+            echo
+            echo "These paths require maintainer-owned changes or direct owner review."
+            exit 1
+          fi
+
+          echo "No protected paths changed."

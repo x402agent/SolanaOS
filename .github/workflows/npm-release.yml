@@ -1,0 +1,52 @@
+name: npm-release
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_type:
+        description: "Version bump or exact semver"
+        required: true
+        default: "patch"
+      target:
+        description: "Which package set to release"
+        required: true
+        default: "all"
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: https://registry.npmjs.org
+
+      - name: Configure git identity
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Bump versions
+        run: node scripts/release-npm.mjs version "${{ github.event.inputs.release_type }}" "${{ github.event.inputs.target }}"
+
+      - name: Commit release versions
+        run: |
+          git add npm/solanaos/package.json npm/solanaos-installer/package.json npm/mawdbot-installer/package.json
+          git commit -m "chore(npm): release ${{ github.event.inputs.release_type }} (${{ github.event.inputs.target }})" || echo "No version changes to commit"
+
+      - name: Pack verify
+        run: node scripts/release-npm.mjs pack "${{ github.event.inputs.target }}"
+
+      - name: Publish to npm
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: node scripts/release-npm.mjs publish "${{ github.event.inputs.target }}"
+
+      - name: Push release commit
+        run: git push
