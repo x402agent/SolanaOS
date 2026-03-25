@@ -29,6 +29,7 @@ const TAB_LABELS: Record<HQSidebarTab, string> = {
   history: "History",
   playbooks: "Playbooks",
   analytics: "Analytics",
+  market: "Market",
 };
 
 const PRIMARY_TABS: HQSidebarTab[] = ["inbox", "history", "playbooks"];
