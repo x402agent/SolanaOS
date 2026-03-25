@@ -549,11 +549,13 @@ Ask about any token in plain English and get live data:
 ```bash
 npx solanaos-computer@latest install --with-web
 cd ~/solanaos
-$EDITOR .env
+~/.nanosolana/bin/solanaos onboard        # interactive wizard: LLM, Solana keys, Telegram
 ~/.nanosolana/bin/solanaos version
-~/.nanosolana/bin/solanaos gateway setup-code
+~/.nanosolana/bin/solanaos server          # Control UI on port 7777
 ~/.nanosolana/bin/solanaos daemon
 ```
+
+The `onboard` wizard walks you through selecting an LLM provider (Ollama, OpenRouter, Anthropic, xAI, OpenAI), entering Solana API keys (SolanaTracker, Birdeye), and configuring a Telegram bot. It writes everything to `~/.nanosolana/solanaos.json` so you can skip the manual `.env` setup.
 
 Primary command names:
 
@@ -572,9 +574,10 @@ Compatibility npm packages still exist:
 git clone https://github.com/x402agent/SolanaOS.git
 cd solanaos
 cp .env.example .env
-make build
+make build                        # builds UI (npm ci + vite) then Go binary with //go:embed
+./build/solanaos onboard          # or edit .env manually
 ./build/solanaos version
-./build/solanaos status
+./build/solanaos server            # Control UI at http://localhost:7777
 ./build/solanaos daemon
 ```
 
