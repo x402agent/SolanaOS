@@ -20,7 +20,7 @@ npx solanaos-cli install
 ## What happens when you run it
 
 1. Animated terminal boot sequence with Unicode matrix frames
-2. Clones the [SolanaOS repo](https://github.com/x402agent/Solana-Os-Go)
+2. Clones the [SolanaOS repo](https://github.com/x402agent/SolanaOS)
 3. Builds the <10MB Go binary
 4. Creates `~/.nanosolana/` workspace + wallet
 5. Installs `solanaos` CLI globally
@@ -98,7 +98,7 @@ TELEGRAM_ID=your-chat-id
 | **Hub** | [seeker.solanaos.net](https://seeker.solanaos.net) |
 | **Souls** | [souls.solanaos.net](https://souls.solanaos.net) |
 | **Docs** | [go.solanaos.net](https://go.solanaos.net) |
-| **GitHub** | [x402agent/Solana-Os-Go](https://github.com/x402agent/Solana-Os-Go) |
+| **GitHub** | [x402agent/SolanaOS](https://github.com/x402agent/SolanaOS) |
 | **Strategy** | [seeker.solanaos.net/strategy](https://seeker.solanaos.net/strategy) |
 | **Mining** | [seeker.solanaos.net/mining](https://seeker.solanaos.net/mining) |
 | **Skills** | [seeker.solanaos.net/skills](https://seeker.solanaos.net/skills) |

@@ -1,6 +1,6 @@
 {
   "name": "solanaos-cli",
-  "version": "2.0.1",
+  "version": "2.1.0",
   "description": "SolanaOS — The Solana Computer. One command to install the autonomous trading runtime, connect your Seeker, and go live.",
   "license": "MIT",
   "type": "module",
@@ -37,11 +37,11 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/x402agent/Solana-Os-Go.git",
+    "url": "git+https://github.com/x402agent/SolanaOS.git",
     "directory": "npm/solanaos-installer"
   },
-  "homepage": "https://go.solanaos.net",
+  "homepage": "https://solanaos.net",
   "bugs": {
-    "url": "https://github.com/x402agent/Solana-Os-Go/issues"
+    "url": "https://github.com/x402agent/SolanaOS/issues"
   }
 }

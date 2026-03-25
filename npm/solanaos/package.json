@@ -1,6 +1,6 @@
 {
   "name": "solanaos-computer",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "Primary SolanaOS npm installer and launcher for the Solana-native trading and operator runtime",
   "license": "MIT",
   "type": "module",
@@ -37,11 +37,11 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/x402agent/Solana-Os-Go.git",
+    "url": "git+https://github.com/x402agent/SolanaOS.git",
     "directory": "npm/solanaos"
   },
-  "homepage": "https://go.solanaos.net",
+  "homepage": "https://solanaos.net",
   "bugs": {
-    "url": "https://github.com/x402agent/Solana-Os-Go/issues"
+    "url": "https://github.com/x402agent/SolanaOS/issues"
   }
 }

@@ -2,7 +2,7 @@
 
 Primary npm entrypoint for installing and launching SolanaOS.
 
-This package wraps the repo’s public [`install.sh`](https://github.com/x402agent/Solana-Os-Go/blob/main/install.sh), installs the Go runtime into `~/.nanosolana/bin/`, and keeps the legacy `nanosolana` alias working.
+This package wraps the repo’s public [`install.sh`](https://github.com/x402agent/SolanaOS/blob/main/install.sh), installs the Go runtime into `~/.nanosolana/bin/`, and keeps the legacy `nanosolana` alias working.
 
 ## Install
 
@@ -28,7 +28,7 @@ All three command names point at the same runtime bootstrapper. The public brand
 
 ## What the installer does
 
-1. Uses a local checkout when run inside the repo, otherwise clones `x402agent/Solana-Os-Go`
+1. Uses a local checkout when run inside the repo, otherwise clones `x402agent/SolanaOS`
 2. Builds the main Go binary at `build/solanaos`
 3. Creates the workspace at `~/.nanosolana/`
 4. Installs stable launchers into `~/.nanosolana/bin/`
@@ -78,7 +78,7 @@ If installed with `--with-web`:
 - Hub: https://seeker.solanaos.net
 - Souls: https://souls.solanaos.net
 - Strategy Builder: https://seeker.solanaos.net/strategy
-- GitHub: https://github.com/x402agent/Solana-Os-Go
+- GitHub: https://github.com/x402agent/SolanaOS
 
 ## Verify before publish
 
