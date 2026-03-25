@@ -21,6 +21,7 @@ type HQSidebarProps = {
   historyPanel: ReactNode;
   playbooksPanel: ReactNode;
   analyticsPanel: ReactNode;
+  marketPanel?: ReactNode;
 };
 
 const TAB_LABELS: Record<HQSidebarTab, string> = {
