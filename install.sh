@@ -5,7 +5,7 @@
 # Usage:
 #   bash install.sh
 #   bash install.sh --with-web
-#   SOLANAOS_REPO_URL=https://github.com/x402agent/Solana-Os-Go.git bash install.sh
+#   SOLANAOS_REPO_URL=https://github.com/x402agent/SolanaOS.git bash install.sh
 #
 # What it does:
 #   1. Uses the local checkout when run from the repo, otherwise clones or updates a repo
@@ -69,7 +69,7 @@ WITH_WEB=false
 INSTALL_DIR="${SOLANAOS_DIR:-${NANOSOLANA_DIR:-$HOME/solanaos}}"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" 2>/dev/null && pwd || pwd)"
 LOCAL_SOURCE=false
-REPO_URL="${SOLANAOS_REPO_URL:-${NANOSOLANA_REPO_URL:-https://github.com/x402agent/Solana-Os-Go.git}}"
+REPO_URL="${SOLANAOS_REPO_URL:-${NANOSOLANA_REPO_URL:-https://github.com/x402agent/SolanaOS.git}}"
 
 for arg in "$@"; do
   case "$arg" in
