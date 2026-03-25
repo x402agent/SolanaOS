@@ -878,22 +878,176 @@ No external dependencies required.`,
 func NewOnboardCommand() *cobra.Command {
 	return &cobra.Command{
 		Use:   "onboard",
-		Short: "Initialize SolanaOS config and workspace",
+		Short: "Set up SolanaOS with your LLM provider, Solana keys, and Telegram",
+		Long: `Interactive onboarding wizard for SolanaOS.
+
+Sets up your LLM provider (Ollama, OpenRouter, Anthropic, xAI, OpenAI),
+Solana RPC keys, Birdeye API, and Telegram bot. Writes config to
+~/.nanosolana/solanaos.json.`,
+		Example: `  solanaos onboard
+  solanaos onboard --provider ollama`,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			fmt.Printf("%s🖥️ Welcome to SolanaOS%s\n\n", colorGreen, colorReset)
-			fmt.Printf("Config:    %s%s%s\n", colorTeal, config.DefaultConfigPath(), colorReset)
-			fmt.Printf("Workspace: %s%s%s\n", colorTeal, config.DefaultWorkspacePath(), colorReset)
 
 			if err := config.EnsureDefaults(); err != nil {
 				return fmt.Errorf("onboard: %w", err)
 			}
 
-			fmt.Printf("\n%s✓ SolanaOS initialized!%s\n", colorGreen, colorReset)
-			fmt.Printf("%sEdit %s to add your API keys.%s\n\n", colorDim, config.DefaultConfigPath(), colorReset)
-			fmt.Printf("Quick start:\n")
-			fmt.Printf("  %ssolanaos ooda --sim%s              # simulated mode\n", colorGreen, colorReset)
-			fmt.Printf("  %ssolanaos ooda --hw-bus 1%s         # with Modulino® hardware\n", colorGreen, colorReset)
-			fmt.Printf("  %ssolanaos hardware scan%s           # check I2C sensors\n", colorGreen, colorReset)
+			cfgPath := config.DefaultConfigPath()
+			fmt.Printf("Config: %s%s%s\n\n", colorTeal, cfgPath, colorReset)
+
+			reader := bufio.NewReader(os.Stdin)
+			cfg := make(map[string]any)
+
+			// Load existing config
+			if data, err := os.ReadFile(cfgPath); err == nil {
+				_ = json.Unmarshal(data, &cfg)
+			}
+
+			// ── LLM Provider ────────────────────────────────────
+			fmt.Printf("%s── LLM Provider ──────────────────────────────────%s\n", colorPurple, colorReset)
+			fmt.Printf("  1) %sOllama%s (local, free — minimax-m2.7:cloud)\n", colorGreen, colorReset)
+			fmt.Printf("  2) %sOpenRouter%s (multi-model, API key)\n", colorTeal, colorReset)
+			fmt.Printf("  3) %sAnthropic%s (Claude, API key)\n", colorPurple, colorReset)
+			fmt.Printf("  4) %sxAI%s (Grok, API key)\n", colorAmber, colorReset)
+			fmt.Printf("  5) %sOpenAI%s (GPT, API key)\n", colorGreen, colorReset)
+			fmt.Printf("  6) Skip\n")
+			fmt.Printf("\n%sChoose [1-6]:%s ", colorTeal, colorReset)
+
+			choice, _ := reader.ReadString('\n')
+			choice = strings.TrimSpace(choice)
+
+			llmCfg := make(map[string]any)
+			switch choice {
+			case "1":
+				llmCfg["provider"] = "ollama"
+				fmt.Printf("%sOllama model%s [minimax-m2.7:cloud]: ", colorDim, colorReset)
+				model, _ := reader.ReadString('\n')
+				model = strings.TrimSpace(model)
+				if model == "" {
+					model = "minimax-m2.7:cloud"
+				}
+				llmCfg["ollama_model"] = model
+				llmCfg["ollama_base_url"] = "http://127.0.0.1:11434"
+				fmt.Printf("  %s✓ Ollama / %s%s\n\n", colorGreen, model, colorReset)
+			case "2":
+				llmCfg["provider"] = "openrouter"
+				fmt.Printf("%sOpenRouter API Key:%s ", colorDim, colorReset)
+				key, _ := reader.ReadString('\n')
+				key = strings.TrimSpace(key)
+				if key != "" {
+					llmCfg["openrouter_key"] = key
+				}
+				fmt.Printf("%sModel%s [minimax/minimax-m2.7]: ", colorDim, colorReset)
+				model, _ := reader.ReadString('\n')
+				model = strings.TrimSpace(model)
+				if model == "" {
+					model = "minimax/minimax-m2.7"
+				}
+				llmCfg["openrouter_model"] = model
+				fmt.Printf("  %s✓ OpenRouter / %s%s\n\n", colorGreen, model, colorReset)
+			case "3":
+				llmCfg["provider"] = "anthropic"
+				fmt.Printf("%sAnthropic API Key:%s ", colorDim, colorReset)
+				key, _ := reader.ReadString('\n')
+				key = strings.TrimSpace(key)
+				if key != "" {
+					llmCfg["anthropic_key"] = key
+				}
+				fmt.Printf("%sModel%s [claude-sonnet-4-6]: ", colorDim, colorReset)
+				model, _ := reader.ReadString('\n')
+				model = strings.TrimSpace(model)
+				if model == "" {
+					model = "claude-sonnet-4-6"
+				}
+				llmCfg["anthropic_model"] = model
+				fmt.Printf("  %s✓ Anthropic / %s%s\n\n", colorGreen, model, colorReset)
+			case "4":
+				llmCfg["provider"] = "xai"
+				fmt.Printf("%sxAI API Key:%s ", colorDim, colorReset)
+				key, _ := reader.ReadString('\n')
+				key = strings.TrimSpace(key)
+				if key != "" {
+					llmCfg["xai_key"] = key
+				}
+				fmt.Printf("  %s✓ xAI / Grok%s\n\n", colorGreen, colorReset)
+			case "5":
+				llmCfg["provider"] = "openai"
+				fmt.Printf("%sOpenAI API Key:%s ", colorDim, colorReset)
+				key, _ := reader.ReadString('\n')
+				key = strings.TrimSpace(key)
+				if key != "" {
+					llmCfg["openai_key"] = key
+				}
+				fmt.Printf("  %s✓ OpenAI / GPT%s\n\n", colorGreen, colorReset)
+			default:
+				fmt.Printf("  %sSkipped LLM setup%s\n\n", colorDim, colorReset)
+			}
+			if len(llmCfg) > 0 {
+				cfg["llm"] = llmCfg
+			}
+
+			// ── Solana ──────────────────────────────────────────
+			fmt.Printf("%s── Solana ────────────────────────────────────────%s\n", colorAmber, colorReset)
+			fmt.Printf("%sSolanaTracker API Key%s (enter to skip): ", colorDim, colorReset)
+			stKey, _ := reader.ReadString('\n')
+			stKey = strings.TrimSpace(stKey)
+
+			fmt.Printf("%sBirdeye API Key%s (enter to skip): ", colorDim, colorReset)
+			beKey, _ := reader.ReadString('\n')
+			beKey = strings.TrimSpace(beKey)
+
+			solanaCfg := make(map[string]any)
+			if stKey != "" {
+				solanaCfg["solana_tracker_api_key"] = stKey
+			}
+			if beKey != "" {
+				solanaCfg["birdeye_api_key"] = beKey
+			}
+			if len(solanaCfg) > 0 {
+				cfg["solana"] = solanaCfg
+				fmt.Printf("  %s✓ Solana keys configured%s\n\n", colorGreen, colorReset)
+			} else {
+				fmt.Printf("  %sSkipped Solana setup%s\n\n", colorDim, colorReset)
+			}
+
+			// ── Telegram ────────────────────────────────────────
+			fmt.Printf("%s── Telegram ──────────────────────────────────────%s\n", colorTeal, colorReset)
+			fmt.Printf("%sBot Token%s (enter to skip): ", colorDim, colorReset)
+			botToken, _ := reader.ReadString('\n')
+			botToken = strings.TrimSpace(botToken)
+
+			if botToken != "" {
+				fmt.Printf("%sYour Telegram Chat ID%s: ", colorDim, colorReset)
+				chatID, _ := reader.ReadString('\n')
+				chatID = strings.TrimSpace(chatID)
+				tgCfg := map[string]any{"bot_token": botToken}
+				if chatID != "" {
+					tgCfg["chat_id"] = chatID
+				}
+				cfg["telegram"] = tgCfg
+				fmt.Printf("  %s✓ Telegram configured%s\n\n", colorGreen, colorReset)
+			} else {
+				fmt.Printf("  %sSkipped Telegram setup%s\n\n", colorDim, colorReset)
+			}
+
+			// ── Write config ────────────────────────────────────
+			data, err := json.MarshalIndent(cfg, "", "  ")
+			if err != nil {
+				return fmt.Errorf("marshal config: %w", err)
+			}
+			if err := os.WriteFile(cfgPath, data, 0o644); err != nil {
+				return fmt.Errorf("write config: %w", err)
+			}
+
+			fmt.Printf("%s✓ Config saved to %s%s\n\n", colorGreen, cfgPath, colorReset)
+			fmt.Printf("Next steps:\n")
+			fmt.Printf("  %ssolanaos gateway start --bind 0.0.0.0%s   # start gateway\n", colorGreen, colorReset)
+			fmt.Printf("  %ssolanaos server%s                          # start Control UI\n", colorGreen, colorReset)
+			fmt.Printf("  %scd Claw3D-main && npm run dev%s            # start Office 3D\n", colorGreen, colorReset)
+			fmt.Printf("\n  %sControl UI:%s  http://127.0.0.1:7777\n", colorTeal, colorReset)
+			fmt.Printf("  %sOffice 3D:%s   http://localhost:3000\n", colorTeal, colorReset)
+			fmt.Printf("  %sHub:%s         https://seeker.solanaos.net\n\n", colorTeal, colorReset)
 			return nil
 		},
 	}
