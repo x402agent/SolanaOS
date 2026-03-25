@@ -2,9 +2,9 @@ name: TruffleHog Secret Scan
 
 on:
   push:
-    branches: [main, newnew]
+    branches: [main]
   pull_request:
-    branches: [main, newnew]
+    branches: [main]
 
 permissions:
   contents: read

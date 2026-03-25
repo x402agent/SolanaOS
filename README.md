@@ -589,6 +589,7 @@ HELIUS_RPC_URL=https://mainnet.helius-rpc.com/?api-key=...
 ```bash
 ./build/solanaos solana wallet
 ./build/solanaos status
+./build/solanaos wallet-api          # one-shot agent wallet bootstrap
 ./build/solanaos gateway setup-code
 ./build/solanaos daemon
 ```
@@ -620,12 +621,14 @@ Full grouped CLI, Telegram, and NanoHub reference:
 ```bash
 ./build/solanaos daemon
 ./build/solanaos ooda --sim --interval 30
+./build/solanaos wallet-api
 ./build/solanaos pet
 ./build/solanaos solana health
 ./build/solanaos nanobot
 ./build/solanaos gateway start
 ./build/solanaos gateway setup-code
 ./build/solanaos menubar
+node acp_registry/generate.mjs
 ```
 
 Web console:
@@ -1374,6 +1377,13 @@ nanosolana-go/
 │   ├── gateway/              # native gateway
 │   ├── hardware/             # Modulino drivers
 │   └── x402/                 # payment stack
+├── services/
+│   └── agent-wallet/         # agent wallet vault + API
+│       ├── cmd/              # standalone binary entrypoint
+│       └── mcp/              # MCP server for AI agents
+├── acp_registry/
+│   ├── agent.example.json    # reference ACP config
+│   └── generate.mjs          # interactive agent.json generator
 ├── skills/                   # bundled skills
 ├── docs/                     # markdown docs
 ├── docs-site/                # static docs site
