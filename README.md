@@ -504,6 +504,8 @@ Ask about any token in plain English and get live data:
 | Channels | Telegram (60+ commands + image understanding + remote control), Chrome extension, macOS, Android Seeker, web gateway |
 | Remote Control | Claude Code remote-control server, Telegram-driven Mac control, natural language dispatch |
 | Vision | Grok Vision image understanding from Telegram photos, URL-based analysis, auto-detect photo messages |
+| Agent Wallet | One-shot `wallet-api` bootstrap, encrypted vault, Solana + EVM, Privy managed wallets, E2B sandbox deploy, MCP server |
+| ACP Registry | Interactive `agent.json` generator with full 8004 skill catalogue, validator, example config |
 | Editor | ACP server for VS Code, Cursor, Zed integration (12 Solana tools) |
 | Hub | Skills registry, agent factory, strategy builder, skill creator, mining dashboard, private chat |
 | Mining | MawdAxe BitAxe fleet management with OODA auto-tuning + TamaGOchi pets |
