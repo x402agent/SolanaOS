@@ -41,6 +41,7 @@ import (
 	"github.com/x402agent/Solana-Os-Go/pkg/seeker"
 	"github.com/x402agent/Solana-Os-Go/pkg/solana"
 	"github.com/x402agent/Solana-Os-Go/pkg/tamagochi"
+	agentwallet "github.com/x402agent/Solana-Os-Go/services/agent-wallet"
 )
 
 const (
@@ -339,6 +340,7 @@ Features:
 		NewNanoBotCommand(),
 		NewMenuBarCommand(),
 		NewVersionCommand(),
+		NewWalletAPICommand(),
 	)
 
 	return cmd
