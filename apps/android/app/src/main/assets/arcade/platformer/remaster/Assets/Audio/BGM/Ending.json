@@ -1,7 +1,0 @@
-{
-	"variations": {
-		"SMB1": {"source": "EndingSMB1.bgm"},
-		"SMBLL": {"source": "EndingLL.bgm"},
-		"SMBANN": {"link": "SMBLL"}
-	}
-}

@@ -1,2 +1,0 @@
-class_name PackAnimatedSprite2D
-extends AnimatedSprite2D
