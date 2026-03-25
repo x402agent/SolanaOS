@@ -18,7 +18,7 @@ Autonomous local-first runtime for Solana trading, research, wallets, automation
 **Pure Go · <10MB binary · Telegram-native · Seeker-ready · Solana developer tooling included**
 
 <p>
-  <a href="https://github.com/x402agent/Solana-Os-Go"><img src="https://img.shields.io/badge/GitHub-Solana--Os--Go-111827?style=for-the-badge&logo=github&logoColor=white" alt="GitHub repo"></a>
+  <a href="https://github.com/x402agent/SolanaOS"><img src="https://img.shields.io/badge/GitHub-SolanaOS-111827?style=for-the-badge&logo=github&logoColor=white" alt="GitHub repo"></a>
   <a href="https://seeker.solanaos.net"><img src="https://img.shields.io/badge/Hub-seeker.solanaos.net-14F195?style=for-the-badge&logo=solana&logoColor=white" alt="SolanaOS Hub"></a>
   <a href="https://souls.solanaos.net"><img src="https://img.shields.io/badge/Souls-souls.solanaos.net-00D4FF?style=for-the-badge&logo=solana&logoColor=white" alt="SolanaOS Souls"></a>
   <a href="https://go.solanaos.net"><img src="https://img.shields.io/badge/Docs-go.solanaos.net-FF7A18?style=for-the-badge&logo=gitbook&logoColor=white" alt="Docs"></a>
@@ -95,7 +95,7 @@ This README is the GitHub front door. Use it to install, explore the live surfac
 
 ## Start Here
 
-- Public repo: [github.com/x402agent/Solana-Os-Go](https://github.com/x402agent/Solana-Os-Go)
+- Public repo: [github.com/x402agent/SolanaOS](https://github.com/x402agent/SolanaOS)
 - Launch page: [solanaos.net](https://solanaos.net)
 - Live Hub: [seeker.solanaos.net](https://seeker.solanaos.net)
 - Soul library: [souls.solanaos.net](https://souls.solanaos.net)
@@ -308,7 +308,7 @@ This monorepo contains product code, client apps, deployment config, registry me
 
 | Category | Link |
 | --- | --- |
-| Repo | [github.com/x402agent/Solana-Os-Go](https://github.com/x402agent/Solana-Os-Go) |
+| Repo | [github.com/x402agent/SolanaOS](https://github.com/x402agent/SolanaOS) |
 | Launch | [solanaos.net](https://solanaos.net) |
 | Hub | [seeker.solanaos.net](https://seeker.solanaos.net) |
 | Souls | [souls.solanaos.net](https://souls.solanaos.net) |
@@ -327,7 +327,7 @@ This monorepo contains product code, client apps, deployment config, registry me
 
 ## Public Repo Notes
 
-- Primary public repo: `https://github.com/x402agent/Solana-Os-Go`
+- Primary public repo: `https://github.com/x402agent/SolanaOS`
 - Primary binary / CLI name: `solanaos`
 - Compatibility alias: `nanosolana`
 - Secrets belong in `.env` or deployment environment variables only
@@ -391,7 +391,7 @@ PINATA_MESH_SYNC=true    # Auto-sync files across Tailscale/BLE mesh
 ### Go Usage
 
 ```go
-import "github.com/x402agent/Solana-Os-Go/pkg/pinata"
+import "github.com/x402agent/SolanaOS/pkg/pinata"
 
 hub := pinata.NewHub(pinata.Config{JWT: os.Getenv("PINATA_JWT"), Gateway: os.Getenv("PINATA_GATEWAY")})
 mesh := pinata.NewMeshSync(hub)
@@ -527,8 +527,8 @@ Compatibility npm packages still exist:
 ### Fast local dev path
 
 ```bash
-git clone https://github.com/x402agent/Solana-Os-Go.git
-cd Solana-Os-Go
+git clone https://github.com/x402agent/SolanaOS.git
+cd solanaos
 cp .env.example .env
 make build
 ./build/solanaos version
@@ -1291,6 +1291,6 @@ See [docs/vision.md](docs/vision.md) for the full thesis.
 
 **Built by [8BIT Labs](https://github.com/x402agent) · Powered by Go · Memory by [Honcho](https://honcho.dev) · Paid via [x402](https://x402.org)**
 
-[GitHub](https://github.com/x402agent/Solana-Os-Go) · [Hub](https://seeker.solanaos.net) · [Souls](https://souls.solanaos.net) · [Docs](https://go.solanaos.net) · [Launch](https://solanaos.net)
+[GitHub](https://github.com/x402agent/SolanaOS) · [Hub](https://seeker.solanaos.net) · [Souls](https://souls.solanaos.net) · [Docs](https://go.solanaos.net) · [Launch](https://solanaos.net)
 
 </div>
