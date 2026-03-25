@@ -5,7 +5,7 @@
 # into a single image that can run on one Fly machine with /data storage.
 # ──────────────────────────────────────────────────────────────────────
 
-FROM golang:1.25.7-alpine AS go-builder
+FROM golang:1.26.1-alpine AS go-builder
 
 RUN apk add --no-cache git
 
