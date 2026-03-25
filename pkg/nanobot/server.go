@@ -13,6 +13,7 @@ import (
 	"embed"
 	"encoding/json"
 	"fmt"
+	"io"
 	"io/fs"
 	"net"
 	"net/http"
@@ -104,7 +105,21 @@ func (s *Server) Start(ctx context.Context) error {
 		return fmt.Errorf("listen %s: %w", addr, err)
 	}
 
-	srv := &http.Server{Handler: requireAuth(mux)}
+	// Resolve gateway address for WebSocket proxying.
+	gatewayAddr := resolveGatewayAddr()
+	s.logf("🔌 Gateway proxy: %s", gatewayAddr)
+
+	authedHandler := requireAuth(mux)
+	srv := &http.Server{
+		Handler: http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			// Proxy WebSocket upgrades to the gateway.
+			if isWebSocketUpgrade(r) {
+				proxyWebSocket(w, r, gatewayAddr)
+				return
+			}
+			authedHandler.ServeHTTP(w, r)
+		}),
+	}
 	go func() {
 		<-ctx.Done()
 		shutdownCtx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
@@ -464,4 +479,62 @@ func (s *Server) handleMiner(w http.ResponseWriter, r *http.Request) {
 	data["online"] = true
 	data["host"] = host
 	json.NewEncoder(w).Encode(data)
+}
+
+// resolveGatewayAddr returns the gateway WebSocket address to proxy to.
+func resolveGatewayAddr() string {
+	if v := strings.TrimSpace(os.Getenv("GATEWAY_PORT")); v != "" {
+		return "127.0.0.1:" + v
+	}
+	return "127.0.0.1:18790"
+}
+
+// isWebSocketUpgrade returns true if the request is a WebSocket upgrade.
+func isWebSocketUpgrade(r *http.Request) bool {
+	return strings.EqualFold(r.Header.Get("Upgrade"), "websocket") &&
+		strings.Contains(strings.ToLower(r.Header.Get("Connection")), "upgrade")
+}
+
+// proxyWebSocket hijacks the connection and pipes it to the gateway.
+func proxyWebSocket(w http.ResponseWriter, r *http.Request, gatewayAddr string) {
+	hj, ok := w.(http.Hijacker)
+	if !ok {
+		http.Error(w, "websocket proxy not supported", http.StatusInternalServerError)
+		return
+	}
+
+	upstream, err := net.DialTimeout("tcp", gatewayAddr, 5*time.Second)
+	if err != nil {
+		http.Error(w, "gateway unavailable", http.StatusBadGateway)
+		return
+	}
+
+	client, _, err := hj.Hijack()
+	if err != nil {
+		upstream.Close()
+		return
+	}
+
+	// Replay the original HTTP upgrade request to the gateway.
+	reqLine := fmt.Sprintf("%s %s HTTP/%d.%d\r\n", r.Method, r.URL.RequestURI(), r.ProtoMajor, r.ProtoMinor)
+	var headers strings.Builder
+	for k, vals := range r.Header {
+		for _, v := range vals {
+			headers.WriteString(k)
+			headers.WriteString(": ")
+			headers.WriteString(v)
+			headers.WriteString("\r\n")
+		}
+	}
+	upstream.Write([]byte(reqLine + headers.String() + "\r\n"))
+
+	// Bidirectional pipe.
+	go func() {
+		io.Copy(upstream, client)
+		upstream.Close()
+	}()
+	go func() {
+		io.Copy(client, upstream)
+		client.Close()
+	}()
 }
