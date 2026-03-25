@@ -51,7 +51,8 @@ type Bridge struct {
 	authToken string
 	logf      func(string, ...any)
 	cancel    context.CancelFunc
-	llm       LLMProvider // optional chat inference
+	llm       LLMProvider    // optional chat inference
+	skills    SkillsProvider // optional skills catalog
 	startedAt time.Time
 }
 
@@ -64,6 +65,27 @@ type LLMProvider interface {
 // SetLLM attaches an LLM provider for chat inference.
 func (b *Bridge) SetLLM(provider LLMProvider) {
 	b.llm = provider
+}
+
+// SkillsProvider gives the gateway access to loaded skills.
+type SkillsProvider interface {
+	Count() int
+	All() []SkillEntry
+	Get(name string) *SkillEntry
+	BuildContext() string
+}
+
+// SkillEntry is a skill visible to the gateway.
+type SkillEntry struct {
+	Name        string   `json:"name"`
+	Description string   `json:"description"`
+	Tags        []string `json:"tags,omitempty"`
+	Emoji       string   `json:"emoji,omitempty"`
+}
+
+// SetSkills attaches a skills provider.
+func (b *Bridge) SetSkills(provider SkillsProvider) {
+	b.skills = provider
 }
 
 // configFilePath returns the path to solanaos.json.

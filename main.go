@@ -36,6 +36,7 @@ import (
 	"github.com/x402agent/Solana-Os-Go/pkg/hardware"
 	"github.com/x402agent/Solana-Os-Go/pkg/llm"
 	"github.com/x402agent/Solana-Os-Go/pkg/nanobot"
+	"github.com/x402agent/Solana-Os-Go/pkg/skills"
 	"github.com/x402agent/Solana-Os-Go/pkg/node"
 	"github.com/x402agent/Solana-Os-Go/pkg/onchain"
 	"github.com/x402agent/Solana-Os-Go/pkg/seeker"
@@ -106,6 +107,47 @@ type gatewayConnectBundle struct {
 		GatewayURL string `json:"gatewayUrl"`
 		Secret     string `json:"secret"`
 	} `json:"macos"`
+}
+
+// skillsAdapter bridges skills.Manager to gw.SkillsProvider.
+type skillsAdapter struct {
+	mgr *skills.Manager
+}
+
+func (a *skillsAdapter) Count() int { return a.mgr.Count() }
+
+func (a *skillsAdapter) All() []gw.SkillEntry {
+	raw := a.mgr.All()
+	out := make([]gw.SkillEntry, len(raw))
+	for i, s := range raw {
+		out[i] = gw.SkillEntry{Name: s.Name, Description: s.Description, Tags: s.Tags, Emoji: s.Emoji}
+	}
+	return out
+}
+
+func (a *skillsAdapter) Get(name string) *gw.SkillEntry {
+	s := a.mgr.Get(name)
+	if s == nil {
+		return nil
+	}
+	return &gw.SkillEntry{Name: s.Name, Description: s.Description, Tags: s.Tags, Emoji: s.Emoji}
+}
+
+func (a *skillsAdapter) BuildContext() string {
+	all := a.mgr.All()
+	if len(all) == 0 {
+		return ""
+	}
+	var b strings.Builder
+	b.WriteString("Available skills:\n")
+	for _, s := range all {
+		emoji := s.Emoji
+		if emoji == "" {
+			emoji = "🔧"
+		}
+		b.WriteString(fmt.Sprintf("- %s %s: %s\n", emoji, s.Name, s.Description))
+	}
+	return b.String()
 }
 
 type gatewayConnectFiles struct {
@@ -772,6 +814,15 @@ No external dependencies required.`,
 				fmt.Printf("%s🤖 LLM attached: %s / %s%s\n", colorGreen, llmClient.Provider(), llmClient.Model(), colorReset)
 			} else {
 				fmt.Printf("%s⚠️  No LLM configured — chat will be view-only. Set OPENROUTER_API_KEY or similar in .env%s\n", colorAmber, colorReset)
+			}
+
+			// Attach skills provider.
+			skillsDir := skills.ResolveSkillsDir()
+			if skillsDir != "" {
+				if mgr, err := skills.NewManager(skillsDir); err == nil && mgr.Count() > 0 {
+					bridge.SetSkills(&skillsAdapter{mgr: mgr})
+					fmt.Printf("%s📚 Skills loaded: %d from %s%s\n", colorGreen, mgr.Count(), skillsDir, colorReset)
+				}
 			}
 
 			ctx, cancel := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)

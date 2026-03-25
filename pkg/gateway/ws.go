@@ -336,7 +336,11 @@ func (b *Bridge) handleWSRequest(writeJSON func(map[string]any), id, method stri
 			}
 			ctx, cancel := context.WithTimeout(context.Background(), 60*time.Second)
 			defer cancel()
-			reply, err := b.llm.Chat(ctx, sessionKey, message, "")
+			skillsContext := ""
+			if b.skills != nil {
+				skillsContext = b.skills.BuildContext()
+			}
+			reply, err := b.llm.Chat(ctx, sessionKey, message, skillsContext)
 			if err != nil {
 				reply = "LLM error: " + err.Error()
 			}
@@ -538,12 +542,25 @@ func (b *Bridge) handleWSRequest(writeJSON func(map[string]any), id, method stri
 		})
 
 	case "skills.status":
+		skillsList := []any{}
+		if b.skills != nil {
+			for _, s := range b.skills.All() {
+				skillsList = append(skillsList, map[string]any{
+					"name":        s.Name,
+					"description": s.Description,
+					"tags":        s.Tags,
+					"emoji":       s.Emoji,
+					"enabled":     true,
+				})
+			}
+		}
 		writeJSON(map[string]any{
 			"type": "res",
 			"id":   id,
 			"ok":   true,
 			"payload": map[string]any{
-				"skills": []any{},
+				"skills": skillsList,
+				"count":  len(skillsList),
 			},
 		})
 
