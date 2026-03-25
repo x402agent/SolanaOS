@@ -1512,27 +1512,26 @@ Architecture:
 
 func NewNanoBotCommand() *cobra.Command {
 	var port int
-	var public bool
+	var local bool
 	var noBrowser bool
 
 	cmd := &cobra.Command{
-		Use:     "nanobot",
-		Aliases: []string{"control"},
-		Short:   "Launch the interactive SolanaOS Control UI",
-		Long: `Start SolanaOS Control — a local web app with
-an animated SolanaOS assistant you can talk to.
+		Use:     "server",
+		Aliases: []string{"nanobot", "control"},
+		Short:   "Start the SolanaOS Control UI server",
+		Long: `Start SolanaOS Server — the Control UI with built-in gateway proxy.
+
+Binds to 0.0.0.0 by default so the UI is accessible over Tailscale and LAN.
+Use --local to restrict to localhost only.
 
 Features:
-  🤖 Animated SolanaOS assistant with moods
-  💬 Chat interface — ask SolanaOS anything
-  📊 One-click health, balance, trending, pet status
+  💬 Chat interface with gateway WebSocket proxy
+  📊 Real-time system status, wallet, and trading data
   🔐 Wallet info and on-chain registry
-  ⚡ Real-time daemon status
-
-The UI launches locally by default, and can also be exposed publicly for hosted deployments.`,
-		Example: `  solanaos nanobot
-  solanaos nanobot --port 7777
-  solanaos nanobot --public --no-browser --port 8080`,
+  ⚡ Daemon health monitoring`,
+		Example: `  solanaos server
+  solanaos server --port 7777
+  solanaos server --local --no-browser`,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			binary, _ := os.Executable()
 			if binary == "" {
@@ -1543,14 +1542,13 @@ The UI launches locally by default, and can also be exposed publicly for hosted 
 			if envPort := os.Getenv("PORT"); envPort != "" {
 				if p, err := strconv.Atoi(envPort); err == nil && p > 0 {
 					port = p
-					public = true
 					noBrowser = true
 				}
 			}
 
-			host := "127.0.0.1"
-			if public {
-				host = "0.0.0.0"
+			host := "0.0.0.0"
+			if local {
+				host = "127.0.0.1"
 			}
 
 			displayHost := host
@@ -1558,15 +1556,15 @@ The UI launches locally by default, and can also be exposed publicly for hosted 
 				displayHost = "127.0.0.1"
 			}
 
-			fmt.Fprintf(os.Stderr, "%s🤖 SolanaOS Control starting on http://%s:%d%s\n", colorGreen, displayHost, port, colorReset)
+			fmt.Fprintf(os.Stderr, "%s🖥️  SolanaOS Server starting on http://%s:%d%s\n", colorGreen, displayHost, port, colorReset)
 
 			srv := nanobot.NewServerWithOptions(port, binary, host, !noBrowser)
 			return srv.Start(cmd.Context())
 		},
 	}
 
-	cmd.Flags().IntVar(&port, "port", 7777, "SolanaOS Control UI port")
-	cmd.Flags().BoolVar(&public, "public", false, "Listen on all interfaces instead of localhost only")
+	cmd.Flags().IntVar(&port, "port", 7777, "SolanaOS Server port")
+	cmd.Flags().BoolVar(&local, "local", false, "Listen on localhost only (default: 0.0.0.0)")
 	cmd.Flags().BoolVar(&noBrowser, "no-browser", false, "Do not open a browser window on startup")
 
 	return cmd

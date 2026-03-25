@@ -290,6 +290,24 @@ func (b *Bridge) handleWSRequest(writeJSON func(map[string]any), id, method stri
 			},
 		})
 
+	case "exec.approvals.get", "exec.approvals.node.get":
+		writeJSON(map[string]any{
+			"type": "res",
+			"id":   id,
+			"ok":   true,
+			"payload": map[string]any{
+				"approvals": map[string]any{},
+			},
+		})
+
+	case "exec.approvals.set", "exec.approvals.node.set":
+		writeJSON(map[string]any{
+			"type": "res",
+			"id":   id,
+			"ok":   true,
+			"payload": map[string]any{"ok": true},
+		})
+
 	default:
 		writeJSON(map[string]any{
 			"type": "res",
