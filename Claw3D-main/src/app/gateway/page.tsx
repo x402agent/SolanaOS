@@ -226,7 +226,7 @@ export default function GatewaySetupPage() {
   }, [gatewayUrl, token, router]);
 
   return (
-    <div className="relative flex min-h-screen flex-col items-center overflow-y-auto bg-[#0a0a14] pb-20">
+    <div className="relative flex h-full flex-col items-center overflow-y-auto bg-[#0a0a14] pb-20">
       {/* Background effects */}
       <div className="pointer-events-none fixed inset-0 z-0">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(153,69,255,0.08),transparent_50%),radial-gradient(circle_at_80%_80%,rgba(20,241,149,0.05),transparent_50%)]" />
