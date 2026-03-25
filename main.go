@@ -764,6 +764,16 @@ No external dependencies required.`,
 			fmt.Printf("%s🖥️ SolanaOS Gateway%s\n\n", colorGreen, colorReset)
 
 			bridge := gw.NewBridge(bridgeCfg, nil)
+
+			// Attach LLM provider for chat inference.
+			llmClient := llm.New()
+			if llmClient.IsConfigured() {
+				bridge.SetLLM(llmClient)
+				fmt.Printf("%s🤖 LLM attached: %s / %s%s\n", colorGreen, llmClient.Provider(), llmClient.Model(), colorReset)
+			} else {
+				fmt.Printf("%s⚠️  No LLM configured — chat will be view-only. Set OPENROUTER_API_KEY or similar in .env%s\n", colorAmber, colorReset)
+			}
+
 			ctx, cancel := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
 			defer cancel()
 
