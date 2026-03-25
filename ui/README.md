@@ -35,7 +35,7 @@ The UI auto-detects the gateway URL from the page origin (`ws://<current host>`)
 |---|---|---|
 | `SOLANAOS_GATEWAY_HOST` | `127.0.0.1` | Gateway host for the dev proxy |
 | `SOLANAOS_GATEWAY_PORT` | `18790` | Gateway port for the dev proxy |
-| `OPENCLAW_CONTROL_UI_BASE_PATH` | `./` | Base path for the built assets |
+| `SOLANAOS_CONTROL_UI_BASE_PATH` | `./` | Base path for the built assets |
 
 Example with a remote gateway:
 
@@ -48,7 +48,7 @@ SOLANAOS_GATEWAY_HOST=100.122.9.113 npm run dev
 | Command | Description |
 |---|---|
 | `npm run dev` | Start Vite dev server with gateway proxy |
-| `npm run build` | Production build to `../dist/control-ui/` |
+| `npm run build` | Production build to `../pkg/nanobot/ui/` (embedded in Go binary) |
 | `npm run preview` | Preview the production build |
 | `npm test` | Run tests with Vitest |
 

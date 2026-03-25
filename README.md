@@ -91,6 +91,8 @@ This README is the GitHub front door. Use it to install, explore the live surfac
 | distribute reusable agent workflows | `@nanosolana/nanohub` + the public Hub registry |
 | build Seeker/mobile wallet experiences | Android app + Mobile Wallet Adapter + Phantom + pairing flow |
 | experiment with agent identity | [`SOUL.md`](SOUL.md) + Souls registry + strategy docs |
+| give agents their own wallets | `solanaos wallet-api` — one-shot vault + API + MCP server for Solana + EVM |
+| register agents on-chain with ACP | `node acp_registry/generate.mjs` — interactive 8004 agent.json builder |
 | connect research, execution, and memory | SolanaTracker, Jupiter, Hyperliquid, Aster, Honcho, x402 |
 
 ## Start Here

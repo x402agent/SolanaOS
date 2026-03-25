@@ -239,7 +239,7 @@ func NewGatewayRemoteCommand() *cobra.Command {
 			fmt.Printf("\nSSH config snippet:\n\n%s\n", spec.SSHConfigEntry())
 			fmt.Printf("LaunchAgent file: ~/Library/LaunchAgents/%s\n", spec.LaunchAgentFilename())
 			fmt.Printf("Recommended env:\n")
-			fmt.Printf("  export OPENCLAW_GATEWAY_URL=%q\n", spec.LocalForwardURL(firstNonEmptyString(scheme, "ws")))
+			fmt.Printf("  export GATEWAY_REMOTE_URL=%q\n", spec.LocalForwardURL(firstNonEmptyString(scheme, "ws")))
 			return nil
 		},
 	}
