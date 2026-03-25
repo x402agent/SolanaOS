@@ -35,6 +35,7 @@ import (
 	gw "github.com/x402agent/Solana-Os-Go/pkg/gateway"
 	"github.com/x402agent/Solana-Os-Go/pkg/hardware"
 	"github.com/x402agent/Solana-Os-Go/pkg/llm"
+	"github.com/x402agent/Solana-Os-Go/pkg/honcho"
 	"github.com/x402agent/Solana-Os-Go/pkg/nanobot"
 	"github.com/x402agent/Solana-Os-Go/pkg/skills"
 	"github.com/x402agent/Solana-Os-Go/pkg/node"
@@ -181,10 +182,23 @@ func (a *honchoAdapter) GetContext(ctx context.Context, sessionID, query string)
 	if err != nil {
 		return "", err
 	}
-	if sc == nil || sc.Content == "" {
+	if sc == nil {
 		return "", nil
 	}
-	return sc.Content, nil
+	var parts []string
+	if sc.PeerRepresentation != "" {
+		parts = append(parts, "User context: "+sc.PeerRepresentation)
+	}
+	if len(sc.PeerCard) > 0 {
+		parts = append(parts, "User profile: "+strings.Join(sc.PeerCard, "; "))
+	}
+	if sc.Summary != nil && sc.Summary.Content != "" {
+		parts = append(parts, "Session summary: "+sc.Summary.Content)
+	}
+	if len(parts) == 0 {
+		return "", nil
+	}
+	return strings.Join(parts, "\n"), nil
 }
 
 type gatewayConnectFiles struct {
@@ -899,6 +913,27 @@ No external dependencies required.`,
 					bridge.SetSkills(&skillsAdapter{mgr: mgr})
 					fmt.Printf("%s📚 Skills loaded: %d from %s%s\n", colorGreen, mgr.Count(), skillsDir, colorReset)
 				}
+			}
+
+			// Attach Honcho v3 memory (if configured).
+			honchoKey := strings.TrimSpace(os.Getenv("HONCHO_API_KEY"))
+			if honchoKey != "" {
+				hCfg := config.HonchoConfig{
+					Enabled:     true,
+					APIKey:      honchoKey,
+					BaseURL:     strings.TrimSpace(os.Getenv("HONCHO_BASE_URL")),
+					WorkspaceID: strings.TrimSpace(os.Getenv("HONCHO_WORKSPACE_ID")),
+					AgentPeerID: strings.TrimSpace(os.Getenv("HONCHO_AGENT_PEER_ID")),
+				}
+				if hCfg.WorkspaceID == "" {
+					hCfg.WorkspaceID = "solanaos"
+				}
+				if hCfg.AgentPeerID == "" {
+					hCfg.AgentPeerID = "solanaos-agent"
+				}
+				hClient := honcho.NewClient(hCfg)
+				bridge.SetHoncho(&honchoAdapter{client: hClient})
+				fmt.Printf("%s🧠 Honcho v3 memory attached: %s%s\n", colorGreen, hCfg.WorkspaceID, colorReset)
 			}
 
 			ctx, cancel := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)

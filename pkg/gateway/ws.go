@@ -351,8 +351,28 @@ func (b *Bridge) handleWSRequest(writeJSON func(map[string]any), id, method stri
 			ctx, cancel := context.WithTimeout(context.Background(), 60*time.Second)
 			defer cancel()
 
-			// Build context: skills + auto-detected Solana token data
+			// Ingest user message into Honcho memory (async, non-blocking)
+			if b.honcho != nil && b.honcho.IsConfigured() {
+				go func() {
+					hCtx, hCancel := context.WithTimeout(context.Background(), 10*time.Second)
+					defer hCancel()
+					_ = b.honcho.IngestMessage(hCtx, sessionKey, "user", message)
+				}()
+			}
+
+			// Build context: Honcho memory + skills + auto-detected Solana token data
 			var contextParts []string
+
+			// Fetch Honcho memory context
+			if b.honcho != nil && b.honcho.IsConfigured() {
+				hCtx, hCancel := context.WithTimeout(context.Background(), 8*time.Second)
+				if honchoCtx, err := b.honcho.GetContext(hCtx, sessionKey, message); err == nil && honchoCtx != "" {
+					contextParts = append(contextParts, "Memory (Honcho):\n"+honchoCtx)
+					b.logf("💬 Honcho context: %d chars", len(honchoCtx))
+				}
+				hCancel()
+			}
+
 			if b.skills != nil {
 				if sc := b.skills.BuildContext(); sc != "" {
 					contextParts = append(contextParts, sc)
@@ -387,6 +407,14 @@ func (b *Bridge) handleWSRequest(writeJSON func(map[string]any), id, method stri
 				"content": reply,
 				"ts":      time.Now().UnixMilli(),
 			})
+			// Ingest assistant reply into Honcho
+			if b.honcho != nil && b.honcho.IsConfigured() {
+				go func() {
+					hCtx, hCancel := context.WithTimeout(context.Background(), 10*time.Second)
+					defer hCancel()
+					_ = b.honcho.IngestMessage(hCtx, sessionKey, "assistant", reply)
+				}()
+			}
 			writeJSON(map[string]any{
 				"type":  "event",
 				"event": "chat",
