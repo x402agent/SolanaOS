@@ -252,7 +252,17 @@ Local Operator Machine
      │    │    ├── Natural language token queries
      │    │    └── Remote control (Claude Code)
      │    ├── Gateway API (port 18790)
+     │    │    ├── WebSocket protocol (config, status, sessions, agents, skills, cron, logs, chat)
+     │    │    ├── LLM chat integration (Ollama, OpenRouter, Anthropic, xAI)
+     │    │    ├── Keepalive (30s ping, 90s read deadline)
+     │    │    └── Config read/write (~/.nanosolana/solanaos.json)
      │    └── Honcho v3 + vault memory
+     ├── SolanaOS Control UI (port 7777, `solanaos server`)
+     │    ├── Lit + Vite SPA (//go:embed into binary)
+     │    ├── Chat with LLM, real-time status, config editor
+     │    ├── Debug panel, cron, sessions, skills, channels, logs
+     │    ├── Proxies WebSocket to gateway on port 18790
+     │    └── Binds 0.0.0.0 (Tailscale/LAN), --local for localhost
      ├── Web Backend (port 18800)
      │    ├── Control console UI
      │    ├── Setup code generation (QR)
@@ -267,10 +277,18 @@ Local Operator Machine
      │    ├── Privy managed wallets (optional)
      │    ├── E2B sandbox deployment
      │    └── MCP server for AI agent tooling
-     ├── Control API (port 7777)
-     │    └── Wallet, status, chat, tools
      └── Chrome Extension
           └── Wallet, Seeker, Miner, Chat, Tools tabs
+
+office.solanaos.net ─── SolanaOS Office (3D workspace)
+     ├── Adapted from Claw3D, rebranded as SolanaOS HQ
+     ├── 3D retro office for managing agents
+     ├── Real-time Solana market terminal (Birdeye API)
+     │    ├── /api/market — prices, trending, OHLCV, new_listings, meme_list
+     │    ├── smart_money, token_txs, holder_distribution, wallet_networth
+     │    └── 60-second in-memory cache, pop-out terminal
+     ├── Agent chat + skills marketplace
+     └── Solana purple (#9945FF) + green (#14F195) branding
 ```
 
 Public routes include `/`, `/launch`, `/mobile`, `/solanaos`, and `/pair`. Authenticated routes still require GitHub, Phantom wallet, or Seeker pairing. The web backend runs locally and generates setup codes for clients to connect through the gateway.
@@ -330,6 +348,7 @@ This monorepo contains product code, client apps, deployment config, registry me
 | Hub | [seeker.solanaos.net](https://seeker.solanaos.net) |
 | Souls | [souls.solanaos.net](https://souls.solanaos.net) |
 | Docs | [solanaos.net](https://solanaos.net) |
+| Office | [office.solanaos.net](https://office.solanaos.net) |
 | Dashboard | [seeker.solanaos.net/dashboard](https://seeker.solanaos.net/dashboard) |
 | Mining | [seeker.solanaos.net/mining](https://seeker.solanaos.net/mining) |
 | Strategy | [seeker.solanaos.net/strategy](https://seeker.solanaos.net/strategy) |
@@ -507,7 +526,11 @@ Ask about any token in plain English and get live data:
 | Agent | Context compression, smart model routing, insights extraction, prompt caching, redaction |
 | LLMs | OpenRouter, xAI/Grok (vision + image gen + video), Anthropic/Claude Code, Ollama/DeepSolana, Mimo reasoning |
 | Trading | Spot (natural language + auto-detect contract addresses), Hyperliquid perps, Aster perps, multi-venue strategy |
-| Channels | Telegram (60+ commands + image understanding + remote control), Chrome extension, macOS, Android Seeker, web gateway |
+| Control UI | Lit + Vite browser panel (`solanaos server` on port 7777) — chat, status, config, debug, cron, sessions, skills, channels, logs |
+| Office | 3D workspace at office.solanaos.net — Birdeye market terminal, agent chat, skills marketplace, Solana-branded |
+| Gateway WS | Full WebSocket protocol — config, status, sessions, agents, skills, cron, logs, chat.send with async LLM inference, keepalive |
+| Onboarding | `solanaos onboard` interactive wizard — LLM provider, Solana keys, Telegram bot → `~/.nanosolana/solanaos.json` |
+| Channels | Telegram (60+ commands + image understanding + remote control), Chrome extension, macOS, Android Seeker, web gateway, Control UI |
 | Remote Control | Claude Code remote-control server, Telegram-driven Mac control, natural language dispatch |
 | Vision | Grok Vision image understanding from Telegram photos, URL-based analysis, auto-detect photo messages |
 | Agent Wallet | One-shot `wallet-api` bootstrap, encrypted vault, Solana + EVM, Privy managed wallets, E2B sandbox deploy, MCP server |
