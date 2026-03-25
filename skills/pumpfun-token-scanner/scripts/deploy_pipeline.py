@@ -28,7 +28,7 @@ from urllib.request import Request, urlopen
 from urllib.error import URLError
 
 SCRIPTS_DIR = Path(__file__).parent
-PROJECT_ROOT = Path(os.path.expanduser("~/Downloads/nanosolana-go"))
+PROJECT_ROOT = Path(os.path.expanduser("/Users/8bit/solanaos"))
 PUMP_MD = PROJECT_ROOT / "pump.md"
 NANOHUB_DIR = PROJECT_ROOT / "nanohub"
 ENV_FILE = PROJECT_ROOT / ".env"

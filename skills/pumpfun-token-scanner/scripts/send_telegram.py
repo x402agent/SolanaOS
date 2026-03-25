@@ -2,12 +2,12 @@
 """
 send_telegram.py — Pump.fun Digest → Telegram
 
-Parses ~/Downloads/nanosolana-go/pump.md and sends a formatted digest to Telegram.
+Parses /Users/8bit/solanaos/pump.md and sends a formatted digest to Telegram.
 Tries the SolanaOS gateway (localhost:18790) first; falls back to direct Bot API.
 
 Credentials are read from (in order):
-  1. ~/Downloads/nanosolana-go/.env
-  2. ~/.nanosolana/.env
+  1. /Users/8bit/solanaos/.env
+  2. ~/.solanaos/.env
   3. Environment variables
 """
 
@@ -24,10 +24,10 @@ from pathlib import Path
 # ---------------------------------------------------------------------------
 # Config
 # ---------------------------------------------------------------------------
-PUMP_MD = Path.home() / "Downloads" / "nanosolana-go" / "pump.md"
+PUMP_MD = Path.home() / "Downloads" / "solanaos-go" / "pump.md"
 ENV_PATHS = [
-    Path.home() / "Downloads" / "nanosolana-go" / ".env",
-    Path.home() / ".nanosolana" / ".env",
+    Path.home() / "Downloads" / "solanaos-go" / ".env",
+    Path.home() / ".solanaos" / ".env",
 ]
 GATEWAY_URL = "http://localhost:18790/api/v1/telegram/send"
 GATEWAY_TIMEOUT = 3  # seconds — fast fail if gateway isn't running
@@ -64,7 +64,7 @@ def get_credentials():
 
     if not token or not chat_id:
         print("ERROR: TELEGRAM_BOT_TOKEN and/or TELEGRAM_ID not found.")
-        print("Set them in ~/Downloads/nanosolana-go/.env or export as env vars.")
+        print("Set them in /Users/8bit/solanaos/.env or export as env vars.")
         sys.exit(1)
 
     return token, chat_id

@@ -3,13 +3,13 @@
 push_to_convex.py — Pushes pump.md scanner data to the nanohub Convex backend.
 
 Reads pump.md, parses the pipe-delimited token table, and POSTs it to the
-Convex HTTP endpoint at /nanosolana/tracker/pump-ingest.
+Convex HTTP endpoint at /solanaos/tracker/pump-ingest.
 
 Usage:
     python3 push_to_convex.py [--source browser|cli|remote-trigger]
 
 The CONVEX_SITE_URL is read from (in order):
-    1. ~/Downloads/nanosolana-go/nanohub/.env.local
+    1. /Users/8bit/solanaos/nanohub/.env.local
     2. Environment variable CONVEX_SITE_URL
     3. Fallback: https://artful-frog-940.convex.site
 """
@@ -22,8 +22,8 @@ from pathlib import Path
 from urllib.request import Request, urlopen
 from urllib.error import URLError
 
-PUMP_MD = os.path.expanduser("~/Downloads/nanosolana-go/pump.md")
-ENV_LOCAL = os.path.expanduser("~/Downloads/nanosolana-go/nanohub/.env.local")
+PUMP_MD = os.path.expanduser("/Users/8bit/solanaos/pump.md")
+ENV_LOCAL = os.path.expanduser("/Users/8bit/solanaos/nanohub/.env.local")
 FALLBACK_URL = "https://artful-frog-940.convex.site"
 
 
@@ -91,7 +91,7 @@ def main():
     print(f"Parsed {len(rows)} tokens from pump.md")
 
     convex_url = get_convex_url()
-    endpoint = f"{convex_url}/nanosolana/tracker/pump-ingest"
+    endpoint = f"{convex_url}/solanaos/tracker/pump-ingest"
 
     payload = json.dumps({
         "source": source,

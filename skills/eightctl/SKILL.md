@@ -4,7 +4,7 @@ description: Control Eight Sleep pods (status, temperature, alarms, schedules).
 homepage: https://eightctl.sh
 metadata:
   {
-    "nanosolana":
+    "solanaos":
       {
         "emoji": "🛌",
         "requires": { "bins": ["eightctl"] },

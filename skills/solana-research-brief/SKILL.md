@@ -25,7 +25,7 @@ Keep output concise and decision-focused.
 For CLI users, prefer:
 
 ```bash
-mawdbot solana research <mint>
+solanaos solana research <mint>
 ```
 
 For Telegram daemon users, prefer:

@@ -1,9 +1,9 @@
 ---
 name: voice-call
-description: Start voice calls via the NanoSolana voice-call plugin.
+description: Start voice calls via the SolanaOS voice-call plugin.
 metadata:
   {
-    "nanosolana":
+    "solanaos":
       {
         "emoji": "📞",
         "skillKey": "voice-call",
@@ -19,8 +19,8 @@ Use the voice-call plugin to start or inspect calls (Twilio, Telnyx, Plivo, or m
 ## CLI
 
 ```bash
-nanosolana voicecall call --to "+15555550123" --message "Hello from NanoSolana"
-nanosolana voicecall status --call-id <id>
+solanaos voicecall call --to "+15555550123" --message "Hello from SolanaOS"
+solanaos voicecall status --call-id <id>
 ```
 
 ## Tool

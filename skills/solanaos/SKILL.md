@@ -130,7 +130,7 @@ Auto-registers commands on daemon start. Key commands:
 ## Memory — Honcho v3
 
 Three memory layers:
-1. **Local Vault** (`~/.nanosolana/memory/`) — decisions, lessons, trades, research
+1. **Local Vault** (`~/.solanaos/memory/`) — decisions, lessons, trades, research
 2. **Honcho v3** — cross-session dialectic memory with user modeling
 3. **Convex** — cloud persistence for Hub + Android sync
 

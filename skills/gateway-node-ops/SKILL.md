@@ -1,8 +1,8 @@
 ---
-description: How to spawn a NanoSolana Gateway and connect headless nodes
+description: How to spawn a SolanaOS Gateway and connect headless nodes
 ---
 
-# NanoSolana Gateway + Node Workflow
+# SolanaOS Gateway + Node Workflow
 
 ## Prerequisites
 
@@ -12,20 +12,20 @@ Ensure the following tools are installed:
 - `openclaw` — `npm install -g openclaw`
 - `go` — https://go.dev/dl/
 
-## Build MawdBot
+## Build SolanaOS
 
 // turbo
 ```bash
-cd /Users/8bit/Downloads/mawdbot-go-main && go build -ldflags="-s -w" -o build/mawdbot .
+cd /Users/8bit/solanaos && go build -ldflags="-s -w" -o build/solanaos .
 ```
 
 ## Spawn the Gateway (Quick)
 
-### Option A: Via MawdBot CLI
+### Option A: Via SolanaOS CLI
 
 // turbo
 ```bash
-./build/mawdbot node gateway-spawn
+./build/solanaos node gateway-spawn
 ```
 
 This will:
@@ -41,14 +41,14 @@ This will:
 ./scripts/gateway-spawn.sh
 ```
 
-Same result, but works without building MawdBot first.
+Same result, but works without building SolanaOS first.
 
 ## Pair a Node
 
 From the hardware device (Orin Nano, RPi, etc.), run:
 
 ```bash
-./build/mawdbot node pair --bridge <TAILSCALE_IP>:18790 --display-name "My Orin Nano"
+./build/solanaos node pair --bridge <TAILSCALE_IP>:18790 --display-name "My Orin Nano"
 ```
 
 Then approve from the gateway host:
@@ -59,7 +59,7 @@ openclaw nodes approve <requestId>
 ## Run the Node
 
 ```bash
-./build/mawdbot node run --bridge <TAILSCALE_IP>:18790
+./build/solanaos node run --bridge <TAILSCALE_IP>:18790
 ```
 
 ## Auto-Spawn at Daemon Launch
@@ -67,7 +67,7 @@ openclaw nodes approve <requestId>
 To make the daemon automatically spawn a gateway at startup:
 
 ```bash
-GATEWAY_AUTO_SPAWN=true ./build/mawdbot daemon
+GATEWAY_AUTO_SPAWN=true ./build/solanaos daemon
 ```
 
 Or set in `.env`:
@@ -85,27 +85,27 @@ GATEWAY_USE_TAILSCALE=true
 ./scripts/gateway-spawn.sh --status
 
 # Kill the gateway
-./build/mawdbot node gateway-kill
+./build/solanaos node gateway-kill
 
 # Or via script
 ./scripts/gateway-spawn.sh --kill
 
 # Attach to see gateway logs
-tmux attach -t nanoclaw-gw
+tmux attach -t solanaos-gw
 ```
 
 ## Cross-Compile for Hardware
 
 ```bash
 # Raspberry Pi (ARM64)
-GOOS=linux GOARCH=arm64 go build -ldflags="-s -w" -o build/mawdbot-linux-arm64 .
+GOOS=linux GOARCH=arm64 go build -ldflags="-s -w" -o build/solanaos-linux-arm64 .
 
 # NVIDIA Orin Nano (ARM64)
-GOOS=linux GOARCH=arm64 go build -ldflags="-s -w" -o build/mawdbot-orin .
+GOOS=linux GOARCH=arm64 go build -ldflags="-s -w" -o build/solanaos-orin .
 ```
 
 ## Termius SSH Workflow
 
 1. Add your Tailscale host in Termius (use Tailscale IP)
-2. SSH in and run: `./build/mawdbot node gateway-spawn`
-3. From a second Termius tab: `./build/mawdbot node run --bridge <IP>:18790`
+2. SSH in and run: `./build/solanaos node gateway-spawn`
+3. From a second Termius tab: `./build/solanaos node run --bridge <IP>:18790`

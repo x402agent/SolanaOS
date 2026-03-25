@@ -8,7 +8,7 @@ Execute buy and sell trades on the Pump.fun protocol using the native Pump SDK. 
 
 ## Prerequisites
 
-- Funded Solana wallet via `nanosolana birth`
+- Funded Solana wallet via `solanaos birth`
 - `HELIUS_RPC_URL` configured
 - Understanding of bonding curve mechanics
 
@@ -32,7 +32,7 @@ if (summary.isGraduated) {
 ### 2. Buy on Bonding Curve
 
 ```typescript
-import { OnlinePumpSdk, getBuyTokenAmountFromSolAmount } from "nanosolana";
+import { OnlinePumpSdk, getBuyTokenAmountFromSolAmount } from "solanaos";
 import BN from "bn.js";
 
 const sdk = new OnlinePumpSdk(connection);
@@ -65,7 +65,7 @@ const buyIxs = await sdk.buyInstructions({
 ### 3. Sell on Bonding Curve
 
 ```typescript
-import { getSellSolAmountFromTokenAmount } from "nanosolana";
+import { getSellSolAmountFromTokenAmount } from "solanaos";
 
 const [sellState, global, feeConfig] = await Promise.all([
   sdk.fetchSellState(mint, user),

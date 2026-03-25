@@ -1,6 +1,6 @@
 ---
 name: seeker-daemon-ops
-description: "Use when the user wants to run, monitor, or debug the Seeker Nano Solana daemon and Telegram command flow"
+description: "Use when the user wants to run, monitor, or debug the SolanaOS Seeker daemon and Telegram command flow"
 version: "1.0.0"
 emoji: "🦅"
 requires:
@@ -17,7 +17,7 @@ Use this skill to operate the daemon quickly and safely.
 ## Standard run
 
 ```bash
-go run ./cmd/mawdbot daemon --seeker --pet-name SeekerClaw
+go run ./cmd/solanaos daemon --seeker --pet-name SeekerClaw
 ```
 
 ## Common safe modes
@@ -25,13 +25,13 @@ go run ./cmd/mawdbot daemon --seeker --pet-name SeekerClaw
 - Disable Telegram for local testing:
 
 ```bash
-go run ./cmd/mawdbot daemon --seeker --no-telegram
+go run ./cmd/solanaos daemon --seeker --no-telegram
 ```
 
 - Keep daemon online but disable OODA trading loop:
 
 ```bash
-go run ./cmd/mawdbot daemon --seeker --no-ooda
+go run ./cmd/solanaos daemon --seeker --no-ooda
 ```
 
 ## Telegram command validation checklist

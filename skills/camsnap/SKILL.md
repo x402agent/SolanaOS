@@ -4,7 +4,7 @@ description: Capture frames or clips from RTSP/ONVIF cameras.
 homepage: https://camsnap.ai
 metadata:
   {
-    "nanosolana":
+    "solanaos":
       {
         "emoji": "📸",
         "requires": { "bins": ["camsnap"] },

@@ -3,7 +3,7 @@
 # Usage: ./watch_pump.sh [--poll-interval 30] [--once]
 #
 # Requires: deploy_pipeline.py, push_to_convex.py, send_telegram.py in same dir
-# Env: reads .env from ~/Downloads/nanosolana-go/.env
+# Env: reads .env from /Users/8bit/solanaos/.env
 
 set -euo pipefail
 

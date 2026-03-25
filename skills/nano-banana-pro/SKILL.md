@@ -4,7 +4,7 @@ description: Generate or edit images via Gemini 3 Pro Image (Nano Banana Pro).
 homepage: https://ai.google.dev/
 metadata:
   {
-    "nanosolana":
+    "solanaos":
       {
         "emoji": "🍌",
         "requires": { "bins": ["uv"], "env": ["GEMINI_API_KEY"] },
@@ -48,7 +48,7 @@ uv run {baseDir}/scripts/generate_image.py --prompt "combine these into one scen
 API key
 
 - `GEMINI_API_KEY` env var
-- Or set `skills."nano-banana-pro".apiKey` / `skills."nano-banana-pro".env.GEMINI_API_KEY` in `~/.nanosolana/nanosolana.json`
+- Or set `skills."nano-banana-pro".apiKey` / `skills."nano-banana-pro".env.GEMINI_API_KEY` in `~/.solanaos/solanaos.json`
 
 Specific aspect ratio (optional)
 
@@ -61,5 +61,5 @@ Notes
 - Resolutions: `1K` (default), `2K`, `4K`.
 - Aspect ratios: `1:1`, `2:3`, `3:2`, `3:4`, `4:3`, `4:5`, `5:4`, `9:16`, `16:9`, `21:9`. Without `--aspect-ratio` / `-a`, the model picks freely - use this flag for avatars, profile pics, or consistent batch generation.
 - Use timestamps in filenames: `yyyy-mm-dd-hh-mm-ss-name.png`.
-- The script prints a `MEDIA:` line for NanoSolana to auto-attach on supported chat providers.
+- The script prints a `MEDIA:` line for SolanaOS to auto-attach on supported chat providers.
 - Do not read the image back; report the saved path only.

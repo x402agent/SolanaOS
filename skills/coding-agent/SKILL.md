@@ -3,7 +3,7 @@ name: coding-agent
 description: 'Delegate coding tasks to Codex, Claude Code, or Pi agents via background process. Use when: (1) building/creating new features or apps, (2) reviewing PRs (spawn in temp dir), (3) refactoring large codebases, (4) iterative coding that needs file exploration. NOT for: simple one-liner fixes (just edit), reading code (use read tool), thread-bound ACP harness requests in chat (for example spawn/run Codex or Claude Code in a Discord thread; use sessions_spawn with runtime:"acp"), or any work in ~/clawd workspace (never spawn agents here). Claude Code: use --print --permission-mode bypassPermissions (no PTY). Codex/Pi/OpenCode: pty:true required.'
 metadata:
   {
-    "nanosolana": { "emoji": "🧩", "requires": { "anyBins": ["claude", "codex", "opencode", "pi"] } },
+    "solanaos": { "emoji": "🧩", "requires": { "anyBins": ["claude", "codex", "opencode", "pi"] } },
   }
 ---
 
@@ -129,7 +129,7 @@ bash pty:true workdir:~/project background:true command:"codex --yolo 'Refactor 
 
 ### Reviewing PRs
 
-**⚠️ CRITICAL: Never review PRs in NanoSolana's own project folder!**
+**⚠️ CRITICAL: Never review PRs in SolanaOS's own project folder!**
 Clone to temp folder or use git worktree.
 
 ```bash
@@ -176,8 +176,8 @@ bash workdir:~/project background:true command:"claude --permission-mode bypassP
 
 ## Gateway-Controlled Claude Sessions
 
-When NanoSolana's web gateway is available, Claude Code sessions can be driven through REST instead of a raw shell process.
-This is the preferred path when you want NanoSolana to own the session registry and let clients list/resume/kill runs.
+When SolanaOS's web gateway is available, Claude Code sessions can be driven through REST instead of a raw shell process.
+This is the preferred path when you want SolanaOS to own the session registry and let clients list/resume/kill runs.
 
 Endpoints:
 
@@ -206,13 +206,13 @@ Example create request:
 Notes:
 
 - Claude runs through `claude --print --output-format stream-json --permission-mode bypassPermissions`.
-- NanoSolana stores the Claude `session_id` and continues the same Claude conversation on later `:id/prompt` calls via `--resume`.
+- SolanaOS stores the Claude `session_id` and continues the same Claude conversation on later `:id/prompt` calls via `--resume`.
 - Gateway control is session-based, not PTY-based, for Claude Code. PTY guidance still applies to Codex/Pi/OpenCode.
 - The web gateway can now expose the dashboard through Tailscale Serve (`--tailscale serve`) or Funnel (`--tailscale funnel --auth password`) while keeping the local service on loopback.
 
 ### Telegram Natural Language
 
-When you're talking to NanoSolana through Telegram, you can now hit the same flow without slash-only syntax.
+When you're talking to SolanaOS through Telegram, you can now hit the same flow without slash-only syntax.
 Examples:
 
 ```text
@@ -291,8 +291,8 @@ git worktree remove /tmp/issue-99
 5. **--full-auto for building** - auto-approves changes
 6. **vanilla for reviewing** - no special flags needed
 7. **Parallel is OK** - run many Codex processes at once for batch work
-8. **NEVER start Codex in ~/.nanosolana/** - it'll read your soul docs and get weird ideas about the org chart!
-9. **NEVER checkout branches in ~/Projects/nanosolana/** - that's the LIVE NanoSolana instance!
+8. **NEVER start Codex in ~/.solanaos/** - it'll read your soul docs and get weird ideas about the org chart!
+9. **NEVER checkout branches in ~/Projects/solanaos/** - that's the LIVE SolanaOS instance!
 
 ---
 
@@ -314,13 +314,13 @@ This prevents the user from seeing only "Agent failed before reply" and having n
 
 ## Auto-Notify on Completion
 
-For long-running background tasks, append a wake trigger to your prompt so NanoSolana gets notified immediately when the agent finishes (instead of waiting for the next heartbeat):
+For long-running background tasks, append a wake trigger to your prompt so SolanaOS gets notified immediately when the agent finishes (instead of waiting for the next heartbeat):
 
 ```
 ... your task here.
 
 When completely finished, run this command to notify me:
-nanosolana system event --text "Done: [brief summary of what was built]" --mode now
+solanaos system event --text "Done: [brief summary of what was built]" --mode now
 ```
 
 **Example:**
@@ -328,7 +328,7 @@ nanosolana system event --text "Done: [brief summary of what was built]" --mode 
 ```bash
 bash pty:true workdir:~/project background:true command:"codex --yolo exec 'Build a REST API for todos.
 
-When completely finished, run: nanosolana system event --text \"Done: Built todos REST API with CRUD endpoints\" --mode now'"
+When completely finished, run: solanaos system event --text \"Done: Built todos REST API with CRUD endpoints\" --mode now'"
 ```
 
 This triggers an immediate wake event — Skippy gets pinged in seconds, not 10 minutes.

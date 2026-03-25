@@ -17,7 +17,7 @@ Set up, manage, and claim creator fee sharing on Pump.fun tokens. Supports up to
 ### 1. Create Fee Sharing Config
 
 ```typescript
-import { PUMP_SDK } from "nanosolana";
+import { PUMP_SDK } from "solanaos";
 
 const createConfigIx = await PUMP_SDK.createFeeSharingConfig({
   creator: wallet.publicKey,
@@ -78,7 +78,7 @@ Fees are tiered by market cap:
 Track unclaimed $PUMP reward tokens:
 
 ```typescript
-import { totalUnclaimedTokens, currentDayTokens } from "nanosolana";
+import { totalUnclaimedTokens, currentDayTokens } from "solanaos";
 
 const unclaimed = totalUnclaimedTokens(userVolumeAccumulator, globalVolumeAccumulator);
 const todayTokens = currentDayTokens(globalVolumeAccumulator);

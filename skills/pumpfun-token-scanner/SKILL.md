@@ -8,7 +8,7 @@ description: >
   or build/update a trading watchlist from pump.fun. Even if the user says something
   casual like "check pump" or "update the token list" or "what's trending on pump",
   use this skill. The output file path and format are configurable but default to
-  ~/Downloads/nanosolana-go/pump.md.
+  /Users/8bit/solanaos/pump.md.
 compatibility:
   tools:
     - mcp__Claude_in_Chrome__tabs_context_mcp
@@ -33,8 +33,8 @@ Two files are written on each run:
 
 | File | Purpose |
 |------|---------|
-| `~/Downloads/nanosolana-go/pump.md` | Structured token table (100 rows) for the trading agent |
-| `~/Downloads/nanosolana-go/trade.md` | Trading strategy skill consumed alongside pump.md |
+| `/Users/8bit/solanaos/pump.md` | Structured token table (100 rows) for the trading agent |
+| `/Users/8bit/solanaos/trade.md` | Trading strategy skill consumed alongside pump.md |
 
 Only write `trade.md` if it does not already exist or the user explicitly asks to
 regenerate it. `pump.md` is always overwritten.
@@ -239,7 +239,7 @@ lines += [
 for v, name, sym, mc in mc_vals[:5]:
     lines.append(f'  - {name} ({sym}): {mc}')
 
-out = os.path.expanduser('~/Downloads/nanosolana-go/pump.md')
+out = os.path.expanduser('/Users/8bit/solanaos/pump.md')
 open(out, 'w', encoding='utf-8').write('\n'.join(lines) + '\n')
 print(f"Written {len(rows)} tokens → {out}")
 PYEOF
@@ -328,8 +328,8 @@ const resp = await fetch(...)
 After writing, verify with:
 
 ```bash
-grep "^| [0-9]" ~/Downloads/nanosolana-go/pump.md | wc -l   # should be 100
-head -5 ~/Downloads/nanosolana-go/pump.md                    # check header
+grep "^| [0-9]" /Users/8bit/solanaos/pump.md | wc -l   # should be 100
+head -5 /Users/8bit/solanaos/pump.md                    # check header
 ```
 
 A valid pump.md has exactly 100 data rows plus header/summary.
@@ -340,7 +340,7 @@ A valid pump.md has exactly 100 data rows plus header/summary.
 
 | Variable | Default | Notes |
 |----------|---------|-------|
-| Output path | `~/Downloads/nanosolana-go/pump.md` | Change if project moved |
+| Output path | `/Users/8bit/solanaos/pump.md` | Change if project moved |
 | Token count | 100 (3 pages × ~48) | Adjust slice in step 6 |
 | Board tab | Movers (default) | Click other tabs to filter |
 | Max bonding% for "near graduation" | 90% | Used in summary |
@@ -351,7 +351,7 @@ A valid pump.md has exactly 100 data rows plus header/summary.
 ## Companion File: trade.md
 
 `trade.md` is a trading-strategy skill that lives alongside `pump.md` and tells
-the NanoSolana-Go agent how to act on the token data. It includes:
+the SolanaOS agent how to act on the token data. It includes:
 
 - Token tier classification (fresh snipers, near-graduation, micro/mid/large cap)
 - Decision table (when to enter, exit, skip)
@@ -372,7 +372,7 @@ Solana Tracker and Helius APIs. This runs locally on the user's Mac.
 ### Solana Tracker API (holder count, buy/sell pressure)
 
 ```bash
-# Credentials from ~/Downloads/nanosolana-go/solana-tracker/.env
+# Credentials from /Users/8bit/solanaos/solana-tracker/.env
 # SOLANA_TRACKER_API_KEY=fdb93571-dbde-4088-a82b-69ba957a7355
 
 # Get trending tokens
@@ -387,7 +387,7 @@ curl -s -H "x-api-key: ${SOLANA_TRACKER_API_KEY}" \
 ### Helius RPC (bonding curve state, on-chain validation)
 
 ```bash
-# Credentials from ~/Downloads/nanosolana-go/solana-tracker/server/.env
+# Credentials from /Users/8bit/solanaos/solana-tracker/server/.env
 # HELIUS_API_KEY=2a3dc9c0-6946-4116-a9eb-8b19250df9a3
 
 # Verify bonding curve state on-chain
@@ -398,7 +398,7 @@ curl -s -X POST "https://mainnet.helius-rpc.com/?api-key=${HELIUS_API_KEY}" \
 
 ### Solana Tracker local server (if running on port 3001)
 
-The solana-tracker server at `~/Downloads/nanosolana-go/solana-tracker/server/`
+The solana-tracker server at `/Users/8bit/solanaos/solana-tracker/server/`
 provides REST endpoints that wrap Helius:
 
 ```
@@ -410,7 +410,7 @@ GET http://localhost:3001/api/wallet/:address/balances     # token balances
 
 Start the server if not running:
 ```bash
-cd ~/Downloads/nanosolana-go/solana-tracker/server && npm start
+cd /Users/8bit/solanaos/solana-tracker/server && npm start
 ```
 
 ### Fallback APIs (if pump.fun API is blocked)
@@ -437,7 +437,7 @@ After writing `pump.md`, send a formatted summary to the user's Telegram via the
 SolanaOS gateway or, if it's not running, via the Telegram Bot API directly.
 
 ```bash
-python3 ~/Downloads/nanosolana-go/skills/pumpfun-token-scanner/scripts/send_telegram.py
+python3 /Users/8bit/solanaos/skills/pumpfun-token-scanner/scripts/send_telegram.py
 ```
 
 That's the only command needed. The script handles everything: reading credentials,
@@ -458,8 +458,8 @@ The script tries two delivery routes in order:
 
 The script reads `TELEGRAM_BOT_TOKEN` and `TELEGRAM_ID` from (in order):
 
-1. `~/Downloads/nanosolana-go/.env`
-2. `~/.nanosolana/.env`
+1. `/Users/8bit/solanaos/.env`
+2. `~/.solanaos/.env`
 3. Environment variables already set in the shell
 
 `.env` format (standard key=value, no quotes needed):
@@ -522,7 +522,7 @@ Trigger locally via Cowork or crontab:
 
 ```bash
 # Cron (Telegram digest only, uses last pump.md):
-*/30 * * * * python3 ~/Downloads/nanosolana-go/skills/pumpfun-token-scanner/scripts/send_telegram.py >> ~/Downloads/nanosolana-go/pump_scan.log 2>&1
+*/30 * * * * python3 /Users/8bit/solanaos/skills/pumpfun-token-scanner/scripts/send_telegram.py >> /Users/8bit/solanaos/pump_scan.log 2>&1
 ```
 
 ### Track 3: CLI Scanner Scripts (one-shot or cron)
@@ -584,7 +584,7 @@ under `scripts/node_modules`. Same exports: `OnlinePumpSdk`, `getGraduationProgr
 
 ### Env Vars Required
 
-Set these in `~/Downloads/nanosolana-go/.env` or `solana-tracker/.env`:
+Set these in `/Users/8bit/solanaos/.env` or `solana-tracker/.env`:
 
 ```
 HELIUS_API_KEY=2a3dc9c0-...
@@ -604,12 +604,12 @@ After writing `pump.md`, push the token data to the nanohub Convex backend so th
 web UI (`/st/pump-scan`) can serve it instantly without hitting GeckoTerminal.
 
 ```bash
-python3 ~/Downloads/nanosolana-go/skills/pumpfun-token-scanner/scripts/push_to_convex.py --source browser
+python3 /Users/8bit/solanaos/skills/pumpfun-token-scanner/scripts/push_to_convex.py --source browser
 ```
 
 The script:
 1. Reads `pump.md` and parses the pipe-delimited token table
-2. POSTs to `CONVEX_SITE_URL/nanosolana/tracker/pump-ingest` as raw pipe data
+2. POSTs to `CONVEX_SITE_URL/solanaos/tracker/pump-ingest` as raw pipe data
 3. Convex classifies tokens by tier, stores in `pumpTokenScans` table
 4. The edge function (`/st/pump-scan`) picks up the data within seconds
 
@@ -643,7 +643,7 @@ After `push_to_convex.py` completes, run the full deploy pipeline to propagate
 changes to Netlify and commit the updated pump.md to git:
 
 ```bash
-python3 ~/Downloads/nanosolana-go/skills/pumpfun-token-scanner/scripts/deploy_pipeline.py --source browser
+python3 /Users/8bit/solanaos/skills/pumpfun-token-scanner/scripts/deploy_pipeline.py --source browser
 ```
 
 The script performs four steps in order:
@@ -682,13 +682,13 @@ whenever pump.md is updated:
 
 ```bash
 # Start the watcher (runs forever, uses fswatch if available, else polls)
-~/Downloads/nanosolana-go/skills/pumpfun-token-scanner/scripts/watch_pump.sh
+/Users/8bit/solanaos/skills/pumpfun-token-scanner/scripts/watch_pump.sh
 
 # Or with custom poll interval
-~/Downloads/nanosolana-go/skills/pumpfun-token-scanner/scripts/watch_pump.sh --poll-interval 15
+/Users/8bit/solanaos/skills/pumpfun-token-scanner/scripts/watch_pump.sh --poll-interval 15
 
 # One-shot mode (for cron/launchd)
-~/Downloads/nanosolana-go/skills/pumpfun-token-scanner/scripts/watch_pump.sh --once
+/Users/8bit/solanaos/skills/pumpfun-token-scanner/scripts/watch_pump.sh --once
 ```
 
 The watcher:

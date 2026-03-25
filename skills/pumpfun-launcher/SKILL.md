@@ -4,11 +4,11 @@ description: Launch new tokens on Pump.fun directly via the Pump SDK
 
 # PumpFun Token Launcher
 
-Launch new tokens on the Pump.fun protocol using the native Pump SDK integrated into NanoSolana.
+Launch new tokens on the Pump.fun protocol using the native Pump SDK integrated into SolanaOS.
 
 ## Prerequisites
 
-- Solana wallet configured (`nanosolana birth`)
+- Solana wallet configured (`solanaos birth`)
 - `HELIUS_RPC_URL` or `SOLANA_RPC_URL` set in vault
 - Sufficient SOL balance for transaction fees (~0.05 SOL)
 
@@ -28,7 +28,7 @@ The Pump SDK provides offline instruction builders for token creation. This skil
 
 ```typescript
 import { Keypair, Connection } from "@solana/web3.js";
-import { PUMP_SDK, OnlinePumpSdk, getBuyTokenAmountFromSolAmount } from "nanosolana";
+import { PUMP_SDK, OnlinePumpSdk, getBuyTokenAmountFromSolAmount } from "solanaos";
 
 const connection = new Connection(process.env.HELIUS_RPC_URL!);
 const mintKeypair = Keypair.generate();

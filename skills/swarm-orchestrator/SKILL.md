@@ -8,7 +8,7 @@ Manage multi-bot trading swarms with agent personas, epistemological memory, and
 
 ## Prerequisites
 
-- NanoSolana core installed
+- SolanaOS core installed
 - `TELEGRAM_BOT_TOKEN` for Telegram gateway (optional)
 - `HELIUS_RPC_URL` configured
 
@@ -18,7 +18,7 @@ Manage multi-bot trading swarms with agent personas, epistemological memory, and
 # Start the swarm orchestrator
 npm run swarm
 
-# Start MawdBot agent orchestrator
+# Start SolanaOS agent orchestrator
 npm run claw
 npm run claw:dev  # with hot reload
 ```
@@ -107,7 +107,7 @@ Each agent gets its own ClawVault with 3-tier epistemological memory:
 The bot manager handles lifecycle for sub-bots:
 
 ```typescript
-import { BotManager, EventBus } from "nanosolana";
+import { BotManager, EventBus } from "solanaos";
 
 const eventBus = new EventBus(5000);
 const manager = new BotManager(eventBus);

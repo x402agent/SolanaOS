@@ -18,7 +18,7 @@ Monitor bonding curve state, calculate price impact, track graduation progress, 
 Fetch the current state of any token's bonding curve:
 
 ```typescript
-import { OnlinePumpSdk } from "nanosolana";
+import { OnlinePumpSdk } from "solanaos";
 
 const sdk = new OnlinePumpSdk(connection);
 const summary = await sdk.fetchBondingCurveSummary(mint);
@@ -33,7 +33,7 @@ console.log("Token Supply Remaining:", summary.tokensRemaining.toString());
 Track how close a token is to graduating from the bonding curve to the AMM:
 
 ```typescript
-import { getGraduationProgress } from "nanosolana";
+import { getGraduationProgress } from "solanaos";
 
 const progress = getGraduationProgress(bondingCurve, global);
 console.log(`Progress: ${progress.progressBps / 100}%`);
@@ -46,7 +46,7 @@ console.log(`Tokens remaining: ${progress.tokensRemaining.toString()}`);
 Calculate the price impact of a trade before executing:
 
 ```typescript
-import { calculateBuyPriceImpact, calculateSellPriceImpact } from "nanosolana";
+import { calculateBuyPriceImpact, calculateSellPriceImpact } from "solanaos";
 
 const buyImpact = calculateBuyPriceImpact(bondingCurve, global, feeConfig, buyAmountLamports);
 console.log(`Price impact: ${buyImpact.priceImpactBps / 100}%`);
@@ -61,7 +61,7 @@ console.log(`Price impact: ${sellImpact.priceImpactBps / 100}%`);
 Get the current buy and sell price per token:
 
 ```typescript
-import { getTokenPrice } from "nanosolana";
+import { getTokenPrice } from "solanaos";
 
 const price = getTokenPrice(bondingCurve, global, feeConfig);
 console.log(`Buy price: ${price.buyPricePerToken.toString()} lamports`);
@@ -73,7 +73,7 @@ console.log(`Sell price: ${price.sellPricePerToken.toString()} lamports`);
 Calculate the current fee tier based on market cap:
 
 ```typescript
-import { computeFeesBps, calculateFeeTier } from "nanosolana";
+import { computeFeesBps, calculateFeeTier } from "solanaos";
 
 const fees = computeFeesBps(global, feeConfig);
 console.log(`Protocol fee: ${fees.protocolFeeBps} bps`);
@@ -85,7 +85,7 @@ console.log(`Creator fee: ${fees.creatorFeeBps} bps`);
 Calculate expected tokens for a given SOL amount:
 
 ```typescript
-import { getBuyTokenAmountFromSolAmount, getSellSolAmountFromTokenAmount } from "nanosolana";
+import { getBuyTokenAmountFromSolAmount, getSellSolAmountFromTokenAmount } from "solanaos";
 
 const tokens = getBuyTokenAmountFromSolAmount({
   global, feeConfig,

@@ -41,7 +41,7 @@ from pathlib import Path
 # ---------------------------------------------------------------------------
 
 SCRIPTS_DIR = Path(__file__).parent
-PROJECT_ROOT = Path(os.path.expanduser("~/Downloads/nanosolana-go"))
+PROJECT_ROOT = Path(os.path.expanduser("/Users/8bit/solanaos"))
 PUMP_MD = PROJECT_ROOT / "pump.md"
 ENV_FILE = PROJECT_ROOT / ".env"
 
