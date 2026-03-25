@@ -318,6 +318,7 @@ This monorepo contains product code, client apps, deployment config, registry me
 | `apps/macos/` | Native macOS menu bar app and packaging/build files. |
 | `apps/dapp-publishing-main/` | Dapp publishing workspace/vendor subtree used by related ecosystem tooling. |
 | `chrome-extension/` | Chrome extension popup/background code, icons, manifest, and UI assets. |
+| `Claw3D-main/` | SolanaOS Office — 3D retro workspace adapted from Claw3D, deployed to office.solanaos.net. Birdeye market terminal, agent chat, skills marketplace. |
 | `cmd/` | Go binary entrypoints such as `solanaos`, gateway API, control API, and TUI programs. |
 | `docs/` | Deployment docs, hardware docs, reference material, examples, release notes, and protocol guides. |
 | `internal/` | Internal Go-only packages that are not meant to be imported outside this module. |
@@ -652,11 +653,12 @@ Full grouped CLI, Telegram, and NanoHub reference:
 
 ```bash
 ./build/solanaos daemon
+./build/solanaos server                    # Control UI on :7777 (aliases: nanobot, control)
+./build/solanaos server --local            # restrict to localhost only
 ./build/solanaos ooda --sim --interval 30
 ./build/solanaos wallet-api
 ./build/solanaos pet
 ./build/solanaos solana health
-./build/solanaos nanobot
 ./build/solanaos gateway start
 ./build/solanaos gateway setup-code
 ./build/solanaos menubar
@@ -1121,13 +1123,76 @@ Status line: `daemon status · ooda mode · watchlist count · honcho on/off`
 
 | Surface | Notes |
 | --- | --- |
-| SolanaOS Control | Local wallet/chat/tools UI, usually on `127.0.0.1:7777` |
+| **SolanaOS Control UI** | Lit + Vite SPA on port 7777 (`solanaos server`). Chat with LLM, real-time status, config editor, debug panel, cron, sessions, skills, channels, logs. Embedded into Go binary via `//go:embed`. Binds `0.0.0.0` by default for Tailscale/LAN; use `--local` for localhost. Proxies WebSocket to gateway on port 18790. Aliases: `nanobot`, `control`. |
+| **SolanaOS Office** | 3D retro workspace at [office.solanaos.net](https://office.solanaos.net). Adapted from Claw3D, rebranded as SolanaOS HQ. Real-time Solana market terminal (Birdeye API), agent chat, skills marketplace. Solana purple/green branding. |
+| SolanaOS Control (legacy) | Local wallet/chat/tools UI, usually on `127.0.0.1:7777` |
 | Web console | Local or Tailscale-served browser UI |
 | Telegram | Main operator bot surface |
 | Chrome extension | Popup wallet/chat/tools plus Seeker pairing |
 | macOS app | Menu bar control surface |
 | Android | SolanaOS Seeker app and gateway pairing |
 | SolanaOS Hub | Registry and skills marketplace at `seeker.solanaos.net` |
+
+## SolanaOS Office (3D Workspace)
+
+A 3D retro office environment for managing agents and monitoring Solana markets. Adapted from Claw3D, lives in `Claw3D-main/`, deployed to [office.solanaos.net](https://office.solanaos.net).
+
+### Features
+
+- **3D office environment** — retro workspace for agent management, rebranded as "SolanaOS HQ"
+- **Real-time Solana market terminal** — powered by Birdeye API with a pop-out terminal in the 3D scene
+- **Agent chat** — interact with agents directly from the office
+- **Skills marketplace** — browse and manage agent skills
+- **Solana branding** — purple (#9945FF) and green (#14F195) color scheme
+
+### Birdeye Market API
+
+The Office exposes an API route at `/api/market` supporting:
+
+| Endpoint | What |
+| --- | --- |
+| `prices` | Current token prices |
+| `trending` | Trending tokens on Solana |
+| `overview` | Market overview |
+| `OHLCV` | Candlestick chart data |
+| `new_listings` | Recently listed tokens |
+| `meme_list` | Meme token leaderboard |
+| `smart_money` | Smart money flow tracking |
+| `token_txs` | Token transaction history |
+| `holder_distribution` | Token holder breakdown |
+| `wallet_networth` | Wallet net worth lookup |
+| `wallet_pnl` | Wallet profit and loss |
+| `search` | Token search |
+| `networks` | Supported networks |
+
+All responses are cached in memory for 60 seconds.
+
+## Gateway WebSocket Protocol
+
+The gateway on port 18790 exposes a full WebSocket protocol used by both the Control UI and the Office. The gateway sends ping frames every 30 seconds with a 90-second read deadline that resets on every message, preventing timeout disconnects.
+
+### Supported Methods
+
+| Method | What |
+| --- | --- |
+| `config.get` / `config.set` / `config.schema` | Read/write `~/.nanosolana/solanaos.json`, schema with sections for LLM, Solana, Telegram, Gateway |
+| `status` / `health` | Runtime status and health check |
+| `system-presence` | Online presence signal |
+| `sessions.list` | Active session listing |
+| `agents.list` / `agent.identity.get` | Agent enumeration and identity |
+| `skills.status` / `channels.status` | Skills and channels state |
+| `cron.*` | Cron job management |
+| `logs.tail` | Live log streaming |
+| `device.pair.*` | Device pairing flow |
+| `exec.approvals.*` | Execution approval management |
+| `models.list` | Available LLM models |
+| `last-heartbeat` | Last daemon heartbeat |
+| `chat.send` | Send message with async LLM inference (streams response as `chat` event) |
+| `chat.history` / `chat.abort` | Chat history retrieval and abort in-flight inference |
+
+### LLM Chat Integration
+
+The `chat.send` method routes to any configured LLM provider via the `LLMProvider` interface. Supported providers: Ollama, OpenRouter, Anthropic, xAI. The gateway prints `LLM attached: <provider> / <model>` on startup. Responses stream back to the client as `chat` WebSocket events.
 
 ## Hardware
 
