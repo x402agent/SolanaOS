@@ -26,12 +26,26 @@ interface TrendingToken {
   logoURI?: string;
 }
 
-interface PricesResponse {
-  tokens: TokenPrice[];
+// Birdeye multi_price returns { success, data: { [mint]: { value, priceChange24h, ... } } }
+interface BirdeyePriceEntry {
+  value: number;
+  priceChange24h: number;
+  updateUnixTime: number;
 }
 
-interface TrendingResponse {
-  tokens: TrendingToken[];
+// Birdeye token_trending returns { success, data: { tokens: [...] } } or { data: { items: [...] } }
+interface BirdeyeTrendingItem {
+  address: string;
+  symbol: string;
+  name: string;
+  price: number;
+  price_change_24h_percent?: number;
+  priceChange24hPercent?: number;
+  market_cap?: number;
+  marketCap?: number;
+  liquidity?: number;
+  logo_uri?: string;
+  logoURI?: string;
 }
 
 /* ------------------------------------------------------------------ */
@@ -46,7 +60,7 @@ const WATCHLIST_MINTS: Record<string, string> = {
   POPCAT: "7GCihgDB8fe6KNjn2MYtkzZcRjQy3t9GHdC8uHYmW2hr",
 };
 
-const POLL_INTERVAL_MS = 30_000;
+const POLL_INTERVAL_MS = 60_000;
 
 /* ------------------------------------------------------------------ */
 /*  Formatters                                                         */
@@ -253,18 +267,26 @@ export default function MarketPanel() {
       setErrorPrices(null);
       const res = await fetch("/api/market?type=prices");
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const data: PricesResponse = await res.json();
+      const json = await res.json();
 
-      // Re-order to match watchlist order and filter to watchlist only
-      const mintOrder = Object.values(WATCHLIST_MINTS);
-      const byMint = new Map(data.tokens.map((t) => [t.mint, t]));
-      const ordered: TokenPrice[] = [];
-      for (const mint of mintOrder) {
-        const token = byMint.get(mint);
-        if (token) ordered.push(token);
+      // Birdeye returns { success, data: { [mint]: { value, priceChange24h, ... } } }
+      const raw: Record<string, BirdeyePriceEntry> = json?.data ?? {};
+      const symbols = Object.keys(WATCHLIST_MINTS);
+      const mints = Object.values(WATCHLIST_MINTS);
+      const result: TokenPrice[] = [];
+      for (let i = 0; i < mints.length; i++) {
+        const entry = raw[mints[i]];
+        if (entry) {
+          result.push({
+            mint: mints[i],
+            symbol: symbols[i],
+            name: symbols[i],
+            price: entry.value ?? 0,
+            priceChange24h: entry.priceChange24h ?? 0,
+          });
+        }
       }
-      // If API returned them differently keyed, fall back to whatever we got
-      setPrices(ordered.length > 0 ? ordered : data.tokens.slice(0, 5));
+      setPrices(result);
       setLastUpdated(new Date());
     } catch (err) {
       setErrorPrices(err instanceof Error ? err.message : "Failed to fetch prices");
@@ -279,8 +301,22 @@ export default function MarketPanel() {
       setErrorTrending(null);
       const res = await fetch("/api/market?type=trending");
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const data: TrendingResponse = await res.json();
-      setTrending(data.tokens.slice(0, 10));
+      const json = await res.json();
+
+      // Birdeye trending returns { data: { tokens: [...] } } or { data: { items: [...] } }
+      const items: BirdeyeTrendingItem[] =
+        json?.data?.tokens ?? json?.data?.items ?? [];
+      const result: TrendingToken[] = items.slice(0, 10).map((t) => ({
+        mint: t.address,
+        symbol: t.symbol ?? "???",
+        name: t.name ?? t.symbol ?? "",
+        price: t.price ?? 0,
+        priceChange24h: t.price_change_24h_percent ?? t.priceChange24hPercent ?? 0,
+        marketCap: t.market_cap ?? t.marketCap ?? 0,
+        liquidity: t.liquidity ?? 0,
+        logoURI: t.logo_uri ?? t.logoURI,
+      }));
+      setTrending(result);
     } catch (err) {
       setErrorTrending(err instanceof Error ? err.message : "Failed to fetch trending");
     } finally {
