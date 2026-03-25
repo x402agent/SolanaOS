@@ -205,6 +205,7 @@ Browse all 80+ skills at [seeker.solanaos.net/skills](https://seeker.solanaos.ne
 | `pkg/x402/` | x402 payment protocol — USDC-gated APIs |
 | `pkg/gateway/` | Gateway API server with memory, trading, chat endpoints |
 | `pkg/pinata/` | Pinata Private IPFS Hub — upload, list, access links, groups, mesh sync, mainnet deploy |
+| `services/agent-wallet/` | Agent Wallet API — encrypted vault, Solana + EVM wallets, Privy, E2B sandboxes, MCP server |
 
 ### Architecture
 
@@ -251,6 +252,12 @@ Local Operator Machine
      │    ├── BitAxe fleet OODA loop
      │    ├── REST API + SSE live stream
      │    └── TamaGOchi pet system
+     ├── Agent Wallet API (port 8421)
+     │    ├── AES-256-GCM encrypted vault
+     │    ├── Solana + EVM wallet CRUD
+     │    ├── Privy managed wallets (optional)
+     │    ├── E2B sandbox deployment
+     │    └── MCP server for AI agent tooling
      ├── Control API (port 7777)
      │    └── Wallet, status, chat, tools
      └── Chrome Extension
@@ -276,8 +283,9 @@ This monorepo contains product code, client apps, deployment config, registry me
 | `.netlify/` | Local Netlify runtime/build state used during Netlify-oriented frontend work. |
 | `.vscode/` | Workspace editor settings for local development. |
 | `.vscode/settings.json` | VS Code workspace settings file for this repo. |
-| `acp_registry/` | ACP registry metadata published from this repo. |
-| `acp_registry/agent.json` | SolanaOS agent registry descriptor. |
+| `acp_registry/` | ACP registry metadata and interactive generator. |
+| `acp_registry/agent.example.json` | Reference ACP agent registry descriptor. |
+| `acp_registry/generate.mjs` | Interactive CLI to generate a custom `agent.json` for the 8004 ACP registry. |
 | `apps/` | User-facing applications layered on top of the runtime. |
 | `apps/android/` | Solana Seeker Android app with onboarding, wallet pairing, chat, Grok, ORE, voice, and runtime controls. |
 | `apps/macos/` | Native macOS menu bar app and packaging/build files. |
