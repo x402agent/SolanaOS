@@ -156,6 +156,7 @@ type Client struct {
 	mu                 sync.Mutex
 	sessions           map[string][]Message // sessionID -> history
 	xaiResponseIDs     map[string]string    // sessionID -> last xAI response ID (stateful Responses API)
+	feedback           *FeedbackState       // EMA-learned parameter adjustments for god mode
 }
 
 // New creates a client from env vars.
@@ -269,6 +270,7 @@ func New() *Client {
 		http:               &http.Client{Timeout: 120 * time.Second},
 		sessions:           make(map[string][]Message),
 		xaiResponseIDs:     make(map[string]string),
+		feedback:           NewFeedbackState(),
 	}
 }
 
@@ -526,6 +528,11 @@ func (c *Client) LastResolvedClient() string {
 	c.mu.Lock()
 	defer c.mu.Unlock()
 	return c.lastResolvedClient
+}
+
+// Feedback returns the EMA feedback state for god mode parameter learning.
+func (c *Client) Feedback() *FeedbackState {
+	return c.feedback
 }
 
 func (c *Client) FallbackEnabled() bool {

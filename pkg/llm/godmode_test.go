@@ -3,9 +3,9 @@ package llm
 import "testing"
 
 func TestDetectGodModeProfileTrading(t *testing.T) {
-	profile, confidence := detectGodModeProfile("Give me a SOL perp setup with entry, stop, target, and risk.", nil)
-	if profile.ID != "trading" && profile.ID != "execution" {
-		t.Fatalf("profile.ID = %q, want trading or execution", profile.ID)
+	ctx, confidence := DetectAutoTuneContext("Give me a SOL perp setup with entry, stop, target, and risk.", nil)
+	if ctx != ContextTrading && ctx != ContextExecution {
+		t.Fatalf("context = %q, want trading or execution", ctx)
 	}
 	if confidence <= 0 {
 		t.Fatalf("confidence = %f, want > 0", confidence)
@@ -13,17 +13,18 @@ func TestDetectGodModeProfileTrading(t *testing.T) {
 }
 
 func TestDetectGodModeProfileCode(t *testing.T) {
-	profile, _ := detectGodModeProfile("Write a Go function that parses a Jupiter swap response and add tests.", nil)
-	if profile.ID != "code" {
-		t.Fatalf("profile.ID = %q, want code", profile.ID)
+	ctx, _ := DetectAutoTuneContext("Write a Go function that parses a Jupiter swap response and add tests.", nil)
+	if ctx != ContextCode {
+		t.Fatalf("context = %q, want code", ctx)
 	}
 }
 
 func TestCleanupGodModeReply(t *testing.T) {
-	got := cleanupGodModeReply("Sure, I think the cleanest path is to switch the provider and retry.")
+	cfg := STMConfig{HedgeReducer: true, DirectMode: true}
+	got := ApplySTM("Sure, I think the cleanest path is to switch the provider and retry.", cfg)
 	want := "The cleanest path is to switch the provider and retry."
 	if got != want {
-		t.Fatalf("cleanupGodModeReply() = %q, want %q", got, want)
+		t.Fatalf("ApplySTM() = %q, want %q", got, want)
 	}
 }
 

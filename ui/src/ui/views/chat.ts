@@ -366,13 +366,13 @@ export function renderChat(props: ChatProps) {
             class="btn ${props.godModeEnabled ? "primary" : ""}"
             type="button"
             ?disabled=${!props.connected}
-            title="Multi-model compare, adaptive routing, and response cleanup. This mode does not disable provider safeguards."
+            title="Solana God Mode: AutoTune adaptive sampling, multi-model racing, STM output normalization, and anti-refusal scoring. Liberated cognition for maximum signal density."
             @click=${() => props.onGodModeToggle(!props.godModeEnabled)}
           >
-            ${props.godModeEnabled ? "God Mode On" : "God Mode Off"}
+            ${props.godModeEnabled ? "God Mode" : "God Mode Off"}
           </button>
           <span class="chat-compose__mode-note">
-            Multi-model compare for higher-signal answers.
+            ${props.godModeEnabled ? "AutoTune + Multi-model race + STM cleanup" : "Enable liberated multi-model cognition"}
           </span>
         </div>
         <div class="chat-compose__row">

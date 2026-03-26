@@ -429,13 +429,32 @@ func (b *Bridge) handleWSRequest(writeJSON func(map[string]any), id, method stri
 				"ts":      time.Now().UnixMilli(),
 			}
 			if godReply != nil {
-				assistantMessage["meta"] = map[string]any{
+				meta := map[string]any{
 					"mode":        "god",
 					"profile":     godReply.Profile,
 					"confidence":  godReply.Confidence,
 					"winnerModel": godReply.WinnerModel,
 					"candidates":  godReply.Candidates,
 				}
+				if godReply.AutoTune != nil {
+					meta["autoTune"] = map[string]any{
+						"detectedContext": godReply.AutoTune.DetectedContext,
+						"confidence":      godReply.AutoTune.Confidence,
+						"reasoning":       godReply.AutoTune.Reasoning,
+						"params":          godReply.AutoTune.Params,
+					}
+				}
+				if godReply.Parseltongue != nil && len(godReply.Parseltongue.TriggersFound) > 0 {
+					meta["parseltongue"] = map[string]any{
+						"triggersFound":   godReply.Parseltongue.TriggersFound,
+						"techniqueUsed":   godReply.Parseltongue.TechniqueUsed,
+						"transformations": len(godReply.Parseltongue.Transformations),
+					}
+				}
+				if len(godReply.STMApplied) > 0 {
+					meta["stmApplied"] = godReply.STMApplied
+				}
+				assistantMessage["meta"] = meta
 			}
 			b.appendChatMessage(sessionKey, assistantMessage)
 			// Ingest assistant reply into Honcho
@@ -461,6 +480,34 @@ func (b *Bridge) handleWSRequest(writeJSON func(map[string]any), id, method stri
 				},
 			})
 		}()
+
+	case "chat.feedback":
+		// EMA feedback loop: record user rating to improve god mode parameter selection.
+		messageId, _ := params["messageId"].(string)
+		ratingRaw, _ := params["rating"].(float64)
+		contextTypeStr, _ := params["contextType"].(string)
+		modelStr, _ := params["model"].(string)
+		rating := int(ratingRaw)
+		if rating != 1 && rating != -1 {
+			rating = 1
+		}
+		if b.llm != nil && b.llm.Feedback() != nil && contextTypeStr != "" {
+			record := llm.FeedbackRecord{
+				MessageID:   messageId,
+				Timestamp:   time.Now().UnixMilli(),
+				ContextType: llm.ContextType(contextTypeStr),
+				Model:       modelStr,
+				Rating:      rating,
+			}
+			b.llm.Feedback().RecordFeedback(record)
+			b.logf("💬 chat.feedback: recorded %+d for %s context=%s", rating, modelStr, contextTypeStr)
+		}
+		writeJSON(map[string]any{
+			"type":    "res",
+			"id":      id,
+			"ok":      true,
+			"payload": map[string]any{"ok": true},
+		})
 
 	case "chat.abort":
 		writeJSON(map[string]any{

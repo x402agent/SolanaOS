@@ -66,6 +66,7 @@ type LLMProvider interface {
 	IsConfigured() bool
 	Chat(ctx context.Context, sessionID, userMsg, contextStr string) (string, error)
 	ChatGodMode(ctx context.Context, sessionID, userMsg, contextStr string) (*llm.GodModeResult, error)
+	Feedback() *llm.FeedbackState
 }
 
 // SetLLM attaches an LLM provider for chat inference.
