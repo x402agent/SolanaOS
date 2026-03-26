@@ -35,7 +35,7 @@ Claw3D-main
 .idea/
 .vscode/
 *.code-workspace
-
+page-agent-main
 # ── Local agent/editor state ─────────────────────────────────────────
 .agent/
 .augment/
@@ -44,7 +44,7 @@ Claw3D-main
 .commandcode/
 !.agents/
 !.agents/**
-
+Claw3D-main
 # ── Android local build state ─────────────────────────────────────────
 apps/android/local.properties
 apps/android/release-signing.properties
