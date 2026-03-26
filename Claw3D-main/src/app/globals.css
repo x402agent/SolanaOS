@@ -5,21 +5,6 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/* SolanaOS brand: remap cyan palette to Solana purple/green */
-@theme {
-  --color-cyan-50: #f0fdf4;
-  --color-cyan-100: #d1fae5;
-  --color-cyan-200: #a7f3d0;
-  --color-cyan-300: #14F195;
-  --color-cyan-400: #14F195;
-  --color-cyan-500: #9945FF;
-  --color-cyan-600: #8B35EF;
-  --color-cyan-700: #7C28DF;
-  --color-cyan-800: #6B21A8;
-  --color-cyan-900: #581C87;
-  --color-cyan-950: #3B0764;
-}
-
 :root {
   --neutral-tint-rgb: rgb(100 80 160);
   --neutral-tint: #6450a0;
@@ -341,7 +326,6 @@
     letter-spacing: var(--tracking-normal);
     font-family: var(--font-sans), sans-serif;
     position: relative;
-    overflow: hidden;
   }
 
   body::before {

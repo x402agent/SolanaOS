@@ -399,10 +399,14 @@ func (b *Bridge) handleWSRequest(writeJSON func(map[string]any), id, method stri
 				b.logf("💬 chat.send: LLM error: %v", err)
 				reply = "LLM error: " + err.Error()
 			} else {
-				b.logf("💬 chat.send: LLM replied (%d chars)", len(reply))
+				b.logf("💬 chat.send: LLM raw reply (%d chars)", len(reply))
 			}
 			// Strip <think>...</think> reasoning blocks and special tokens from response
 			reply = stripThinkingTags(reply)
+			if reply == "" {
+				reply = "I'm thinking about this but couldn't formulate a response. Could you rephrase?"
+			}
+			b.logf("💬 chat.send: cleaned reply (%d chars)", len(reply))
 			// Store assistant reply
 			b.appendChatMessage(sessionKey, map[string]any{
 				"role":    "assistant",
@@ -703,6 +707,7 @@ func (b *Bridge) handleWSRequest(writeJSON func(map[string]any), id, method stri
 		channels["signal"] = map[string]any{"configured": false, "running": false}
 		channels["nostr"] = map[string]any{"configured": false, "running": false}
 		channels["imessage"] = map[string]any{"configured": false, "running": false}
+		channels["bluebubbles"] = map[string]any{"configured": false, "running": false}
 		channels["google-chat"] = map[string]any{"configured": false, "running": false}
 		// WebChat is always available via the gateway
 		channels["webchat"] = map[string]any{
@@ -956,6 +961,12 @@ func stripThinkingTags(s string) string {
 	// Remove repeated user/assistant prompt leakage
 	if idx := strings.Index(s, "<|im_start|>"); idx != -1 {
 		s = s[:idx]
+	}
+	// Cut off hallucinated conversation turns (model generates "user\n..." after answer)
+	for _, marker := range []string{"\nuser\n", "\nassistant\n", "\nsystem\n"} {
+		if idx := strings.Index(s, marker); idx != -1 {
+			s = s[:idx]
+		}
 	}
 	return strings.TrimSpace(s)
 }

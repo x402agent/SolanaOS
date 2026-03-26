@@ -226,7 +226,7 @@ export default function GatewaySetupPage() {
   }, [gatewayUrl, token, router]);
 
   return (
-    <div className="relative flex h-full flex-col items-center overflow-y-auto bg-[#0a0a14] pb-20">
+    <div className="relative flex min-h-screen flex-col items-center overflow-y-auto bg-[#0a0a14] pb-20">
       {/* Background effects */}
       <div className="pointer-events-none fixed inset-0 z-0">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(153,69,255,0.08),transparent_50%),radial-gradient(circle_at_80%_80%,rgba(20,241,149,0.05),transparent_50%)]" />
@@ -273,8 +273,51 @@ export default function GatewaySetupPage() {
         </div>
       </div>
 
+      {/* Quick Join — shared public gateway */}
+      <div className="relative z-10 mt-8 w-full max-w-2xl px-6">
+        <div className="rounded-xl border border-[#14F195]/20 bg-[#14F195]/[0.04] p-5">
+          <div className="flex items-start gap-3">
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#14F195]/15">
+              <Zap className="h-4 w-4 text-[#14F195]" />
+            </div>
+            <div className="min-w-0 flex-1">
+              <h2 className="text-sm font-semibold text-white">
+                Quick Join — Public Gateway
+              </h2>
+              <p className="mt-1 text-xs text-white/50">
+                Connect instantly to the shared SolanaOS gateway. No setup
+                required — create your agents and start building right away.
+              </p>
+              <button
+                type="button"
+                className="mt-3 inline-flex items-center gap-2 rounded-md bg-[#14F195] px-5 py-2.5 text-sm font-bold text-[#0a0a14] transition hover:bg-[#14F195]/90"
+                onClick={() => {
+                  saveBrowserGatewaySettings({
+                    gatewayUrl: "wss://my-solanaos.fly.dev:18790",
+                    token: "",
+                    lastConnected: new Date().toISOString(),
+                  });
+                  router.push("/office");
+                }}
+              >
+                <Terminal className="h-4 w-4" />
+                Enter the Office
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div className="my-4 flex items-center gap-3">
+          <div className="h-px flex-1 bg-white/10" />
+          <span className="text-[10px] font-medium tracking-[0.15em] text-white/30">
+            OR SET UP YOUR OWN
+          </span>
+          <div className="h-px flex-1 bg-white/10" />
+        </div>
+      </div>
+
       {/* Progress bar */}
-      <div className="relative z-10 mt-8 flex w-full max-w-2xl gap-1.5 px-6">
+      <div className="relative z-10 flex w-full max-w-2xl gap-1.5 px-6">
         {[1, 2, 3].map((s) => (
           <div
             key={s}
@@ -561,7 +604,7 @@ export default function GatewaySetupPage() {
           <p className="text-[11px] text-white/30">
             Need help?{" "}
             <a
-              href="https://solanaos.net"
+              href="https://go.solanaos.net"
               target="_blank"
               rel="noopener noreferrer"
               className="text-[#14F195]/50 hover:text-[#14F195]"

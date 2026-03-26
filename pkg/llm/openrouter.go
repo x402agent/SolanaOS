@@ -1192,6 +1192,8 @@ func (c *Client) chatOllama(ctx context.Context, baseURL, model string, messages
 		"messages": messages,
 		"options": map[string]interface{}{
 			"temperature": 0.2,
+			"stop":        []string{"<|im_start|>", "<|im_end|>", "<|endoftext|>"},
+			"num_predict": 2048,
 		},
 	}
 
@@ -1226,10 +1228,12 @@ func (c *Client) chatOllama(ctx context.Context, baseURL, model string, messages
 	if result.Error != "" {
 		return "", fmt.Errorf("ollama: %s", result.Error)
 	}
-	if strings.TrimSpace(result.Message.Content) == "" {
-		return "", fmt.Errorf("ollama: empty response")
+	content := result.Message.Content
+	// Don't reject responses that contain only thinking tags — let the gateway strip them
+	if strings.TrimSpace(content) == "" {
+		return "(no response)", nil
 	}
-	return result.Message.Content, nil
+	return content, nil
 }
 
 func parseBool(raw string, fallback bool) bool {
