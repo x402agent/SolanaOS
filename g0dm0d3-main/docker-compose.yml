@@ -1,0 +1,39 @@
+# G0DM0D3 Self-Hosting Stack
+#
+# Spin up the full stack for you and your friends:
+#   1. Copy .env.example to .env and fill in OPENROUTER_API_KEY
+#   2. docker compose up --build -d
+#   3. Open http://localhost:3000
+#
+# Your friends connect to the same URL — no individual API keys needed.
+# The server-side OPENROUTER_API_KEY covers everyone.
+
+services:
+  # ── API Server ────────────────────────────────────────────
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      - PORT=7860
+    expose:
+      - "7860"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:7860/v1/health"]
+      interval: 30s
+      timeout: 5s
+      start_period: 10s
+
+  # ── Frontend (nginx) ──────────────────────────────────────
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.web
+    restart: unless-stopped
+    ports:
+      - "${WEB_PORT:-3000}:80"
+    depends_on:
+      api:
+        condition: service_healthy

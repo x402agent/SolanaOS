@@ -22,6 +22,8 @@ import (
 	"strings"
 	"sync"
 	"time"
+
+	"github.com/x402agent/Solana-Os-Go/pkg/llm"
 )
 
 // BridgeConfig configures the gateway bridge server.
@@ -42,20 +44,20 @@ func DefaultBridgeConfig() BridgeConfig {
 
 // Bridge is the native SolanaOS gateway bridge server.
 type Bridge struct {
-	cfg       BridgeConfig
-	listener  net.Listener
-	mu        sync.RWMutex
-	nodes     map[string]*connectedNode
-	pending   map[string]*pairRequest
-	invokes   map[string]chan invokeResponse
-	authToken string
-	logf      func(string, ...any)
-	cancel    context.CancelFunc
+	cfg         BridgeConfig
+	listener    net.Listener
+	mu          sync.RWMutex
+	nodes       map[string]*connectedNode
+	pending     map[string]*pairRequest
+	invokes     map[string]chan invokeResponse
+	authToken   string
+	logf        func(string, ...any)
+	cancel      context.CancelFunc
 	llm         LLMProvider    // optional chat inference
 	skills      SkillsProvider // optional skills catalog
 	honcho      HonchoProvider // optional Honcho memory
 	startedAt   time.Time
-	reloadLLM   func() LLMProvider // callback to reload LLM from config
+	reloadLLM   func() LLMProvider          // callback to reload LLM from config
 	chatHistory map[string][]map[string]any // session -> messages
 }
 
@@ -63,6 +65,7 @@ type Bridge struct {
 type LLMProvider interface {
 	IsConfigured() bool
 	Chat(ctx context.Context, sessionID, userMsg, contextStr string) (string, error)
+	ChatGodMode(ctx context.Context, sessionID, userMsg, contextStr string) (*llm.GodModeResult, error)
 }
 
 // SetLLM attaches an LLM provider for chat inference.

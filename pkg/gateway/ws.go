@@ -18,6 +18,7 @@ import (
 	"time"
 
 	"github.com/gorilla/websocket"
+	"github.com/x402agent/Solana-Os-Go/pkg/llm"
 )
 
 // wsUpgrader handles the HTTP → WebSocket upgrade.
@@ -309,11 +310,13 @@ func (b *Bridge) handleWSRequest(writeJSON func(map[string]any), id, method stri
 		runID := "run-" + generateShortID()
 		message, _ := params["message"].(string)
 		sessionKey, _ := params["sessionKey"].(string)
+		mode, _ := params["mode"].(string)
+		mode = strings.ToLower(strings.TrimSpace(mode))
 		msgPreview := message
 		if len(msgPreview) > 60 {
 			msgPreview = msgPreview[:60] + "..."
 		}
-		b.logf("💬 chat.send: run=%s session=%s msg=%q", runID, sessionKey, msgPreview)
+		b.logf("💬 chat.send: run=%s session=%s mode=%s msg=%q", runID, sessionKey, mode, msgPreview)
 		writeJSON(map[string]any{
 			"type": "res",
 			"id":   id,
@@ -394,7 +397,19 @@ func (b *Bridge) handleWSRequest(writeJSON func(map[string]any), id, method stri
 			}
 
 			combinedContext := strings.Join(contextParts, "\n\n")
-			reply, err := b.llm.Chat(ctx, sessionKey, message, combinedContext)
+			var (
+				reply    string
+				err      error
+				godReply *llm.GodModeResult
+			)
+			if mode == "god" || mode == "godmode" || mode == "solana-god" {
+				godReply, err = b.llm.ChatGodMode(ctx, sessionKey, message, combinedContext)
+				if err == nil && godReply != nil {
+					reply = godReply.Reply
+				}
+			} else {
+				reply, err = b.llm.Chat(ctx, sessionKey, message, combinedContext)
+			}
 			if err != nil {
 				b.logf("💬 chat.send: LLM error: %v", err)
 				reply = "LLM error: " + err.Error()
@@ -408,11 +423,21 @@ func (b *Bridge) handleWSRequest(writeJSON func(map[string]any), id, method stri
 			}
 			b.logf("💬 chat.send: cleaned reply (%d chars)", len(reply))
 			// Store assistant reply
-			b.appendChatMessage(sessionKey, map[string]any{
+			assistantMessage := map[string]any{
 				"role":    "assistant",
 				"content": reply,
 				"ts":      time.Now().UnixMilli(),
-			})
+			}
+			if godReply != nil {
+				assistantMessage["meta"] = map[string]any{
+					"mode":        "god",
+					"profile":     godReply.Profile,
+					"confidence":  godReply.Confidence,
+					"winnerModel": godReply.WinnerModel,
+					"candidates":  godReply.Candidates,
+				}
+			}
+			b.appendChatMessage(sessionKey, assistantMessage)
 			// Ingest assistant reply into Honcho
 			if b.honcho != nil && b.honcho.IsConfigured() {
 				go func() {
@@ -431,6 +456,7 @@ func (b *Bridge) handleWSRequest(writeJSON func(map[string]any), id, method stri
 					"message": map[string]any{
 						"role": "assistant",
 						"text": reply,
+						"meta": assistantMessage["meta"],
 					},
 				},
 			})
@@ -508,17 +534,17 @@ func (b *Bridge) handleWSRequest(writeJSON func(map[string]any), id, method stri
 							"title": "Solana",
 							"properties": map[string]any{
 								"rpc_url":                map[string]any{"type": "string", "title": "RPC URL"},
-								"solana_tracker_api_key":  map[string]any{"type": "string", "title": "SolanaTracker API Key"},
-								"helius_api_key":          map[string]any{"type": "string", "title": "Helius API Key"},
-								"birdeye_api_key":         map[string]any{"type": "string", "title": "Birdeye API Key"},
+								"solana_tracker_api_key": map[string]any{"type": "string", "title": "SolanaTracker API Key"},
+								"helius_api_key":         map[string]any{"type": "string", "title": "Helius API Key"},
+								"birdeye_api_key":        map[string]any{"type": "string", "title": "Birdeye API Key"},
 							},
 						},
 						"telegram": map[string]any{
 							"type":  "object",
 							"title": "Telegram",
 							"properties": map[string]any{
-								"bot_token":   map[string]any{"type": "string", "title": "Bot Token"},
-								"chat_id":     map[string]any{"type": "string", "title": "Chat ID"},
+								"bot_token": map[string]any{"type": "string", "title": "Bot Token"},
+								"chat_id":   map[string]any{"type": "string", "title": "Chat ID"},
 							},
 						},
 						"gateway": map[string]any{
@@ -650,21 +676,21 @@ func (b *Bridge) handleWSRequest(writeJSON func(map[string]any), id, method stri
 					emoji = "🔧"
 				}
 				skillsList = append(skillsList, map[string]any{
-					"name":              s.Name,
-					"description":       s.Description,
-					"source":            "bundled",
-					"filePath":          "skills/" + s.Name + "/SKILL.md",
-					"baseDir":           "skills/" + s.Name,
-					"skillKey":          s.Name,
-					"emoji":             emoji,
-					"always":            false,
-					"disabled":          false,
+					"name":               s.Name,
+					"description":        s.Description,
+					"source":             "bundled",
+					"filePath":           "skills/" + s.Name + "/SKILL.md",
+					"baseDir":            "skills/" + s.Name,
+					"skillKey":           s.Name,
+					"emoji":              emoji,
+					"always":             false,
+					"disabled":           false,
 					"blockedByAllowlist": false,
-					"eligible":          true,
-					"requirements":      map[string]any{"bins": []any{}, "env": []any{}, "config": []any{}, "os": []any{}},
-					"missing":           map[string]any{"bins": []any{}, "env": []any{}, "config": []any{}, "os": []any{}},
-					"configChecks":      []any{},
-					"install":           []any{},
+					"eligible":           true,
+					"requirements":       map[string]any{"bins": []any{}, "env": []any{}, "config": []any{}, "os": []any{}},
+					"missing":            map[string]any{"bins": []any{}, "env": []any{}, "config": []any{}, "os": []any{}},
+					"configChecks":       []any{},
+					"install":            []any{},
 				})
 			}
 		}
@@ -673,8 +699,8 @@ func (b *Bridge) handleWSRequest(writeJSON func(map[string]any), id, method stri
 			"id":   id,
 			"ok":   true,
 			"payload": map[string]any{
-				"skills":          skillsList,
-				"workspaceDir":    "skills/",
+				"skills":           skillsList,
+				"workspaceDir":     "skills/",
 				"managedSkillsDir": "~/.nanosolana/skills",
 			},
 		})

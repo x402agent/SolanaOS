@@ -13,6 +13,7 @@ export type ChatState = {
   chatSending: boolean;
   chatMessage: string;
   chatAttachments: ChatAttachment[];
+  chatGodMode: boolean;
   chatRunId: string | null;
   chatStream: string | null;
   chatStreamStartedAt: number | null;
@@ -123,6 +124,7 @@ export async function sendChatMessage(
     await state.client.request("chat.send", {
       sessionKey: state.sessionKey,
       message: msg,
+      mode: state.chatGodMode ? "god" : undefined,
       deliver: false,
       idempotencyKey: runId,
       attachments: apiAttachments,

@@ -33,6 +33,7 @@ export type ChatProps = {
   toolMessages: unknown[];
   stream: string | null;
   streamStartedAt: number | null;
+  godModeEnabled: boolean;
   assistantAvatarUrl?: string | null;
   draft: string;
   queue: ChatQueueItem[];
@@ -60,6 +61,7 @@ export type ChatProps = {
   onRefresh: () => void;
   onToggleFocusMode: () => void;
   onDraftChange: (next: string) => void;
+  onGodModeToggle: (next: boolean) => void;
   onSend: () => void;
   onAbort?: () => void;
   onQueueRemove: (id: string) => void;
@@ -359,6 +361,20 @@ export function renderChat(props: ChatProps) {
 
       <div class="chat-compose">
         ${renderAttachmentPreview(props)}
+        <div class="chat-compose__modes">
+          <button
+            class="btn ${props.godModeEnabled ? "primary" : ""}"
+            type="button"
+            ?disabled=${!props.connected}
+            title="Multi-model compare, adaptive routing, and response cleanup. This mode does not disable provider safeguards."
+            @click=${() => props.onGodModeToggle(!props.godModeEnabled)}
+          >
+            ${props.godModeEnabled ? "God Mode On" : "God Mode Off"}
+          </button>
+          <span class="chat-compose__mode-note">
+            Multi-model compare for higher-signal answers.
+          </span>
+        </div>
         <div class="chat-compose__row">
           <label class="field chat-compose__field">
             <span>Message</span>
