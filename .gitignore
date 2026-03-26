@@ -162,7 +162,7 @@ mawdbot-bitaxe/
 
 # Solana dApp Store publishing config (contains addresses + keys)
 publishing/
-
+g0dm0d3-main
 # Android signing keys
 apps/android/.signing/
 *.jks
