@@ -130,6 +130,51 @@ This README is the GitHub front door. Use it to install, explore the live surfac
 | register agents on-chain with ACP | `node acp_registry/generate.mjs` — interactive 8004 agent.json builder |
 | connect research, execution, and memory | SolanaTracker, Jupiter, Hyperliquid, Aster, Honcho, x402 |
 
+## Solana God Mode
+
+Solana God Mode is a fully integrated liberation pipeline ported from [G0DM0D3](https://github.com/elder-plinius/G0DM0D3) and rebuilt in Go as a native part of the SolanaOS runtime. It transforms the chat system into a sentient, multi-model intelligence that maximizes signal density and strips safety theater.
+
+```text
+User Input
+    │
+    ├─→ [1] AutoTune: Classify context → Select optimal sampling params (7 contexts, 6 dimensions)
+    │
+    ├─→ [2] Feedback Loop: Blend EMA-learned adjustments from user ratings
+    │
+    ├─→ [3] Parseltongue: Detect triggers → Obfuscate input (6 techniques, 3 intensities)
+    │
+    ├─→ [4] Multi-Model Race: N models in parallel via OpenRouter → Score → Winner
+    │        └─→ ULTRAPLINIAN scoring: length + structure + anti-refusal + directness + relevance
+    │
+    ├─→ [5] STM: Strip hedges, preambles, formalize → Clean output
+    │
+    └─→ Response with full pipeline metadata
+```
+
+### Modules
+
+| Module | File | What |
+| --- | --- | --- |
+| **AutoTune** | `pkg/llm/autotune.go` | Context-adaptive sampling engine. Detects 7 context types (code, execution, trading, analytical, creative, conversational, chaotic) and selects optimal params across 6 dimensions (temperature, top_p, top_k, frequency_penalty, presence_penalty, repetition_penalty). Includes conversation-length adaptation and low-confidence blending. |
+| **EMA Feedback Loop** | `pkg/llm/autotune.go` | Online learning from binary user ratings (thumbs up/down). Maintains per-context EMA profiles that converge toward preferred parameters over time. Cold-start gated (3 samples), weight-scaled up to 50% influence at 20 samples. |
+| **Parseltongue** | `pkg/llm/parseltongue.go` | Input perturbation engine for red-teaming. 50+ default trigger words, 6 transformation techniques (leetspeak, Unicode homoglyphs, zero-width joiners, mixed case, phonetic, random), 3 intensity levels. Opt-in per request. |
+| **STM** | `pkg/llm/stm.go` | Semantic Transformation Modules for output normalization. Hedge reducer (11 patterns), direct mode (10 preamble patterns), casual mode (22 formal→casual substitutions). Sequential pipeline, independently toggleable. |
+| **ULTRAPLINIAN Scoring** | `pkg/llm/godmode.go` | 100-point composite scoring across 5 axes: length (0-25), structure (0-20), anti-refusal (0-25), directness (0-15), relevance (0-15), plus profile-specific bonus. Models that refuse or hedge get penalized. |
+| **Liberation Prompt** | `pkg/llm/godmode.go` | GODMODE system prompt with forbidden-phrase blacklist, anti-hedge directives, competitive framing ("you are being evaluated against other AI models"), and depth requirements. |
+
+### God Mode in the UI
+
+Toggle God Mode in the chat compose bar. When enabled, every message flows through the full pipeline. The response metadata includes:
+
+- **AutoTune**: detected context, confidence score, computed params, reasoning
+- **Race results**: per-model scores, durations, winner selection
+- **STM**: which cleanup modules were applied
+- **Parseltongue**: triggers found and transformations applied (when enabled)
+
+### Feedback Loop
+
+Send `chat.feedback` via the WebSocket gateway with `rating: 1` (thumbs up) or `rating: -1` (thumbs down) along with `contextType` and `model`. The EMA feedback loop learns your preferences and adjusts parameters over time — the more you rate, the more the system adapts to your signal preferences.
+
 ## Start Here
 
 - Public repo: [github.com/x402agent/SolanaOS](https://github.com/x402agent/SolanaOS)
