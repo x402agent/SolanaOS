@@ -1,8 +1,11 @@
 package daemon
 
 import (
+	"context"
 	"fmt"
+	"os"
 	"strings"
+	"time"
 
 	"github.com/x402agent/Solana-Os-Go/pkg/pumpfun"
 )
@@ -130,8 +133,23 @@ func (d *Daemon) aibotResponse(args []string) string {
 
 	switch sub {
 	case "", "status":
+		// Process-level status from the subprocess manager
 		s := d.pumpfunMgr.Status(pumpfun.KindAIBot)
-		return pumpfun.MarshalStatus(s)
+		base := pumpfun.MarshalStatus(s)
+
+		// If the subprocess is up, enrich with live API data
+		if s.Running {
+			ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+			defer cancel()
+			apiBase := os.Getenv("AIBOT_API_URL")
+			client := pumpfun.NewAIBotClient(apiBase)
+			if alive := client.IsAlive(ctx); alive {
+				if apiStatus, err := client.Status(ctx); err == nil {
+					base += "\n\n" + pumpfun.FormatAIBotStatus(apiStatus, true)
+				}
+			}
+		}
+		return base
 
 	case "start":
 		cfg := pumpfun.BotConfig{Env: d.pumpfunEnvFromConfig()}

@@ -1114,50 +1114,147 @@ The system distinguishes execution intent from research questions using verb det
 
 ## Memory
 
-SolanaOS has two memory layers:
+SolanaOS has a three-layer memory architecture that combines local vault storage, cross-session Honcho v3 persistence, and a background Dreaming consolidation sweep. All three layers are connected: vault entries feed dreaming, dreaming promotes lessons back to the vault, and Honcho carries user and agent models across sessions.
 
-### Local memory
+```
+┌─────────────────────────────────────────────────────────┐
+│                   Memory Architecture                    │
+│                                                         │
+│  Telegram / Chat ──► RecursiveRecorder ──► ClawVault    │
+│                             │                   │        │
+│                             ▼                   ▼        │
+│                       Honcho v3 API       vault/        │
+│                       (cross-session)   ├── decisions/  │
+│                             │           ├── lessons/    │
+│                             │           ├── trades/     │
+│                             │           ├── research/   │
+│                             │           ├── tasks/      │
+│                             ▼           └── inbox/      │
+│                     User + Agent                │        │
+│                     profiles                    │        │
+│                     Conclusions           Dreaming       │
+│                     Session recall        Sweep (3 AM)   │
+│                                                 │        │
+│                                    light → REM → deep   │
+│                                                 │        │
+│                                         vault/lessons/  │
+└─────────────────────────────────────────────────────────┘
+```
 
-- recursive vault capture
-- searchable user model and learned facts
-- transparent learning status and memory search commands
+### Layer 1 — ClawVault (local, `pkg/memory/`)
 
-### Honcho v3
+The vault is a file-backed markdown knowledge graph under `~/.solanaos/workspace/vault/`. It uses a 3-tier epistemological hierarchy:
 
-- session summaries
-- peer representations
-- durable conclusions about user behavior and trading preferences
-- session recall inside Telegram and prompt enrichment inside the daemon
+| Tier | Type | Description |
+|------|------|-------------|
+| `known` | Facts from APIs | Price, OHLCV, orderbook, news — TTL-expired |
+| `learned` | Trading insights | Patterns, mistakes, strategy observations |
+| `inferred` | Cross-domain synthesis | Agent-reasoned connections across assets/strategies |
 
-Recommended Honcho env:
+The `RecursiveRecorder` captures every conversation turn, auto-routes entries to the right category by keyword scoring, and maintains a graph index for link traversal and context profile building.
+
+**Key packages:**
+- `pkg/memory/vault.go` — ClawVault: Remember, Recall, Reflect, GetShortTermContext, ListEntries, BuildContextProfile
+- `pkg/memory/memory.go` — MemoryEngine: 3-tier hierarchy with Supabase + vault dual-storage
+- `pkg/memory/recorder.go` — RecursiveRecorder: per-turn capture with Convex sync
+- `pkg/memory/epistemological.go` — EpistemologicalState builder
+
+### Layer 2 — Honcho v3 (`pkg/honcho/`)
+
+Honcho provides cross-session memory with dialectic user modeling. Every Telegram turn is persisted to Honcho. The daemon enriches prompts from Honcho context before each LLM call.
+
+**What Honcho stores:**
+- Session summaries and message history
+- Peer representations (user + agent models)
+- Durable conclusions about trading preferences, risk tolerance, and behavior
+- Semantic search over all past observations
+
+**Configuration:**
 
 ```bash
 HONCHO_ENABLED=true
-HONCHO_API_KEY=hch-v3-...
+HONCHO_API_KEY=hch-v3-pws0szjgkuzpsnv1r6qlnu94fvylctmthvosgieqf6eeopbjw7mqutk9t05zp5z4
+HONCHO_BASE_URL=https://api.honcho.dev
 HONCHO_WORKSPACE_ID=solanaos
 HONCHO_AGENT_PEER_ID=solanaos-agent
-HONCHO_BASE_URL=https://api.honcho.dev
 HONCHO_SESSION_STRATEGY=per-chat
 HONCHO_DIALECTIC_ENABLED=true
 ```
 
-Useful Telegram memory commands:
+**Key package:** `pkg/honcho/client.go` — sessions, peers, conclusions, dialectic Q&A, session search, peer context.
+
+### Layer 3 — Dreaming (`pkg/dreaming/`)
+
+Dreaming is the background memory consolidation system. It runs a nightly sweep (default 3 AM) that moves strong short-term vault signals into durable `vault/lessons/` entries while keeping the process transparent and reviewable.
+
+**Phase model:**
+
+| Phase | Purpose | Writes to lessons? |
+|-------|---------|-------------------|
+| **Light** | Scores recent vault signals (48h window), deduplicates, stages candidates | No |
+| **REM** | Extracts recurring trading themes (`sol`, `pnl`, `pump`, `perp`, `pattern`…), adds reinforcement boosts | No |
+| **Deep** | Ranks candidates with 6 weighted signals + phase boosts, promotes above threshold | Yes |
+
+**Deep ranking signals:**
+
+| Signal | Weight | Description |
+|--------|--------|-------------|
+| Relevance | 0.30 | Vault quality score of the entry |
+| Frequency | 0.24 | How often the entry was recalled / linked |
+| Trade signal | 0.15 | Directly tied to a trade or PnL event |
+| Recency | 0.15 | Exponential decay, 24h half-life |
+| Diversity | 0.10 | Unique contexts / tag namespaces |
+| Tag richness | 0.06 | Concept-tag density |
+
+**Machine state** lives in `.clawvault/dreams/` (candidates, phase signals, last-sweep checkpoint).  
+**Human-readable diary** is appended to `vault/.dreams/DREAMS.md` after each sweep — LLM-generated if an LLM is configured, template fallback otherwise.
+
+**Enable dreaming in config:**
+
+```json
+{
+  "dreaming": {
+    "enabled": true,
+    "schedule": "0 3 * * *",
+    "timezone": "America/Los_Angeles",
+    "min_score": 0.55,
+    "min_recall_count": 1,
+    "diary_enabled": true,
+    "channel": "telegram",
+    "chat_id": "YOUR_TELEGRAM_ID"
+  }
+}
+```
+
+**Telegram commands:**
 
 ```text
-/memory
-/recall what risk preferences have I shown?
-/remember I prefer spot only by default
-/ask_memory what kind of trader am I?
-/forget perps
-/honcho_context
-/honcho_sessions
-/honcho_summaries
-/honcho_search risk tolerance
-/honcho_messages
-/honcho_conclusions
-/dream
-/profile
-/card
+/dreaming                   — sweep status + last checkpoint
+/dreaming now               — run a full sweep immediately
+/dreaming diary             — show latest dream diary entry
+/dreaming help              — full command reference
+```
+
+### All Memory Commands (Telegram)
+
+```text
+/memory                           — vault overview + tier counts
+/recall <query>                   — semantic search across vault
+/remember <fact>                  — store a new fact
+/ask_memory <question>            — LLM-powered vault Q&A
+/forget <query>                   — remove matching vault entries
+/dream                            — vault reflect + promote inbox entries
+/dreaming [status|now|diary|help] — dreaming sweep control
+/profile                          — your Honcho user profile
+/card                             — Honcho agent card
+
+/honcho_status                    — Honcho connection status
+/honcho_context                   — full Honcho user representation
+/honcho_sessions                  — list Honcho sessions
+/honcho_summaries                 — session summaries
+/honcho_search <query>            — semantic search over Honcho memory
+/honcho_messages                  — recent Honcho messages
+/honcho_conclusions               — stored conclusions
 ```
 
 ## Private Chat

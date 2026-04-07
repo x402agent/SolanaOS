@@ -4026,7 +4026,7 @@ func (d *Daemon) maybeHandleModelText(content string) (string, bool) {
 
 	// Natural language model switching: "use model 2", "switch to nemotron", "use minimax", "use omni", etc.
 	if n, ok := extractNaturalModelSwitch(content, d.llm.ModelPresets()); ok {
-		if n == 4 {
+		if n == 5 {
 			mimoModel := d.llm.MimoModel()
 			prevProvider, prevModel, changed, err := d.llm.SetOpenRouterModel(mimoModel)
 			if err != nil {
@@ -4037,8 +4037,7 @@ func (d *Daemon) maybeHandleModelText(content string) (string, bool) {
 			}
 			return fmt.Sprintf("✅ Switched to Mimo `%s`\nPrevious: `%s/%s`", mimoModel, prevProvider, prevModel), true
 		}
-		if n == 5 {
-			// Omni model shortcut
+		if n == 6 {
 			omniModel := d.llm.OmniModel()
 			prevProvider, prevModel, changed, err := d.llm.SetOpenRouterModel(omniModel)
 			if err != nil {
@@ -4048,6 +4047,28 @@ func (d *Daemon) maybeHandleModelText(content string) (string, bool) {
 				return fmt.Sprintf("🤖 Already on `%s`", omniModel), true
 			}
 			return fmt.Sprintf("✅ Switched to omni `%s`\nPrevious: `%s/%s`", omniModel, prevProvider, prevModel), true
+		}
+		if n == 7 {
+			claudeModel := d.llm.ClaudeORModel()
+			prevProvider, prevModel, changed, err := d.llm.SetOpenRouterModel(claudeModel)
+			if err != nil {
+				return fmt.Sprintf("❌ Model switch failed: %v", err), true
+			}
+			if !changed {
+				return fmt.Sprintf("🤖 Already on `%s`", claudeModel), true
+			}
+			return fmt.Sprintf("✅ Switched to Claude-OR `%s`\nPrevious: `%s/%s`", claudeModel, prevProvider, prevModel), true
+		}
+		if n == 8 {
+			gemmaModel := d.llm.GemmaModel()
+			prevProvider, prevModel, changed, err := d.llm.SetOpenRouterModel(gemmaModel)
+			if err != nil {
+				return fmt.Sprintf("❌ Model switch failed: %v", err), true
+			}
+			if !changed {
+				return fmt.Sprintf("🤖 Already on `%s`", gemmaModel), true
+			}
+			return fmt.Sprintf("✅ Switched to Gemma `%s`\nPrevious: `%s/%s`", gemmaModel, prevProvider, prevModel), true
 		}
 		prevProvider, prevModel, changed, err := d.llm.SetModelPreset(n)
 		presets := d.llm.ModelPresets()
