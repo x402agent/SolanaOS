@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+
 - **Local signer service** — AES-256-GCM encrypted `dev` and `trade` Solana keypairs auto-generated on first run (`services/agent-wallet/local_signer.go`)
 - **Local process sandbox** — E2B-compatible sandbox fallback using child processes, no API key required (`services/agent-wallet/local_sandbox.go`)
 - **Local signer REST API** — `GET/POST /v1/local-signers/{mode}` endpoints for listing, signing, and broadcasting SOL transfers
@@ -23,6 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **`services/agent-wallet/README.md`** — full service documentation
 
 ### Changed
+
 - `.gitignore` cleaned of absolute local paths; `Claw3D-main/`, `g0dm0d3-main/`, `solana-keychain-main/`, `page-agent-main/` untracked from git index (still present locally, ignored going forward)
 - Repo layout section updated with accurate directory map and service port table
 - npm packages table now shows source directory and version
@@ -31,6 +33,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Signer/vault storage path normalized to `~/.solanaos/` across all docs and scripts
 
 ### Security
+
 - Sub-repo directories (`Claw3D-main`, `g0dm0d3-main`, `solana-keychain-main`, `page-agent-main`) removed from git tracking
 - CI secret scan now excludes `node_modules/` and `.git/`
 - All `.env` and secret files excluded from repository
