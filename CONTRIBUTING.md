@@ -52,7 +52,7 @@ make test
 
 ## Project Structure
 
-```
+```text
 solanaos/
 ├── main.go                    # root CLI entry (cobra commands)
 ├── start.sh                   # start/stop/status all services
@@ -100,9 +100,11 @@ Non-negotiable before any PR:
 2. **Never commit `.env`** — gitignored; use `.env.example` for documentation
 3. **Never log secrets** — log public keys, truncated URLs, boolean status only
 4. **Verify before pushing:**
+
    ```bash
    grep -rn "sk-or-v1-\|hch-v3-\|AKIA" --include="*.go" --include="*.ts" pkg/ cmd/ services/ mcp-server/
    ```
+
 5. **AES keys stay in vault** — wallet private keys must never appear in API responses
 
 See [SECURITY.md](SECURITY.md) for the full policy.
@@ -124,18 +126,22 @@ See [SECURITY.md](SECURITY.md) for the full policy.
 1. Fork + create a feature branch: `git checkout -b feat/my-thing`
 2. Make changes with tests
 3. Run the full check:
+
    ```bash
    make build && make test
    gofmt -l . && go vet ./...
    ```
+
 4. Commit clearly:
-   ```
+
+   ```text
    feat(agent): add momentum filter to OODA signal scoring
 
    - Added 5-candle EMA momentum check before entry
    - Filters low-conviction signals below 0.3 confidence
    - Tests in pkg/agent/momentum_test.go
    ```
+
 5. Open PR to `main` — fill out the PR template
 
 ---
