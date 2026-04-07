@@ -274,27 +274,128 @@ Browse all 80+ skills at [seeker.solanaos.net/skills](https://seeker.solanaos.ne
 
 ### Go Packages (pkg/)
 
+SolanaOS ships as a **single Go binary under 10 MB** that contains 55 packages — the equivalent of a full-stack trading platform, multi-provider AI runtime, hardware OS, and payment layer all compiled to a single executable. No Docker, no Node.js, no Python. Just `go build`.
+
+#### Intelligence Layer
+
 | Package | What |
 | --- | --- |
-| `pkg/agent/` | OODA loop, context compression, smart routing, insights, redaction, model metadata |
-| `pkg/acp/` | ACP JSON-RPC server for VS Code/Cursor editor integration |
-| `pkg/honcho/` | Honcho v3 client — sessions, peers, conclusions, dialectic, dreams |
-| `pkg/memory/` | Epistemological vault interface, Honcho adapter, ClawVault local memory |
-| `pkg/solana/` | SolanaTracker RPC/Datastream, Jupiter swaps, SolanaTracker swap API |
-| `pkg/trading/` | Unified trading engine (Hyperliquid + Aster) with risk validation |
-| `pkg/blockchain/` | On-chain queries with USD pricing — wallets, tokens, research |
-| `pkg/hyperliquid/` | Hyperliquid perps — positions, orders, fills, leverage, WebSocket |
-| `pkg/aster/` | Aster perps — account, positions, income, orders |
-| `pkg/tailscale/` | Mesh networking — gateway on both local and Tailscale interfaces |
-| `pkg/daemon/` | Daemon orchestrator — wires everything together |
-| `pkg/config/` | Config loader — env vars, JSON, defaults |
-| `pkg/skills/` | Skills manager — install, search, inject into LLM context |
-| `pkg/tamagochi/` | TamaGOchi companion state driven by trading P&L |
-| `pkg/hardware/` | Arduino Modulino I2C — LEDs, buzzer, knob, IMU, ToF |
-| `pkg/x402/` | x402 payment protocol — USDC-gated APIs |
-| `pkg/gateway/` | Gateway API server with memory, trading, chat endpoints |
-| `pkg/pinata/` | Pinata Private IPFS Hub — upload, list, access links, groups, mesh sync, mainnet deploy |
-| `services/agent-wallet/` | Agent Wallet API — encrypted vault, Solana + EVM wallets, Privy, E2B sandboxes, MCP server |
+| `pkg/llm/` | Multi-provider LLM client: OpenRouter (multi-model race + leaderboard tracking), Anthropic, xAI/Grok, Ollama, Together AI, llama.cpp, Mistral Audio (TTS/STT), Cloudflare AI Gateway. Includes **Solana God Mode** — AutoTune (7-context adaptive sampling), EMA feedback learning, Parseltongue obfuscation engine, ULTRAPLINIAN scoring (100-pt composite), STM output normalization. |
+| `pkg/agent/` | Dexter-style iterative OODA loop with tool-calling, context compression, smart routing, live Solana context injection, kill-switch, scratchpad, prompt caching, and per-model metadata. |
+| `pkg/autotune/` | Context-adaptive LLM parameter selection engine — part of `pkg/llm`. Detects trading, code, analytical, creative, chaotic, and conversational contexts and auto-selects temperature/top_p/top_k across 6 dimensions. |
+| `pkg/autoreply/` | Chat text sanitizer: extracts `<thinking>` blocks, strips internal reasoning from visible output, normalizes formatting for Telegram/web/CLI display. |
+| `pkg/providers/` | Provider abstraction layer (OpenAI-compatible message format). Shared types for tool calls, tool results, and streaming. |
+| `pkg/routing/` | Multi-agent message routing and session key resolution for swarm setups. |
+| `pkg/learning/` | Autonomous experiment loop: reads strategy, mutates params, backtests, accepts/rejects results, logs learning events. Includes SkillForge (skill synthesis from feedback), session search, and user model tracking. |
+| `pkg/research/` | Overnight research system: generates hypotheses → queries vault lessons → mutates strategy → backtests → stores accepted results as typed trajectories. |
+| `pkg/session/` | Per-session message history with configurable max turns and summarization trigger. Thread-safe across concurrent agents. |
+
+#### Solana + Trading Layer
+
+| Package | What |
+| --- | --- |
+| `pkg/solana/` | SolanaTracker RPC + Datastream WebSocket, Birdeye v3 REST + WebSocket (OHLCV, price stats, token list scroll, pair list, liquidity), wallet queries, Jupiter swap routing, SolanaTracker swap API, transaction builder, program registry. |
+| `pkg/trading/` | Unified trading engine across Hyperliquid and Aster perps — position lifecycle, risk validation, stop-loss/take-profit, order routing. |
+| `pkg/strategy/` | Pure-Go quant strategy: RSI (Wilder smoothing), EMA, ATR, VWAP implemented from first principles. No external indicator libraries. |
+| `pkg/hyperliquid/` | Full Hyperliquid perps client — positions, open orders, fills, leverage, cancel, WebSocket feed, EIP-712 signing. |
+| `pkg/aster/` | Aster DEX client — account, positions, income, orders, HMAC-V1 + EIP-712-V3 auth, futures tools. |
+| `pkg/blockchain/` | On-chain queries via Helius/SolanaTracker: wallet portfolio with USD pricing, token metadata, transaction history. |
+| `pkg/onchain/` | On-chain execution engine: real-time balance monitoring via WSS, Jupiter swap execution, Pinata IPFS, agent NFT registration (Metaplex), mainnet deploy. |
+| `pkg/pumplaunch/` | pump.fun token launch service — bonding curve lifecycle, metadata upload, graduation detection. |
+
+#### Memory + Storage Layer
+
+| Package | What |
+| --- | --- |
+| `pkg/memory/` | Epistemological vault interface with Honcho v3 adapter, ClawVault local memory, 3-tier memory hierarchy (episodic, semantic, procedural), recorder, and session-scoped channel memory. |
+| `pkg/honcho/` | Honcho v3 HTTP client — sessions, peers, conclusions, dialectic Q&A, dreams (synthesis), session search, peer context. |
+| `pkg/storage/` | Supabase Storage client for persisting agent-generated media (images, videos) to a cloud bucket. |
+| `pkg/pinata/` | Pinata Private IPFS Hub — file upload/list/delete, access links, groups, per-wallet scoping, BLE mesh sync, mainnet deploy pipeline. |
+| `pkg/migrate/` | Version-based config migration for upgrading legacy config files to current schema. |
+| `pkg/state/` | Atomic persistent agent state — last-active channel tracking, survives restarts. |
+
+#### Gateway + Channels Layer
+
+| Package | What |
+| --- | --- |
+| `pkg/gateway/` | TCP + WebSocket gateway bridge with LLM/skills/honcho provider injection, coding sessions, Convex event streaming, Tailscale mesh proxy, remote node pairing, IPFS mesh, and contract enforcement. |
+| `pkg/channels/` | Multi-channel manager — registers and dispatches across all active channel bridges. |
+| `pkg/channels/telegram/` | Full Telegram bot: 60+ slash commands, voice/image/video understanding, auto-detect Solana addresses, inline keyboards, proxy support, natural-language trade execution. |
+| `pkg/channels/bluebubbles/` | iMessage bridge via BlueBubbles server — receive/send iMessages through the agent. |
+| `pkg/nanobot/` | SolanaOS Control UI server (port 7777): serves 750-line Lit+Vite browser app embedded in the binary, WebSocket proxy to gateway, DAS API, wallet API. |
+| `pkg/node/` | Headless bridge client for NVIDIA Orin Nano / Raspberry Pi hardware nodes — gateway pairing, voice transcript forwarding, mDNS discovery, exponential backoff reconnect. |
+| `pkg/controlapi/` | HTTP control API — health, status, model switching, config read/write, session management. |
+| `pkg/mcp/` | Model Context Protocol integration — manages MCP server connections, tool proxying, and schema registration for IDE/Claude integration. |
+
+#### Agent Infrastructure Layer
+
+| Package | What |
+| --- | --- |
+| `pkg/daemon/` | 8,400-line orchestrator that wires all packages together — OODA trading loop, 100+ Telegram command handlers, God Mode pipeline, BlueBubbles/Twilio/Mistral Audio init, Birdeye chart handler, pair handlers, browser automation, cron scheduling, heartbeat, and channel management. |
+| `pkg/commands/` | Slash-command registry with pluggable definitions — `Definition` + `Registry` pattern for all chat surfaces. |
+| `pkg/cron/` | Configurable cron scheduler — OODA cycles, research runs, heartbeat probes, custom jobs. |
+| `pkg/heartbeat/` | Periodic proactive notifications — sends liveness pings, market summaries, and alert digests on schedule. |
+| `pkg/health/` | System health checker — collects `CheckResult` from all subsystems, produces a Telegram-formatted summary. |
+| `pkg/skills/` | Skills manager — discovers, loads, and injects SKILL.md bundles into LLM context. Supports frontmatter parsing, semantic search, and NanoHub sync. |
+| `pkg/tools/` | Tool registry with built-in tools: web search, file ops, shell exec, Solana queries, I2C hardware, message routing, agent spawn. |
+| `pkg/delegation/` | Multi-agent task delegation — `Planner` + `WorkerSpec` for splitting work across sub-agents. |
+| `pkg/agentregistry/` | 8004 ACP agent registry service — on-chain agent registration, status sync, Telegram status commands. |
+| `pkg/identity/` | Sender identity resolution — canonical `platform:id` format, allowlist matching, legacy compat. |
+| `pkg/bus/` | Internal message bus — typed `SenderInfo`/`Peer` messages, channel pub/sub for inter-component communication. |
+| `pkg/acp/` | ACP JSON-RPC server for VS Code/Cursor editor integration — context compressor with middle-turn summarization. |
+
+#### Hardware + Device Layer
+
+| Package | What |
+| --- | --- |
+| `pkg/hardware/` | Arduino Modulino I2C cluster adapter — Pixels LEDs (visual status), Buzzer (audio alerts), Buttons (human control), Knob (real-time RSI tuning), IMU, ToF distance sensor. Implements `agent.AgentHooks`. |
+| `pkg/devices/` | Device registry for I2C sensors — typed `DeviceType` + `Device` + `DeviceRegistry` with discovery and lifecycle management. |
+| `pkg/tamagochi/` | TamaGOchi virtual pet driven by real on-chain metrics: wallet balance, trade win-rate, OODA cycle health, uptime. Maps to hardware LED states and Telegram status. |
+| `pkg/bitaxe/` | OODA agent for autonomous Bitaxe ASIC miner management — observe hashrate/temps, orient (compare to target), decide (tune/alert/restart), act. |
+
+#### AI Computer Use Layer
+
+| Package | What |
+| --- | --- |
+| `pkg/browseruse/` | Browser automation via Browserbase/Playwright/Puppeteer — cloud sessions, DOM inspection, screenshot capture, form fill, JavaScript eval. |
+| `pkg/e2b/` | E2B Code Interpreter + Desktop Sandbox agent — vision-LLM screenshot analysis, click/type/shell execution, autonomous computer use. |
+| `pkg/steel/` | Steel cloud browser client — WebSocket-driven headful browsers with proxy, CAPTCHA solving, session recording, HLS replay. |
+| `pkg/seeker/` | Solana Seeker phone agent — runs OODA loop as Android foreground service, Android Bridge connection, PLATFORM.md generation, IPFS deploy. |
+
+#### Payments + Auth Layer
+
+| Package | What |
+| --- | --- |
+| `pkg/x402/` | x402 payment protocol — USDC-gated HTTP APIs, Solana USDC payment client, multi-chain support (Solana + Base + Polygon), x402 middleware, facilitator proxy. |
+| `pkg/auth/` | OAuth/token management — API key store, PKCE auth flow, token expiry tracking. |
+
+#### Utilities
+
+| Package | What |
+| --- | --- |
+| `pkg/config/` | Single-file config loader — env vars, JSON, `.env`, defaults, migration, site metadata, version. Covers 100+ settings across all subsystems including BlueBubbles, Hume AI, SOLANA_RPC_URL, Together AI, llama.cpp, Cloudflare AI Gateway. |
+| `pkg/constants/` | System-wide constants — internal channel names, magic values. |
+| `pkg/fileutil/` | Safe file I/O — workspace-scoped read/write, path traversal prevention. |
+| `pkg/logger/` | Structured leveled logger — category-filtered, field-tagged output. |
+| `pkg/media/` | Media file lifecycle — store, resolve, release, PDF extraction. |
+| `pkg/utils/` | Shared helpers — truncate, audio/image type detection, string normalization. |
+| `pkg/runtimeenv/` | Runtime backend registry — maps `BackendSpec` names to active provider instances. |
+| `pkg/tailscale/` | Tailscale mesh manager — exposes gateway on local + VPN interfaces simultaneously. |
+| `pkg/voice/` | Voice AI: Hume EVI (emotion analysis via WebSocket), Twilio (voice calls). |
+
+#### Why This Fits in One Go Binary
+
+Shipping 55 packages — spanning blockchain, multi-provider AI, hardware I2C, payment protocols, browser automation, and real-time trading — as a single `<10MB` binary is only possible because Go:
+
+- **zero-dependency deployment**: no runtime, no VM, no interpreter — one file, any platform
+- **native concurrency**: goroutines handle parallel model races, OODA loops, WebSocket feeds, and hardware polling without thread pools
+- **static linking**: all packages compile to a single ELF/Mach-O with dead-code elimination — unused code costs zero bytes
+- **cross-compilation**: `GOARCH=arm64 go build` produces an Orin Nano binary from a Mac in seconds
+- **embed**: `//go:embed` inlines the 750-line control UI HTML directly — no web server needed
+
+The result: `solanaos daemon` boots in under 1 second, uses under 50 MB RAM at idle, and can trade, respond to Telegram, drive hardware LEDs, and run a multi-model LLM race simultaneously on a $35 Raspberry Pi.
+
+`services/agent-wallet/` | Agent Wallet API — AES-256-GCM encrypted vault, Solana + EVM wallets, Privy managed wallets, E2B sandbox deployment, MCP server for AI agent tooling |
 
 ### Architecture
 
