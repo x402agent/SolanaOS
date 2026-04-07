@@ -114,18 +114,6 @@
   z-index: 10;
 }
 
-.chat-compose__modes {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
-.chat-compose__mode-note {
-  font-size: 12px;
-  color: var(--muted);
-}
-
 /* Image attachments preview */
 .chat-attachments {
   display: inline-flex;

@@ -79,7 +79,7 @@ import { type ChatAttachment, type ChatQueueItem, type CronFormState } from "./u
 
 declare global {
   interface Window {
-    __SOLANAOS_CONTROL_UI_BASE_PATH__?: string;
+    __OPENCLAW_CONTROL_UI_BASE_PATH__?: string;
   }
 }
 
@@ -98,8 +98,8 @@ function resolveOnboardingMode(): boolean {
   return normalized === "1" || normalized === "true" || normalized === "yes" || normalized === "on";
 }
 
-@customElement("solanaos-app")
-export class SolanaOSApp extends LitElement {
+@customElement("openclaw-app")
+export class OpenClawApp extends LitElement {
   @state() settings: UiSettings = loadSettings();
   @state() password = "";
   @state() tab: Tab = "chat";
@@ -124,7 +124,6 @@ export class SolanaOSApp extends LitElement {
   @state() chatMessage = "";
   @state() chatMessages: unknown[] = [];
   @state() chatToolMessages: unknown[] = [];
-  @state() chatGodMode = false;
   @state() chatStream: string | null = null;
   @state() chatStreamStartedAt: number | null = null;
   @state() chatRunId: string | null = null;

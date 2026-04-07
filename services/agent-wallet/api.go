@@ -157,6 +157,12 @@ func (s *Server) Start() error {
 		s.RegisterPrivyRoutes(mux, s.privy)
 	}
 
+	// Local signers (AES-256 encrypted dev + trade keys)
+	mux.HandleFunc("GET /v1/local-signers", s.handleListLocalSigners)
+	mux.HandleFunc("GET /v1/local-signers/{mode}", s.handleGetLocalSigner)
+	mux.HandleFunc("POST /v1/local-signers/{mode}/sign", s.handleLocalSign)
+	mux.HandleFunc("POST /v1/local-signers/{mode}/sign-tx", s.handleLocalSignTx)
+
 	// Health
 	mux.HandleFunc("GET /v1/health", s.handleHealth)
 	mux.HandleFunc("GET /", s.handleRoot)

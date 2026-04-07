@@ -13,7 +13,6 @@ export type ChatState = {
   chatSending: boolean;
   chatMessage: string;
   chatAttachments: ChatAttachment[];
-  chatGodMode: boolean;
   chatRunId: string | null;
   chatStream: string | null;
   chatStreamStartedAt: number | null;
@@ -124,7 +123,6 @@ export async function sendChatMessage(
     await state.client.request("chat.send", {
       sessionKey: state.sessionKey,
       message: msg,
-      mode: state.chatGodMode ? "god" : undefined,
       deliver: false,
       idempotencyKey: runId,
       attachments: apiAttachments,
@@ -176,7 +174,7 @@ export function handleChatEvent(state: ChatState, payload?: ChatEventPayload) {
   }
 
   // Final from another run (e.g. sub-agent announce): refresh history to show new message.
-  // See https://github.com/x402agent/SolanaOS/issues/1909
+  // See https://github.com/openclaw/openclaw/issues/1909
   if (payload.runId && state.chatRunId && payload.runId !== state.chatRunId) {
     if (payload.state === "final") {
       return "final";

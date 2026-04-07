@@ -160,7 +160,7 @@ export function renderApp(state: AppViewState) {
           <div class="nav-group__items">
             <a
               class="nav-item nav-item--external"
-              href="https://solanaos.net"
+              href="https://docs.solanaos.com"
               target="_blank"
               rel="noreferrer"
               title="Docs (opens in new tab)"
@@ -451,7 +451,6 @@ export function renderApp(state: AppViewState) {
                 stream: state.chatStream,
                 streamStartedAt: state.chatStreamStartedAt,
                 draft: state.chatMessage,
-                godModeEnabled: state.chatGodMode,
                 queue: state.chatQueue,
                 connected: state.connected,
                 canSend: state.connected,
@@ -474,7 +473,6 @@ export function renderApp(state: AppViewState) {
                 },
                 onChatScroll: (event) => state.handleChatScroll(event),
                 onDraftChange: (next) => (state.chatMessage = next),
-                onGodModeToggle: (next) => (state.chatGodMode = next),
                 attachments: state.chatAttachments,
                 onAttachmentsChange: (next) => (state.chatAttachments = next),
                 onSend: () => state.handleSendChat(),

@@ -49,7 +49,6 @@ export type AppViewState = {
   chatAttachments: ChatAttachment[];
   chatMessages: unknown[];
   chatToolMessages: unknown[];
-  chatGodMode: boolean;
   chatStream: string | null;
   chatRunId: string | null;
   chatAvatarUrl: string | null;
@@ -197,7 +196,6 @@ export type AppViewState = {
   setPassword: (next: string) => void;
   setSessionKey: (next: string) => void;
   setChatMessage: (next: string) => void;
-  setChatGodMode: (next: boolean) => void;
   handleChatSend: () => Promise<void>;
   handleChatAbort: () => Promise<void>;
   handleChatSelectQueueItem: (id: string) => void;
