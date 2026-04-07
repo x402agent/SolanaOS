@@ -18,6 +18,7 @@ import (
 	"time"
 
 	"github.com/gorilla/websocket"
+	"github.com/x402agent/Solana-Os-Go/pkg/pumpfun"
 	"github.com/x402agent/Solana-Os-Go/pkg/llm"
 )
 
@@ -919,6 +920,111 @@ func (b *Bridge) handleWSRequest(writeJSON func(map[string]any), id, method stri
 			"id":      id,
 			"ok":      true,
 			"payload": map[string]any{"ok": true},
+		})
+
+	// ── Pump.fun AI Bot (proxies to :3001 Express API) ──────────────────
+	case "bot.status":
+		ai := pumpfun.NewAIBotClient(os.Getenv("AIBOT_API_URL"))
+		alive := ai.IsAlive(ctx)
+		status, err := ai.Status(ctx)
+		if err != nil {
+			writeJSON(map[string]any{
+				"type":    "res",
+				"id":      id,
+				"ok":      true,
+				"payload": map[string]any{"alive": false, "error": err.Error()},
+			})
+			break
+		}
+		writeJSON(map[string]any{
+			"type": "res",
+			"id":   id,
+			"ok":   true,
+			"payload": map[string]any{
+				"alive":            alive,
+				"isRunning":        status.IsRunning,
+				"totalTrades":      status.TotalTrades,
+				"successfulTrades": status.SuccessfulTrades,
+				"failedTrades":     status.FailedTrades,
+				"totalProfit":      status.TotalProfit,
+				"winRate":          status.WinRate,
+				"startTime":        status.StartTime,
+				"openPositions":    status.OpenPositions,
+			},
+		})
+
+	case "bot.start":
+		ai := pumpfun.NewAIBotClient(os.Getenv("AIBOT_API_URL"))
+		if err := ai.StartBot(ctx); err != nil {
+			writeJSON(map[string]any{
+				"type":    "res",
+				"id":      id,
+				"ok":      false,
+				"error":   map[string]any{"code": "BOT_ERROR", "message": err.Error()},
+			})
+			break
+		}
+		writeJSON(map[string]any{
+			"type":    "res",
+			"id":      id,
+			"ok":      true,
+			"payload": map[string]any{"started": true},
+		})
+
+	case "bot.stop":
+		ai := pumpfun.NewAIBotClient(os.Getenv("AIBOT_API_URL"))
+		if err := ai.StopBot(ctx); err != nil {
+			writeJSON(map[string]any{
+				"type":    "res",
+				"id":      id,
+				"ok":      false,
+				"error":   map[string]any{"code": "BOT_ERROR", "message": err.Error()},
+			})
+			break
+		}
+		writeJSON(map[string]any{
+			"type":    "res",
+			"id":      id,
+			"ok":      true,
+			"payload": map[string]any{"stopped": true},
+		})
+
+	case "bot.trades":
+		ai := pumpfun.NewAIBotClient(os.Getenv("AIBOT_API_URL"))
+		trades, err := ai.Trades(ctx)
+		if err != nil {
+			writeJSON(map[string]any{
+				"type":    "res",
+				"id":      id,
+				"ok":      false,
+				"error":   map[string]any{"code": "BOT_ERROR", "message": err.Error()},
+			})
+			break
+		}
+		writeJSON(map[string]any{
+			"type":    "res",
+			"id":      id,
+			"ok":      true,
+			"payload": map[string]any{"trades": trades},
+		})
+
+	case "bot.predictions":
+		ai := pumpfun.NewAIBotClient(os.Getenv("AIBOT_API_URL"))
+		preds, err := ai.Predictions(ctx)
+		if err != nil {
+			writeJSON(map[string]any{
+				"type":    "res",
+				"id":      id,
+				"ok":      false,
+				"error":   map[string]any{"code": "BOT_ERROR", "message": err.Error()},
+			})
+			break
+		}
+		writeJSON(map[string]any{
+			"type":    "res",
+			"id":      id,
+			"ok":      true,
+			"payload": map[string]any{"predictions": preds},
 		})
 
 	default:

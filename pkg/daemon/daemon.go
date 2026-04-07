@@ -3922,16 +3922,16 @@ func (d *Daemon) modelResponse(args []string) string {
 	freeModels := d.llm.FreeModels()
 	if len(args) == 0 {
 		return fmt.Sprintf(
-			"🤖 Active backend: `%s`\nModel: `%s`\nMimo: `%s`\nOmni: `%s`\nLast used: `%s`\nOllama fallback: `%t`\nFree model chain: `%s`\n\n**Presets:**\n`/model 1` → `%s`\n`/model 2` → `%s`\n`/model 3` → `%s`\n`/model mimo` → `%s`\n`/model omni` → `%s`\n\nSwitch with:\n`/model 1` · `/model 2` · `/model 3` · `/model mimo` · `/model omni`\n`/model anthropic claude-sonnet-4-6`\n`/model openrouter minimax/minimax-m2.5:free`\n`/model xai grok-4-1-fast`\n`/model ollama minimax-m2.7:cloud`",
+			"🤖 Active backend: `%s`\nModel: `%s`\nMimo: `%s`\nOmni: `%s`\nLast used: `%s`\nOllama fallback: `%t`\nFree model chain: `%s`\n\n**Presets:**\n`/model 1` → `%s`\n`/model 2` → `%s`\n`/model 3` → `%s`\n`/model 4` → `%s`\n`/model claude` → `%s`\n`/model gemma` → `%s`\n`/model mimo` → `%s`\n`/model omni` → `%s`\n\nSwitch with:\n`/model 1` · `/model 2` · `/model 3` · `/model 4` · `/model claude` · `/model gemma` · `/model mimo` · `/model omni`\n`/model anthropic claude-sonnet-4-6`\n`/model openrouter vendor/model`\n`/model xai grok-4-1-fast`\n`/model ollama 8bit/DeepSolana`",
 			d.llm.Provider(), d.llm.Model(), d.llm.MimoModel(), d.llm.OmniModel(), d.llm.LastResolvedClient(), d.llm.FallbackEnabled(), strings.Join(freeModels, " -> "),
-			presets[0], presets[1], presets[2], d.llm.MimoModel(), d.llm.OmniModel(),
+			presets[0], presets[1], presets[2], presets[3], d.llm.ClaudeORModel(), d.llm.GemmaModel(), d.llm.MimoModel(), d.llm.OmniModel(),
 		)
 	}
 
-	// Handle numeric preset shortcuts: /model 1, /model 2, /model 3, /model mimo, /model omni
+	// Handle numeric preset shortcuts: /model 1, /model 2, /model 3, /model 4, /model claude, /model gemma, /model mimo, /model omni
 	if len(args) == 1 {
 		switch args[0] {
-		case "1", "2", "3":
+		case "1", "2", "3", "4":
 			n := int(args[0][0] - '0')
 			prevProvider, prevModel, changed, err := d.llm.SetModelPreset(n)
 			if err != nil {
@@ -3943,6 +3943,32 @@ func (d *Daemon) modelResponse(args []string) string {
 			return fmt.Sprintf(
 				"✅ Switched to preset %d\n\nModel: `%s`\nPrevious: `%s/%s`\nReasoning: enabled\nSessions reset.",
 				n, presets[n-1], prevProvider, prevModel,
+			)
+		case "claude":
+			claudeModel := d.llm.ClaudeORModel()
+			prevProvider, prevModel, changed, err := d.llm.SetOpenRouterModel(claudeModel)
+			if err != nil {
+				return fmt.Sprintf("❌ Model switch failed: %v", err)
+			}
+			if !changed {
+				return fmt.Sprintf("🤖 Claude-OR model already active: `%s`", claudeModel)
+			}
+			return fmt.Sprintf(
+				"✅ Switched to Claude via OpenRouter\n\nModel: `%s`\nPrevious: `%s/%s`\nReasoning: enabled\nSessions reset.",
+				claudeModel, prevProvider, prevModel,
+			)
+		case "gemma":
+			gemmaModel := d.llm.GemmaModel()
+			prevProvider, prevModel, changed, err := d.llm.SetOpenRouterModel(gemmaModel)
+			if err != nil {
+				return fmt.Sprintf("❌ Model switch failed: %v", err)
+			}
+			if !changed {
+				return fmt.Sprintf("🤖 Gemma model already active: `%s`", gemmaModel)
+			}
+			return fmt.Sprintf(
+				"✅ Switched to Gemma (free)\n\nModel: `%s`\nPrevious: `%s/%s`\nSessions reset.",
+				gemmaModel, prevProvider, prevModel,
 			)
 		case "mimo":
 			mimoModel := d.llm.MimoModel()
@@ -3976,8 +4002,8 @@ func (d *Daemon) modelResponse(args []string) string {
 	raw := strings.Join(args, " ")
 	backend, model, ok := extractModelSelection(raw)
 	if !ok {
-		return fmt.Sprintf("Usage:\n`/model 1` → `%s`\n`/model 2` → `%s`\n`/model 3` → `%s`\n`/model mimo` → `%s`\n`/model omni` → `%s`\n`/model anthropic claude-sonnet-4-6`\n`/model openrouter vendor/model`\n`/model xai grok-4-1-fast`\n`/model ollama minimax-m2.7:cloud`",
-			presets[0], presets[1], presets[2], d.llm.MimoModel(), d.llm.OmniModel())
+		return fmt.Sprintf("Usage:\n`/model 1` → `%s`\n`/model 2` → `%s`\n`/model 3` → `%s`\n`/model 4` → `%s`\n`/model claude` → `%s`\n`/model gemma` → `%s`\n`/model mimo` → `%s`\n`/model omni` → `%s`\n`/model anthropic claude-sonnet-4-6`\n`/model openrouter vendor/model`\n`/model xai grok-4-1-fast`\n`/model ollama 8bit/DeepSolana`",
+			presets[0], presets[1], presets[2], presets[3], d.llm.ClaudeORModel(), d.llm.GemmaModel(), d.llm.MimoModel(), d.llm.OmniModel())
 	}
 
 	prevProvider, prevModel, changed, err := d.setLLMBackendModel(backend, model)
@@ -4050,15 +4076,16 @@ func (d *Daemon) maybeHandleModelText(content string) (string, bool) {
 }
 
 // extractNaturalModelSwitch detects phrases like "use model 1", "switch to nemotron",
-// "use minimax", "switch to hermes", "use deepsolana" etc. Returns preset index (1-3).
-func extractNaturalModelSwitch(msg string, presets [3]string) (int, bool) {
+// "use minimax", "switch to hermes", "use deepsolana" etc. Returns preset index (1-4)
+// or sentinel values: 5=mimo, 6=omni, 7=claude, 8=gemma.
+func extractNaturalModelSwitch(msg string, presets [4]string) (int, bool) {
 	lower := strings.ToLower(strings.TrimSpace(msg))
 
 	// Must look like a switch intent, not a question or general chat
 	switchPhrases := []string{"use model", "switch to model", "switch model", "change model", "set model"}
 	for _, phrase := range switchPhrases {
 		if strings.Contains(lower, phrase) {
-			for _, n := range []string{"1", "2", "3"} {
+			for _, n := range []string{"1", "2", "3", "4"} {
 				if strings.Contains(lower, phrase+" "+n) || strings.HasSuffix(lower, " "+n) {
 					return int(n[0] - '0'), true
 				}
@@ -4066,29 +4093,44 @@ func extractNaturalModelSwitch(msg string, presets [3]string) (int, bool) {
 		}
 	}
 
-	// "use mimo", "switch to xiaomi" etc. → returns preset 4 (sentinel for mimo)
-	mimoKeywords := []string{"mimo", "xiaomi"}
 	switchTriggersPre := []string{"use ", "switch to ", "change to ", "switch model to ", "activate ", "load "}
-	for _, kw := range mimoKeywords {
+
+	// "use mimo", "switch to xiaomi" etc. → sentinel 5
+	for _, kw := range []string{"mimo", "xiaomi"} {
 		for _, trigger := range switchTriggersPre {
 			if strings.Contains(lower, trigger+kw) {
-				return 4, true
+				return 5, true
 			}
 		}
 	}
 
-	// "use omni", "switch to omni" etc. → returns preset 5 (sentinel for omni)
+	// "use omni" → sentinel 6
 	for _, trigger := range switchTriggersPre {
 		if strings.Contains(lower, trigger+"omni") {
-			return 5, true
+			return 6, true
+		}
+	}
+
+	// "use claude", "switch to claude" → sentinel 7
+	for _, trigger := range switchTriggersPre {
+		if strings.Contains(lower, trigger+"claude") {
+			return 7, true
+		}
+	}
+
+	// "use gemma", "switch to gemma" → sentinel 8
+	for _, trigger := range switchTriggersPre {
+		if strings.Contains(lower, trigger+"gemma") {
+			return 8, true
 		}
 	}
 
 	// Keyword shortcuts for each preset name fragment
-	presetKeywords := [3][]string{
+	presetKeywords := [4][]string{
 		{"nemotron", "nvidia", "model 1", "model1"},
 		{"hermes", "nous", "llama-3.1-405", "model 2", "model2"},
 		{"minimax", "m2.5", "model 3", "model3"},
+		{"glm", "glm-5", "z-ai", "model 4", "model4"},
 	}
 	switchTriggers := []string{"use ", "switch to ", "change to ", "switch model to ", "activate ", "load "}
 	for i, keywords := range presetKeywords {

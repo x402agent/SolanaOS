@@ -738,11 +738,25 @@ func maskKey(key string) string {
 	return key[:10] + "..." + key[len(key)-4:]
 }
 
-// ModelPresets returns the three named OpenRouter model presets (MODEL1/2/3).
-func (c *Client) ModelPresets() [3]string {
+// ModelPresets returns the four named OpenRouter model presets (MODEL1/2/3/4).
+func (c *Client) ModelPresets() [4]string {
 	c.mu.Lock()
 	defer c.mu.Unlock()
-	return [3]string{c.model1, c.model2, c.model3}
+	return [4]string{c.model1, c.model2, c.model3, c.model4}
+}
+
+// ClaudeORModel returns the Claude-via-OpenRouter model slug (OPENROUTER_CLAUDE).
+func (c *Client) ClaudeORModel() string {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+	return c.claudeORModel
+}
+
+// GemmaModel returns the Gemma-via-OpenRouter model slug (OPENROUTER_GEMMA).
+func (c *Client) GemmaModel() string {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+	return c.gemmaModel
 }
 
 func (c *Client) FreeModels() []string {
@@ -763,6 +777,8 @@ func (c *Client) SetModelPreset(n int) (string, string, bool, error) {
 		preset = c.model2
 	case 3:
 		preset = c.model3
+	case 4:
+		preset = c.model4
 	}
 	c.mu.Unlock()
 	if preset == "" {

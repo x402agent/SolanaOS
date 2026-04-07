@@ -69,6 +69,97 @@ Autonomous local-first runtime for Solana trading, research, wallets, automation
 
 </div>
 
+## One-Shot Start
+
+Get everything running locally — Go daemon, gateway, both MCP servers — in one command.
+
+```bash
+git clone https://github.com/x402agent/SolanaOS.git
+cd SolanaOS
+cp .env.example .env        # add your API keys
+bash start.sh               # builds binary + starts all services
+```
+
+Or via Make or npm:
+
+```bash
+make start          # build + start all services
+make dev            # build + start all services + Vite UI on :5173
+make stop           # stop all background services
+make status         # show running service status
+
+npm start           # same as bash start.sh
+npm run start:ui    # with UI dev server
+npm run stop        # stop all services
+```
+
+Or with Docker (zero local Go/Node required):
+
+```bash
+cp .env.example .env
+docker compose up           # starts daemon, gateway, mcp, solana-claude-mcp
+docker compose up -d        # same, background
+make docker-up              # alias
+```
+
+**What starts:**
+
+| Service | Port | Description |
+| --- | --- | --- |
+| `solanaos gateway` | `:8080` | HTTP + SSE gateway — all tools over REST |
+| `solanaos daemon` | — | Autonomous OODA agent loop, Telegram bot, memory |
+| `mcp-server` | `:3001` | SolanaOS MCP server for Claude Desktop / Cursor |
+| `solana-claude MCP` | `:3000` | Open-source Solana agent framework MCP server |
+| `UI` (opt) | `:5173` | Lit+Vite control panel (`--with-ui` flag) |
+
+**Add to Claude Desktop** (`~/Library/Application Support/Claude/claude_desktop_config.json`):
+
+```json
+{
+  "mcpServers": {
+    "solanaos": {
+      "command": "node",
+      "args": ["/path/to/SolanaOS/mcp-server/dist/index.js"]
+    },
+    "solana-claude": {
+      "command": "node",
+      "args": ["/path/to/SolanaOS/solana-claude/mcp-server/dist/index.js"]
+    }
+  }
+}
+```
+
+**Minimum .env to get started:**
+
+```bash
+HELIUS_API_KEY=your-key            # or SOLANA_TRACKER_API_KEY
+HELIUS_RPC_URL=https://mainnet.helius-rpc.com/?api-key=YOUR_KEY
+OPENROUTER_API_KEY=sk-or-v1-...   # free models at openrouter.ai
+LLM_PROVIDER=openrouter
+TELEGRAM_BOT_TOKEN=...            # optional — Telegram control surface
+```
+
+**Logs** are written to `.logs/` (`gateway.log`, `daemon.log`, `mcp-root.log`, `mcp-solana-claude.log`).
+
+---
+
+## Key Documents
+
+| File | What it covers |
+| --- | --- |
+| [DAEMON.md](DAEMON.md) | Full daemon architecture, subsystem table, all 55 packages, hardware layer, OODA loop internals |
+| [SKILL.md](SKILL.md) | Complete agent skill file — give this to any AI to install and operate SolanaOS in one shot |
+| [SOUL.md](SOUL.md) | Agent identity, trading philosophy, memory model, KNOWN/LEARNED/INFERRED epistemology |
+| [STRATEGY.md](STRATEGY.md) | Multi-venue trading strategy: Solana meme spot, Hyperliquid perps, Aster perps, OODA flow, confidence model |
+| [TRADE.md](TRADE.md) | Pump.fun trading agent skill — token classification tiers, execution workflow, Jupiter integration |
+| [TOKEN.md](TOKEN.md) | $CLAWD token — first AI-deployed token on pump.fun, tokenized agent, automated buybacks |
+| [PUMP.md](PUMP.md) | Pump.fun scanner report format, meta analysis pipeline, token data schema |
+| [META.md](META.md) | Pump.fun board meta analysis — cycle position, dominant themes, sniper candidates |
+| [CONTRIBUTING.md](CONTRIBUTING.md) | How to contribute skills, code, and improvements |
+| [SECURITY.md](SECURITY.md) | Security policy and responsible disclosure |
+
+---
+
 ## Deploy on Fly.io
 
 Deploy SolanaOS to Fly.io with a single command. Download the deploy package and run the script — it handles app creation, volumes, secrets, and deployment.
