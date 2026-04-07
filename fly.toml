@@ -13,13 +13,16 @@ kill_timeout = "30s"
   SOLANA_WALLET_KEY_PATH = "/data/solanaos/wallet/agent-wallet.json"
   SOLANAOS_SOUL_PATH = "/app/SOUL.md"
   SOLANAOS_SKILLS_DIR = "/app/skills"
-  SOLANAOS_FLY_START_DAEMON = "true"
-  SOLANAOS_FLY_START_GATEWAY = "false"
+  SOLANAOS_FLY_START_DAEMON = "false"
+  SOLANAOS_FLY_START_GATEWAY = "true"
+  SOLANAOS_FLY_GATEWAY_BIND = "0.0.0.0"
+  SOLANAOS_FLY_GATEWAY_PORT = "18790"
   GATEWAY_BIND = "public"
-  GATEWAY_AUTH_MODE = "password"
+  GATEWAY_AUTH_MODE = "open"
   GATEWAY_AUTH_ALLOW_TAILSCALE = "false"
   GATEWAY_TAILSCALE_MODE = "off"
 
+# Web console — primary HTTP service
 [http_service]
   internal_port = 18800
   force_https = true
@@ -27,6 +30,20 @@ kill_timeout = "30s"
   auto_start_machines = true
   min_machines_running = 1
   processes = ["app"]
+
+# Gateway WebSocket — exposed on port 18790
+[[services]]
+  internal_port = 18790
+  protocol = "tcp"
+
+  [[services.ports]]
+    port = 18790
+    handlers = ["tls"]
+
+  [services.concurrency]
+    type = "connections"
+    hard_limit = 500
+    soft_limit = 250
 
 [[vm]]
   size = "shared-cpu-2x"

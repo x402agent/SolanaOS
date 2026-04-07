@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "description": "Platform blocklist — tokens deployed via these platforms are excluded from all scans. These platforms generate low-quality, spam, or bot-deployed tokens that pollute the feed.",
+  "blocked_platforms": [
+    {
+      "name": "RapidLaunch",
+      "domains": ["rapidlaunch.io"],
+      "signatures": ["rapidlaunch.io", "Created on https://rapidlaunch.io"],
+      "reason": "Automated token factory — generates spam tokens"
+    },
+    {
+      "name": "7Tracker / J7Tracker",
+      "domains": ["7tracker.io", "j7tracker.io"],
+      "signatures": ["7tracker.io", "j7tracker.io", "Deployed using https://j7tracker.io"],
+      "reason": "Automated deployer platform — low-quality bot tokens"
+    }
+  ],
+  "blocked_deployer_wallets": [],
+  "notes": "Add known deployer wallet addresses to blocked_deployer_wallets as they are discovered. The signatures array is matched case-insensitively against token card text (browser) and token descriptions (API)."
+}

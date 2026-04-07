@@ -1,0 +1,63 @@
+# OS files
+.DS_Store
+*.swp
+*.swo
+*~
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# IDE
+.vscode/
+.idea/
+*.iml
+
+# Test outputs
+/tmp/
+*.tmp
+.cache/
+
+# Logs
+*.log
+
+# Anchor/Solana
+.anchor/
+target/
+test-ledger/
+# Cargo.lock is tracked for binaries but not for libraries
+package-lock.json
+yarn.lock
+
+# Built binaries (platform-specific)
+bin/qedgen
+
+# Leanstral verification artifacts
+**/lean_proofs/*_raw.txt
+**/lean_proofs/metadata.json
+**/lean_proofs/prompt.txt
+**/.qedgen/
+**/.leanstral/
+
+# Lean build artifacts
+.lake/
+*.olean
+*.olean.trace
+*.old
+
+# Local agent/editor state
+.agents/
+.claude/
+\n# Generated proof artifacts\nlean_project/\nqedgen_*/

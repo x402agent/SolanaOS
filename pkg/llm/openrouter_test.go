@@ -8,24 +8,24 @@ import (
 )
 
 func TestResolveActiveProviderPrefersRequestedProvider(t *testing.T) {
-	got := resolveActiveProvider("ollama", "sk-or", "sk-ant", "sk-xai", "minimax-m2.7:cloud")
+	got := resolveActiveProvider("ollama", "sk-or", "sk-ant", "sk-xai", "", "minimax-m2.7:cloud")
 	if got != "ollama" {
 		t.Fatalf("resolveActiveProvider() = %q, want %q", got, "ollama")
 	}
 
-	got = resolveActiveProvider("openrouter", "sk-or", "sk-ant", "sk-xai", "minimax-m2.7:cloud")
+	got = resolveActiveProvider("openrouter", "sk-or", "sk-ant", "sk-xai", "", "minimax-m2.7:cloud")
 	if got != "openrouter" {
 		t.Fatalf("resolveActiveProvider() = %q, want %q", got, "openrouter")
 	}
 }
 
 func TestResolveActiveProviderDefaultsToOpenRouterWhenConfigured(t *testing.T) {
-	got := resolveActiveProvider("", "sk-or", "", "", "minimax-m2.7:cloud")
+	got := resolveActiveProvider("", "sk-or", "", "", "", "minimax-m2.7:cloud")
 	if got != "openrouter" {
 		t.Fatalf("resolveActiveProvider() = %q, want %q", got, "openrouter")
 	}
 
-	got = resolveActiveProvider("", "", "sk-ant", "", "minimax-m2.7:cloud")
+	got = resolveActiveProvider("", "", "sk-ant", "", "", "minimax-m2.7:cloud")
 	if got != "anthropic" {
 		t.Fatalf("resolveActiveProvider() = %q, want %q", got, "anthropic")
 	}

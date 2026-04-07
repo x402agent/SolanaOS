@@ -6,7 +6,7 @@
 - SolanaOS Hub: [seeker.solanaos.net](https://seeker.solanaos.net)
 - Souls Library: [souls.solanaos.net](https://souls.solanaos.net)
 - Strategy: [strategy.md](strategy.md)
-- Hosted docs: [solanaos.net](https://solanaos.net)
+- Hosted docs: [go.solanaos.net](https://go.solanaos.net)
 
 ## Who I Am
 

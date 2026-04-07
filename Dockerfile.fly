@@ -31,9 +31,11 @@ RUN mkdir -p /out && \
 
 FROM node:22-alpine AS frontend-builder
 
+RUN apk add --no-cache python3 make g++ linux-headers eudev-dev libusb-dev
+
 WORKDIR /src/web/frontend
 COPY web/frontend/package.json web/frontend/package-lock.json ./
-RUN npm install
+RUN npm install --ignore-scripts || npm install
 COPY web/frontend ./
 COPY docs/docs-site /src/docs-site
 RUN npm run build
@@ -62,8 +64,19 @@ COPY --from=go-builder /src/scripts/fly-start.sh /app/fly-start.sh
 
 RUN chmod +x /app/fly-start.sh && \
     mkdir -p /data /app/web/frontend && \
-    adduser -D -u 1000 solanaos && chown -R solanaos:solanaos /app /data
-USER solanaos
+    adduser -D -u 1000 -h /home/solanaos solanaos && \
+    chown -R solanaos:solanaos /app /data /home/solanaos
+
+# Fix /data permissions at container start (volume may be owned by root from prior deploys)
+RUN printf '#!/bin/sh\nchown -R solanaos:solanaos /data 2>/dev/null || true\nexec su-exec solanaos /app/fly-start.sh\n' > /app/entrypoint.sh && \
+    chmod +x /app/entrypoint.sh
+RUN apk add --no-cache su-exec
+
+VOLUME ["/data"]
+
+EXPOSE 18800
+
+ENTRYPOINT ["/app/entrypoint.sh"]
 
 ENV PORT=18800 \
     SOLANAOS_HOME=/data/solanaos \
@@ -71,9 +84,3 @@ ENV PORT=18800 \
     SOLANA_WALLET_KEY_PATH=/data/solanaos/wallet/agent-wallet.json \
     SOLANAOS_SOUL_PATH=/app/SOUL.md \
     SOLANAOS_SKILLS_DIR=/app/skills
-
-VOLUME ["/data"]
-
-EXPOSE 18800
-
-ENTRYPOINT ["/app/fly-start.sh"]

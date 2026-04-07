@@ -74,7 +74,7 @@ scripts/node_modules/
 web/frontend/node_modules/
 docs/docs-site/node_modules/
 .npm-cache/
-
+solana-keychain-main
 # ── Docker ────────────────────────────────────────────────────────────
 docker-compose.override.yml
 

@@ -22,7 +22,8 @@ type Server struct {
 	solanaRPC    *rpc.Client
 	evmClients   map[int]*EVMClient    // chainID → client
 	privy        *PrivyClient          // Privy managed wallets (optional)
-	deployer     *Deployer             // E2B sandbox deployer (optional)
+	deployer     *Deployer             // E2B cloud sandbox deployer (optional)
+	sandbox      *LocalSandbox         // local process sandbox (fallback)
 	localSigners *LocalSignerManager   // AES-256 local dev + trade signers
 	port         string
 	httpSrv      *http.Server
@@ -105,6 +106,7 @@ func NewServer(cfg ServerConfig) (*Server, error) {
 		evmClients:   make(map[int]*EVMClient),
 		privy:        NewPrivyClient(DefaultPrivyConfig()),
 		deployer:     NewDeployer(),
+		sandbox:      NewLocalSandbox(),
 		localSigners: localSigners,
 		port:         cfg.Port,
 	}
@@ -667,11 +669,6 @@ type deployReq struct {
 }
 
 func (s *Server) handleDeploy(w http.ResponseWriter, r *http.Request) {
-	if s.deployer == nil || !s.deployer.IsConfigured() {
-		jsonError(w, "E2B deployer not configured — set E2B_API_KEY", http.StatusServiceUnavailable)
-		return
-	}
-
 	var req deployReq
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		jsonError(w, "invalid request body", http.StatusBadRequest)
@@ -684,38 +681,60 @@ func (s *Server) handleDeploy(w http.ResponseWriter, r *http.Request) {
 	ctx, cancel := context.WithTimeout(r.Context(), 120*time.Second)
 	defer cancel()
 
-	dep, err := s.deployer.Deploy(ctx, req.AgentID, req.Env)
-	if err != nil {
-		jsonError(w, "deploy failed: "+err.Error(), http.StatusInternalServerError)
+	// Use E2B cloud sandbox if configured, otherwise fall back to local process sandbox.
+	if s.deployer != nil && s.deployer.IsConfigured() {
+		dep, err := s.deployer.Deploy(ctx, req.AgentID, req.Env)
+		if err != nil {
+			jsonError(w, "e2b deploy failed: "+err.Error(), http.StatusInternalServerError)
+			return
+		}
+		jsonResp(w, dep)
 		return
 	}
 
+	dep, err := s.sandbox.Deploy(ctx, req.AgentID, req.Env)
+	if err != nil {
+		jsonError(w, "local sandbox deploy failed: "+err.Error(), http.StatusInternalServerError)
+		return
+	}
 	jsonResp(w, dep)
 }
 
 func (s *Server) handleListDeployments(w http.ResponseWriter, r *http.Request) {
-	if s.deployer == nil || !s.deployer.IsConfigured() {
-		jsonResp(w, []any{})
-		return
+	var all []*Deployment
+	if s.deployer != nil && s.deployer.IsConfigured() {
+		all = append(all, s.deployer.ListDeployments()...)
 	}
-	jsonResp(w, s.deployer.ListDeployments())
+	if s.sandbox != nil {
+		all = append(all, s.sandbox.ListDeployments()...)
+	}
+	if all == nil {
+		all = []*Deployment{}
+	}
+	jsonResp(w, all)
 }
 
 func (s *Server) handleTeardown(w http.ResponseWriter, r *http.Request) {
-	if s.deployer == nil || !s.deployer.IsConfigured() {
-		jsonError(w, "E2B deployer not configured", http.StatusServiceUnavailable)
-		return
-	}
-
 	agentID := r.PathValue("agent_id")
 	ctx, cancel := context.WithTimeout(r.Context(), 30*time.Second)
 	defer cancel()
 
-	if err := s.deployer.Teardown(ctx, agentID); err != nil {
-		jsonError(w, err.Error(), http.StatusNotFound)
+	// Try E2B first, then local sandbox.
+	if s.deployer != nil && s.deployer.IsConfigured() {
+		if err := s.deployer.Teardown(ctx, agentID); err == nil {
+			jsonResp(w, map[string]any{"torn_down": true, "agent_id": agentID})
+			return
+		}
+	}
+	if s.sandbox != nil {
+		if err := s.sandbox.Teardown(ctx, agentID); err != nil {
+			jsonError(w, err.Error(), http.StatusNotFound)
+			return
+		}
+		jsonResp(w, map[string]any{"torn_down": true, "agent_id": agentID})
 		return
 	}
-	jsonResp(w, map[string]any{"torn_down": true, "agent_id": agentID})
+	jsonError(w, "no deployer configured", http.StatusServiceUnavailable)
 }
 
 // ── Solana Transfer ──────────────────────────────────────────────
@@ -782,6 +801,114 @@ func parseSOLAmount(amount string) (uint64, error) {
 		return 0, fmt.Errorf("amount must be positive")
 	}
 	return uint64(lamportsInt), nil
+}
+
+// ── Local Signer Handlers ────────────────────────────────────────
+
+func (s *Server) handleListLocalSigners(w http.ResponseWriter, r *http.Request) {
+	if s.localSigners == nil {
+		jsonError(w, "local signers not initialized", http.StatusServiceUnavailable)
+		return
+	}
+	jsonResp(w, []map[string]any{
+		{"mode": "dev", "pubkey": s.localSigners.Dev.Pubkey()},
+		{"mode": "trade", "pubkey": s.localSigners.Trade.Pubkey()},
+	})
+}
+
+func (s *Server) handleGetLocalSigner(w http.ResponseWriter, r *http.Request) {
+	if s.localSigners == nil {
+		jsonError(w, "local signers not initialized", http.StatusServiceUnavailable)
+		return
+	}
+	mode := SignerMode(r.PathValue("mode"))
+	signer := s.localSigners.Get(mode)
+	if signer == nil {
+		jsonError(w, "unknown signer mode", http.StatusBadRequest)
+		return
+	}
+	jsonResp(w, map[string]any{
+		"mode":   signer.Mode(),
+		"pubkey": signer.Pubkey(),
+	})
+}
+
+type localSignReq struct {
+	Message string `json:"message"` // UTF-8 or base64 payload
+}
+
+func (s *Server) handleLocalSign(w http.ResponseWriter, r *http.Request) {
+	if s.localSigners == nil {
+		jsonError(w, "local signers not initialized", http.StatusServiceUnavailable)
+		return
+	}
+
+	mode := SignerMode(r.PathValue("mode"))
+	signer := s.localSigners.Get(mode)
+	if signer == nil {
+		jsonError(w, "unknown signer mode", http.StatusBadRequest)
+		return
+	}
+
+	var req localSignReq
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		jsonError(w, "invalid request body", http.StatusBadRequest)
+		return
+	}
+
+	sig, err := signer.SignMessage([]byte(req.Message))
+	if err != nil {
+		jsonError(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	jsonResp(w, map[string]any{
+		"signature": sig,
+		"pubkey":    signer.Pubkey(),
+		"mode":      signer.Mode(),
+	})
+}
+
+type localSignTxReq struct {
+	To     string `json:"to"`     // recipient pubkey (base58)
+	Amount string `json:"amount"` // SOL amount (e.g. "0.01")
+}
+
+func (s *Server) handleLocalSignTx(w http.ResponseWriter, r *http.Request) {
+	if s.localSigners == nil {
+		jsonError(w, "local signers not initialized", http.StatusServiceUnavailable)
+		return
+	}
+
+	mode := SignerMode(r.PathValue("mode"))
+	signer := s.localSigners.Get(mode)
+	if signer == nil {
+		jsonError(w, "unknown signer mode", http.StatusBadRequest)
+		return
+	}
+
+	var req localSignTxReq
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		jsonError(w, "invalid request body", http.StatusBadRequest)
+		return
+	}
+
+	ctx, cancel := context.WithTimeout(r.Context(), 30*time.Second)
+	defer cancel()
+
+	sig, err := s.solanaTransfer(ctx, []byte(signer.PrivateKey()), req.To, req.Amount)
+	if err != nil {
+		jsonError(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	jsonResp(w, map[string]any{
+		"signature": sig,
+		"from":      signer.Pubkey(),
+		"to":        req.To,
+		"amount":    req.Amount,
+		"mode":      signer.Mode(),
+	})
 }
 
 // ── Public Vault Accessors (for CLI one-shot bootstrap) ──────────

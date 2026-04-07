@@ -2,6 +2,10 @@
 # ║  SolanaOS :: Makefile                                               ║
 # ║  Build targets for x86_64, ARM64 (NVIDIA Orin Nano), RISC-V        ║
 # ╠══════════════════════════════════════════════════════════════════════╣
+# ║  make start          One-shot: build + start all services           ║
+# ║  make dev            One-shot: start all services + UI dev server   ║
+# ║  make stop           Stop all background services                   ║
+# ║  make status         Show running service status                    ║
 # ║  make build          Build for current platform                     ║
 # ║  make slim           Build extra-slim daemon binary profile         ║
 # ║  make size-report    Compare standard vs slim binary sizes          ║
@@ -9,6 +13,8 @@
 # ║  make tui            Build TUI launcher                             ║
 # ║  make all            Build all targets                              ║
 # ║  make docker         Build Docker image                             ║
+# ║  make docker-up      Docker Compose: start all services             ║
+# ║  make docker-down    Docker Compose: stop all services              ║
 # ║  make clean          Remove build artifacts                         ║
 # ║  make install        Install to /usr/local/bin                      ║
 # ║  make test           Run tests                                      ║
@@ -61,22 +67,48 @@ BIN_TUI   := $(BUILD_DIR)/solanaos-tui
 BIN_SLIM  := $(BUILD_DIR)/solanaos-slim
 BIN_CONTROL_API := $(BUILD_DIR)/solanaos-control-api
 
-.PHONY: all build build-ui build-control-api run-control-api test-control-api slim size-report orin tui docker docker-fly clean install test lint deps scan-i2c npm-pack seeker-install seeker-logcat connect-bundle
+.PHONY: all build build-control-api run-control-api test-control-api slim size-report orin tui docker docker-fly docker-up docker-down clean install test lint deps scan-i2c npm-pack seeker-install seeker-logcat connect-bundle start dev stop status
 
 # ── Default ───────────────────────────────────────────────────────────
 
 all: build tui
 
-# ── Build Control UI (Vite + Lit) ────────────────────────────────────
+# ── One-Shot Start ────────────────────────────────────────────────────
 
-build-ui:
-	@echo "⚡ Building SolanaOS Control UI..."
-	@cd ui && npm run build
-	@echo "✓ Control UI built → pkg/nanobot/ui/"
+start:
+	@bash start.sh
+
+dev:
+	@bash start.sh --with-ui
+
+stop:
+	@bash start.sh --stop
+
+status:
+	@bash start.sh --status
+
+# ── Docker Compose ────────────────────────────────────────────────────
+
+docker-up:
+	@echo "🐳 Starting SolanaOS via Docker Compose..."
+	@[ -f .env ] || (cp .env.example .env && echo "Created .env — edit before running agents")
+	docker compose up -d
+	@echo "✓ Services starting:"
+	@echo "  Gateway:          http://localhost:8080"
+	@echo "  MCP root:         http://localhost:3001/mcp"
+	@echo "  solana-claude MCP: http://localhost:3000/mcp"
+	@echo ""
+	@echo "  Logs: docker compose logs -f"
+	@echo "  Stop: make docker-down"
+
+docker-down:
+	@echo "🛑 Stopping SolanaOS Docker Compose services..."
+	docker compose down
+	@echo "✓ Done"
 
 # ── Build for current platform ────────────────────────────────────────
 
-build: build-ui
+build:
 	@echo "⚡ Building SolanaOS binary..."
 	@mkdir -p $(BUILD_DIR)
 	@mkdir -p $(GOCACHE_DIR) $(GOTMPDIR_DIR) $(GOMODCACHE_DIR)
@@ -285,8 +317,7 @@ npm-pack:
 help:
 	@echo "SolanaOS — Makefile targets:"
 	@echo ""
-	@echo "  build       Build UI + Go binary for current platform"
-	@echo "  build-ui    Build the Control UI (Vite + Lit)"
+	@echo "  build       Build for current platform"
 	@echo "  slim        Build slim profile (CGO off, netgo/osusergo tags)"
 	@echo "  size-report Build standard + slim and print size deltas"
 	@echo "  tui         Build TUI launcher"

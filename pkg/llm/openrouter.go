@@ -511,6 +511,24 @@ func (c *Client) ChatOmni(ctx context.Context, text string, mediaURLs ...string)
 	return reply, err
 }
 
+// ChatOpenRouterDirect sends a raw messages array to a specific OpenRouter model.
+// Returns the reply text, reasoning details (if any), and error.
+func (c *Client) ChatOpenRouterDirect(ctx context.Context, model string, messages []map[string]interface{}) (string, json.RawMessage, error) {
+	if !c.IsOpenRouterConfigured() {
+		return "", nil, fmt.Errorf("OPENROUTER_API_KEY not set")
+	}
+	c.mu.Lock()
+	endpoint := c.endpoint
+	c.mu.Unlock()
+
+	payload := map[string]interface{}{
+		"model":      model,
+		"messages":   messages,
+		"max_tokens": 4096,
+	}
+	return c.chatOpenRouter(ctx, endpoint, model, "", "", payload)
+}
+
 func (c *Client) chatOpenRouterSession(ctx context.Context, sessionID, model, userMsg, systemPrompt string) (string, error) {
 	if !c.IsOpenRouterConfigured() {
 		return "", fmt.Errorf("OPENROUTER_API_KEY not set")

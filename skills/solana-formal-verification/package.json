@@ -1,0 +1,46 @@
+{
+  "name": "qedgen-solana-skills",
+  "version": "1.0.0",
+  "description": "Agent skill for generating formal Lean 4 proofs using Mistral's Leanstral model. Perfect for verifying Solana programs, Rust code, and smart contracts",
+  "keywords": [
+    "agent-skill",
+    "lean4",
+    "formal-verification",
+    "qedgen",
+    "solana",
+    "rust",
+    "smart-contracts",
+    "proof-assistant",
+    "mistral"
+  ],
+  "main": "SKILL.md",
+  "bin": {
+    "qedgen": "./bin/qedgen"
+  },
+  "files": [
+    "SKILL.md",
+    "bin/",
+    "install.sh",
+    "Cargo.toml",
+    "Cargo.lock",
+    "crates/",
+    "tools/"
+  ],
+  "scripts": {
+    "postinstall": "bash install.sh",
+    "prepack": "cargo build --release && mkdir -p bin && cp target/release/qedgen bin/ && chmod +x bin/qedgen",
+    "test": "./bin/qedgen --help"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/qedgen/solana-skills.git"
+  },
+  "author": "abishekk92",
+  "license": "MIT",
+  "homepage": "https://github.com/qedgen/solana-skills#readme",
+  "agentSkills": {
+    "skills": [
+      "SKILL.md"
+    ]
+  }
+}
