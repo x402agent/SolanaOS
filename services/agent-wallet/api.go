@@ -18,13 +18,14 @@ import (
 
 // Server is the agentic wallet HTTP API.
 type Server struct {
-	vault      *Vault
-	solanaRPC  *rpc.Client
-	evmClients map[int]*EVMClient // chainID → client
-	privy      *PrivyClient       // Privy managed wallets (optional)
-	deployer   *Deployer          // E2B sandbox deployer (optional)
-	port       string
-	httpSrv    *http.Server
+	vault        *Vault
+	solanaRPC    *rpc.Client
+	evmClients   map[int]*EVMClient    // chainID → client
+	privy        *PrivyClient          // Privy managed wallets (optional)
+	deployer     *Deployer             // E2B sandbox deployer (optional)
+	localSigners *LocalSignerManager   // AES-256 local dev + trade signers
+	port         string
+	httpSrv      *http.Server
 }
 
 // ServerConfig holds API server configuration.
@@ -93,13 +94,19 @@ func NewServer(cfg ServerConfig) (*Server, error) {
 		return nil, fmt.Errorf("init vault: %w", err)
 	}
 
+	localSigners, err := NewLocalSignerManager()
+	if err != nil {
+		log.Printf("[WALLET-API] ⚠️  Local signers init error: %v", err)
+	}
+
 	s := &Server{
-		vault:      vault,
-		solanaRPC:  rpc.New(cfg.SolanaRPC),
-		evmClients: make(map[int]*EVMClient),
-		privy:      NewPrivyClient(DefaultPrivyConfig()),
-		deployer:   NewDeployer(),
-		port:       cfg.Port,
+		vault:        vault,
+		solanaRPC:    rpc.New(cfg.SolanaRPC),
+		evmClients:   make(map[int]*EVMClient),
+		privy:        NewPrivyClient(DefaultPrivyConfig()),
+		deployer:     NewDeployer(),
+		localSigners: localSigners,
+		port:         cfg.Port,
 	}
 
 	// Initialize EVM clients
