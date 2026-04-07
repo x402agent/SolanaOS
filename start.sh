@@ -119,6 +119,10 @@ build_all() {
   $GOENVVARS "$GO_BIN" build -trimpath -ldflags="-s -w" \
     -o "$BUILD_DIR/agent-wallet" "$SCRIPT_DIR/services/agent-wallet/cmd" 2>&1
   info "✓ agent-wallet"
+
+  $GOENVVARS "$GO_BIN" build -trimpath -ldflags="-s -w" \
+    -o "$BUILD_DIR/gateway-api" "$SCRIPT_DIR/cmd/gateway-api" 2>&1
+  info "✓ gateway-api"
 }
 
 # ── Stop ─────────────────────────────────────────────────────────────
@@ -128,6 +132,7 @@ if $STOP_MODE; then
   info "Stopping SolanaOS services..."
   stop_service "solanaos-daemon"
   stop_service "agent-wallet"
+  stop_service "mcp-server"
   stop_service "ui-dev"
   echo ""
   exit 0
@@ -138,8 +143,9 @@ fi
 if $STATUS_MODE; then
   echo ""
   echo -e "${PURPLE}SolanaOS Service Status${RESET}"
-  service_status "solanaos-daemon"
   service_status "agent-wallet"
+  service_status "solanaos-daemon"
+  service_status "mcp-server"
   $WITH_UI && service_status "ui-dev"
   echo ""
   exit 0
@@ -174,6 +180,22 @@ start_service "solanaos-daemon" "$BUILD_DIR/solanaos" daemon
 dim "Gateway:  http://localhost:${GATEWAY_PORT:-8080}"
 dim "Control:  http://localhost:${CONTROL_PORT:-7777}"
 
+# ── MCP Server (optional — needs node + built dist) ──────────────────
+
+MCP_PORT="${MCP_PORT:-3001}"
+if command -v node >/dev/null 2>&1 && [ -f "$SCRIPT_DIR/mcp-server/dist/http.js" ]; then
+  info "Starting SolanaOS MCP server..."
+  start_service "mcp-server" node "$SCRIPT_DIR/mcp-server/dist/http.js"
+  dim "MCP:      http://localhost:$MCP_PORT/mcp"
+elif command -v npm >/dev/null 2>&1 && [ -f "$SCRIPT_DIR/mcp-server/package.json" ]; then
+  info "Building + starting SolanaOS MCP server..."
+  (cd "$SCRIPT_DIR/mcp-server" && npm install --silent && npm run build) 2>&1
+  start_service "mcp-server" node "$SCRIPT_DIR/mcp-server/dist/http.js"
+  dim "MCP:      http://localhost:$MCP_PORT/mcp"
+else
+  dim "MCP server skipped (run: make build-mcp && make start-mcp)"
+fi
+
 # ── UI Dev Server (optional) ──────────────────────────────────────────
 
 if $WITH_UI; then
@@ -190,9 +212,12 @@ fi
 
 echo ""
 echo -e "  ${GREEN}✓ SolanaOS running${RESET}"
-echo -e "  ${DIM}Wallet API:${RESET}  http://localhost:$WALLET_PORT"
-echo -e "  ${DIM}Local keys:${RESET}  ~/.nanosolana/signers/{dev,trade}.enc"
-echo -e "  ${DIM}Logs:${RESET}        journalctl -f  ${DIM}or${RESET}  $BUILD_DIR/solanaos daemon --no-bg"
+echo -e "  ${DIM}Wallet API:${RESET}   http://localhost:$WALLET_PORT/v1/health"
+echo -e "  ${DIM}Local keys:${RESET}   ~/.nanosolana/signers/{dev,trade}.enc"
+echo -e "  ${DIM}Gateway:${RESET}      http://localhost:${GATEWAY_PORT:-18790}"
+echo -e "  ${DIM}Control UI:${RESET}   http://localhost:${CONTROL_PORT:-7777}"
+echo -e "  ${DIM}MCP:${RESET}          http://localhost:$MCP_PORT/mcp  ${DIM}(if built)${RESET}"
+echo -e "  ${DIM}Logs:${RESET}         $BUILD_DIR/solanaos daemon --no-bg"
 echo -e "  ${DIM}Stop:${RESET}        bash start.sh --stop"
 echo -e "  ${DIM}Status:${RESET}      bash start.sh --status"
 echo ""

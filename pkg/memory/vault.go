@@ -20,6 +20,7 @@
 package memory
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"math/rand"
@@ -114,6 +115,22 @@ type Checkpoint struct {
 	CreatedAt string `json:"created_at"`
 }
 
+// ── Embedder interface ───────────────────────────────────────────────
+// Allows injecting an embedding client without importing pkg/llm.
+
+type Embedder interface {
+	// SemanticSearch returns candidates ranked by cosine similarity to query.
+	// threshold filters results below a minimum similarity score.
+	SemanticSearch(ctx context.Context, query string, candidates []string, threshold float64) ([]SemanticResult, error)
+}
+
+// SemanticResult is a ranked candidate from a semantic search.
+type SemanticResult struct {
+	Index int
+	Score float64
+	Text  string
+}
+
 // ── ClawVault ────────────────────────────────────────────────────────
 
 type ClawVault struct {
@@ -123,6 +140,7 @@ type ClawVault struct {
 	graphIndex      GraphIndex
 	shortTermBuffer []VaultEntry
 	shortTermMax    int
+	embedder        Embedder // optional; enables semantic search in Recall
 }
 
 func NewClawVault(vaultPath string) *ClawVault {
@@ -136,6 +154,14 @@ func NewClawVault(vaultPath string) *ClawVault {
 		},
 		shortTermMax: 50,
 	}
+}
+
+// SetEmbedder injects an embedding client for semantic search in Recall.
+// Call this after construction, before any Recall calls.
+func (v *ClawVault) SetEmbedder(e Embedder) {
+	v.mu.Lock()
+	v.embedder = e
+	v.mu.Unlock()
 }
 
 func (v *ClawVault) Init() error {
@@ -248,6 +274,18 @@ type RecallOpts struct {
 
 func (v *ClawVault) Recall(query string, opts RecallOpts) []VaultEntry {
 	v.mu.RLock()
+	embedder := v.embedder
+	v.mu.RUnlock()
+
+	// Use semantic search when an embedder is available.
+	if embedder != nil {
+		return v.recallSemantic(query, opts, embedder)
+	}
+	return v.recallKeyword(query, opts)
+}
+
+func (v *ClawVault) recallKeyword(query string, opts RecallOpts) []VaultEntry {
+	v.mu.RLock()
 	defer v.mu.RUnlock()
 
 	limit := opts.Limit
@@ -257,7 +295,6 @@ func (v *ClawVault) Recall(query string, opts RecallOpts) []VaultEntry {
 
 	entries := v.loadAllEntries(opts.Category)
 
-	// Score entries against query
 	type scored struct {
 		entry     VaultEntry
 		relevance float64
@@ -270,7 +307,6 @@ func (v *ClawVault) Recall(query string, opts RecallOpts) []VaultEntry {
 		}
 	}
 
-	// Sort by relevance × score (descending)
 	for i := 0; i < len(results); i++ {
 		for j := i + 1; j < len(results); j++ {
 			if results[j].relevance*results[j].entry.Score > results[i].relevance*results[i].entry.Score {

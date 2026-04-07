@@ -67,8 +67,9 @@ BIN_TUI   := $(BUILD_DIR)/solanaos-tui
 BIN_SLIM  := $(BUILD_DIR)/solanaos-slim
 BIN_CONTROL_API   := $(BUILD_DIR)/solanaos-control-api
 BIN_AGENT_WALLET  := $(BUILD_DIR)/agent-wallet
+BIN_GATEWAY_API   := $(BUILD_DIR)/gateway-api
 
-.PHONY: all build build-control-api run-control-api test-control-api build-agent-wallet start-agent-wallet stop-agent-wallet slim size-report orin tui docker docker-fly docker-up docker-down clean install test lint deps scan-i2c npm-pack seeker-install seeker-logcat connect-bundle start dev stop status
+.PHONY: all build build-control-api run-control-api test-control-api build-agent-wallet start-agent-wallet stop-agent-wallet build-gateway-api build-mcp start-mcp stop-mcp npm-sync slim size-report orin tui docker docker-fly docker-up docker-down clean install test lint deps scan-i2c npm-pack seeker-install seeker-logcat connect-bundle start dev stop status help
 
 # ── Default ───────────────────────────────────────────────────────────
 
@@ -142,6 +143,49 @@ stop-agent-wallet:
 	else \
 	  echo "no agent-wallet.pid found"; \
 	fi
+
+build-gateway-api:
+	@echo "⚡ Building Gateway API binary..."
+	@mkdir -p $(BUILD_DIR)
+	@mkdir -p $(GOCACHE_DIR) $(GOTMPDIR_DIR) $(GOMODCACHE_DIR)
+	$(GOBUILD) -o $(BIN_GATEWAY_API) ./cmd/gateway-api
+	@echo "✓ $(BIN_GATEWAY_API) built"
+	@ls -lh $(BIN_GATEWAY_API)
+
+build-mcp:
+	@echo "⚡ Building SolanaOS MCP server..."
+	@[ -d mcp-server ] || (echo "mcp-server/ not found" && exit 1)
+	cd mcp-server && npm install --silent && npm run build
+	@echo "✓ mcp-server/dist built"
+
+start-mcp:
+	@echo "🔌 Starting SolanaOS MCP server (HTTP mode, port $${MCP_PORT:-3001})..."
+	@[ -f mcp-server/dist/http.js ] || $(MAKE) build-mcp
+	@[ -f .env ] && set -a && . ./.env && set +a; \
+	 node mcp-server/dist/http.js & echo $$! > /tmp/solanaos-pids/mcp.pid
+	@echo "✓ MCP server running at http://localhost:$${MCP_PORT:-3001}/mcp"
+
+stop-mcp:
+	@if [ -f /tmp/solanaos-pids/mcp.pid ]; then \
+	  PID=$$(cat /tmp/solanaos-pids/mcp.pid); \
+	  kill $$PID 2>/dev/null && echo "✓ MCP server stopped (pid $$PID)" || echo "already stopped"; \
+	  rm -f /tmp/solanaos-pids/mcp.pid; \
+	else echo "no mcp.pid found"; fi
+
+npm-sync:
+	@echo "📦 Syncing new/npm → npm (canonical)..."
+	@for pkg in solanaos solanaos-installer mawdbot-installer; do \
+	  SRC="new/npm/$$pkg/package.json"; \
+	  DST="npm/$$pkg/package.json"; \
+	  [ -f "$$SRC" ] || continue; \
+	  NEW_VER=$$(node -p "require('./$$SRC').version" 2>/dev/null); \
+	  OLD_VER=$$(node -p "require('./$$DST').version" 2>/dev/null); \
+	  if [ "$$NEW_VER" != "$$OLD_VER" ]; then \
+	    echo "  ⚠️  $$pkg: npm/=$$OLD_VER new/npm/=$$NEW_VER — update npm/ manually then re-run"; \
+	  else \
+	    echo "  ✓  $$pkg: v$$OLD_VER in sync"; \
+	  fi; \
+	done
 
 build-control-api:
 	@echo "⚡ Building SolanaOS Control API..."
@@ -270,13 +314,16 @@ docker-orin:
 
 # ── Install ───────────────────────────────────────────────────────────
 
-install: build tui
+install: build tui build-agent-wallet build-gateway-api
 	@echo "📦 Installing SolanaOS to /usr/local/bin..."
 	install -m 755 $(BIN_CLI) /usr/local/bin/solanaos
 	install -m 755 $(BIN_TUI) /usr/local/bin/solanaos-tui
+	install -m 755 $(BIN_AGENT_WALLET) /usr/local/bin/agent-wallet
+	install -m 755 $(BIN_GATEWAY_API) /usr/local/bin/solanaos-gateway
 	ln -sf /usr/local/bin/solanaos /usr/local/bin/nanosolana
 	ln -sf /usr/local/bin/solanaos-tui /usr/local/bin/nanosolana-tui
-	@echo "✓ Installed solanaos and solanaos-tui (compat aliases: nanosolana, nanosolana-tui)"
+	@echo "✓ Installed: solanaos, solanaos-tui, agent-wallet, solanaos-gateway"
+	@echo "  Compat aliases: nanosolana, nanosolana-tui"
 
 # ── Test ──────────────────────────────────────────────────────────────
 
@@ -343,16 +390,49 @@ npm-pack:
 help:
 	@echo "SolanaOS — Makefile targets:"
 	@echo ""
-	@echo "  build       Build for current platform"
-	@echo "  slim        Build slim profile (CGO off, netgo/osusergo tags)"
-	@echo "  size-report Build standard + slim and print size deltas"
-	@echo "  tui         Build TUI launcher"
-	@echo "  all         Build CLI + TUI"
-	@echo "  orin        Cross-compile for NVIDIA Orin Nano (linux/arm64)"
-	@echo "  rpi         Cross-compile for Raspberry Pi (linux/arm64)"
-	@echo "  riscv       Cross-compile for RISC-V (linux/riscv64)"
-	@echo "  macos       Build for macOS Apple Silicon"
-	@echo "  cross       All cross-compilation targets"
-	@echo "  docker      Build Docker image"
-	@echo "  docker-fly  Build the Fly.io image"
-	@echo "  npm-pack    Dry-run pack the solanaos-cli npm package"
+	@echo "  ── Build ──────────────────────────────────────────────"
+	@echo "  build               Build solanaos binary (current platform)"
+	@echo "  build-agent-wallet  Build agent-wallet service binary"
+	@echo "  build-gateway-api   Build standalone gateway-api binary"
+	@echo "  build-control-api   Build solanaos-control-api binary"
+	@echo "  build-mcp           Build solanaos-mcp TypeScript server"
+	@echo "  tui                 Build TUI launcher"
+	@echo "  slim                Build slim profile (CGO off, netgo/osusergo)"
+	@echo "  all                 Build solanaos + TUI"
+	@echo ""
+	@echo "  ── Start / Stop ───────────────────────────────────────"
+	@echo "  start               Build + start all services (via start.sh)"
+	@echo "  dev                 Start all services + web UI dev server"
+	@echo "  stop                Stop all background services"
+	@echo "  status              Show running service status"
+	@echo "  start-agent-wallet  Build + start agent-wallet in background"
+	@echo "  stop-agent-wallet   Stop agent-wallet"
+	@echo "  start-mcp           Build + start MCP server (HTTP, port 3001)"
+	@echo "  stop-mcp            Stop MCP server"
+	@echo ""
+	@echo "  ── npm ────────────────────────────────────────────────"
+	@echo "  npm-pack            Dry-run pack solanaos-cli npm package"
+	@echo "  npm-sync            Check npm/ vs new/npm/ version drift"
+	@echo ""
+	@echo "  ── Cross-compile ──────────────────────────────────────"
+	@echo "  orin                Cross-compile for NVIDIA Orin Nano (arm64)"
+	@echo "  rpi                 Cross-compile for Raspberry Pi (arm64)"
+	@echo "  riscv               Cross-compile for RISC-V"
+	@echo "  macos               Build for macOS Apple Silicon"
+	@echo "  cross               All cross-compilation targets"
+	@echo ""
+	@echo "  ── Docker ─────────────────────────────────────────────"
+	@echo "  docker              Build Docker image"
+	@echo "  docker-fly          Build Fly.io image"
+	@echo "  docker-up           Start all services via Docker Compose"
+	@echo "  docker-down         Stop Docker Compose services"
+	@echo ""
+	@echo "  ── Other ──────────────────────────────────────────────"
+	@echo "  install             Install all binaries to /usr/local/bin"
+	@echo "  test                Run Go tests"
+	@echo "  lint                Run golangci-lint"
+	@echo "  deps                go mod download + tidy"
+	@echo "  size-report         Compare standard vs slim binary sizes"
+	@echo "  scan-i2c            Scan I2C bus for Modulino sensors"
+	@echo "  connect-bundle      Regenerate Seeker connect bundle"
+	@echo "  clean               Remove build/ artifacts"
