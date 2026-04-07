@@ -151,6 +151,9 @@ type Client struct {
 	ollamaModel        string
 	activeProvider     string
 	fallbackToOllama   bool
+	leaderboardMode    bool   // OPENROUTER_LEADERBOARD_MODE — enables OpenRouter attribution headers
+	appTitle           string // OPENROUTER_APP_TITLE — X-Title sent to OpenRouter (default: SolanaOS)
+	userID             string // SOLANAOS_USER_ID — X-User-ID sent to OpenRouter (wallet or github id)
 	lastResolvedClient string
 	http               *http.Client
 	mu                 sync.Mutex
@@ -266,6 +269,9 @@ func New() *Client {
 		ollamaModel:        ollamaModel,
 		activeProvider:     activeProvider,
 		fallbackToOllama:   parseBool(os.Getenv("OLLAMA_FALLBACK_ENABLED"), true),
+		leaderboardMode:    parseBool(os.Getenv("OPENROUTER_LEADERBOARD_MODE"), true),
+		appTitle:           firstNonEmpty(strings.TrimSpace(os.Getenv("OPENROUTER_APP_TITLE")), "SolanaOS"),
+		userID:             strings.TrimSpace(os.Getenv("SOLANAOS_USER_ID")),
 		lastResolvedClient: activeProvider,
 		http:               &http.Client{Timeout: 120 * time.Second},
 		sessions:           make(map[string][]Message),
@@ -438,7 +444,7 @@ func (c *Client) ChatOmni(ctx context.Context, text string, mediaURLs ...string)
 		},
 	}
 
-	reply, _, err := c.chatOpenRouter(ctx, endpoint, model, payload)
+	reply, _, err := c.chatOpenRouter(ctx, endpoint, model, "", "", payload)
 	return reply, err
 }
 
@@ -474,7 +480,7 @@ func (c *Client) chatOpenRouterSession(ctx context.Context, sessionID, model, us
 		"messages":  messages,
 		"reasoning": map[string]bool{"enabled": true},
 	}
-	reply, reasoningDetails, err := c.chatOpenRouter(ctx, endpoint, model, payload)
+	reply, reasoningDetails, err := c.chatOpenRouter(ctx, endpoint, model, sessionID, "", payload)
 	if err != nil {
 		return "", err
 	}
@@ -858,7 +864,7 @@ func (c *Client) Chat(ctx context.Context, sessionID, userMsg, contextStr string
 	default:
 		payload["model"] = activeModel
 		payload["reasoning"] = map[string]bool{"enabled": true}
-		reply, reasoningDetails, err = c.chatOpenRouter(ctx, activeEndpoint, activeModel, payload)
+		reply, reasoningDetails, err = c.chatOpenRouter(ctx, activeEndpoint, activeModel, sessionID, "", payload)
 		usedBackend = "openrouter"
 		if err != nil {
 			reply, reasoningDetails, activeModel, err = c.tryOpenRouterFreeChain(ctx, activeEndpoint, freeModels, messages, activeModel)
@@ -976,7 +982,7 @@ func (c *Client) OneShot(ctx context.Context, systemPrompt, userMsg string) (str
 			"messages":  messages,
 			"reasoning": map[string]bool{"enabled": true},
 		}
-		reply, _, err = c.chatOpenRouter(ctx, activeEndpoint, activeModel, payload)
+		reply, _, err = c.chatOpenRouter(ctx, activeEndpoint, activeModel, "", "", payload)
 		usedBackend = "openrouter"
 		if err != nil {
 			reply, _, activeModel, err = c.tryOpenRouterFreeChain(ctx, activeEndpoint, freeModels, messages, activeModel)
@@ -1125,16 +1131,25 @@ func defaultSolanaOSHome() string {
 	return filepath.Join(home, ".nanosolana")
 }
 
-func (c *Client) chatOpenRouter(ctx context.Context, endpoint, model string, payload map[string]interface{}) (string, json.RawMessage, error) {
+func (c *Client) chatOpenRouter(ctx context.Context, endpoint, model, sessionID, titleOverride string, payload map[string]interface{}) (string, json.RawMessage, error) {
 	body, _ := json.Marshal(payload)
 	req, err := http.NewRequestWithContext(ctx, http.MethodPost, endpoint, bytes.NewReader(body))
 	if err != nil {
 		return "", nil, err
 	}
+	appTitle := firstNonEmpty(titleOverride, c.appTitle, "SolanaOS")
 	req.Header.Set("Authorization", "Bearer "+c.apiKey)
 	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("HTTP-Referer", "https://nanosolana.dev")
-	req.Header.Set("X-Title", "SolanaOS")
+	req.Header.Set("HTTP-Referer", "https://solanaos.net")
+	req.Header.Set("X-Title", appTitle)
+	req.Header.Set("X-OpenRouter-Title", appTitle)
+	req.Header.Set("X-OpenRouter-Categories", "cloud-agent,personal-agent")
+	if c.userID != "" {
+		req.Header.Set("X-User-ID", c.userID)
+	}
+	if sessionID != "" {
+		req.Header.Set("X-Session-ID", sessionID)
+	}
 
 	resp, err := c.http.Do(req)
 	if err != nil {
@@ -1184,7 +1199,7 @@ func (c *Client) tryOpenRouterFreeChain(ctx context.Context, endpoint string, fr
 			"messages":  messages,
 			"reasoning": map[string]bool{"enabled": true},
 		}
-		reply, reasoningDetails, err := c.chatOpenRouter(ctx, endpoint, model, payload)
+		reply, reasoningDetails, err := c.chatOpenRouter(ctx, endpoint, model, "", "", payload)
 		if err == nil {
 			return reply, reasoningDetails, model, nil
 		}

@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "name": "solanaos",
+  "display_name": "Solanaos",
+  "description": "",
+  "icon": "icon.svg",
+  "distribution": {
+    "type": "docker",
+    "command": "solanaos",
+    "args": [
+      "acp"
+    ]
+  },
+  "services": [
+    {
+      "type": "http",
+      "description": "HTTP service endpoint"
+    }
+  ],
+  "registry": {
+    "protocol": "8004",
+    "program_id": "Ag8004rWo8ao8AUKhLk78iv2nLQpZMyBPXiAh5QLbFiE",
+    "metadata_storage": "pinata_ipfs",
+    "nft_standard": "metaplex_core",
+    "clusters": [
+      "devnet"
+    ],
+    "features": {
+      "atom_reputation": false,
+      "seal_v1": false,
+      "x402_payments": false,
+      "proof_pass": false,
+      "collection_pointer": false,
+      "heartbeat_sync": false
+    }
+  },
+  "capabilities": {
+    "skills": [],
+    "domains": [],
+    "x402_support": false
+  }
+}

@@ -192,7 +192,7 @@ func (c *Client) ChatGodMode(ctx context.Context, sessionID, userMsg, contextStr
 	})
 
 	// ── Stage 4: Race models in parallel ──
-	results := c.raceGodModeModels(ctx, endpoint, models, params, messages, userMsg)
+	results := c.raceGodModeModels(ctx, endpoint, models, params, messages, userMsg, sessionID)
 	winner := pickBestGodModeCandidate(results)
 
 	if winner == nil {
@@ -323,6 +323,7 @@ func (c *Client) raceGodModeModels(
 	params AutoTuneParams,
 	messages []map[string]interface{},
 	userMsg string,
+	sessionID string,
 ) []godModeRaceCandidate {
 	resultsCh := make(chan godModeRaceCandidate, len(models))
 	for _, model := range models {
@@ -340,7 +341,11 @@ func (c *Client) raceGodModeModels(
 				"repetition_penalty": params.RepetitionPenalty,
 				"reasoning":         map[string]bool{"enabled": true},
 			}
-			content, _, err := c.chatOpenRouter(ctx, endpoint, model, payload)
+			godModeTitle := ""
+			if c.leaderboardMode {
+				godModeTitle = "SolanaOS-GodMode"
+			}
+			content, _, err := c.chatOpenRouter(ctx, endpoint, model, sessionID, godModeTitle, payload)
 			result := godModeRaceCandidate{
 				Model:      model,
 				DurationMS: time.Since(start).Milliseconds(),
@@ -352,7 +357,8 @@ func (c *Client) raceGodModeModels(
 			}
 			result.Content = content
 			result.Success = true
-			result.Score = scoreGodModeResponse(string(autoTuneContextFromProfile(model)), userMsg, content)
+			qualityScore := scoreGodModeResponse(string(autoTuneContextFromProfile(model)), userMsg, content)
+			result.Score = qualityScore + scoreEfficiency(len(content), result.DurationMS)
 			resultsCh <- result
 		}()
 	}
@@ -575,6 +581,15 @@ func countListItems(content string) int {
 
 func countCodeBlocks(content string) int {
 	return strings.Count(content, "```") / 2
+}
+
+// scoreEfficiency returns a 0-10 bonus that rewards low latency and concise output.
+// Uses content length as a token proxy: shorter high-quality responses rank higher.
+func scoreEfficiency(contentLen int, durationMS int64) int {
+	t := float64(contentLen) * 0.001
+	l := float64(durationMS) / 1000.0
+	bonus := int(10.0 / (1.0 + t + l))
+	return clampInt(bonus, 0, 10)
 }
 
 func clampInt(value, minValue, maxValue int) int {
