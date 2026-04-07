@@ -61,6 +61,7 @@ import (
 	"github.com/x402agent/Solana-Os-Go/pkg/memory"
 	"github.com/x402agent/Solana-Os-Go/pkg/onchain"
 	"github.com/x402agent/Solana-Os-Go/pkg/pumplaunch"
+	"github.com/x402agent/Solana-Os-Go/pkg/pumpfun"
 	"github.com/x402agent/Solana-Os-Go/pkg/research"
 	"github.com/x402agent/Solana-Os-Go/pkg/routing"
 	"github.com/x402agent/Solana-Os-Go/pkg/runtimeenv"
@@ -131,6 +132,7 @@ type Daemon struct {
 	steel          *steelpkg.Client
 	storage        *storagepkg.SupabaseStorage
 	remoteControl  *remoteControlStore
+	pumpfunMgr     *pumpfun.Manager
 	mistralAudio   *llm.MistralAudioClient
 	twilioVoice    *voicepkg.TwilioClient
 	startedAt      time.Time

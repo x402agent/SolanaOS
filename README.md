@@ -126,7 +126,7 @@ This README is the GitHub front door. Use it to install, explore the live surfac
 | distribute reusable agent workflows | `@nanosolana/nanohub` + the public Hub registry |
 | build Seeker/mobile wallet experiences | Android app + Mobile Wallet Adapter + Phantom + pairing flow |
 | experiment with agent identity | [`SOUL.md`](SOUL.md) + Souls registry + strategy docs |
-| give agents their own wallets | `solanaos wallet-api` — one-shot vault + API + MCP server for Solana + EVM |
+| give agents their own wallets | `solanaos wallet-api` — one-shot vault + API + MCP server for Solana + EVM; AES-256 local dev + trade signing keys auto-generated on first run |
 | register agents on-chain with ACP | `node acp_registry/generate.mjs` — interactive 8004 agent.json builder |
 | connect research, execution, and memory | SolanaTracker, Jupiter, Hyperliquid, Aster, Honcho, x402 |
 
@@ -194,7 +194,7 @@ Send `chat.feedback` via the WebSocket gateway with `rating: 1` (thumbs up) or `
 - SolanaOS Office (3D workspace): [Claw3D-main/](Claw3D-main/) — deployed at [office.solanaos.net](https://office.solanaos.net)
 - Control API: [docs/control-api.md](docs/control-api.md)
 - Fly deployment: [docs/fly-deployment.md](docs/fly-deployment.md)
-- Agent Wallet API: [services/agent-wallet/](services/agent-wallet/) (one-shot bootstrap, MCP server, Privy, E2B)
+- Agent Wallet API: [services/agent-wallet/](services/agent-wallet/) (one-shot bootstrap, MCP server, Privy, E2B, local signers)
 - ACP Registry Generator: [acp_registry/generate.mjs](acp_registry/generate.mjs) (interactive agent.json builder)
 - ACP Registry Example: [acp_registry/agent.example.json](acp_registry/agent.example.json)
 - SolanaOS identity prompt: [SOUL.md](SOUL.md)
@@ -1360,6 +1360,43 @@ X402_PAYWALL_ENABLED=true
 
 SolanaOS includes a full agent wallet service that manages encrypted Solana + EVM keypairs, exposes a REST API, and optionally integrates with Privy managed wallets and E2B sandbox deployment.
 
+### Local Signing Keys (dev + trade)
+
+On every startup the agent wallet bootstraps two dedicated AES-256-GCM encrypted Solana keypairs:
+
+| Key | File | Purpose |
+| --- | --- | --- |
+| `dev` | `~/.nanosolana/signers/dev.enc` | Devnet / local development signing |
+| `trade` | `~/.nanosolana/signers/trade.enc` | Mainnet trading and live transactions |
+
+Key loading priority: `LOCAL_SIGNER_{MODE}_KEY` env var → disk `.enc` file → fresh generated keypair. Each file is an AES-256-GCM envelope:
+
+```json
+{ "data": "<hex ciphertext>", "nonce": "<hex nonce>" }
+```
+
+The master AES key is derived from `VAULT_PASSPHRASE` via SHA-256. The trade key can have its own `TRADE_SIGNER_PASSPHRASE`. Private keys are **never** returned by the API.
+
+**Local signer endpoints:**
+
+```text
+GET  /v1/local-signers              → list dev + trade pubkeys
+GET  /v1/local-signers/{mode}       → get pubkey (mode: dev|trade)
+POST /v1/local-signers/{mode}/sign  → sign arbitrary message
+POST /v1/local-signers/{mode}/sign-tx → build + sign + broadcast SOL transfer
+```
+
+### Sandbox Modes
+
+The `/v1/deploy` endpoint works in two modes — no configuration change needed:
+
+| Mode | Trigger | Notes |
+| --- | --- | --- |
+| **E2B cloud** | `E2B_API_KEY` is set | Spins up a remote E2B sandbox; API URL is `https://{id}-8420.e2b.dev` |
+| **Local process** | `E2B_API_KEY` not set | Re-executes the wallet binary as a child process on a free local port; API URL is `http://localhost:{port}` |
+
+Local sandboxes are useful for CI, offline development, and testing agent interactions without cloud dependencies.
+
 ### One-Shot Bootstrap
 
 ```bash
@@ -1368,10 +1405,11 @@ solanaos wallet-api
 
 This single command:
 1. Initializes the AES-256-GCM encrypted vault at `~/.nanosolana/vault/`
-2. Creates a default Solana wallet if no wallets exist
-3. Connects to Solana RPC and any configured EVM chains
-4. Starts the wallet API server on port 8421
-5. Handles graceful shutdown on Ctrl+C
+2. Generates (or loads) `dev` and `trade` signing keys at `~/.nanosolana/signers/`
+3. Creates a default Solana vault wallet if no wallets exist
+4. Connects to Solana RPC and any configured EVM chains
+5. Starts the wallet API server on port 8421
+6. Handles graceful shutdown on Ctrl+C
 
 ### Flags
 

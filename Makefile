@@ -65,9 +65,10 @@ BUILD_DIR := ./build
 BIN_CLI   := $(BUILD_DIR)/solanaos
 BIN_TUI   := $(BUILD_DIR)/solanaos-tui
 BIN_SLIM  := $(BUILD_DIR)/solanaos-slim
-BIN_CONTROL_API := $(BUILD_DIR)/solanaos-control-api
+BIN_CONTROL_API   := $(BUILD_DIR)/solanaos-control-api
+BIN_AGENT_WALLET  := $(BUILD_DIR)/agent-wallet
 
-.PHONY: all build build-control-api run-control-api test-control-api slim size-report orin tui docker docker-fly docker-up docker-down clean install test lint deps scan-i2c npm-pack seeker-install seeker-logcat connect-bundle start dev stop status
+.PHONY: all build build-control-api run-control-api test-control-api build-agent-wallet start-agent-wallet stop-agent-wallet slim size-report orin tui docker docker-fly docker-up docker-down clean install test lint deps scan-i2c npm-pack seeker-install seeker-logcat connect-bundle start dev stop status
 
 # ── Default ───────────────────────────────────────────────────────────
 
@@ -116,6 +117,31 @@ build:
 	@ln -sf solanaos $(BUILD_DIR)/nanosolana
 	@echo "✓ $(BIN_CLI) built"
 	@ls -lh $(BIN_CLI)
+
+build-agent-wallet:
+	@echo "⚡ Building Agent Wallet service..."
+	@mkdir -p $(BUILD_DIR)
+	@mkdir -p $(GOCACHE_DIR) $(GOTMPDIR_DIR) $(GOMODCACHE_DIR)
+	$(GOBUILD) -o $(BIN_AGENT_WALLET) ./services/agent-wallet/cmd
+	@echo "✓ $(BIN_AGENT_WALLET) built"
+	@ls -lh $(BIN_AGENT_WALLET)
+
+start-agent-wallet: build-agent-wallet
+	@echo "🔑 Starting Agent Wallet (port $${WALLET_API_PORT:-8421})..."
+	@[ -f .env ] && set -a && . ./.env && set +a; \
+	 $(BIN_AGENT_WALLET) & echo $$! > /tmp/agent-wallet.pid
+	@echo "✓ Agent Wallet running (pid $$(cat /tmp/agent-wallet.pid))"
+	@echo "  API:  http://localhost:$${WALLET_API_PORT:-8421}/v1/health"
+	@echo "  Keys: ~/.nanosolana/signers/{dev,trade}.enc"
+
+stop-agent-wallet:
+	@if [ -f /tmp/agent-wallet.pid ]; then \
+	  PID=$$(cat /tmp/agent-wallet.pid); \
+	  kill $$PID 2>/dev/null && echo "✓ Agent Wallet stopped (pid $$PID)" || echo "already stopped"; \
+	  rm -f /tmp/agent-wallet.pid; \
+	else \
+	  echo "no agent-wallet.pid found"; \
+	fi
 
 build-control-api:
 	@echo "⚡ Building SolanaOS Control API..."

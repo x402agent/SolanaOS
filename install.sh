@@ -150,6 +150,31 @@ if [ -x "$BIN_DIR/solanaos" ]; then
   "$BIN_DIR/solanaos" gateway setup-code >/dev/null 2>&1 || true
 fi
 
+info "Building Agent Wallet service..."
+AGENT_WALLET_BINARY="$INSTALL_DIR/build/agent-wallet"
+"$GO_BIN" build -ldflags="-s -w" -o "$AGENT_WALLET_BINARY" \
+  "$INSTALL_DIR/services/agent-wallet/cmd" 2>&1 \
+  && install -m 755 "$AGENT_WALLET_BINARY" "$BIN_DIR/agent-wallet" \
+  && info "Installed agent-wallet at $BIN_DIR/agent-wallet" \
+  || warn "agent-wallet build failed — run: make build-agent-wallet"
+
+info "Initializing local signing keys (dev + trade)..."
+SIGNERS_DIR="$HOME/.nanosolana/signers"
+mkdir -p "$SIGNERS_DIR"
+# Run with --help to trigger key init without starting the server
+"$AGENT_WALLET_BINARY" >/dev/null 2>&1 &
+INIT_PID=$!
+sleep 2
+kill $INIT_PID 2>/dev/null || true
+if ls "$SIGNERS_DIR"/*.enc >/dev/null 2>&1; then
+  for f in "$SIGNERS_DIR"/*.enc; do
+    mode="$(basename "$f" .enc)"
+    dim "  $mode key: $f"
+  done
+else
+  dim "Keys will be generated on first start (run: agent-wallet)"
+fi
+
 info "Checking agentic wallet..."
 "$BINARY" solana wallet >/dev/null 2>&1 || warn "Wallet check skipped (add HELIUS_RPC_URL to .env)"
 
@@ -199,6 +224,8 @@ echo -e "    ${GREEN}$BIN_DIR/solanaos version${RESET}            ${DIM}# Run fr
 echo -e "    ${GREEN}./build/solanaos solana health${RESET}        ${DIM}# Check mainnet${RESET}"
 echo -e "    ${GREEN}./build/solanaos ooda --sim${RESET}           ${DIM}# Simulated trading${RESET}"
 echo -e "    ${GREEN}./build/solanaos daemon${RESET}               ${DIM}# Full autonomous agent${RESET}"
+echo -e "    ${GREEN}./build/agent-wallet${RESET}                  ${DIM}# Agent wallet API + local signing keys${RESET}"
+echo -e "    ${GREEN}bash start.sh${RESET}                         ${DIM}# Start all services (daemon + wallet)${RESET}"
 echo -e "    ${GREEN}$BIN_DIR/solanaos gateway start${RESET}      ${DIM}# Start the native gateway${RESET}"
 echo -e "    ${GREEN}$BIN_DIR/solanaos gateway setup-code${RESET} ${DIM}# Print Seeker setup code${RESET}"
 if $WITH_WEB; then
