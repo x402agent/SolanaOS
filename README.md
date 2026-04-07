@@ -41,6 +41,11 @@ Autonomous local-first runtime for Solana trading, research, wallets, automation
   <img src="https://img.shields.io/badge/Phantom-Connect%20SDK-AB9FF2?style=flat" alt="Phantom">
   <img src="https://img.shields.io/badge/x402-Payment%20Protocol-FF6B35?style=flat" alt="x402">
   <img src="https://img.shields.io/badge/license-MIT-green?style=flat" alt="License">
+  <a href="https://github.com/x402agent/SolanaOS/actions/workflows/ci.yml"><img src="https://github.com/x402agent/SolanaOS/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
+</p>
+
+<p>
+  <a href="FORK.md"><strong>⚡ Fork Guide — go live in 15 minutes →</strong></a>
 </p>
 
 <p>
