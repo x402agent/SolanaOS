@@ -6,8 +6,7 @@
   "type": "module",
   "bin": {
     "solanaos-cli": "bin/solanaos.mjs",
-    "solanaos": "bin/solanaos.mjs",
-    "nanosolana": "bin/solanaos.mjs"
+    "solanaos": "bin/solanaos.mjs"
   },
   "files": [
     "bin",
@@ -27,7 +26,6 @@
   "keywords": [
     "solana",
     "solanaos",
-    "nanosolana",
     "trading",
     "agent",
     "helius",

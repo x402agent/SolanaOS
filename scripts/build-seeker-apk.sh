@@ -58,7 +58,7 @@ fi
 
 if [[ "$LAUNCH_FLAG" == "1" ]]; then
   echo -e "${DIM}  Launching SolanaOS...${RESET}"
-  adb shell am start -n com.nanosolana.solanaos/ai.openclaw.app.MainActivity >/dev/null
+  adb shell am start -n com.solanaos.solanaos/ai.openclaw.app.MainActivity >/dev/null
   echo -e "${GREEN}  ✅ Launched${RESET}"
 fi
 

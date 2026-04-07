@@ -231,7 +231,7 @@ async function loadSigner() {
 function statePath() {
   return (
     env("PUMP_LAUNCH_STATE_PATH") ||
-    path.join(os.homedir(), ".nanosolana", "pump", "pump-launch.json")
+    path.join(os.homedir(), ".solanaos", "pump", "pump-launch.json")
   );
 }
 

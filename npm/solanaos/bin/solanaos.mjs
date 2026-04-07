@@ -8,10 +8,10 @@ import { spawn } from 'node:child_process';
 
 import { installSolanaOS } from './install.mjs';
 
-const homeBinDir = join(homedir(), '.nanosolana', 'bin');
+const homeBinDir = join(homedir(), '.solanaos', 'bin');
 const STABLE_BINARIES = [
   join(homeBinDir, platform() === 'win32' ? 'solanaos.exe' : 'solanaos'),
-  join(homeBinDir, platform() === 'win32' ? 'nanosolana.exe' : 'nanosolana'),
+  join(homeBinDir, platform() === 'win32' ? 'solanaos.exe' : 'solanaos'),
 ];
 
 function splitArgs(argv) {

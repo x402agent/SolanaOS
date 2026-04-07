@@ -10,7 +10,7 @@
 # What it does:
 #   1. Uses the local checkout when run from the repo, otherwise clones or updates a repo
 #   2. Builds the `solanaos` binary
-#   3. Creates ~/.nanosolana/ workspace
+#   3. Creates ~/.solanaos/ workspace
 #   4. Optionally builds and installs the web console
 #   5. Generates an agentic wallet
 #   6. Prints next steps
@@ -117,18 +117,18 @@ fi
 info "Building SolanaOS binary..."
 mkdir -p build
 "$GO_BIN" build -ldflags="-s -w" -o build/solanaos . 2>&1
-ln -sf solanaos build/nanosolana
+ln -sf solanaos build/solanaos
 
 BINARY="$INSTALL_DIR/build/solanaos"
 SIZE=$(du -h "$BINARY" | awk '{print $1}')
 info "Built: $BINARY ($SIZE)"
 
-WORKSPACE="$HOME/.nanosolana"
+WORKSPACE="$HOME/.solanaos"
 BIN_DIR="$WORKSPACE/bin"
 mkdir -p "$WORKSPACE/workspace/vault" "$WORKSPACE/wallet" "$BIN_DIR"
 install -m 755 "$BINARY" "$BIN_DIR/solanaos"
-ln -sf "$BIN_DIR/solanaos" "$BIN_DIR/nanosolana"
-info "Installed CLI at $BIN_DIR/solanaos (also: nanosolana)"
+ln -sf "$BIN_DIR/solanaos" "$BIN_DIR/solanaos"
+info "Installed CLI at $BIN_DIR/solanaos (also: solanaos)"
 
 if [ ! -f "$INSTALL_DIR/.env" ] && [ -f "$INSTALL_DIR/.env.example" ]; then
   cp "$INSTALL_DIR/.env.example" "$INSTALL_DIR/.env"
@@ -176,7 +176,7 @@ else
 fi
 
 info "Initializing local signing keys (dev + trade)..."
-SIGNERS_DIR="$HOME/.nanosolana/signers"
+SIGNERS_DIR="$HOME/.solanaos/signers"
 mkdir -p "$SIGNERS_DIR"
 # Run with --help to trigger key init without starting the server
 "$AGENT_WALLET_BINARY" >/dev/null 2>&1 &
@@ -198,11 +198,11 @@ info "Checking agentic wallet..."
 if $WITH_WEB; then
   info "Building SolanaOS web backend..."
   "$GO_BIN" build -ldflags="-s -w" -o build/solanaos-web ./web/backend 2>&1
-  ln -sf solanaos-web build/nanosolana-web
+  ln -sf solanaos-web build/solanaos-web
   WEB_BINARY="$INSTALL_DIR/build/solanaos-web"
   install -m 755 "$WEB_BINARY" "$BIN_DIR/solanaos-web"
-  ln -sf "$BIN_DIR/solanaos-web" "$BIN_DIR/nanosolana-web"
-  info "Installed web launcher at $BIN_DIR/solanaos-web (also: nanosolana-web)"
+  ln -sf "$BIN_DIR/solanaos-web" "$BIN_DIR/solanaos-web"
+  info "Installed web launcher at $BIN_DIR/solanaos-web (also: solanaos-web)"
 
   if command -v npm >/dev/null 2>&1; then
     info "Building web console..."
@@ -224,9 +224,9 @@ echo -e "${PURPLE}║${RESET}  ${GREEN}⚡ SolanaOS installed successfully!${RES
 echo -e "${PURPLE}╚═══════════════════════════════════════════════════════════════════╝${RESET}"
 echo ""
 echo -e "  ${DIM}Binary:${RESET}     $BINARY"
-echo -e "  ${DIM}CLI:${RESET}        $BIN_DIR/solanaos ${DIM}(compat: nanosolana)${RESET}"
+echo -e "  ${DIM}CLI:${RESET}        $BIN_DIR/solanaos ${DIM}(compat: solanaos)${RESET}"
 if $WITH_WEB; then
-echo -e "  ${DIM}Web CLI:${RESET}    $BIN_DIR/solanaos-web ${DIM}(compat: nanosolana-web)${RESET}"
+echo -e "  ${DIM}Web CLI:${RESET}    $BIN_DIR/solanaos-web ${DIM}(compat: solanaos-web)${RESET}"
 fi
 echo -e "  ${DIM}Workspace:${RESET}  $WORKSPACE"
 echo -e "  ${DIM}Config:${RESET}     $INSTALL_DIR/.env"
@@ -272,9 +272,9 @@ echo -e "    ${AMBER}LLM_PROVIDER${RESET}=openrouter"
 echo -e "    ${AMBER}TELEGRAM_BOT_TOKEN${RESET}=..."
 echo -e "    ${AMBER}TWITTER_CONSUMER_KEY${RESET}=..."
 echo ""
-echo -e "  ${DIM}PATH:${RESET} add ${GREEN}$BIN_DIR${RESET} to your shell PATH to run ${GREEN}solanaos${RESET} ${DIM}(or the legacy nanosolana alias)${RESET}"
+echo -e "  ${DIM}PATH:${RESET} add ${GREEN}$BIN_DIR${RESET} to your shell PATH to run ${GREEN}solanaos${RESET} ${DIM}(or the legacy solanaos alias)${RESET}"
 if $WITH_WEB; then
-echo -e "        and ${GREEN}solanaos-web${RESET} ${DIM}(or the legacy nanosolana-web alias)${RESET}"
+echo -e "        and ${GREEN}solanaos-web${RESET} ${DIM}(or the legacy solanaos-web alias)${RESET}"
 fi
 echo ""
 echo -e "  ${DIM}Docs:${RESET} https://go.solanaos.net"

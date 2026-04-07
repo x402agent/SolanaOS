@@ -368,7 +368,7 @@ Next steps:
        solanaos gateway start --no-tailscale
 
   3. Open the setup code for your Seeker app:
-       cat ~/.nanosolana/connect/setup-code.txt
+       cat ~/.solanaos/connect/setup-code.txt
 
   4. In the Android Seeker app:
        Connect -> Setup Code -> paste setup-code.txt

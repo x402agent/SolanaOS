@@ -247,7 +247,7 @@ solanaos gateway start --port 19001
 solanaos gateway start --no-tailscale
 solanaos gateway stop
 solanaos gateway setup-code
-cat ~/.nanosolana/connect/setup-code.txt
+cat ~/.solanaos/connect/setup-code.txt
 solanaos node run --bridge <TAILSCALE_IP>:18790
 solanaos node pair --bridge <TAILSCALE_IP>:18790 --display-name "Orin Nano"
 ```
@@ -394,11 +394,11 @@ what did I trade last week?
 ## NanoHub CLI
 
 ```bash
-npx @nanosolana/nanohub --help
-npx @nanosolana/nanohub login
-npx @nanosolana/nanohub search solana
-npx @nanosolana/nanohub install <slug>
-npx @nanosolana/nanohub publish ./my-skill \
+npx @solanaos/nanohub --help
+npx @solanaos/nanohub login
+npx @solanaos/nanohub search solana
+npx @solanaos/nanohub install <slug>
+npx @solanaos/nanohub publish ./my-skill \
   --slug my-skill \
   --name "My Skill" \
   --version 1.0.0 \

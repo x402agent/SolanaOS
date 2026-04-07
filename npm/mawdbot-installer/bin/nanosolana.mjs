@@ -6,9 +6,9 @@ import { homedir, platform } from 'node:os';
 import { join } from 'node:path';
 import { spawn } from 'node:child_process';
 
-import { installNanoSolana } from './install.mjs';
+import { installSolanaOS } from './install.mjs';
 
-const STABLE_BINARY = join(homedir(), '.nanosolana', 'bin', platform() === 'win32' ? 'nanosolana.exe' : 'nanosolana');
+const STABLE_BINARY = join(homedir(), '.solanaos', 'bin', platform() === 'win32' ? 'solanaos.exe' : 'solanaos');
 
 function splitArgs(argv) {
   if (argv.length === 0) {
@@ -43,7 +43,7 @@ async function ensureBinary() {
   }
 
   console.log('SolanaOS is not installed yet. Bootstrapping now...\n');
-  await installNanoSolana([]);
+  await installSolanaOS([]);
 
   if (await fileExists(STABLE_BINARY)) {
     return STABLE_BINARY;
@@ -77,7 +77,7 @@ async function main() {
   const { mode, forwarded } = splitArgs(process.argv.slice(2));
 
   if (mode === 'install') {
-    await installNanoSolana(forwarded);
+    await installSolanaOS(forwarded);
     return;
   }
 

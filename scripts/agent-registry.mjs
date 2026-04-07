@@ -174,7 +174,7 @@ async function ensureDir(filePath) {
 async function writeState(payload) {
   const statePath =
     env("AGENT_REGISTRY_STATE_PATH") ||
-    path.join(os.homedir(), ".nanosolana", "registry", "agent-registry.json");
+    path.join(os.homedir(), ".solanaos", "registry", "agent-registry.json");
   await ensureDir(statePath);
   await fs.writeFile(statePath, `${JSON.stringify(payload, null, 2)}\n`, "utf8");
 }

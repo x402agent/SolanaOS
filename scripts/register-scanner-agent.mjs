@@ -182,7 +182,7 @@ async function main() {
   }
 
   // Save state locally
-  const stateDir = path.join(os.homedir(), ".nanosolana", "registry");
+  const stateDir = path.join(os.homedir(), ".solanaos", "registry");
   await fs.mkdir(stateDir, { recursive: true });
   const state = {
     action,
@@ -199,7 +199,7 @@ async function main() {
     path.join(stateDir, "scanner-agent.json"),
     JSON.stringify(state, null, 2),
   );
-  console.log(`[scanner-agent] State saved to ~/.nanosolana/registry/scanner-agent.json`);
+  console.log(`[scanner-agent] State saved to ~/.solanaos/registry/scanner-agent.json`);
 
   // Sync to nanohub Convex backend
   const syncUrl = env("AGENT_REGISTRY_SYNC_URL");

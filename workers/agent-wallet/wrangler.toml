@@ -1,4 +1,4 @@
-name = "nanosolana-agent-wallet"
+name = "solanaos-agent-wallet"
 main = "src/index.ts"
 compatibility_date = "2025-12-01"
 compatibility_flags = ["nodejs_compat"]

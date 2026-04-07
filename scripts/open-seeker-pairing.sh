@@ -26,4 +26,4 @@ fi
 adb shell am start \
   -a android.intent.action.VIEW \
   -d "$deep_link_url" \
-  com.nanosolana.solanaos
+  com.solanaos.solanaos

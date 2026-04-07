@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-WORKSPACE="${HOME}/.nanosolana"
+WORKSPACE="${HOME}/.solanaos"
 INSTALL_DIR=""
 ENV_FILE=""
 CONTROL_API_URL="${SOLANAOS_CONTROL_API_URL:-http://127.0.0.1:7777}"
