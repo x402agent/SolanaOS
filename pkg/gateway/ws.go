@@ -1027,6 +1027,100 @@ func (b *Bridge) handleWSRequest(ctx context.Context, writeJSON func(map[string]
 			"payload": map[string]any{"predictions": preds},
 		})
 
+	// ── Memory status ────────────────────────────────────────────────
+	case "memory.status":
+		honchoActive := b.honcho != nil && b.honcho.IsConfigured()
+		dreamerPayload := map[string]any{"enabled": false}
+		if b.dreamer != nil {
+			dreamerPayload = map[string]any{
+				"enabled":      true,
+				"lastSweepAt":  b.dreamer.LastSweepAt(),
+				"lastPromoted": b.dreamer.LastPromoted(),
+				"lastStaged":   b.dreamer.LastStaged(),
+				"status":       b.dreamer.Status(),
+			}
+		}
+		writeJSON(map[string]any{
+			"type": "res",
+			"id":   id,
+			"ok":   true,
+			"payload": map[string]any{
+				"vault":    map[string]any{"enabled": true},
+				"honcho":   map[string]any{"enabled": honchoActive},
+				"dreaming": dreamerPayload,
+			},
+		})
+
+	// ── Dreaming control ─────────────────────────────────────────────
+	case "dreaming.status":
+		if b.dreamer == nil {
+			writeJSON(map[string]any{
+				"type":    "res",
+				"id":      id,
+				"ok":      true,
+				"payload": map[string]any{"enabled": false, "status": "Dreaming not initialised"},
+			})
+			break
+		}
+		writeJSON(map[string]any{
+			"type": "res",
+			"id":   id,
+			"ok":   true,
+			"payload": map[string]any{
+				"enabled":      true,
+				"lastSweepAt":  b.dreamer.LastSweepAt(),
+				"lastPromoted": b.dreamer.LastPromoted(),
+				"lastStaged":   b.dreamer.LastStaged(),
+				"diaryEntry":   b.dreamer.DiaryEntry(),
+				"status":       b.dreamer.Status(),
+			},
+		})
+
+	case "dreaming.sweep":
+		if b.dreamer == nil {
+			writeJSON(map[string]any{
+				"type":    "res",
+				"id":      id,
+				"ok":      false,
+				"error":   map[string]any{"code": "NOT_CONFIGURED", "message": "Dreaming not initialised"},
+			})
+			break
+		}
+		summary, err := b.dreamer.RunSweep(ctx)
+		if err != nil {
+			writeJSON(map[string]any{
+				"type":  "res",
+				"id":    id,
+				"ok":    false,
+				"error": map[string]any{"code": "SWEEP_FAILED", "message": err.Error()},
+			})
+			break
+		}
+		writeJSON(map[string]any{
+			"type": "res",
+			"id":   id,
+			"ok":   true,
+			"payload": map[string]any{
+				"summary":      summary,
+				"lastSweepAt":  b.dreamer.LastSweepAt(),
+				"lastPromoted": b.dreamer.LastPromoted(),
+				"lastStaged":   b.dreamer.LastStaged(),
+				"diaryEntry":   b.dreamer.DiaryEntry(),
+			},
+		})
+
+	case "dreaming.diary":
+		entry := ""
+		if b.dreamer != nil {
+			entry = b.dreamer.DiaryEntry()
+		}
+		writeJSON(map[string]any{
+			"type":    "res",
+			"id":      id,
+			"ok":      true,
+			"payload": map[string]any{"diaryEntry": entry},
+		})
+
 	default:
 		writeJSON(map[string]any{
 			"type": "res",
