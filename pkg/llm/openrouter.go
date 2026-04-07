@@ -23,6 +23,9 @@ const (
 	DefaultModel1             = "nvidia/nemotron-3-super-120b-a12b:free"
 	DefaultModel2             = "nousresearch/hermes-3-llama-3.1-405b:free"
 	DefaultModel3             = "minimax/minimax-m2.5:free"
+	DefaultModel4             = "z-ai/glm-5.1"
+	DefaultClaudeORModel      = "anthropic/claude-opus-4.6-fast" // Claude via OpenRouter (no ANTHROPIC_API_KEY needed)
+	DefaultGemmaModel         = "google/gemma-4-26b-a4b-it:free"
 	DefaultMimoModel          = "xiaomi/mimo-v2-pro"
 	DefaultOmniModel          = "xiaomi/mimo-v2-pro"
 	DefaultAnthropicBaseURL   = "https://api.anthropic.com"
@@ -132,6 +135,9 @@ type Client struct {
 	model1             string // OPENROUTER_MODEL1 preset (nvidia/nemotron-3-super-120b-a12b:free)
 	model2             string // OPENROUTER_MODEL2 preset (nousresearch/hermes-3-llama-3.1-405b:free)
 	model3             string // OPENROUTER_MODEL3 preset (minimax/minimax-m2.5:free)
+	model4             string // OPENROUTER_MODEL4 preset (z-ai/glm-5.1)
+	claudeORModel      string // OPENROUTER_CLAUDE — Claude via OpenRouter (anthropic/claude-opus-4.6-fast)
+	gemmaModel         string // OPENROUTER_GEMMA — Gemma via OpenRouter (google/gemma-4-26b-a4b-it:free)
 	mimoModel          string // OPENROUTER_MIMO_MODEL (xiaomi/mimo-v2-pro)
 	omniModel          string // OPENROUTER_OMNI_MODEL (xiaomi/mimo-v2-omni)
 	freeModels         []string
@@ -191,6 +197,18 @@ func New() *Client {
 	if model3 == "" {
 		model3 = DefaultModel3
 	}
+	model4 := strings.TrimSpace(os.Getenv("OPENROUTER_MODEL4"))
+	if model4 == "" {
+		model4 = DefaultModel4
+	}
+	claudeORModel := strings.TrimSpace(os.Getenv("OPENROUTER_CLAUDE"))
+	if claudeORModel == "" {
+		claudeORModel = DefaultClaudeORModel
+	}
+	gemmaModel := strings.TrimSpace(os.Getenv("OPENROUTER_GEMMA"))
+	if gemmaModel == "" {
+		gemmaModel = DefaultGemmaModel
+	}
 	mimoModel := strings.TrimSpace(os.Getenv("OPENROUTER_MIMO_MODEL"))
 	if mimoModel == "" {
 		mimoModel = DefaultMimoModel
@@ -201,7 +219,7 @@ func New() *Client {
 	}
 	freeModels := parseList(os.Getenv("OPENROUTER_FREE_MODELS"))
 	if len(freeModels) == 0 {
-		freeModels = dedupeStrings([]string{model1, model2, model3})
+		freeModels = dedupeStrings([]string{model1, model2, model3, model4, gemmaModel})
 	}
 	anthropicKey := strings.TrimSpace(os.Getenv("ANTHROPIC_API_KEY"))
 	anthropicBaseURL := strings.TrimRight(strings.TrimSpace(os.Getenv("ANTHROPIC_BASE_URL")), "/")
@@ -295,6 +313,9 @@ func New() *Client {
 		model1:             model1,
 		model2:             model2,
 		model3:             model3,
+		model4:             model4,
+		claudeORModel:      claudeORModel,
+		gemmaModel:         gemmaModel,
 		mimoModel:          mimoModel,
 		omniModel:          omniModel,
 		freeModels:         freeModels,
