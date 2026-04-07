@@ -283,7 +283,7 @@ func (wa *WalletAPI) handleAirdrop(w http.ResponseWriter, r *http.Request) {
 	// Use standard devnet RPC for airdrop
 	json.NewEncoder(w).Encode(map[string]any{
 		"ok":      false,
-		"error":   "Use CLI: nanosolana solana airdrop",
+		"error":   "Use CLI: solanaos solana airdrop",
 		"address": wa.wallet.PublicKeyStr(),
 	})
 }

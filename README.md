@@ -304,6 +304,7 @@ SolanaOS ships as a **single Go binary under 10 MB** that contains 55 packages �
 | `pkg/blockchain/` | On-chain queries via Helius/SolanaTracker: wallet portfolio with USD pricing, token metadata, transaction history. |
 | `pkg/onchain/` | On-chain execution engine: real-time balance monitoring via WSS, Jupiter swap execution, Pinata IPFS, agent NFT registration (Metaplex), mainnet deploy. |
 | `pkg/pumplaunch/` | pump.fun token launch service — bonding curve lifecycle, metadata upload, graduation detection. |
+| `pkg/pumpfun/` | Supervised subprocess manager for the two pump.fun TypeScript bots — start/stop, stdout/stderr ring-buffer capture, .env read-write, status snapshots. Integrated into the daemon as `/sniper` and `/aibot` Telegram commands. |
 
 #### Memory + Storage Layer
 

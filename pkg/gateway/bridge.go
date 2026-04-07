@@ -597,7 +597,7 @@ func (b *Bridge) handleInvalidFrame(conn net.Conn, line string, err error) {
 	switch detectPlaintextProtocol(line) {
 	case "http":
 		b.logf("rejected HTTP probe from %s on JSON bridge: %q", remote, preview)
-		_, _ = conn.Write([]byte("HTTP/1.1 426 Upgrade Required\r\nContent-Type: text/plain; charset=utf-8\r\nConnection: close\r\n\r\nSolanaOS Gateway speaks JSON-line over raw TCP, not HTTP.\r\nUse `nanosolana node pair --bridge ...` or `nanosolana node run --bridge ...`.\r\n"))
+		_, _ = conn.Write([]byte("HTTP/1.1 426 Upgrade Required\r\nContent-Type: text/plain; charset=utf-8\r\nConnection: close\r\n\r\nSolanaOS Gateway speaks JSON-line over raw TCP, not HTTP.\r\nUse `solanaos node pair --bridge ...` or `solanaos node run --bridge ...`.\r\n"))
 	case "tls":
 		b.logf("rejected TLS probe from %s on JSON bridge", remote)
 	default:

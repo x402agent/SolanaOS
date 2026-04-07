@@ -80,7 +80,7 @@ type NodeState struct {
 func DefaultStatePath() string {
 	home, err := os.UserHomeDir()
 	if err != nil {
-		return "./nanosolana-node.json"
+		return "./solanaos-node.json"
 	}
 	return filepath.Join(home, ".solanaos", "node.json")
 }

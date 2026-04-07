@@ -89,7 +89,7 @@ const (
 	GatewayEventSessionRefresh  = "session.refresh"
 	GatewayEventExecApproval    = "exec.approval"
 
-	ControlUIBootstrapConfigPath = "/__nanosolana/control-ui-config.json"
+	ControlUIBootstrapConfigPath = "/__solanaos/control-ui-config.json"
 )
 
 type ControlUIBootstrapConfig struct {

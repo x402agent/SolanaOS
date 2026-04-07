@@ -420,7 +420,7 @@ func inferGitHubRepoPlan(brief, defaultOwner string) githubRepoPlan {
 		plan.Name = normalizeRepoName(slugFromBrief(brief))
 	}
 	if plan.Name == "" {
-		plan.Name = fmt.Sprintf("nanosolana-%d", time.Now().Unix())
+		plan.Name = fmt.Sprintf("solanaos-%d", time.Now().Unix())
 	}
 	if plan.Owner == "" {
 		plan.Owner = defaultOwner

@@ -3530,7 +3530,7 @@ func (d *Daemon) computerControlResponse(msg bus.InboundMessage, args []string) 
 			"`/lsdir [path]` — list a directory\n\n" +
 			"Example: `/computer ls -la ~/Downloads`\n" +
 			"Example: `/readfile ~/.env`\n" +
-			"Example: `/lsdir ~/Downloads/nanosolana-go`"
+			"Example: `/lsdir ~/Downloads/solanaos-go`"
 	}
 
 	command := strings.Join(args, " ")
