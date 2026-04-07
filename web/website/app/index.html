@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SolanaOS — App Setup</title>
+<meta name="description" content="Set up the SolanaOS mobile app. Connect to your runtime, pair your wallet, and get started.">
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<div class="corner-frame"></div>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="../" class="nav-brand">
+      <svg width="32" height="32" viewBox="0 0 100 100">
+        <circle cx="50" cy="50" r="42" fill="none" stroke="#14F195" stroke-width="2" opacity="0.8"/>
+        <circle cx="50" cy="50" r="34" fill="none" stroke="#9945FF" stroke-width="1.5" opacity="0.5"/>
+        <polygon points="50,36 64,50 50,64 36,50" fill="none" stroke="#14F195" stroke-width="1.5"/>
+        <text x="50" y="56" text-anchor="middle" font-family="Orbitron" font-weight="900" font-size="20" fill="#9945FF">S</text>
+      </svg>
+      <span class="nav-title">SOLANAOS</span>
+    </a>
+    <div class="nav-links" id="navLinks">
+      <a href="../">HOME</a>
+      <a href="./" class="active">APP</a>
+      <a href="../android/">ANDROID</a>
+      <a href="../telegram/">TELEGRAM</a>
+      <a href="../gateway/">GATEWAY</a>
+      <a href="../ore-miner/">ORE MINER</a>
+    </div>
+    <button class="nav-toggle" onclick="document.getElementById('navLinks').classList.toggle('open')">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<div class="breadcrumb">> <a href="../">HOME</a> / APP SETUP</div>
+
+<div class="page-header">
+  <h1>APP SETUP</h1>
+  <div class="subtitle">CONNECT YOUR DEVICE TO THE SOLANA COMPUTER</div>
+</div>
+
+<section class="section">
+  <div id="runtimeMount"></div>
+</section>
+
+<section class="section">
+  <!-- Welcome Panel -->
+  <div class="panel" style="text-align:center;padding:30px;">
+    <div style="display:flex;justify-content:center;align-items:center;gap:16px;margin-bottom:20px;">
+      <div class="float">
+        <svg width="50" height="55" viewBox="0 0 60 65">
+          <rect x="10" y="10" width="40" height="36" rx="4" fill="#FF7400"/>
+          <rect x="12" y="12" width="36" height="32" rx="3" fill="#FF8C2A"/>
+          <polygon points="18,22 24,26 18,30" fill="#1a1a2e"/>
+          <polygon points="42,22 36,26 42,30" fill="#1a1a2e"/>
+          <path d="M24,34 Q30,38 36,34" fill="none" stroke="#1a1a2e" stroke-width="1.5" stroke-linecap="round"/>
+          <rect x="2" y="24" width="10" height="8" rx="3" fill="#FF7400"/>
+          <rect x="48" y="24" width="10" height="8" rx="3" fill="#FF7400"/>
+          <rect x="16" y="46" width="10" height="12" rx="3" fill="#FF7400"/>
+          <rect x="34" y="46" width="10" height="12" rx="3" fill="#FF7400"/>
+          <rect x="14" y="54" width="14" height="6" rx="2" fill="#E06600"/>
+          <rect x="32" y="54" width="14" height="6" rx="2" fill="#E06600"/>
+        </svg>
+      </div>
+      <svg width="80" height="80" viewBox="0 0 100 100">
+        <circle cx="50" cy="50" r="42" fill="none" stroke="#14F195" stroke-width="2" opacity="0.8"/>
+        <circle cx="50" cy="50" r="34" fill="none" stroke="#9945FF" stroke-width="1.5" opacity="0.5"/>
+        <polygon points="50,36 64,50 50,64 36,50" fill="none" stroke="#14F195" stroke-width="1.5"/>
+        <text x="50" y="56" text-anchor="middle" font-family="Orbitron" font-weight="900" font-size="20" fill="#9945FF">S</text>
+      </svg>
+      <div class="float-delay">
+        <svg width="50" height="55" viewBox="0 0 60 65">
+          <rect x="10" y="10" width="40" height="36" rx="4" fill="#9945FF"/>
+          <rect x="12" y="12" width="36" height="32" rx="3" fill="#AB60FF"/>
+          <polygon points="18,22 24,26 18,30" fill="#14F195"/>
+          <polygon points="42,22 36,26 42,30" fill="#14F195"/>
+          <path d="M24,34 Q30,38 36,34" fill="none" stroke="#14F195" stroke-width="1.5" stroke-linecap="round"/>
+          <rect x="2" y="24" width="10" height="8" rx="3" fill="#9945FF"/>
+          <rect x="48" y="24" width="10" height="8" rx="3" fill="#9945FF"/>
+          <rect x="16" y="46" width="10" height="12" rx="3" fill="#9945FF"/>
+          <rect x="34" y="46" width="10" height="12" rx="3" fill="#9945FF"/>
+          <rect x="14" y="54" width="14" height="6" rx="2" fill="#7B30E0"/>
+          <rect x="32" y="54" width="14" height="6" rx="2" fill="#7B30E0"/>
+        </svg>
+      </div>
+    </div>
+    <div style="font-family:var(--font-display);font-size:16px;letter-spacing:2px;color:var(--green);margin-bottom:6px;">SolanaOS v2.0</div>
+    <div style="font-size:12px;opacity:0.5;">Pure Go &middot; Local-First &middot; &lt;10MB</div>
+  </div>
+
+  <h2 class="section-title left">QUICK START</h2>
+
+  <!-- Requirements -->
+  <div class="panel">
+    <div class="panel-label">REQUIREMENTS</div>
+    <div class="hw-row"><span class="hw-name"><span class="status-dot"></span> Solana Wallet</span><span class="hw-status">Phantom / Solflare / Backpack</span></div>
+    <div class="hw-row"><span class="hw-name"><span class="status-dot"></span> Android Device</span><span class="hw-status">Android 10+ / Seeker</span></div>
+    <div class="hw-row"><span class="hw-name"><span class="status-dot"></span> Network</span><span class="hw-status">Wi-Fi or Tailscale VPN</span></div>
+    <div class="hw-row"><span class="hw-name"><span class="status-dot"></span> SOL Balance</span><span class="hw-status">0.1+ SOL recommended</span></div>
+  </div>
+
+  <!-- Steps -->
+  <h2 class="section-title left" style="margin-top:40px;">SETUP STEPS</h2>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-content">
+        <h3>Install the APK</h3>
+        <p>Download the SeekerClaw APK from GitHub releases or build from source. The APK is Solana Mobile Stack compatible and works on any Android 10+ device, with native Seeker support.</p>
+        <div class="code-block">
+          <span class="comment"># Open the latest GitHub release page</span><br>
+          <span class="func">open</span> https://github.com/x402agent/Solana-Os-Go/releases/latest<br><br>
+          <span class="comment"># Or build locally and install via ADB</span><br>
+          <span class="func">adb</span> install apps/android/app/build/outputs/apk/debug/app-debug.apk
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-content">
+        <h3>Connect Your Wallet</h3>
+        <p>Open the app and tap <code>{ CONNECT & PAIR }</code>. Select your preferred wallet (Phantom, Solflare, or Backpack). The app will request transaction signing permissions for the agentic wallet.</p>
+        <div class="info-box">
+          <strong>Agentic Wallet:</strong> SolanaOS auto-generates a local keypair for autonomous trading. This is separate from your main wallet. Fund it with a small amount of SOL to enable OODA trading.
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-content">
+        <h3>Configure Gateway Connection</h3>
+        <p>Enter your gateway's local IP or Tailscale hostname. The app discovers SolanaOS runtimes on your network automatically via mDNS.</p>
+        <div class="code-block">
+          <span class="comment"># Default gateway address</span><br>
+          Gateway: <span class="string">192.168.1.100:8080</span><br><br>
+          <span class="comment"># Or via Tailscale</span><br>
+          Gateway: <span class="string">solanaos-gateway.tail1234.ts.net</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-content">
+        <h3>Pair & Verify</h3>
+        <p>The app will handshake with your gateway and display the dashboard. You should see your agent wallet address, SOL balance, OODA cycle status, and companion state.</p>
+        <div class="panel" style="margin-top:12px;">
+          <div class="panel-label">EXPECTED STATUS</div>
+          <div class="hw-row"><span class="hw-name"><span class="status-dot"></span> Runtime</span><span class="hw-status" style="color:var(--green);">LIVE</span></div>
+          <div class="hw-row"><span class="hw-name"><span class="status-dot"></span> Wallet</span><span class="hw-status">AAqk...DwaM</span></div>
+          <div class="hw-row"><span class="hw-name"><span class="status-dot"></span> Network</span><span class="hw-status" style="color:var(--purple);">MAINNET</span></div>
+          <div class="hw-row"><span class="hw-name"><span class="status-dot"></span> Companion</span><span class="hw-status">JUVENILE Lv3</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-content">
+        <h3>Enable OODA Trading</h3>
+        <p>Once connected, enable the autonomous OODA trading loop from the dashboard. Configure your strategy parameters: RSI thresholds, EMA periods, stop-loss, and position sizing.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Next Steps -->
+  <div class="panel purple" style="margin-top:30px;">
+    <div class="panel-label purple">NEXT STEPS</div>
+    <ul class="link-list">
+      <li><a href="../android/"><span class="arrow">&rarr;</span> Build the Android app from source</a></li>
+      <li><a href="../telegram/"><span class="arrow">&rarr;</span> Set up the Telegram bot for remote control</a></li>
+      <li><a href="../gateway/"><span class="arrow">&rarr;</span> Connect hardware gateway & peripherals</a></li>
+      <li><a href="../ore-miner/"><span class="arrow">&rarr;</span> Start mining ORE v2 on Solana</a></li>
+    </ul>
+  </div>
+</section>
+
+<footer class="footer">
+  <span>solanaos.com</span>
+  <span>8BIT LABS</span>
+  <span>MIT LICENSE</span>
+</footer>
+<script src="../runtime.js"></script>
+</body>
+</html>

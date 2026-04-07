@@ -1,0 +1,104 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Fira+Code:wght@400;500;600&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Fira Code", "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+  
+  --color-solana-purple: #9945FF;
+  --color-solana-green: #14F195;
+  --color-industrial-orange: #FF7400;
+  --color-cyber-blue: #00D1FF;
+  --color-cyber-red: #FF4466;
+  --color-cyber-black: #08090f;
+  --color-cyber-gray: #0e1019;
+  --color-cyber-border: #1a1c2e;
+}
+
+body {
+  @apply bg-cyber-black text-white font-mono antialiased;
+  margin: 0;
+  overflow-x: hidden;
+}
+
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-cyber-black;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-solana-purple/30 rounded-full;
+}
+
+.cyber-grid {
+  background-image: radial-gradient(circle at 2px 2px, rgba(153, 69, 255, 0.03) 1px, transparent 0);
+  background-size: 24px 24px;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #1a1c2e;
+  border-radius: 10px;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+@keyframes petFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-pulse-custom {
+  animation: pulse 2s infinite;
+}
+
+.animate-bounce-custom {
+  animation: bounce 1.5s ease infinite;
+}
+
+.animate-pet-float {
+  animation: petFloat 2.5s ease infinite;
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease forwards;
+}
+
+.glow-purple {
+  box-shadow: 0 0 24px rgba(153, 69, 255, 0.12);
+}
+
+.scanline {
+  background-image: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.02) 0%,
+    rgba(255, 255, 255, 0) 50%,
+    rgba(255, 255, 255, 0.02) 100%
+  );
+  background-size: 100% 6px;
+}
+

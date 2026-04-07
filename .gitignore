@@ -9,33 +9,32 @@ pkg/nanobot/ui/assets/
 *.dll
 *.so
 *.dylib
-.env
-# ── Go ────────────────────────────────────────────────────────────────
-*.test
-*.out
-vendor/
-publishing
-.env.local
-.env
+
 # ── Environment / Secrets ─────────────────────────────────────────────
 .env
 .env.*
 !.env.example
 !**/.env.*.example
 .npmrc
-/Users/8bit/solanaos/Claw3D-main
+
+# ── Go ────────────────────────────────────────────────────────────────
+*.test
+*.out
+vendor/
+publishing
+
 # ── OS files ──────────────────────────────────────────────────────────
 .DS_Store
 Thumbs.db
 *.swp
 *.swo
 *~
-Claw3D-main
+
 # ── IDE ───────────────────────────────────────────────────────────────
 .idea/
 .vscode/
 *.code-workspace
-page-agent-main
+
 # ── Local agent/editor state ─────────────────────────────────────────
 .agent/
 .augment/
@@ -44,7 +43,14 @@ page-agent-main
 .commandcode/
 !.agents/
 !.agents/**
-Claw3D-main
+
+# ── Go caches / local module state ───────────────────────────────────
+.gocache/
+.gocache-*/
+.gomodcache/
+.gopath/
+.npm-cache/
+
 # ── Android local build state ─────────────────────────────────────────
 apps/android/local.properties
 apps/android/release-signing.properties
@@ -56,38 +62,25 @@ apps/android/.gradle-user/
 apps/android/.kotlin/
 apps/android/app/build/
 apps/android/benchmark/build/
-
-# Vendored reference repos in Android (not our code)
 apps/android/OreMiner-master/
 apps/android/solana-pay-android-sample-main/
-apps/android/.gradle-user/
-apps/android/.gradle/
-apps/android/apps/android/.gradle-user/
-apps/android/apps/android/.gradle/
 apps/android/apps/
 apps/macos/.build/
 apps/dapp-publishing-main/node_modules/
-Claw3D-main
-# ── Node (scripts/web) ───────────────────────────────────────────────
+
+# ── Node ─────────────────────────────────────────────────────────────
 node_modules/
 scripts/node_modules/
 web/frontend/node_modules/
 docs/docs-site/node_modules/
-.npm-cache/
-solana-keychain-main
+mcp-server/node_modules/
+workers/agent-wallet/node_modules/
+pumpfun-mcp-worker/node_modules/
+bots/*/node_modules/
+page-agent-main/node_modules/
+
 # ── Docker ────────────────────────────────────────────────────────────
 docker-compose.override.yml
-
-# ── SolanaOS runtime data ────────────────────────────────────────────
-# (these live in ~/.nanosolana/, not in the repo)
-
-# ── Go caches / local module state ───────────────────────────────────
-.gocache/
-.gocache-controlapi/
-.gocache-local/
-.gocache-release/
-.gomodcache/
-.gopath/
 
 # ── Local website / deployment state ─────────────────────────────────
 web/backend/.env
@@ -122,63 +115,43 @@ nanohub/test-results/
 /solanaos-control-api
 /gateway-api
 /backend
+/agent-wallet
 mawdbot-bitaxe/bin/mawdaxe
 mawdbot-bitaxe/.gocache-verify-root/
 mawdbot-bitaxe/integrated/.gomodcache-verify/
 mawdbot-bitaxe/integrated/*.log
 
-# ── Local screenshot / export clutter at repo root ───────────────────
-/4DDC9F6B-8941-419A-8D96-82BCDB1B5BF9_1_105_c.jpeg
-/F0EE3FA6-4242-4AA8-9D2E-7D43CB5D1F93.png
+# ── TypeScript build output ───────────────────────────────────────────
+mcp-server/dist/
+workers/*/dist/
+pumpfun-mcp-worker/dist/
+src/*/dist/
 
-# ── Source deps (bundled for reference, not shipped) ──────────────────
+# ── Vendored / reference repos (not our source) ──────────────────────
 solana-go-main/
 mawdbot-go/
 picoclaw/
 x402-go-main/
-.claude/worktrees/agitated-proskuriakova
-
-# Local Netlify folder
-.netlify
-
-# ── Private / internal directories (NOT for public GitHub) ──────────
-# These contain private keys, internal tools, reference code, or personal data.
-
-# Hermes agent reference (copied for study, not shipped)
 hermes-agent-main/
 
-# Python agent/ACP adapter (Hermes copies, replaced by Go in pkg/acp/)
+# ── Sub-projects tracked separately / too large for main repo ─────────
+# These are bundled for local reference; fork them individually if needed.
+Claw3D-main/
+g0dm0d3-main/
+mawdbot-bitaxe/
+page-agent-main/
+solana-keychain-main/
+
+# ── Private / internal directories ───────────────────────────────────
 /agent/
 acp_adapter/
-
-# Private solanaos-memory standalone module (merged into pkg/)
 solanaos-memory/
-
-# Web frontend/backend (local dev server, not for public repo)
-web/
-
-# MawdAxe mining fleet (separate project, has its own .env)
-mawdbot-bitaxe/
-
-# Solana dApp Store publishing config (contains addresses + keys)
 publishing/
-g0dm0d3-main
-# Android signing keys
-apps/android/.signing/
-*.jks
-*.keystore
+"acp_registry copy"/
 
-# Duplicate ACP registry copy
-acp_registry copy/
-
-# Compiled binaries at repo root (should be in GitHub Releases)
-/Solana-Os-Go
-/solanaos
-/mawdbot-tui
-/solanaos-control-api
-/SeekerClaw-*.apk
-
-# Screenshots at repo root
+# ── Screenshots / media at repo root ─────────────────────────────────
+/4DDC9F6B-8941-419A-8D96-82BCDB1B5BF9_1_105_c.jpeg
+/F0EE3FA6-4242-4AA8-9D2E-7D43CB5D1F93.png
 *.jpeg
 *.png
 !**/icons/*.png
@@ -187,18 +160,22 @@ acp_registry copy/
 !**/public/*.png
 !**/media/*.png
 
-# Reference/vendored source repos
-solana-go-main/
-mawdbot-go/
-picoclaw/
-x402-go-main/
-
-# Stale planning docs
+# ── Stale planning docs ───────────────────────────────────────────────
 program.md
 solanaos-blockchain-SKILL.md
 solana-tracker/
 
-# Pump.fun scan raw API data (ephemeral, regenerated each run)
+# ── Pump.fun scan raw API data ────────────────────────────────────────
 page_*.json
 bonding.json
 trending.json
+
+# ── Android signing keys ──────────────────────────────────────────────
+apps/android/.signing/
+*.jks
+*.keystore
+
+# ── Compiled binaries at repo root ───────────────────────────────────
+/Solana-Os-Go
+/mawdbot-tui
+/SeekerClaw-*.apk

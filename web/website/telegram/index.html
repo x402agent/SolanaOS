@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SolanaOS — Telegram Bot Setup</title>
+<meta name="description" content="Set up the SolanaOS MawdBot Telegram interface for remote command & control of your Solana computer.">
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<div class="corner-frame"></div>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="../" class="nav-brand">
+      <svg width="32" height="32" viewBox="0 0 100 100">
+        <circle cx="50" cy="50" r="42" fill="none" stroke="#14F195" stroke-width="2" opacity="0.8"/>
+        <circle cx="50" cy="50" r="34" fill="none" stroke="#9945FF" stroke-width="1.5" opacity="0.5"/>
+        <polygon points="50,36 64,50 50,64 36,50" fill="none" stroke="#14F195" stroke-width="1.5"/>
+        <text x="50" y="56" text-anchor="middle" font-family="Orbitron" font-weight="900" font-size="20" fill="#9945FF">S</text>
+      </svg>
+      <span class="nav-title">SOLANAOS</span>
+    </a>
+    <div class="nav-links" id="navLinks">
+      <a href="../">HOME</a>
+      <a href="../app/">APP</a>
+      <a href="../android/">ANDROID</a>
+      <a href="./" class="active">TELEGRAM</a>
+      <a href="../gateway/">GATEWAY</a>
+      <a href="../ore-miner/">ORE MINER</a>
+    </div>
+    <button class="nav-toggle" onclick="document.getElementById('navLinks').classList.toggle('open')">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<div class="breadcrumb">> <a href="../">HOME</a> / TELEGRAM BOT</div>
+
+<div class="page-header">
+  <h1>TELEGRAM BOT</h1>
+  <div class="subtitle">REMOTE COMMAND &amp; CONTROL VIA MAWDBOT</div>
+</div>
+
+<section class="section">
+  <div id="runtimeMount"></div>
+</section>
+
+<section class="section">
+
+  <!-- Overview -->
+  <div class="panel" style="display:flex;align-items:center;gap:16px;">
+    <svg width="50" height="55" viewBox="0 0 60 65">
+      <rect x="10" y="10" width="40" height="36" rx="4" fill="#9945FF"/>
+      <rect x="12" y="12" width="36" height="32" rx="3" fill="#AB60FF"/>
+      <polygon points="18,22 24,26 18,30" fill="#14F195"/>
+      <polygon points="42,22 36,26 42,30" fill="#14F195"/>
+      <path d="M24,34 Q30,38 36,34" fill="none" stroke="#14F195" stroke-width="1.5" stroke-linecap="round"/>
+      <rect x="2" y="24" width="10" height="8" rx="3" fill="#9945FF"/>
+      <rect x="48" y="24" width="10" height="8" rx="3" fill="#9945FF"/>
+      <rect x="16" y="46" width="10" height="12" rx="3" fill="#9945FF"/>
+      <rect x="34" y="46" width="10" height="12" rx="3" fill="#9945FF"/>
+      <rect x="14" y="54" width="14" height="6" rx="2" fill="#7B30E0"/>
+      <rect x="32" y="54" width="14" height="6" rx="2" fill="#7B30E0"/>
+    </svg>
+    <div>
+      <div style="font-family:var(--font-display);font-size:14px;letter-spacing:2px;color:var(--purple);margin-bottom:4px;">MAWDBOT</div>
+      <div style="font-size:13px;line-height:1.6;opacity:0.8;">
+        The Telegram bot gives you full remote access to your SolanaOS runtime. Check balances, monitor trades, view trending tokens, manage Hyperliquid positions, and interact with your companion &mdash; all from Telegram.
+      </div>
+    </div>
+  </div>
+
+  <!-- Available Commands -->
+  <h2 class="section-title left" style="margin-top:40px;">AVAILABLE COMMANDS</h2>
+
+  <div class="terminal">
+    <div class="terminal-header">
+      <span class="terminal-dot r"></span>
+      <span class="terminal-dot y"></span>
+      <span class="terminal-dot g"></span>
+      <span class="terminal-title">MAWDBOT COMMANDS</span>
+    </div>
+    <div class="terminal-output">
+      <span class="terminal-cmd">/status</span> &mdash; Runtime status, wallet, balance, uptime<br>
+      <span class="terminal-cmd">/trending</span> &mdash; Top trending tokens on Solana<br>
+      <span class="terminal-cmd">/hl_positions</span> &mdash; Hyperliquid open positions &amp; PnL<br>
+      <span class="terminal-cmd">/hl_balance</span> &mdash; Hyperliquid account balance<br>
+      <span class="terminal-cmd">/swap &lt;token&gt; &lt;amount&gt;</span> &mdash; Jupiter swap via agentic wallet<br>
+      <span class="terminal-cmd">/price &lt;token&gt;</span> &mdash; Current price of any Solana token<br>
+      <span class="terminal-cmd">/portfolio</span> &mdash; Full token portfolio overview<br>
+      <span class="terminal-cmd">/companion</span> &mdash; Companion state, mood, XP, evolution<br>
+      <span class="terminal-cmd">/ooda</span> &mdash; OODA loop status &amp; current cycle<br>
+      <span class="terminal-cmd">/memory</span> &mdash; Honcho memory context<br>
+      <span class="terminal-cmd">/hardware</span> &mdash; Connected I2C hardware status<br>
+      <span class="terminal-cmd">/help</span> &mdash; List all available commands<br>
+    </div>
+  </div>
+
+  <!-- Setup Steps -->
+  <h2 class="section-title left" style="margin-top:40px;">SETUP GUIDE</h2>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-content">
+        <h3>Create a Bot with BotFather</h3>
+        <p>Open Telegram and message <code>@BotFather</code>. Create a new bot:</p>
+        <div class="terminal">
+          <div class="terminal-header">
+            <span class="terminal-dot r"></span><span class="terminal-dot y"></span><span class="terminal-dot g"></span>
+            <span class="terminal-title">TELEGRAM</span>
+          </div>
+          <div class="terminal-output">
+            <span style="color:var(--purple);">You:</span> /newbot<br>
+            <span style="color:var(--green);">BotFather:</span> Choose a name for your bot.<br>
+            <span style="color:var(--purple);">You:</span> SolanaOS MawdBot<br>
+            <span style="color:var(--green);">BotFather:</span> Choose a username for your bot.<br>
+            <span style="color:var(--purple);">You:</span> solanaos_mawdbot<br>
+            <span style="color:var(--green);">BotFather:</span> Done! Your token is:<br>
+            <span style="color:var(--orange);">7234567890:AAHxxxxxxxxxxxxxxxxxxxxxxxxx</span>
+          </div>
+        </div>
+        <div class="info-box warn" style="margin-top:12px;">
+          <strong>Keep your token secret!</strong> Anyone with the token can control your bot. Never commit it to git or share publicly.
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-content">
+        <h3>Get Your Chat ID</h3>
+        <p>Message your new bot, then use the Telegram API to find your chat ID. This restricts the bot to only respond to you.</p>
+        <div class="code-block">
+          <span class="comment"># Get your chat ID (after messaging the bot)</span><br>
+          <span class="func">curl</span> <span class="string">"https://api.telegram.org/bot&lt;YOUR_TOKEN&gt;/getUpdates"</span> | jq <span class="string">'.result[0].message.chat.id'</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-content">
+        <h3>Configure Environment</h3>
+        <p>Set the bot token and chat ID in your SolanaOS environment:</p>
+        <div class="code-block">
+          <span class="comment"># .env file</span><br>
+          TELEGRAM_BOT_TOKEN=<span class="string">"7234567890:AAHxxxxxxxxxxxxxxxxxxxxxxxxx"</span><br>
+          TELEGRAM_CHAT_ID=<span class="string">"123456789"</span><br><br>
+          <span class="comment"># Optional: set allowed user IDs (comma-separated)</span><br>
+          TELEGRAM_ALLOWED_USERS=<span class="string">"123456789,987654321"</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-content">
+        <h3>Start the Bot</h3>
+        <p>The Telegram bot starts automatically when SolanaOS boots. Verify it's running:</p>
+        <div class="terminal">
+          <div class="terminal-header">
+            <span class="terminal-dot r"></span><span class="terminal-dot y"></span><span class="terminal-dot g"></span>
+            <span class="terminal-title">SOLANAOS</span>
+          </div>
+          <div class="terminal-cmd">> ./nanosolana start</div>
+          <div class="terminal-output">
+            <span style="color:var(--green);">✓</span> Runtime started<br>
+            <span style="color:var(--green);">✓</span> Wallet loaded: AAqk...DwaM<br>
+            <span style="color:var(--green);">✓</span> Telegram bot connected<br>
+            <span style="color:var(--green);">✓</span> OODA loop active: cycle #247<br>
+            <span style="color:var(--green);">✓</span> Honcho memory initialized<br>
+            <span style="color:var(--green);">✓</span> Hyperliquid bridge ready
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-content">
+        <h3>Test the Connection</h3>
+        <p>Send <code>/status</code> to your bot in Telegram. You should see:</p>
+        <div class="panel" style="margin-top:10px;">
+          <div class="panel-label">SOLANAOS RUNTIME</div>
+          <div style="font-size:12px;line-height:1.7;">
+            Runtime : <span style="color:var(--green);">LIVE</span> &nbsp;&nbsp;Cycle: #247<br>
+            Wallet &nbsp;: AAqk...DwaM<br>
+            <span style="color:var(--green);">Balance : 2.4831 SOL</span><br>
+            Companion: JUVENILE Lv3<br>
+            Uptime &nbsp;: 14h 23m
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bot Library -->
+  <div class="panel" style="margin-top:30px;">
+    <div class="panel-label">POWERED BY</div>
+    <div class="hw-row"><span class="hw-name"><span class="status-dot"></span> telego</span><span class="hw-status">Go Telegram Bot API v1.7.0</span></div>
+    <div class="hw-row"><span class="hw-name"><span class="status-dot"></span> Long Polling</span><span class="hw-status">Real-time updates</span></div>
+    <div class="hw-row"><span class="hw-name"><span class="status-dot"></span> Rate Limited</span><span class="hw-status">30 msg/sec</span></div>
+  </div>
+
+  <div class="info-box">
+    <strong>Multi-User Support:</strong> You can add multiple allowed user IDs to let team members access the bot. Each user gets their own session context via Honcho memory.
+  </div>
+
+</section>
+
+<footer class="footer">
+  <span>solanaos.com</span>
+  <span>8BIT LABS</span>
+  <span>MIT LICENSE</span>
+</footer>
+<script src="../runtime.js"></script>
+</body>
+</html>

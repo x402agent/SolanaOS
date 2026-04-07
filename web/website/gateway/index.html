@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SolanaOS — Gateway Setup</title>
+<meta name="description" content="Connect your hardware gateway to SolanaOS. Seeker, Orin Nano, Modulino I2C peripherals.">
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<div class="corner-frame"></div>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="../" class="nav-brand">
+      <svg width="32" height="32" viewBox="0 0 100 100">
+        <circle cx="50" cy="50" r="42" fill="none" stroke="#14F195" stroke-width="2" opacity="0.8"/>
+        <circle cx="50" cy="50" r="34" fill="none" stroke="#9945FF" stroke-width="1.5" opacity="0.5"/>
+        <polygon points="50,36 64,50 50,64 36,50" fill="none" stroke="#14F195" stroke-width="1.5"/>
+        <text x="50" y="56" text-anchor="middle" font-family="Orbitron" font-weight="900" font-size="20" fill="#9945FF">S</text>
+      </svg>
+      <span class="nav-title">SOLANAOS</span>
+    </a>
+    <div class="nav-links" id="navLinks">
+      <a href="../">HOME</a>
+      <a href="../app/">APP</a>
+      <a href="../android/">ANDROID</a>
+      <a href="../telegram/">TELEGRAM</a>
+      <a href="./" class="active">GATEWAY</a>
+      <a href="../ore-miner/">ORE MINER</a>
+    </div>
+    <button class="nav-toggle" onclick="document.getElementById('navLinks').classList.toggle('open')">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<div class="breadcrumb">> <a href="../">HOME</a> / GATEWAY</div>
+
+<div class="page-header">
+  <h1>GATEWAY SETUP</h1>
+  <div class="subtitle">CONNECT YOUR HARDWARE TO SOLANAOS</div>
+</div>
+
+<section class="section">
+  <div id="runtimeMount"></div>
+</section>
+
+<section class="section">
+
+  <!-- Architecture Diagram -->
+  <div class="panel" style="text-align:center;padding:30px;">
+    <div class="panel-label purple" style="text-align:left;">GATEWAY ARCHITECTURE</div>
+    <div style="display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:20px;margin:20px 0;">
+      <div style="text-align:center;">
+        <div style="border:1px solid var(--green);padding:14px 20px;border-radius:4px;background:rgba(20,241,149,0.08);margin-bottom:6px;">
+          <div style="font-family:var(--font-display);font-size:12px;font-weight:700;letter-spacing:2px;color:var(--green);">PHONE</div>
+          <div style="font-size:9px;opacity:0.5;margin-top:4px;">Android / Seeker</div>
+        </div>
+      </div>
+      <div style="color:var(--green);font-size:20px;">&#8596;</div>
+      <div style="text-align:center;">
+        <div style="border:1px solid var(--purple);padding:14px 20px;border-radius:4px;background:rgba(153,69,255,0.08);margin-bottom:6px;">
+          <div style="font-family:var(--font-display);font-size:12px;font-weight:700;letter-spacing:2px;color:var(--purple);">GATEWAY</div>
+          <div style="font-size:9px;opacity:0.5;margin-top:4px;">SolanaOS Runtime</div>
+        </div>
+      </div>
+      <div style="color:var(--purple);font-size:20px;">&#8596;</div>
+      <div style="text-align:center;">
+        <div style="border:1px solid var(--green);padding:14px 20px;border-radius:4px;background:rgba(20,241,149,0.08);margin-bottom:6px;">
+          <div style="font-family:var(--font-display);font-size:12px;font-weight:700;letter-spacing:2px;color:var(--green);">SOLANA</div>
+          <div style="font-size:9px;opacity:0.5;margin-top:4px;">Mainnet RPC</div>
+        </div>
+      </div>
+    </div>
+    <div style="color:var(--purple);font-size:14px;margin:10px 0;">&#8597;</div>
+    <div style="display:flex;justify-content:center;gap:12px;flex-wrap:wrap;">
+      <div style="border:1px solid var(--orange-border);padding:8px 14px;border-radius:4px;background:rgba(255,116,0,0.06);font-size:10px;letter-spacing:1px;">
+        <span style="color:var(--orange);">I2C HARDWARE</span>
+      </div>
+      <div style="border:1px solid var(--panel-border);padding:8px 14px;border-radius:4px;background:var(--panel);font-size:10px;letter-spacing:1px;">
+        <span style="color:var(--green);">TELEGRAM BOT</span>
+      </div>
+      <div style="border:1px solid var(--purple-border);padding:8px 14px;border-radius:4px;background:var(--purple-panel);font-size:10px;letter-spacing:1px;">
+        <span style="color:var(--purple);">HYPERLIQUID</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Supported Hardware -->
+  <h2 class="section-title left" style="margin-top:40px;">SUPPORTED GATEWAYS</h2>
+
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-title">NVIDIA ORIN NANO</div>
+      <div class="card-desc">Jetson Orin Nano. ARM64, GPU-accelerated inference, I2C bus for Modulino hardware.</div>
+      <div class="tag-row" style="margin-top:10px;">
+        <span class="tag">ARM64</span>
+        <span class="tag">CUDA</span>
+        <span class="tag">I2C</span>
+      </div>
+    </div>
+    <div class="card purple">
+      <div class="card-title" style="color:var(--purple)">SOLANA SEEKER</div>
+      <div class="card-desc">Solana Mobile Seeker device. Native SMS support, hardware secure element, built-in wallet.</div>
+      <div class="tag-row" style="margin-top:10px;">
+        <span class="tag purple">SMS</span>
+        <span class="tag purple">SE</span>
+        <span class="tag purple">dApp Store</span>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">RASPBERRY PI 5</div>
+      <div class="card-desc">ARM64 SBC. Low-power, always-on gateway with GPIO and I2C support.</div>
+      <div class="tag-row" style="margin-top:10px;">
+        <span class="tag">ARM64</span>
+        <span class="tag">GPIO</span>
+        <span class="tag">I2C</span>
+      </div>
+    </div>
+    <div class="card purple">
+      <div class="card-title" style="color:var(--purple)">x86_64 SERVER</div>
+      <div class="card-desc">Any x86_64 Linux box. Desktop, server, or cloud VM. USB for I2C adapters.</div>
+      <div class="tag-row" style="margin-top:10px;">
+        <span class="tag purple">x86_64</span>
+        <span class="tag purple">USB</span>
+        <span class="tag purple">Docker</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Setup Steps -->
+  <h2 class="section-title left" style="margin-top:40px;">GATEWAY SETUP</h2>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-content">
+        <h3>Install SolanaOS Binary</h3>
+        <p>Download the pre-built binary or build from source. SolanaOS is a single pure Go binary, &lt;10MB, zero dependencies.</p>
+        <div class="code-block">
+          <span class="comment"># One-line install</span><br>
+          <span class="func">curl</span> -sSL https://install.solanaos.com | <span class="func">sh</span><br><br>
+          <span class="comment"># Or build from source (requires Go 1.25+)</span><br>
+          <span class="func">git</span> clone https://github.com/x402agent/Solana-Os-Go.git<br>
+          <span class="func">cd</span> Solana-Os-Go<br>
+          CGO_ENABLED=0 <span class="func">go</span> build -o solanaos .<br><br>
+          <span class="comment"># Binary size check</span><br>
+          <span class="func">ls</span> -lh solanaos<br>
+          <span style="color:var(--text-dim);"># -rwxr-xr-x 1 user user 8.9M solanaos</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-content">
+        <h3>Configure Environment</h3>
+        <p>Copy the example env file and fill in your keys:</p>
+        <div class="code-block">
+          <span class="func">cp</span> .env.example .env<br>
+          <span class="func">nano</span> .env<br><br>
+          <span class="comment"># Required settings</span><br>
+          SOLANA_RPC_URL=<span class="string">"https://mainnet.helius-rpc.com/?api-key=YOUR_KEY"</span><br>
+          SOLANA_PRIVATE_KEY=<span class="string">"your_base58_key"</span><br>
+          TELEGRAM_BOT_TOKEN=<span class="string">"your_bot_token"</span><br>
+          TELEGRAM_CHAT_ID=<span class="string">"your_chat_id"</span><br><br>
+          <span class="comment"># Optional: Hyperliquid</span><br>
+          HL_API_KEY=<span class="string">"your_hl_key"</span><br>
+          HL_API_SECRET=<span class="string">"your_hl_secret"</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-content">
+        <h3>Connect I2C Hardware (Optional)</h3>
+        <p>If using Modulino peripherals, connect via I2C bus:</p>
+        <div class="panel" style="margin-top:10px;">
+          <div class="panel-label orange">MODULINO I2C HARDWARE</div>
+          <div class="hw-row"><span class="hw-name"><span class="status-dot"></span> PIXELS</span><span class="hw-type">8x RGB LED</span><span class="hw-status">IDLE PULSE</span></div>
+          <div class="hw-row"><span class="hw-name"><span class="status-dot"></span> BUZZER</span><span class="hw-type">PWL0121ZE</span><span class="hw-status">STANDBY</span></div>
+          <div class="hw-row"><span class="hw-name"><span class="status-dot"></span> KNOB</span><span class="hw-type">PEC11 Encoder</span><span class="hw-status">RSI: 72</span></div>
+          <div class="hw-row"><span class="hw-name"><span class="status-dot"></span> IMU</span><span class="hw-type">LSM6DS0X</span><span class="hw-status">STABLE</span></div>
+          <div class="hw-row"><span class="hw-name"><span class="status-dot"></span> ToF</span><span class="hw-type">VL53L4CD</span><span class="hw-status">127mm</span></div>
+        </div>
+        <div class="info-box" style="margin-top:12px;">
+          <strong>Hardware auto-detected:</strong> SolanaOS uses periph.io to auto-detect I2C devices at boot. The Knob maps to RSI threshold, Pixels show trade signals, Buzzer alerts on fills.
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-content">
+        <h3>Start the Gateway</h3>
+        <div class="terminal">
+          <div class="terminal-header">
+            <span class="terminal-dot r"></span><span class="terminal-dot y"></span><span class="terminal-dot g"></span>
+            <span class="terminal-title">GATEWAY</span>
+          </div>
+          <div class="terminal-cmd">> ./solanaos start --gateway</div>
+          <div class="terminal-output">
+            <span style="color:var(--green);">✓</span> SolanaOS v2.0.0 booting...<br>
+            <span style="color:var(--green);">✓</span> Wallet loaded: AAqk...DwaM (2.4831 SOL)<br>
+            <span style="color:var(--green);">✓</span> I2C bus: 5 devices detected<br>
+            <span style="color:var(--green);">✓</span> Gateway API: 0.0.0.0:8080<br>
+            <span style="color:var(--green);">✓</span> mDNS: solanaos-gateway.local<br>
+            <span style="color:var(--green);">✓</span> Telegram bot: @solanaos_mawdbot<br>
+            <span style="color:var(--green);">✓</span> OODA loop: ACTIVE (cycle #1)<br>
+            <span style="color:var(--green);">✓</span> Boot time: 0.8s
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-content">
+        <h3>Connect the Mobile App</h3>
+        <p>Open the SolanaOS app on your phone and enter the gateway address displayed above. If on the same network, mDNS discovery will find it automatically.</p>
+        <div class="code-block">
+          <span class="comment"># Gateway address options</span><br>
+          Local: &nbsp;&nbsp;<span class="string">192.168.1.100:8080</span><br>
+          mDNS: &nbsp;&nbsp;<span class="string">solanaos-gateway.local:8080</span><br>
+          Tailscale: <span class="string">solanaos.tail1234.ts.net:8080</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Network Modes -->
+  <h2 class="section-title left" style="margin-top:40px;">NETWORK MODES</h2>
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-title">LAN MODE</div>
+      <div class="card-desc">Phone and gateway on same Wi-Fi. Lowest latency. mDNS auto-discovery. No external access.</div>
+    </div>
+    <div class="card purple">
+      <div class="card-title" style="color:var(--purple)">TAILSCALE VPN</div>
+      <div class="card-desc">Secure mesh VPN. Access gateway from anywhere. Zero-config WireGuard tunnel. Recommended for remote.</div>
+    </div>
+  </div>
+
+</section>
+
+<footer class="footer">
+  <span>solanaos.com</span>
+  <span>8BIT LABS</span>
+  <span>MIT LICENSE</span>
+</footer>
+<script src="../runtime.js"></script>
+</body>
+</html>

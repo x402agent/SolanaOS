@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SolanaOS — Mobile App Hub</title>
+<meta name="description" content="SolanaOS mobile hub: connect your gateway, set up the Android app, configure your Telegram bot, and mine ORE on Solana.">
+<meta name="theme-color" content="#000000">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="corner-frame"></div>
+
+<!-- Navigation -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="/" class="nav-brand">
+      <svg width="32" height="32" viewBox="0 0 100 100">
+        <circle cx="50" cy="50" r="42" fill="none" stroke="#14F195" stroke-width="2" opacity="0.8"/>
+        <circle cx="50" cy="50" r="34" fill="none" stroke="#9945FF" stroke-width="1.5" opacity="0.5"/>
+        <polygon points="50,36 64,50 50,64 36,50" fill="none" stroke="#14F195" stroke-width="1.5"/>
+        <text x="50" y="56" text-anchor="middle" font-family="Orbitron" font-weight="900" font-size="20" fill="#9945FF">S</text>
+      </svg>
+      <span class="nav-title">SOLANAOS</span>
+    </a>
+    <div class="nav-links" id="navLinks">
+      <a href="/" class="active">HOME</a>
+      <a href="app/">APP</a>
+      <a href="android/">ANDROID</a>
+      <a href="telegram/">TELEGRAM</a>
+      <a href="gateway/">GATEWAY</a>
+      <a href="runtime/">RUNTIME</a>
+      <a href="ore-miner/">ORE MINER</a>
+    </div>
+    <button class="nav-toggle" id="navToggle" onclick="document.getElementById('navLinks').classList.toggle('open')">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- Hero -->
+<section class="hero">
+  <!-- MawdBot Characters flanking logo -->
+  <div style="display:flex;justify-content:center;align-items:center;gap:20px;margin-bottom:10px;">
+    <!-- Orange MawdBot -->
+    <div class="float">
+      <svg width="60" height="65" viewBox="0 0 60 65">
+        <rect x="10" y="10" width="40" height="36" rx="4" fill="#FF7400"/>
+        <rect x="12" y="12" width="36" height="32" rx="3" fill="#FF8C2A"/>
+        <rect x="14" y="12" width="12" height="4" rx="1" fill="#FFB060" opacity="0.5"/>
+        <polygon points="18,22 24,26 18,30" fill="#1a1a2e"/>
+        <polygon points="42,22 36,26 42,30" fill="#1a1a2e"/>
+        <rect x="24" y="33" width="12" height="2" rx="1" fill="#1a1a2e" opacity="0.5"/>
+        <rect x="2" y="24" width="10" height="8" rx="3" fill="#FF7400"/>
+        <rect x="48" y="24" width="10" height="8" rx="3" fill="#FF7400"/>
+        <rect x="16" y="46" width="10" height="12" rx="3" fill="#FF7400"/>
+        <rect x="34" y="46" width="10" height="12" rx="3" fill="#FF7400"/>
+        <rect x="14" y="54" width="14" height="6" rx="2" fill="#E06600"/>
+        <rect x="32" y="54" width="14" height="6" rx="2" fill="#E06600"/>
+      </svg>
+    </div>
+    <!-- Logo -->
+    <div class="hero-logo">
+      <svg width="120" height="120" viewBox="0 0 100 100">
+        <circle cx="50" cy="50" r="42" fill="none" stroke="#14F195" stroke-width="2" opacity="0.8"/>
+        <circle cx="50" cy="50" r="34" fill="none" stroke="#9945FF" stroke-width="1.5" opacity="0.5"/>
+        <line x1="50" y1="8" x2="50" y2="28" stroke="#14F195" stroke-width="1" opacity="0.4"/>
+        <line x1="50" y1="72" x2="50" y2="92" stroke="#14F195" stroke-width="1" opacity="0.4"/>
+        <line x1="8" y1="50" x2="28" y2="50" stroke="#14F195" stroke-width="1" opacity="0.4"/>
+        <line x1="72" y1="50" x2="92" y2="50" stroke="#14F195" stroke-width="1" opacity="0.4"/>
+        <polygon points="50,36 64,50 50,64 36,50" fill="none" stroke="#14F195" stroke-width="1.5"/>
+        <text x="50" y="56" text-anchor="middle" font-family="Orbitron" font-weight="900" font-size="20" fill="#9945FF">S</text>
+      </svg>
+    </div>
+    <!-- Purple MawdBot -->
+    <div class="float-delay">
+      <svg width="60" height="65" viewBox="0 0 60 65">
+        <rect x="10" y="10" width="40" height="36" rx="4" fill="#9945FF"/>
+        <rect x="12" y="12" width="36" height="32" rx="3" fill="#AB60FF"/>
+        <rect x="14" y="12" width="12" height="4" rx="1" fill="#C490FF" opacity="0.4"/>
+        <polygon points="18,22 24,26 18,30" fill="#14F195"/>
+        <polygon points="42,22 36,26 42,30" fill="#14F195"/>
+        <rect x="24" y="33" width="12" height="2" rx="1" fill="#14F195" opacity="0.4"/>
+        <rect x="2" y="24" width="10" height="8" rx="3" fill="#9945FF"/>
+        <rect x="48" y="24" width="10" height="8" rx="3" fill="#9945FF"/>
+        <rect x="16" y="46" width="10" height="12" rx="3" fill="#9945FF"/>
+        <rect x="34" y="46" width="10" height="12" rx="3" fill="#9945FF"/>
+        <rect x="14" y="54" width="14" height="6" rx="2" fill="#7B30E0"/>
+        <rect x="32" y="54" width="14" height="6" rx="2" fill="#7B30E0"/>
+      </svg>
+    </div>
+  </div>
+
+  <div class="hero-subtitle">WELCOME TO</div>
+  <h1 class="hero-title">SOLANAOS</h1>
+  <div class="hero-tagline">THE SOLANA COMPUTER &middot; MOBILE HUB</div>
+
+  <div class="hero-features">
+    <div class="feature-row">
+      <span class="feature-num">[01]</span>
+      <span class="feature-text">Android app &mdash; pair your Seeker gateway</span>
+      <span class="feature-dot g"></span>
+    </div>
+    <div class="feature-row alt">
+      <span class="feature-num">[02]</span>
+      <span class="feature-text">Telegram bot &mdash; remote command & control</span>
+      <span class="feature-dot p"></span>
+    </div>
+    <div class="feature-row">
+      <span class="feature-num">[03]</span>
+      <span class="feature-text">ORE v2 miner &mdash; grid-based Solana mining</span>
+      <span class="feature-dot g"></span>
+    </div>
+    <div class="feature-row alt">
+      <span class="feature-num">[04]</span>
+      <span class="feature-text">Gateway setup &mdash; local-first, zero cloud</span>
+      <span class="feature-dot p"></span>
+    </div>
+    <div class="feature-row">
+      <span class="feature-num">[05]</span>
+      <span class="feature-text">OODA autonomous trading loop</span>
+      <span class="feature-dot g"></span>
+    </div>
+    <div class="feature-row alt">
+      <span class="feature-num">[06]</span>
+      <span class="feature-text">Sub-10MB pure Go binary &middot; ARM64 &middot; RISC-V</span>
+      <span class="feature-dot p"></span>
+    </div>
+  </div>
+
+  <a href="app/" class="cta-btn">
+    { GET STARTED } <span class="dot"></span>
+  </a>
+
+  <!-- Signal line -->
+  <svg class="signal-line" viewBox="0 0 1000 30" preserveAspectRatio="none" style="max-width:600px;">
+    <polyline fill="none" stroke="#14F195" stroke-width="1.5" opacity="0.3"
+      points="0,15 10,12 20,18 30,10 40,20 50,14 60,8 70,22 80,15 90,11 100,19 110,13 120,17 130,9 140,21 150,15 160,12 170,18 180,10 190,20 200,13 210,17 220,11 230,19 240,14 250,22 260,15 270,9 280,18 290,12 300,20 310,14 320,16 330,10 340,19 350,13 360,17 370,11 380,15 390,14 400,18 410,10 420,22 430,14 440,16 450,20 460,12 470,19 480,15 490,11 500,17 510,21 520,13 530,18 540,10 550,20 560,14 570,16 580,22 590,12 600,15"/>
+  </svg>
+
+  <div class="footnote">
+    > local-first : zero cloud dependency<br>
+    > solanaos.com
+  </div>
+</section>
+
+<!-- Cards Section -->
+<section class="section">
+  <h2 class="section-title">Choose Your Path</h2>
+  <div class="card-grid">
+
+    <a href="app/" class="card">
+      <div class="card-icon">
+        <svg width="36" height="36" viewBox="0 0 36 36">
+          <rect x="8" y="2" width="20" height="32" rx="3" fill="none" stroke="#14F195" stroke-width="1.5"/>
+          <rect x="15" y="30" width="6" height="1" rx="0.5" fill="#14F195" opacity="0.5"/>
+          <rect x="12" y="8" width="12" height="16" rx="1" fill="rgba(20,241,149,0.15)" stroke="#14F195" stroke-width="0.5"/>
+        </svg>
+      </div>
+      <div class="card-title">APP SETUP</div>
+      <div class="card-desc">Get the SolanaOS mobile app running on your device. Connect to your runtime.</div>
+      <div class="card-arrow">&rarr; GET STARTED</div>
+    </a>
+
+    <a href="android/" class="card purple">
+      <div class="card-icon">
+        <svg width="36" height="36" viewBox="0 0 36 36">
+          <rect x="4" y="12" width="28" height="18" rx="3" fill="none" stroke="#9945FF" stroke-width="1.5"/>
+          <circle cx="14" cy="21" r="2" fill="#9945FF"/>
+          <circle cx="22" cy="21" r="2" fill="#9945FF"/>
+          <line x1="10" y1="8" x2="14" y2="12" stroke="#9945FF" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="26" y1="8" x2="22" y2="12" stroke="#9945FF" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="card-title" style="color:var(--purple)">ANDROID BUILD</div>
+      <div class="card-desc">Build & install the SolanaOS Android app. SeekerClaw APK + Solana Mobile Stack.</div>
+      <div class="card-arrow">&rarr; BUILD GUIDE</div>
+    </a>
+
+    <a href="telegram/" class="card">
+      <div class="card-icon">
+        <svg width="36" height="36" viewBox="0 0 36 36">
+          <path d="M4,16 L32,6 L26,32 L18,22 L4,16Z" fill="none" stroke="#14F195" stroke-width="1.5" stroke-linejoin="round"/>
+          <line x1="32" y1="6" x2="18" y2="22" stroke="#14F195" stroke-width="1.5"/>
+        </svg>
+      </div>
+      <div class="card-title">TELEGRAM BOT</div>
+      <div class="card-desc">Set up the MawdBot Telegram interface. Remote /status, /trending, /hl_positions and more.</div>
+      <div class="card-arrow">&rarr; CONFIGURE</div>
+    </a>
+
+    <a href="gateway/" class="card purple">
+      <div class="card-icon">
+        <svg width="36" height="36" viewBox="0 0 36 36">
+          <rect x="6" y="10" width="24" height="16" rx="2" fill="none" stroke="#9945FF" stroke-width="1.5"/>
+          <circle cx="12" cy="18" r="2" fill="#9945FF"/>
+          <circle cx="18" cy="18" r="2" fill="#14F195"/>
+          <circle cx="24" cy="18" r="2" fill="#9945FF"/>
+          <line x1="18" y1="2" x2="18" y2="10" stroke="#9945FF" stroke-width="1.5"/>
+          <line x1="14" y1="4" x2="22" y2="4" stroke="#9945FF" stroke-width="1"/>
+        </svg>
+      </div>
+      <div class="card-title" style="color:var(--purple)">GATEWAY</div>
+      <div class="card-desc">Connect your hardware gateway. Seeker, Orin Nano, Modulino I2C peripherals.</div>
+      <div class="card-arrow">&rarr; CONNECT</div>
+    </a>
+
+    <a href="ore-miner/" class="card orange">
+      <div class="card-icon">
+        <svg width="36" height="36" viewBox="0 0 36 36">
+          <polygon points="18,4 32,12 32,26 18,34 4,26 4,12" fill="none" stroke="#FF7400" stroke-width="1.5"/>
+          <polygon points="18,10 26,15 26,23 18,28 10,23 10,15" fill="rgba(255,116,0,0.15)" stroke="#FF7400" stroke-width="0.8"/>
+          <text x="18" y="22" text-anchor="middle" font-family="Orbitron" font-weight="900" font-size="10" fill="#FF7400">O</text>
+        </svg>
+      </div>
+      <div class="card-title" style="color:var(--orange)">ORE MINER</div>
+      <div class="card-desc">Mine ORE v2 on Solana. 5x5 grid strategy, Motherlode jackpots, real RPC connection.</div>
+      <div class="card-arrow" style="color:var(--orange)">&rarr; START MINING</div>
+    </a>
+
+    <a href="runtime/" class="card">
+      <div class="card-icon">
+        <svg width="36" height="36" viewBox="0 0 36 36">
+          <rect x="5" y="7" width="26" height="22" rx="3" fill="none" stroke="#14F195" stroke-width="1.5"/>
+          <path d="M11 13h14M11 18h10M11 23h8" stroke="#14F195" stroke-width="1.5" stroke-linecap="round"/>
+          <path d="M24 6l3 3-3 3" fill="none" stroke="#9945FF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="card-title">RUNTIME LAUNCHER</div>
+      <div class="card-desc">HTML launch surface for new app entries, web runtime targets, and custom pushed app links.</div>
+      <div class="card-arrow">&rarr; OPEN RUNTIME</div>
+    </a>
+
+  </div>
+</section>
+
+<section class="section">
+  <div id="runtimeMount"></div>
+</section>
+
+<!-- Quick Status -->
+<section class="section">
+  <h2 class="section-title">System Status</h2>
+  <div class="stat-grid">
+    <div class="stat-box">
+      <div class="stat-label">RUNTIME</div>
+      <div class="stat-value green">LIVE</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-label">NETWORK</div>
+      <div class="stat-value purple">MAINNET</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-label">BINARY</div>
+      <div class="stat-value green">&lt;10MB</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-label">ARCH</div>
+      <div class="stat-value purple">ARM64</div>
+    </div>
+  </div>
+  <div class="status-row">
+    <div class="status-item"><span class="status-dot"></span> TG</div>
+    <div class="status-item"><span class="status-dot"></span> X</div>
+    <div class="status-item"><span class="status-dot"></span> HM</div>
+    <div class="status-item"><span class="status-dot"></span> HL</div>
+    <div class="status-item"><span class="status-dot"></span> MEM</div>
+    <div class="status-item"><span class="status-dot"></span> ORE</div>
+  </div>
+  <div class="tag-row" style="justify-content:center;">
+    <span class="tag">ARM64</span>
+    <span class="tag">x86_64</span>
+    <span class="tag">RISC-V</span>
+    <span class="tag">&lt;10MB</span>
+    <span class="tag purple">OODA</span>
+    <span class="tag purple">x402</span>
+    <span class="tag orange">ORE v2</span>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+  <span>solanaos.com</span>
+  <span>8BIT LABS</span>
+  <span>MIT LICENSE</span>
+</footer>
+
+<script src="runtime.js"></script>
+</body>
+</html>

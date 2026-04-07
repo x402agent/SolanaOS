@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SolanaOS — Android Build Guide</title>
+<meta name="description" content="Build and install the SolanaOS Android app. Gradle build, Solana Mobile Stack, SeekerClaw APK.">
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<div class="corner-frame"></div>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="../" class="nav-brand">
+      <svg width="32" height="32" viewBox="0 0 100 100">
+        <circle cx="50" cy="50" r="42" fill="none" stroke="#14F195" stroke-width="2" opacity="0.8"/>
+        <circle cx="50" cy="50" r="34" fill="none" stroke="#9945FF" stroke-width="1.5" opacity="0.5"/>
+        <polygon points="50,36 64,50 50,64 36,50" fill="none" stroke="#14F195" stroke-width="1.5"/>
+        <text x="50" y="56" text-anchor="middle" font-family="Orbitron" font-weight="900" font-size="20" fill="#9945FF">S</text>
+      </svg>
+      <span class="nav-title">SOLANAOS</span>
+    </a>
+    <div class="nav-links" id="navLinks">
+      <a href="../">HOME</a>
+      <a href="../app/">APP</a>
+      <a href="./" class="active">ANDROID</a>
+      <a href="../telegram/">TELEGRAM</a>
+      <a href="../gateway/">GATEWAY</a>
+      <a href="../ore-miner/">ORE MINER</a>
+    </div>
+    <button class="nav-toggle" onclick="document.getElementById('navLinks').classList.toggle('open')">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<div class="breadcrumb">> <a href="../">HOME</a> / <a href="../app/">APP</a> / ANDROID</div>
+
+<div class="page-header">
+  <h1>ANDROID BUILD</h1>
+  <div class="subtitle">BUILD &amp; INSTALL THE SOLANAOS ANDROID APP</div>
+</div>
+
+<section class="section">
+  <div id="runtimeMount"></div>
+</section>
+
+<section class="section">
+
+  <!-- Project Structure -->
+  <div class="panel">
+    <div class="panel-label purple">PROJECT STRUCTURE</div>
+    <div class="code-block">
+apps/android/<br>
+├── app/ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment"># Main application module</span><br>
+├── apps/ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment"># Sub-app modules</span><br>
+├── benchmark/ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment"># Performance benchmarks</span><br>
+├── design/ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment"># Design system & components</span><br>
+├── docs/ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment"># Documentation</span><br>
+├── gradle/ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment"># Gradle wrapper</span><br>
+├── scripts/ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment"># Build scripts</span><br>
+├── test-fixtures/ &nbsp;&nbsp;&nbsp;<span class="comment"># Test data</span><br>
+├── solana-pay-android-sample-main/<br>
+├── build.gradle.kts<br>
+├── settings.gradle.kts<br>
+├── gradle.properties<br>
+└── Makefile
+    </div>
+  </div>
+
+  <!-- Prerequisites -->
+  <h2 class="section-title left">PREREQUISITES</h2>
+  <div class="panel">
+    <div class="panel-label">BUILD TOOLS</div>
+    <div class="hw-row"><span class="hw-name"><span class="status-dot"></span> Java</span><span class="hw-status">JDK 21+</span></div>
+    <div class="hw-row"><span class="hw-name"><span class="status-dot"></span> Android SDK</span><span class="hw-status">API 34+ (Android 14)</span></div>
+    <div class="hw-row"><span class="hw-name"><span class="status-dot"></span> Gradle</span><span class="hw-status">via gradlew wrapper</span></div>
+    <div class="hw-row"><span class="hw-name"><span class="status-dot"></span> Android Studio</span><span class="hw-status">Hedgehog+ (optional)</span></div>
+    <div class="hw-row"><span class="hw-name"><span class="status-dot"></span> ADB</span><span class="hw-status">For device deployment</span></div>
+  </div>
+
+  <div class="info-box">
+    <strong>Solana Mobile Stack:</strong> The app uses the Solana Mobile Stack (SMS) for wallet integration. Seeker devices have native SMS support. Standard Android devices use the SMS adapter via Phantom/Solflare.
+  </div>
+
+  <!-- Build Steps -->
+  <h2 class="section-title left" style="margin-top:40px;">BUILD FROM SOURCE</h2>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-content">
+        <h3>Clone the Repository</h3>
+        <div class="code-block">
+          <span class="func">git</span> clone https://github.com/x402agent/Solana-Os-Go.git<br>
+          <span class="func">cd</span> Solana-Os-Go/apps/android
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-content">
+        <h3>Configure Local Properties</h3>
+        <p>Create or update <code>local.properties</code> with your Android SDK path:</p>
+        <div class="code-block">
+          <span class="comment"># local.properties</span><br>
+          sdk.dir=<span class="string">/Users/YOUR_USER/Library/Android/sdk</span><br><br>
+          <span class="comment"># Or on Linux</span><br>
+          sdk.dir=<span class="string">/home/YOUR_USER/Android/Sdk</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-content">
+        <h3>Build the APK</h3>
+        <div class="terminal">
+          <div class="terminal-header">
+            <span class="terminal-dot r"></span>
+            <span class="terminal-dot y"></span>
+            <span class="terminal-dot g"></span>
+            <span class="terminal-title">TERMINAL</span>
+          </div>
+          <div class="terminal-cmd">> ./gradlew assembleDebug</div>
+          <div class="terminal-output">
+            <span style="color:var(--green);">BUILD SUCCESSFUL</span> in 2m 34s<br>
+            47 actionable tasks: 47 executed<br><br>
+            APK: app/build/outputs/apk/debug/app-debug.apk
+          </div>
+        </div>
+        <p style="margin-top:10px;">For a release build:</p>
+        <div class="code-block">
+          <span class="comment"># Release build (requires signing config)</span><br>
+          <span class="func">./gradlew</span> assembleRelease<br><br>
+          <span class="comment"># Or use the Makefile</span><br>
+          <span class="func">make</span> build
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-content">
+        <h3>Install on Device</h3>
+        <p>Enable USB debugging on your Android device, then install via ADB:</p>
+        <div class="code-block">
+          <span class="comment"># Install debug APK</span><br>
+          <span class="func">adb</span> install app/build/outputs/apk/debug/app-debug.apk<br><br>
+          <span class="comment"># Or download the latest release from GitHub</span><br>
+          <span class="func">open</span> https://github.com/x402agent/Solana-Os-Go/releases/latest
+        </div>
+        <div class="info-box warn" style="margin-top:12px;">
+          <strong>Seeker Devices:</strong> If you have a Saga or Seeker, the app automatically detects SMS and uses the hardware secure element for transaction signing.
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-content">
+        <h3>Configure the App</h3>
+        <p>On first launch, the app will prompt you to:</p>
+        <div class="feature-row" style="margin-top:8px;">
+          <span class="feature-num">[1]</span>
+          <span class="feature-text">Connect a Solana wallet (Phantom/Solflare/Backpack)</span>
+          <span class="feature-dot g"></span>
+        </div>
+        <div class="feature-row alt">
+          <span class="feature-num">[2]</span>
+          <span class="feature-text">Enter your gateway address or scan QR code</span>
+          <span class="feature-dot p"></span>
+        </div>
+        <div class="feature-row">
+          <span class="feature-num">[3]</span>
+          <span class="feature-text">Fund the agentic wallet with SOL</span>
+          <span class="feature-dot g"></span>
+        </div>
+        <div class="feature-row alt">
+          <span class="feature-num">[4]</span>
+          <span class="feature-text">Enable OODA autonomous trading</span>
+          <span class="feature-dot p"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Solana Pay Sample -->
+  <div class="panel purple" style="margin-top:30px;">
+    <div class="panel-label purple">INCLUDED: SOLANA PAY SAMPLE</div>
+    <p style="font-size:13px;line-height:1.7;">The <code>solana-pay-android-sample-main/</code> directory contains a reference implementation for Solana Pay on Android. This enables QR-code based SOL and SPL token transfers directly from the app.</p>
+  </div>
+
+  <!-- App Features -->
+  <h2 class="section-title left" style="margin-top:40px;">APP FEATURES</h2>
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-title">DASHBOARD</div>
+      <div class="card-desc">Real-time wallet balance, OODA cycle status, companion state, trading performance charts.</div>
+    </div>
+    <div class="card purple">
+      <div class="card-title" style="color:var(--purple)">AGENT TERMINAL</div>
+      <div class="card-desc">Full terminal access: /status, /trending, /hl_positions, /swap, and all SolanaOS commands.</div>
+    </div>
+    <div class="card">
+      <div class="card-title">OODA RUNTIME</div>
+      <div class="card-desc">Observe, Orient, Decide, Act loop. Strategy config, RSI/EMA/ATR parameters, stop-loss.</div>
+    </div>
+    <div class="card purple">
+      <div class="card-title" style="color:var(--purple)">HARDWARE</div>
+      <div class="card-desc">Modulino I2C: Pixels, Buzzer, Knob, IMU, ToF sensor. Real-time hardware monitoring.</div>
+    </div>
+  </div>
+
+</section>
+
+<footer class="footer">
+  <span>solanaos.com</span>
+  <span>8BIT LABS</span>
+  <span>MIT LICENSE</span>
+</footer>
+<script src="../runtime.js"></script>
+</body>
+</html>

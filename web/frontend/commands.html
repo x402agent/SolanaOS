@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SolanaOS Command Deck</title>
+<meta name="description" content="SolanaOS command deck: install, runtime, Telegram, Browser Use, skills, gateway, and operator commands.">
+<style>
+  :root {
+    --sol-green: #14f195;
+    --sol-purple: #9945ff;
+    --sol-blue: #00d4ff;
+    --sol-amber: #ffb020;
+    --sol-red: #ff4060;
+    --bg: #04050b;
+    --bg-soft: #0b0d16;
+    --panel: rgba(16, 16, 28, 0.92);
+    --border: rgba(255, 255, 255, 0.08);
+    --text: #e8eef8;
+    --muted: #8a95ab;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    min-height: 100vh;
+    color: var(--text);
+    background:
+      radial-gradient(circle at top left, rgba(20, 241, 149, 0.12), transparent 24%),
+      radial-gradient(circle at top right, rgba(153, 69, 255, 0.12), transparent 26%),
+      linear-gradient(180deg, #04050b 0%, #070912 50%, #04050b 100%);
+    font: 15px/1.55 "JetBrains Mono", "SF Mono", Menlo, monospace;
+    overflow-x: hidden;
+  }
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background-image:
+      linear-gradient(rgba(20, 241, 149, 0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0, 212, 255, 0.05) 1px, transparent 1px);
+    background-size: 36px 36px;
+    mask-image: radial-gradient(circle at center, black 30%, transparent 82%);
+  }
+  a { color: inherit; }
+  .shell {
+    width: min(1200px, calc(100% - 32px));
+    margin: 0 auto;
+    padding: 28px 0 80px;
+  }
+  .topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 0 20px;
+    color: var(--muted);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .topbar nav {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+  .topbar a {
+    text-decoration: none;
+    color: var(--muted);
+  }
+  .topbar a:hover { color: var(--sol-green); }
+  .hero {
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(180deg, rgba(20, 241, 149, 0.05), rgba(153, 69, 255, 0.06));
+    border: 1px solid var(--border);
+    border-radius: 28px;
+    padding: 34px 28px 24px;
+    box-shadow: 0 24px 90px rgba(0, 0, 0, 0.28);
+  }
+  .ascii {
+    margin: 0 0 18px;
+    color: var(--sol-green);
+    white-space: pre;
+    font-size: clamp(9px, 1.15vw, 14px);
+    line-height: 1.1;
+    overflow-x: auto;
+  }
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 20px;
+    align-items: start;
+  }
+  .hero h1 {
+    margin: 0 0 10px;
+    font-size: clamp(28px, 4vw, 52px);
+    line-height: 1;
+    font-family: "Orbitron", "JetBrains Mono", monospace;
+    letter-spacing: 0.04em;
+  }
+  .hero h1 span {
+    background: linear-gradient(90deg, var(--sol-green), var(--sol-blue), var(--sol-purple));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .hero p {
+    margin: 0 0 18px;
+    color: var(--muted);
+    max-width: 58ch;
+  }
+  .badge-row, .cta-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .badge, .cta, .install-card {
+    border: 1px solid var(--border);
+    background: var(--panel);
+    border-radius: 999px;
+  }
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    font-size: 12px;
+    color: var(--sol-green);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .badge-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--sol-green);
+    box-shadow: 0 0 12px rgba(20, 241, 149, 0.65);
+  }
+  .cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    padding: 0 16px;
+    color: var(--text);
+    text-decoration: none;
+    font-size: 13px;
+    transition: transform 0.18s ease, border-color 0.18s ease, color 0.18s ease;
+  }
+  .cta:hover {
+    transform: translateY(-1px);
+    border-color: rgba(20, 241, 149, 0.55);
+    color: var(--sol-green);
+  }
+  .cta-primary {
+    color: var(--bg);
+    background: linear-gradient(90deg, var(--sol-green), var(--sol-blue));
+    border-color: transparent;
+    font-weight: 700;
+  }
+  .install-card {
+    border-radius: 20px;
+    padding: 18px;
+  }
+  .install-card h2 {
+    margin: 0 0 8px;
+    font-size: 13px;
+    color: var(--sol-amber);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .install-card pre {
+    margin: 0;
+    white-space: pre-wrap;
+    word-break: break-word;
+    color: var(--sol-green);
+    font-size: 14px;
+  }
+  .summary {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+    margin-top: 18px;
+  }
+  .summary-card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 14px 16px;
+  }
+  .summary-card strong {
+    display: block;
+    color: var(--sol-blue);
+    font-size: 22px;
+    margin-bottom: 6px;
+  }
+  .summary-card span {
+    color: var(--muted);
+    font-size: 13px;
+  }
+  .tools {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin: 26px 0 18px;
+  }
+  .search {
+    width: min(420px, 100%);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: rgba(8, 10, 18, 0.86);
+    color: var(--text);
+    padding: 12px 14px;
+    outline: none;
+  }
+  .pill {
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: rgba(10, 12, 20, 0.85);
+    color: var(--muted);
+    padding: 10px 14px;
+    cursor: pointer;
+    font: inherit;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .pill.active, .pill:hover {
+    color: var(--text);
+    border-color: rgba(20, 241, 149, 0.45);
+    background: rgba(20, 241, 149, 0.08);
+  }
+  .deck {
+    display: grid;
+    gap: 22px;
+  }
+  .section {
+    border: 1px solid var(--border);
+    background: rgba(8, 10, 18, 0.78);
+    border-radius: 22px;
+    padding: 18px;
+  }
+  .section-head {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    align-items: center;
+    margin-bottom: 14px;
+  }
+  .section-head h3 {
+    margin: 0;
+    font-size: 18px;
+  }
+  .section-head small {
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 12px;
+  }
+  .card {
+    border: 1px solid var(--border);
+    background: var(--panel);
+    border-radius: 16px;
+    padding: 14px;
+  }
+  .card code {
+    display: block;
+    font-size: 13px;
+    color: var(--sol-green);
+    margin-bottom: 6px;
+  }
+  .alias {
+    display: block;
+    color: var(--sol-purple);
+    font-size: 12px;
+    margin-bottom: 6px;
+  }
+  .card p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 13px;
+  }
+  .footer {
+    text-align: center;
+    color: var(--muted);
+    margin-top: 24px;
+    font-size: 13px;
+  }
+  .hidden { display: none; }
+  @media (max-width: 860px) {
+    .hero-grid, .summary { grid-template-columns: 1fr; }
+    .topbar { align-items: flex-start; flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+  <div class="shell">
+    <div class="topbar">
+      <div>SolanaOS Command Deck · Operator Runtime</div>
+      <nav>
+        <a href="/">Site</a>
+        <a href="/docs">Docs</a>
+        <a href="/guide">Guide</a>
+        <a href="/hardware">Hardware</a>
+        <a href="https://www.npmjs.com/package/solanaos-computer" target="_blank" rel="noreferrer">npm</a>
+      </nav>
+    </div>
+
+    <section class="hero">
+<pre class="ascii">   _____       __                        ____  _____
+  / ___/____  / /___ _____  ____ _     / __ \/ ___/
+  \__ \/ __ \/ / __ `/ __ \/ __ `/    / / / /\__ \
+ ___/ / /_/ / / /_/ / / / / /_/ /    / /_/ /___/ /
+/____/\____/_/\__,_/_/ /_/\__,_/     \____//____/
+                S O L A N A O S</pre>
+      <div class="hero-grid">
+        <div>
+          <div class="badge-row">
+            <div class="badge"><span class="badge-dot"></span> Solana Computer Booted</div>
+            <div class="badge">Unicode Matrix Interface</div>
+          </div>
+          <h1><span>SolanaOS Command Deck</span></h1>
+          <p>The fastest path from zero to a live SolanaOS machine. Install the runtime, bring up the web console, connect Browser Use, then drive the daemon, wallet, Telegram, skills, and gateway from one operator surface.</p>
+          <div class="cta-row">
+            <a class="cta cta-primary" href="https://www.npmjs.com/package/solanaos-computer" target="_blank" rel="noreferrer">npx solanaos-computer@latest install --with-web</a>
+            <a class="cta" href="https://github.com/x402agent/Solana-Os-Go" target="_blank" rel="noreferrer">GitHub</a>
+            <a class="cta" href="/docs">Docs Index</a>
+          </div>
+        </div>
+        <div class="install-card">
+          <h2>One-Shot Install</h2>
+<pre>npx solanaos-computer@latest install --with-web
+cd ~/solanaos
+$EDITOR .env
+~/.nanosolana/bin/solanaos daemon</pre>
+        </div>
+      </div>
+      <div class="summary">
+        <div class="summary-card"><strong id="summary-count">0</strong><span>documented commands across install, runtime, AI, Browser Use, and ops</span></div>
+        <div class="summary-card"><strong>1</strong><span>primary operator command: <code>solanaos</code></span></div>
+        <div class="summary-card"><strong>Live</strong><span>npm package: <code>solanaos-computer</code> · installed binary: <code>solanaos</code></span></div>
+      </div>
+    </section>
+
+    <div class="tools">
+      <input class="search" id="search" type="text" placeholder="Search commands, aliases, Browser Use, wallet, Telegram, gateway..." autocomplete="off">
+      <button class="pill active" data-cat="all">All</button>
+      <button class="pill" data-cat="install">Install</button>
+      <button class="pill" data-cat="core">Core</button>
+      <button class="pill" data-cat="wallet">Wallet</button>
+      <button class="pill" data-cat="trading">Trading</button>
+      <button class="pill" data-cat="browser">Browser Use</button>
+      <button class="pill" data-cat="ai">AI</button>
+      <button class="pill" data-cat="ops">Ops</button>
+    </div>
+
+    <div class="deck" id="deck"></div>
+
+    <div class="footer">
+      SolanaOS Labs · Solana themed control plane · Installed via <code>solanaos-computer</code> · Operated via <code>solanaos</code>
+    </div>
+  </div>
+
+<script>
+const sections = [
+  {
+    id: 'install',
+    title: 'Install & Bootstrap',
+    subtitle: 'one-shot machine bring-up',
+    commands: [
+      { name: 'npx solanaos-computer@latest install --with-web', desc: 'Canonical one-shot install: runtime, workspace, wallet bootstrap, and web console.' },
+      { name: 'npx solanaos-computer@latest install', desc: 'Install the core runtime without building the web console.' },
+      { name: 'npm install -g solanaos-computer', desc: 'Install the one-shot bootstrapper globally, then use solanaos install.' },
+      { name: 'solanaos install --with-web', aliases: 'via npm global shim', desc: 'Run the same installer flow from the global command.' },
+      { name: 'bash install.sh --with-web', desc: 'Repo-local installer path if you are installing directly from source.' },
+      { name: '~/.nanosolana/bin/solanaos version', desc: 'Verify the stable installed SolanaOS runtime from anywhere.' },
+    ],
+  },
+  {
+    id: 'core',
+    title: 'Core Runtime',
+    subtitle: 'daemon, identity, health',
+    commands: [
+      { name: 'solanaos daemon', desc: 'Start the full SolanaOS runtime with channels, trading, wallet, and memory.' },
+      { name: 'solanaos status', desc: 'Show config, runtime, provider, and operator status.' },
+      { name: 'solanaos onboard', desc: 'Initialize config, workspace, and runtime defaults.' },
+      { name: 'solanaos version', desc: 'Show build info and active SolanaOS banner.' },
+      { name: 'solanaos pet', desc: 'Show the companion state layer: stage, mood, energy, and uptime.' },
+      { name: 'solanaos nanobot', desc: 'Launch the local SolanaOS Control UI and API.' },
+      { name: 'solanaos menubar', desc: 'Start the macOS menu bar agent.' },
+      { name: 'solanaos daemon --seeker', desc: 'Run the Seeker-branded daemon profile.' },
+    ],
+  },
+  {
+    id: 'wallet',
+    title: 'Wallet & On-Chain',
+    subtitle: 'wallet, balances, research',
+    commands: [
+      { name: 'solanaos solana wallet', desc: 'Show the agentic wallet address, path, and on-chain balance.' },
+      { name: 'solanaos solana health', desc: 'Check Helius RPC health and network configuration.' },
+      { name: 'solanaos solana balance [pubkey]', desc: 'Inspect SOL and SPL balances for a wallet.' },
+      { name: 'solanaos solana trending', desc: 'Show trending Solana tokens and market context.' },
+      { name: 'solanaos solana research <mint>', desc: 'Deep research a token mint.' },
+      { name: 'solanaos solana register', desc: 'Register the agent on-chain.' },
+      { name: 'solanaos solana registry', desc: 'Inspect the current registry state.' },
+      { name: '/wallet', aliases: 'telegram', desc: 'Telegram shortcut for wallet address and balance.' },
+      { name: '/research <mint>', aliases: 'telegram', desc: 'Telegram shortcut for deep token research.' },
+    ],
+  },
+  {
+    id: 'trading',
+    title: 'Trading & Perps',
+    subtitle: 'ooda, strategy, hyperliquid, aster',
+    commands: [
+      { name: 'solanaos ooda --sim', desc: 'Run the OODA loop in simulated mode.' },
+      { name: 'solanaos ooda --interval 60', desc: 'Run the live OODA loop on a custom interval.' },
+      { name: '/strategy', aliases: '/strat', desc: 'Show live strategy parameters from Telegram.' },
+      { name: '/set <param> <value>', desc: 'Live-edit strategy parameters from Telegram.' },
+      { name: '/hl', aliases: '/hl_account', desc: 'Show Hyperliquid account state.' },
+      { name: '/hl_positions', desc: 'List open Hyperliquid perpetual positions.' },
+      { name: '/hl_open <COIN> <long|short> [size]', desc: 'Open a Hyperliquid market-style IOC order.' },
+      { name: '/aster_account', desc: 'Show Aster futures account summary.' },
+      { name: '/along <symbol> [size_pct] [confidence] [thesis]', desc: 'Open an Aster long from Telegram.' },
+      { name: '/aclose <symbol> [reason]', desc: 'Close an Aster position from Telegram.' },
+    ],
+  },
+  {
+    id: 'browser',
+    title: 'Browser Use',
+    subtitle: 'cloud browser and session control',
+    commands: [
+      { name: 'solanaos browseruse status', desc: 'Show Browser Use readiness, binary path, session, and cloud config.' },
+      { name: 'solanaos browseruse activate', desc: 'Save Browser Use cloud login using BROWSERUSE_API_KEY.' },
+      { name: 'solanaos browseruse sessions', desc: 'List active Browser Use sessions.' },
+      { name: 'solanaos browseruse connect', desc: 'Provision a Browser Use cloud browser and attach the default session.' },
+      { name: 'solanaos browseruse run --session work open https://example.com', desc: 'Drive a named persistent browser session from the CLI.' },
+      { name: '/browseruse status', aliases: 'telegram', desc: 'Show Browser Use readiness from Telegram.' },
+      { name: '/browseruse connect', aliases: 'telegram', desc: 'Provision and attach a Browser Use cloud browser from Telegram.' },
+      { name: '/browseruse --session work state', aliases: 'telegram', desc: 'Inspect the current page and clickable indices in a named session.' },
+    ],
+  },
+  {
+    id: 'ai',
+    title: 'AI, Models & Skills',
+    subtitle: 'grok, claude, ollama, skills',
+    commands: [
+      { name: '/model', desc: 'Show or switch the active model/provider.' },
+      { name: '/grok', desc: 'Show xAI / Grok status.' },
+      { name: '/web <query>', desc: 'Run live web search through Grok.' },
+      { name: '/claude start <prompt>', desc: 'Start a Claude Code session from Telegram.' },
+      { name: '/skills', desc: 'Browse bundled skills grouped by category.' },
+      { name: '/skill <name>', desc: 'Inspect one skill body.' },
+      { name: '/skill_use <name>', desc: 'Load a skill into LLM context immediately.' },
+      { name: '/deepsolana <message>', desc: 'Send a message directly to the local Ollama model.' },
+    ],
+  },
+  {
+    id: 'ops',
+    title: 'Gateway, Hardware & Ops',
+    subtitle: 'remote control and operator surfaces',
+    commands: [
+      { name: 'solanaos gateway start', desc: 'Start the native TCP bridge gateway.' },
+      { name: 'solanaos gateway remote', desc: 'Print the remote SSH forwarding summary.' },
+      { name: 'solanaos hardware scan --bus 1', desc: 'Scan the I2C bus for Modulino sensors.' },
+      { name: 'solanaos hardware test --bus 1', desc: 'Run the hardware self-test flow.' },
+      { name: 'solanaos channels', desc: 'Start the multi-channel gateway.' },
+      { name: 'solanaos node pair', desc: 'Pair a headless hardware node with the gateway.' },
+      { name: 'solanaos node run', desc: 'Run a paired node client.' },
+      { name: 'solanaos-web --no-browser', desc: 'Launch the standalone SolanaOS web console binary.' },
+    ],
+  },
+];
+
+const deck = document.getElementById('deck');
+const search = document.getElementById('search');
+const pills = Array.from(document.querySelectorAll('.pill'));
+const summaryCount = document.getElementById('summary-count');
+let active = 'all';
+
+function countCommands() {
+  return sections.reduce((sum, section) => sum + section.commands.length, 0);
+}
+
+function render() {
+  const query = (search.value || '').trim().toLowerCase();
+  deck.innerHTML = '';
+
+  sections.forEach(section => {
+    const visibleByCat = active === 'all' || active === section.id;
+    const commands = section.commands.filter((cmd) => {
+      if (!visibleByCat) return false;
+      const hay = `${cmd.name} ${cmd.aliases || ''} ${cmd.desc}`.toLowerCase();
+      return !query || hay.includes(query);
+    });
+
+    if (!commands.length) return;
+
+    const wrap = document.createElement('section');
+    wrap.className = 'section';
+    wrap.innerHTML = `
+      <div class="section-head">
+        <div>
+          <h3>${section.title}</h3>
+          <small>${section.subtitle}</small>
+        </div>
+        <small>${commands.length} visible</small>
+      </div>
+      <div class="grid">
+        ${commands.map((cmd) => `
+          <article class="card">
+            <code>${cmd.name}</code>
+            ${cmd.aliases ? `<span class="alias">${cmd.aliases}</span>` : ''}
+            <p>${cmd.desc}</p>
+          </article>
+        `).join('')}
+      </div>
+    `;
+    deck.appendChild(wrap);
+  });
+}
+
+summaryCount.textContent = String(countCommands());
+search.addEventListener('input', render);
+pills.forEach((pill) => {
+  pill.addEventListener('click', () => {
+    pills.forEach((node) => node.classList.remove('active'));
+    pill.classList.add('active');
+    active = pill.dataset.cat || 'all';
+    render();
+  });
+});
+
+render();
+</script>
+</body>
+</html>

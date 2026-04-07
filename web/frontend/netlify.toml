@@ -1,0 +1,28 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+[[redirects]]
+  from = "/"
+  to = "/gateway"
+  status = 302
+  conditions = {Host = ["office.solanaos.net"]}
+
+[[redirects]]
+  from = "/api/*"
+  to = "https://my-solanaos.fly.dev/api/:splat"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/commands"
+  to = "/commands/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SolanaOS — Runtime Launcher</title>
+<meta name="description" content="Runtime HTML launcher for SolanaOS apps, guides, and newly shipped web surfaces.">
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<div class="corner-frame"></div>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="../" class="nav-brand">
+      <svg width="32" height="32" viewBox="0 0 100 100">
+        <circle cx="50" cy="50" r="42" fill="none" stroke="#14F195" stroke-width="2" opacity="0.8"/>
+        <circle cx="50" cy="50" r="34" fill="none" stroke="#9945FF" stroke-width="1.5" opacity="0.5"/>
+        <polygon points="50,36 64,50 50,64 36,50" fill="none" stroke="#14F195" stroke-width="1.5"/>
+        <text x="50" y="56" text-anchor="middle" font-family="Orbitron" font-weight="900" font-size="20" fill="#9945FF">S</text>
+      </svg>
+      <span class="nav-title">SOLANAOS</span>
+    </a>
+    <div class="nav-links" id="navLinks">
+      <a href="../">HOME</a>
+      <a href="../app/">APP</a>
+      <a href="../android/">ANDROID</a>
+      <a href="../gateway/">GATEWAY</a>
+      <a href="./" class="active">RUNTIME</a>
+    </div>
+    <button class="nav-toggle" onclick="document.getElementById('navLinks').classList.toggle('open')">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<div class="breadcrumb">> <a href="../">HOME</a> / RUNTIME</div>
+
+<div class="page-header">
+  <h1>RUNTIME LAUNCHER</h1>
+  <div class="subtitle">PUSH NEW APP SURFACES INTO THE HTML RUNTIME</div>
+</div>
+
+<section class="section">
+  <div id="runtimeMount"></div>
+</section>
+
+<section class="section">
+  <div class="panel">
+    <div class="panel-label purple">HOW TO USE IT</div>
+    <div class="feature-row">
+      <span class="feature-num">[01]</span>
+      <span class="feature-text">Ship a new runtime HTML page under <code>web/frontend/&lt;name&gt;/index.html</code>.</span>
+      <span class="feature-dot g"></span>
+    </div>
+    <div class="feature-row alt">
+      <span class="feature-num">[02]</span>
+      <span class="feature-text">Expose it from the runtime manifest so the launcher advertises it automatically.</span>
+      <span class="feature-dot p"></span>
+    </div>
+    <div class="feature-row">
+      <span class="feature-num">[03]</span>
+      <span class="feature-text">Use the env push slot if you want to announce a new app without changing the page chrome.</span>
+      <span class="feature-dot g"></span>
+    </div>
+  </div>
+
+  <div class="panel purple" style="margin-top:18px;">
+    <div class="panel-label purple">ENV PUSH TARGET</div>
+    <div class="code-block">
+      SOLANAOS_RUNTIME_APP_LABEL=<span class="string">"NFT Studio"</span><br>
+      SOLANAOS_RUNTIME_APP_PATH=<span class="string">"/nft-studio/"</span><br>
+      SOLANAOS_RUNTIME_APP_DESCRIPTION=<span class="string">"Pinata + Metaplex runtime entry."</span><br>
+      SOLANAOS_RUNTIME_APP_KIND=<span class="string">"app"</span>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <span>solanaos.com</span>
+  <span>RUNTIME HTML</span>
+  <span>NEW APP LAUNCHER</span>
+</footer>
+<script src="../runtime.js"></script>
+</body>
+</html>

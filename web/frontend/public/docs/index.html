@@ -1,0 +1,1318 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SolanaOS — The Solana Computer</title>
+  <meta name="description"
+    content="SolanaOS is the Solana computer: a local-first operator runtime for trading, research, automation, wallets, remote control, and companion hardware. Pure Go, MiniMax local harness, Telegram control, x402, and Tailscale." />
+  <meta name="theme-color" content="#020208" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;700&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="/docs-assets/style.css" />
+</head>
+
+<body>
+  <!-- Navigation -->
+  <nav class="nav" id="nav">
+    <div class="nav-inner">
+      <a href="#hero" class="nav-brand">
+        <span class="nav-logo">🖥️</span>
+        <span class="nav-title">SolanaOS</span>
+      </a>
+      <div class="nav-links" id="navLinks">
+        <a href="#live">Live</a>
+        <a href="#features">Features</a>
+        <a href="#architecture">Architecture</a>
+        <a href="#honcho-memory">Honcho Memory</a>
+        <a href="#hardware">Hardware</a>
+        <a href="#tamagochi">Companion Runtime</a>
+        <a href="#x402">x402</a>
+        <a href="#hyperliquid">Hyperliquid</a>
+        <a href="#runtime-update">Updates</a>
+        <a href="#local-harness">MiniMax Harness</a>
+        <a href="#quickstart">Quick Start</a>
+        <a href="/guide">Guide</a>
+        <a href="/hardware">Hardware Guide</a>
+        <a href="https://seeker.solanaos.net" target="_blank">SolanaOS Hub</a>
+        <a href="https://github.com/x402agent/Solana-Os-Go" target="_blank" class="nav-github">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <path
+              d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
+          </svg>
+        </a>
+      </div>
+      <button class="nav-toggle" id="navToggle" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero" id="hero">
+    <div class="hero-bg">
+      <div class="hero-grid"></div>
+      <div class="hero-glow hero-glow-1"></div>
+      <div class="hero-glow hero-glow-2"></div>
+    </div>
+    <div class="hero-content">
+      <div class="hero-badge animate-in">
+        <span class="badge-dot"></span>
+        SolanaOS · Local-first runtime · x402 Protocol
+      </div>
+      <h1 class="hero-title animate-in delay-1">
+        <span class="hero-title-line"><span class="text-gradient-green">Solana</span><span
+            class="text-gradient-purple">OS</span></span>
+        <span class="hero-title-line hero-title-sub">The Solana Computer</span>
+      </h1>
+      <p class="hero-subtitle animate-in delay-2">
+        A local-first <strong>Solana computer</strong> for trading, research, automation, wallets, and operator control.
+        <br>Hardware interface: <strong>Arduino Modulino® I2C</strong> · Native Go runtime · By <strong>SolanaOS Labs</strong>
+      </p>
+      <div class="hero-stats animate-in delay-3">
+        <div class="stat">
+          <span class="stat-value">9.6<span class="stat-unit">MB</span></span>
+          <span class="stat-label">Binary Size</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat">
+          <span class="stat-value">&lt;10<span class="stat-unit">MB</span></span>
+          <span class="stat-label">RAM Usage</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat">
+          <span class="stat-value">&lt;1<span class="stat-unit">s</span></span>
+          <span class="stat-label">Boot Time</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat">
+          <span class="stat-value">7<span class="stat-unit">+</span></span>
+          <span class="stat-label">I2C Sensors</span>
+        </div>
+      </div>
+      <div class="hero-actions animate-in delay-4">
+        <a href="#quickstart" class="btn btn-primary">
+          <span>Get Started</span>
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round" />
+          </svg>
+        </a>
+        <a href="https://github.com/x402agent/Solana-Os-Go" target="_blank" class="btn btn-secondary">View on
+          GitHub</a>
+      </div>
+    </div>
+    <div class="hero-terminal animate-in delay-3">
+      <div class="terminal">
+        <div class="terminal-header">
+          <div class="terminal-dots">
+            <span class="dot dot-red"></span>
+            <span class="dot dot-yellow"></span>
+            <span class="dot dot-green"></span>
+          </div>
+          <span class="terminal-title">solanaos daemon</span>
+        </div>
+        <div class="terminal-body" id="terminalBody">
+          <pre id="terminalOutput"></pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Live Runtime -->
+  <section class="section section-dark" id="live">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Live Runtime</span>
+        <h2 class="section-title">Real-Time Agent Trading Stats</h2>
+        <p class="section-desc">
+          Point the docs page at a running SolanaOS Control instance and it will stream the current daemon, wallet, OODA, and
+          recent trade snapshot directly from the local API.
+        </p>
+      </div>
+
+      <div class="live-toolbar" data-animate>
+        <label class="live-toolbar-label" for="liveApiBase">SolanaOS Control API</label>
+        <input id="liveApiBase" class="live-input" type="text" value="http://127.0.0.1:7777"
+          placeholder="http://127.0.0.1:7777" spellcheck="false" />
+        <button id="liveRefresh" class="btn btn-primary live-refresh-btn" type="button">Refresh</button>
+        <span id="liveConnection" class="live-pill">Waiting for connection</span>
+      </div>
+
+      <div class="live-grid">
+        <div class="live-card" data-animate>
+          <span class="live-label">Daemon</span>
+          <span class="live-value" id="liveDaemon">unknown</span>
+        </div>
+        <div class="live-card" data-animate>
+          <span class="live-label">OODA Mode</span>
+          <span class="live-value" id="liveMode">unknown</span>
+        </div>
+        <div class="live-card" data-animate>
+          <span class="live-label">Wallet</span>
+          <span class="live-value" id="liveWallet">not loaded</span>
+        </div>
+        <div class="live-card" data-animate>
+          <span class="live-label">Wallet SOL</span>
+          <span class="live-value" id="liveWalletSOL">0.0000</span>
+        </div>
+        <div class="live-card" data-animate>
+          <span class="live-label">Watchlist</span>
+          <span class="live-value" id="liveWatchlist">0</span>
+        </div>
+        <div class="live-card" data-animate>
+          <span class="live-label">Cycle Count</span>
+          <span class="live-value" id="liveCycles">0</span>
+        </div>
+        <div class="live-card" data-animate>
+          <span class="live-label">Open Positions</span>
+          <span class="live-value" id="liveOpenPositions">0</span>
+        </div>
+        <div class="live-card" data-animate>
+          <span class="live-label">Closed Trades</span>
+          <span class="live-value" id="liveClosedTrades">0</span>
+        </div>
+      </div>
+
+      <div class="live-panels">
+        <div class="live-panel" data-animate>
+          <div class="live-panel-header">
+            <h3>Recent Trades</h3>
+            <span id="liveUpdatedAt" class="live-panel-meta">No snapshot yet</span>
+          </div>
+          <div id="liveTradesEmpty" class="live-empty">No recent trades available.</div>
+          <ul id="liveTrades" class="live-trades"></ul>
+        </div>
+
+        <div class="live-panel" data-animate>
+          <div class="live-panel-header">
+            <h3>Raw Snapshot</h3>
+            <span class="live-panel-meta">/api/status</span>
+          </div>
+          <pre id="liveJson" class="live-json">{}</pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="runtime-update">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">March 19 Runtime Update</span>
+        <h2 class="section-title">What Changed in the Live Go Runtime</h2>
+        <p class="section-desc">
+          The docs now match the current daemon: local-first MiniMax, native Claude support, cleaner Telegram ops,
+          remote gateway/Tailscale access, and an upgraded live status view.
+        </p>
+      </div>
+      <div class="features-grid">
+        <div class="feature-card" data-animate>
+          <div class="feature-icon" style="--icon-color: #14F195">🧠</div>
+          <h3>MiniMax M2.7 Default</h3>
+          <p><code>minimax-m2.7:cloud</code> is now the default local Ollama harness model for normal chat,
+            <code>/deepsolana</code>, and skill-aware Solana assistance.</p>
+        </div>
+        <div class="feature-card" data-animate>
+          <div class="feature-icon" style="--icon-color: #9945FF">🤖</div>
+          <h3>Claude is First-Class</h3>
+          <p>Anthropic is wired in as a native backend, and Claude Code session workflows still remain available for
+            repo creation, coding, and GitHub automation.</p>
+        </div>
+        <div class="feature-card" data-animate>
+          <div class="feature-icon" style="--icon-color: #00D4FF">📱</div>
+          <h3>Telegram is Operator-Grade</h3>
+          <p>Inline menus, callback actions, smarter natural language, GitHub creation fixes, <code>/personality</code>,
+            and a cleaner <code>/status</code> are now part of the default bot UX.</p>
+        </div>
+        <div class="feature-card" data-animate>
+          <div class="feature-icon" style="--icon-color: #FF6B35">🌐</div>
+          <h3>Tailscale + Remote Gateway</h3>
+          <p>The gateway now supports Tailscale Serve/Funnel patterns and remote-over-SSH setup modeled on the
+            OpenClaw-style control path.</p>
+        </div>
+        <div class="feature-card" data-animate>
+          <div class="feature-icon" style="--icon-color: #B266FF">🔎</div>
+          <h3>Grok Search Repaired</h3>
+          <p><code>/web</code> and <code>/xsearch</code> now route through the proper Grok tool model instead of the
+            broken generic chat payload path.</p>
+        </div>
+        <div class="feature-card" data-animate>
+          <div class="feature-icon" style="--icon-color: #76B900">📊</div>
+          <h3>Ops-Grade Status</h3>
+          <p><code>/status</code> now reports daemon runtime, active model, wallet, Honcho, Aster, Hyperliquid, and
+            service health without exposing raw Solana program failure text.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section class="section" id="features">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Core Capabilities</span>
+        <h2 class="section-title">Everything You Need to Trade Autonomously</h2>
+        <p class="section-desc">From market data ingestion to hardware LED feedback — one binary does it all.</p>
+      </div>
+      <div class="features-grid">
+        <div class="feature-card" data-animate>
+          <div class="feature-icon" style="--icon-color: #14F195">🔄</div>
+          <h3>OODA Trading Loop</h3>
+          <p>Observe → Orient → Decide → Act. Continuous autonomous cycle pulling Helius RPC, Birdeye OHLCV, and Aster
+            perps data.</p>
+        </div>
+        <div class="feature-card" data-animate>
+          <div class="feature-icon" style="--icon-color: #9945FF">🧠</div>
+          <h3>ClawVault Memory</h3>
+          <p>3-tier epistemological memory: Known (fresh API data) → Learned (trade patterns) → Inferred (cross-asset
+            correlations).</p>
+        </div>
+        <div class="feature-card" data-animate>
+          <div class="feature-icon" style="--icon-color: #B266FF">🧬</div>
+          <h3>Honcho Solana Memory</h3>
+          <p>Telegram sessions become structured trading memory: summaries, peer cards, conclusions, and recalled user
+            preferences for Solana spot and perps.</p>
+        </div>
+        <div class="feature-card" data-animate>
+          <div class="feature-icon" style="--icon-color: #00D4FF">📊</div>
+          <h3>RSI + EMA + ATR Strategy</h3>
+          <p>Multi-condition signal engine with auto-optimizer. Parameters adjust based on rolling trade performance.
+          </p>
+        </div>
+        <div class="feature-card" data-animate>
+          <div class="feature-icon" style="--icon-color: #FF6B35">💰</div>
+          <h3>x402 Payment Protocol</h3>
+          <p>Monetize your bot's API with crypto-gated endpoints. Multi-chain USDC payments via Solana, Base, Polygon.
+          </p>
+        </div>
+        <div class="feature-card" data-animate>
+          <div class="feature-icon" style="--icon-color: #FFAA00">🎛️</div>
+          <h3>Arduino Modulino® I2C</h3>
+          <p>8× RGB LEDs, buzzer, 3 buttons, rotary knob, IMU, thermometer, ToF sensor. Physical trading feedback.</p>
+        </div>
+        <div class="feature-card" data-animate>
+          <div class="feature-icon" style="--icon-color: #76B900">🟢</div>
+          <h3>NVIDIA Edge AI</h3>
+          <p>Native ARM64 binary for Orin Nano and Spark. Deploy via Brev.dev GPU cloud or bare-metal JetPack.</p>
+        </div>
+        <div class="feature-card" data-animate>
+          <div class="feature-icon" style="--icon-color: #14F195">🔑</div>
+          <h3>Agentic Wallet</h3>
+          <p>Auto-generates and persists a Solana keypair on first boot. Standard keygen format, 0600 permissions.</p>
+        </div>
+        <div class="feature-card" data-animate>
+          <div class="feature-icon" style="--icon-color: #9945FF">📱</div>
+          <h3>Telegram Bot</h3>
+          <p>Telegram Bot API integration with long polling, inline dashboards, operator personalities, strict
+            <code>TELEGRAM_ID</code> access control, and natural-language Aster, GitHub, and research workflows.
+          </p>
+        </div>
+        <div class="feature-card" data-animate>
+          <div class="feature-icon" style="--icon-color: #00D4FF">🐹</div>
+          <h3>Companion Runtime</h3>
+          <p>Performance-reactive state layer: Egg → Larva → Juvenile → Adult → Alpha. Mood and progression track live
+            runtime performance.</p>
+        </div>
+        <div class="feature-card" data-animate>
+          <div class="feature-icon" style="--icon-color: #4ECDC4">📈</div>
+          <h3>Hyperliquid Perps</h3>
+          <p>EVM perpetuals on Hyperliquid. Open, close, and cancel positions from Telegram with EIP-712 L1 action signing — no web UI needed.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Architecture -->
+  <section class="section section-dark" id="architecture">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">System Design</span>
+        <h2 class="section-title">Architecture</h2>
+        <p class="section-desc">A single daemon orchestrates wallet, RPC, companion state, Telegram, x402, and hardware — all
+          in &lt;10MB.</p>
+      </div>
+      <div class="arch-diagram" data-animate>
+        <div class="arch-row">
+          <div class="arch-node arch-observe">
+            <span class="arch-label">OBSERVE</span>
+            <span class="arch-detail">Helius · Birdeye · Aster</span>
+          </div>
+          <div class="arch-arrow">→</div>
+          <div class="arch-node arch-orient">
+            <span class="arch-label">ORIENT</span>
+            <span class="arch-detail">RSI · EMA · ATR · Memory</span>
+          </div>
+          <div class="arch-arrow">→</div>
+          <div class="arch-node arch-decide">
+            <span class="arch-label">DECIDE</span>
+            <span class="arch-detail">Signal Gate · Confidence</span>
+          </div>
+          <div class="arch-arrow">→</div>
+          <div class="arch-node arch-act">
+            <span class="arch-label">ACT</span>
+            <span class="arch-detail">Jupiter · SOL Transfer</span>
+          </div>
+        </div>
+        <div class="arch-connector">
+          <svg width="100%" height="60">
+            <path d="M50% 0 L50% 30 L25% 30 L25% 60 M50% 30 L75% 30 L75% 60" stroke="#9945FF" stroke-width="2"
+              fill="none" stroke-dasharray="5,5" />
+          </svg>
+        </div>
+        <div class="arch-row arch-row-bottom">
+          <div class="arch-node arch-learn">
+            <span class="arch-label">LEARN</span>
+            <span class="arch-detail">Auto-Optimize · Vault</span>
+          </div>
+          <div class="arch-node arch-pet">
+            <span class="arch-label">🧭 Companion Runtime</span>
+            <span class="arch-detail">Mood · XP · Evolution</span>
+          </div>
+          <div class="arch-node arch-hw">
+            <span class="arch-label">🎛️ Hardware</span>
+            <span class="arch-detail">Modulino® I2C Bus</span>
+          </div>
+          <div class="arch-node arch-x402">
+            <span class="arch-label">💰 x402</span>
+            <span class="arch-detail">USDC Paywall</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="stack-grid">
+        <div class="stack-card" data-animate>
+          <div class="stack-icon">⛓️</div>
+          <h4>Solana Stack</h4>
+          <ul>
+            <li><span class="stack-dot green"></span>Helius RPC + WebSocket</li>
+            <li><span class="stack-dot green"></span>Birdeye Market Data</li>
+            <li><span class="stack-dot green"></span>Jupiter DEX Aggregator</li>
+            <li><span class="stack-dot green"></span>Aster Perp Futures</li>
+            <li><span class="stack-dot green"></span>Hyperliquid EVM Perps</li>
+          </ul>
+        </div>
+        <div class="stack-card" data-animate>
+          <div class="stack-icon">🏗️</div>
+          <h4>Build Targets</h4>
+          <ul>
+            <li><span class="stack-dot purple"></span>NVIDIA Orin Nano (ARM64)</li>
+            <li><span class="stack-dot purple"></span>Raspberry Pi (ARM64)</li>
+            <li><span class="stack-dot purple"></span>RISC-V (riscv64)</li>
+            <li><span class="stack-dot purple"></span>macOS Apple Silicon</li>
+          </ul>
+        </div>
+        <div class="stack-card" data-animate>
+          <div class="stack-icon">📡</div>
+          <h4>Channels</h4>
+          <ul>
+            <li><span class="stack-dot teal"></span>Telegram Bot (zero-dep)</li>
+            <li><span class="stack-dot teal"></span>Discord (planned)</li>
+            <li><span class="stack-dot teal"></span>CLI Interactive REPL</li>
+            <li><span class="stack-dot teal"></span>x402 Paywall API</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Honcho Memory -->
+  <section class="section" id="honcho-memory">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Memory Layer</span>
+        <h2 class="section-title">🧠 Honcho Solana Memory</h2>
+        <p class="section-desc">
+          Honcho turns Telegram chat turns into durable Solana trading memory. The daemon now creates workspace-aware
+          sessions, models peers, writes trading conclusions, and recalls the right summary before the next trade or
+          research step.
+        </p>
+      </div>
+
+      <div class="honcho-layout">
+        <div class="honcho-overview" data-animate>
+          <div class="honcho-flow-card">
+            <div class="honcho-flow-step">
+              <span class="honcho-step-badge">1</span>
+              <div>
+                <h3>Capture</h3>
+                <p>User messages, bot replies, wallet context, watchlists, and session mode are stored in a Honcho
+                  session.</p>
+              </div>
+            </div>
+            <div class="honcho-flow-step">
+              <span class="honcho-step-badge">2</span>
+              <div>
+                <h3>Model</h3>
+                <p>Honcho builds summaries, peer cards, and representations for the user and the agent inside the
+                  trading workspace.</p>
+              </div>
+            </div>
+            <div class="honcho-flow-step">
+              <span class="honcho-step-badge">3</span>
+              <div>
+                <h3>Conclude</h3>
+                <p>Repeated preferences become explicit conclusions: preferred tokens, spot vs perps bias, and risk
+                  posture.</p>
+              </div>
+            </div>
+            <div class="honcho-flow-step">
+              <span class="honcho-step-badge">4</span>
+              <div>
+                <h3>Recall</h3>
+                <p>Before responding, the bot injects summaries and matched conclusions back into prompt context for the
+                  next decision.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="stack-grid honcho-stack-grid">
+            <div class="stack-card" data-animate>
+              <div class="stack-icon">📘</div>
+              <h4>Session Objects</h4>
+              <ul>
+                <li><span class="stack-dot green"></span>Trading-aware session config</li>
+                <li><span class="stack-dot green"></span>Workspace metadata</li>
+                <li><span class="stack-dot green"></span>Per-message reasoning config</li>
+                <li><span class="stack-dot green"></span>File upload support</li>
+              </ul>
+            </div>
+            <div class="stack-card" data-animate>
+              <div class="stack-icon">👥</div>
+              <h4>Peer Modeling</h4>
+              <ul>
+                <li><span class="stack-dot purple"></span>User + agent peer IDs</li>
+                <li><span class="stack-dot purple"></span>Observe-me / observe-others</li>
+                <li><span class="stack-dot purple"></span>Peer cards and representations</li>
+                <li><span class="stack-dot purple"></span>Perspective-specific recall</li>
+              </ul>
+            </div>
+            <div class="stack-card" data-animate>
+              <div class="stack-icon">📈</div>
+              <h4>Trading Conclusions</h4>
+              <ul>
+                <li><span class="stack-dot teal"></span>Token interest tracking</li>
+                <li><span class="stack-dot teal"></span>Spot / perps preference</li>
+                <li><span class="stack-dot teal"></span>Risk appetite inference</li>
+                <li><span class="stack-dot teal"></span>Semantic conclusion search</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="honcho-demo" data-animate>
+          <div class="terminal honcho-terminal">
+            <div class="terminal-header">
+              <div class="terminal-dots">
+                <span class="dot dot-red"></span>
+                <span class="dot dot-yellow"></span>
+                <span class="dot dot-green"></span>
+              </div>
+              <span class="terminal-title">honcho memory replay</span>
+            </div>
+            <div class="terminal-body">
+              <div class="honcho-demo-meta">
+                <span class="honcho-demo-pill" id="honchoDemoStage">Session ingest</span>
+                <span class="honcho-demo-pill honcho-demo-pill-alt" id="honchoDemoToken">BONK</span>
+              </div>
+              <div class="honcho-demo-grid">
+                <div class="honcho-demo-card honcho-demo-card-chat">
+                  <span class="honcho-demo-label">Telegram turn</span>
+                  <p id="honchoDemoPrompt" class="honcho-demo-copy">Loading memory turn…</p>
+                </div>
+                <div class="honcho-demo-card">
+                  <span class="honcho-demo-label">Session summary</span>
+                  <p id="honchoDemoSummary" class="honcho-demo-copy">Waiting for summary…</p>
+                </div>
+                <div class="honcho-demo-card">
+                  <span class="honcho-demo-label">Derived conclusion</span>
+                  <p id="honchoDemoConclusion" class="honcho-demo-copy">No conclusion yet.</p>
+                </div>
+                <div class="honcho-demo-card honcho-demo-card-context">
+                  <span class="honcho-demo-label">Prompt recall</span>
+                  <p id="honchoDemoContext" class="honcho-demo-copy">Recalled context will appear here.</p>
+                </div>
+              </div>
+              <div class="honcho-demo-footer">
+                <span class="honcho-demo-status" id="honchoDemoSession">session: trader-main</span>
+                <span class="honcho-demo-status" id="honchoDemoPeers">peers: user + solanaos-agent</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="terminal honcho-terminal" data-animate>
+            <div class="terminal-header">
+              <div class="terminal-dots">
+                <span class="dot dot-red"></span>
+                <span class="dot dot-yellow"></span>
+                <span class="dot dot-green"></span>
+              </div>
+              <span class="terminal-title">telegram memory commands</span>
+            </div>
+            <div class="terminal-body">
+              <pre><span class="t-dim"># Inspect the new memory layer</span>
+<span class="t-green">/honcho_status</span>                 <span class="t-dim">→ workspace, model, and bridge status</span>
+<span class="t-green">/honcho_context</span>                <span class="t-dim">→ messages + summaries + recalled conclusions</span>
+<span class="t-green">/honcho_sessions</span>               <span class="t-dim">→ list tracked trading sessions</span>
+<span class="t-green">/honcho_summaries</span>              <span class="t-dim">→ short and long session summaries</span>
+<span class="t-green">/honcho_search bonk scalps</span>    <span class="t-dim">→ search messages inside the active session</span>
+<span class="t-green">/honcho_messages</span>               <span class="t-dim">→ recent stored turns</span>
+<span class="t-green">/honcho_conclusions BONK</span>       <span class="t-dim">→ semantic trading conclusions</span></pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Hardware -->
+  <section class="section" id="hardware">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Physical Computing</span>
+        <h2 class="section-title">Arduino Modulino® + NVIDIA Orin Nano</h2>
+        <p class="section-desc">Software intelligence bridged with physical hardware. 7 sensors over a single Qwiic I2C
+          cable.</p>
+      </div>
+      <div class="hardware-showcase">
+        <div class="hw-sensors" data-animate>
+          <div class="hw-sensor" data-sensor="pixels">
+            <div class="hw-sensor-icon" style="--sensor-color: #14F195">💡</div>
+            <div class="hw-sensor-info">
+              <h4>Pixels <span class="hw-addr">0x6C</span></h4>
+              <p>8× RGB LEDs — LC8822</p>
+              <span class="hw-use">Status: idle 🔵 signal 🟣 trade 🟡 win 🟢 loss 🔴</span>
+            </div>
+          </div>
+          <div class="hw-sensor" data-sensor="buzzer">
+            <div class="hw-sensor-icon" style="--sensor-color: #FFAA00">🔊</div>
+            <div class="hw-sensor-info">
+              <h4>Buzzer <span class="hw-addr">0x3C</span></h4>
+              <p>PKLCS1212E — Tone Generator</p>
+              <span class="hw-use">Audio alerts for signals, trades, wins, errors</span>
+            </div>
+          </div>
+          <div class="hw-sensor" data-sensor="buttons">
+            <div class="hw-sensor-icon" style="--sensor-color: #FF4060">🔘</div>
+            <div class="hw-sensor-info">
+              <h4>Buttons <span class="hw-addr">0x7C</span></h4>
+              <p>3× Push + LED</p>
+              <span class="hw-use">A = trigger cycle · B = toggle mode · C = e-stop</span>
+            </div>
+          </div>
+          <div class="hw-sensor" data-sensor="knob">
+            <div class="hw-sensor-icon" style="--sensor-color: #9945FF">🎛️</div>
+            <div class="hw-sensor-info">
+              <h4>Knob <span class="hw-addr">0x76</span></h4>
+              <p>PEC11J — Rotary Encoder</p>
+              <span class="hw-use">Real-time RSI threshold tuning</span>
+            </div>
+          </div>
+          <div class="hw-sensor" data-sensor="imu">
+            <div class="hw-sensor-icon" style="--sensor-color: #00D4FF">🧭</div>
+            <div class="hw-sensor-info">
+              <h4>Movement <span class="hw-addr">0x6A</span></h4>
+              <p>LSM6DSOX — 6-axis IMU</p>
+              <span class="hw-use">Tilt detection → auto-pause trading</span>
+            </div>
+          </div>
+          <div class="hw-sensor" data-sensor="thermo">
+            <div class="hw-sensor-icon" style="--sensor-color: #FF6B35">🌡️</div>
+            <div class="hw-sensor-info">
+              <h4>Thermo <span class="hw-addr">0x44</span></h4>
+              <p>HS3003 — Temp + Humidity</p>
+              <span class="hw-use">Environment logging to ClawVault</span>
+            </div>
+          </div>
+          <div class="hw-sensor" data-sensor="tof">
+            <div class="hw-sensor-icon" style="--sensor-color: #76B900">📡</div>
+            <div class="hw-sensor-info">
+              <h4>Distance <span class="hw-addr">0x29</span></h4>
+              <p>VL53L4CD — Time-of-Flight</p>
+              <span class="hw-use">Proximity wake-up (&lt;5cm triggers cycle)</span>
+            </div>
+          </div>
+        </div>
+        <div class="hw-platforms" data-animate>
+          <h3>Supported Platforms</h3>
+          <div class="platform-grid">
+            <div class="platform-card">
+              <div class="platform-icon">🟢</div>
+              <h4>NVIDIA Orin Nano</h4>
+              <code>make orin</code>
+            </div>
+            <div class="platform-card">
+              <div class="platform-icon">☁️</div>
+              <h4>Brev.dev Spark</h4>
+              <code>brev create solanaos --gpu</code>
+            </div>
+            <div class="platform-card">
+              <div class="platform-icon">🍓</div>
+              <h4>Raspberry Pi</h4>
+              <code>make rpi</code>
+            </div>
+            <div class="platform-card">
+              <div class="platform-icon">🍎</div>
+              <h4>macOS (Stub)</h4>
+              <code>make macos</code>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Companion Runtime -->
+  <section class="section section-dark" id="tamagochi">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Companion Runtime</span>
+        <h2 class="section-title">🧭 Companion Runtime</h2>
+        <p class="section-desc">A performance-reactive state layer driven by real on-chain performance.
+          Physical feedback surface: <strong>Arduino Modulino® I2C</strong>.</p>
+      </div>
+      <div class="pet-showcase">
+        <div class="pet-stages" data-animate>
+          <div class="pet-stage" data-stage="egg">
+            <span class="pet-emoji">🥚</span>
+            <span class="pet-name">Egg</span>
+            <span class="pet-req">First boot</span>
+          </div>
+          <div class="pet-arrow">→</div>
+          <div class="pet-stage" data-stage="larva">
+            <span class="pet-emoji">🦐</span>
+            <span class="pet-name">Larva</span>
+            <span class="pet-req">Wallet created</span>
+          </div>
+          <div class="pet-arrow">→</div>
+          <div class="pet-stage" data-stage="juvenile">
+            <span class="pet-emoji">🐹</span>
+            <span class="pet-name">Juvenile</span>
+            <span class="pet-req">10+ trades</span>
+          </div>
+          <div class="pet-arrow">→</div>
+          <div class="pet-stage" data-stage="adult">
+            <span class="pet-emoji">🐹</span>
+            <span class="pet-name">Adult</span>
+            <span class="pet-req">50+ trades, >40% WR</span>
+          </div>
+          <div class="pet-arrow">→</div>
+          <div class="pet-stage active" data-stage="alpha">
+            <span class="pet-emoji">👑</span>
+            <span class="pet-name">Alpha</span>
+            <span class="pet-req">200+ trades, >55% WR</span>
+          </div>
+        </div>
+        <div class="pet-terminal" data-animate>
+          <div class="terminal">
+            <div class="terminal-header">
+              <div class="terminal-dots"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span
+                  class="dot dot-green"></span></div>
+              <span class="terminal-title">solanaos pet</span>
+            </div>
+            <div class="terminal-body">
+              <pre><span class="t-green">🥚 SolanaOS</span>  😐
+
+<span class="t-dim">📊 Stage:</span> egg · Level 1 · XP 0
+<span class="t-dim">😐 Mood:</span> neutral
+<span class="t-dim">⚡ Energy:</span> <span class="t-green">⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡</span>
+<span class="t-dim">🍽️ Hunger:</span> <span class="t-green">🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢</span>
+
+<span class="t-dim">📈 Trades:</span> 0 · Win Rate: 0%
+<span class="t-dim">💰 Balance:</span> 0.0000 SOL
+<span class="t-dim">📊 Total PnL:</span> +0.0000 SOL
+<span class="t-dim">🔥 Streak:</span> +0
+<span class="t-dim">⏱️ Age:</span> 0s · Uptime: 0h</pre>
+            </div>
+          </div>
+        </div>
+        <div class="mood-grid" data-animate>
+          <h3>Mood System</h3>
+          <div class="moods">
+            <span class="mood">🤩 Ecstatic</span>
+            <span class="mood">😊 Happy</span>
+            <span class="mood active">😐 Neutral</span>
+            <span class="mood">😰 Anxious</span>
+            <span class="mood">😢 Sad</span>
+            <span class="mood">😴 Sleeping</span>
+            <span class="mood">🤤 Hungry</span>
+          </div>
+          <p class="mood-desc">Mood is driven by streak, PnL, and wallet balance in real-time.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- x402 -->
+  <section class="section" id="x402">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Payment Protocol</span>
+        <h2 class="section-title">💰 x402 — Crypto-Gated APIs</h2>
+        <p class="section-desc">Monetize SolanaOS APIs and operator workflows. Accept USDC payments per API call across multiple
+          chains.</p>
+      </div>
+      <div class="x402-flow" data-animate>
+        <div class="flow-step">
+          <div class="flow-icon">📱</div>
+          <div class="flow-label">Client</div>
+          <div class="flow-desc">Sends request with<br>X-PAYMENT header</div>
+        </div>
+        <div class="flow-connector">
+          <div class="flow-line"></div>
+          <span class="flow-amount">0.001 USDC</span>
+        </div>
+        <div class="flow-step flow-step-main">
+          <div class="flow-icon">🐹</div>
+          <div class="flow-label">SolanaOS Paywall</div>
+          <div class="flow-desc">Verifies payment<br>Serves API response</div>
+        </div>
+        <div class="flow-connector">
+          <div class="flow-line"></div>
+          <span class="flow-amount">Verify + Settle</span>
+        </div>
+        <div class="flow-step">
+          <div class="flow-icon">🏦</div>
+          <div class="flow-label">x402 Facilitator</div>
+          <div class="flow-desc">facilitator.x402.rs<br>On-chain settlement</div>
+        </div>
+      </div>
+      <div class="x402-chains" data-animate>
+        <h3>Supported Chains</h3>
+        <div class="chain-grid">
+          <div class="chain active"><span>◎</span> Solana</div>
+          <div class="chain"><span>🔵</span> Base</div>
+          <div class="chain"><span>🟣</span> Polygon</div>
+          <div class="chain"><span>🔺</span> Avalanche</div>
+        </div>
+      </div>
+      <div class="x402-endpoints" data-animate>
+        <div class="terminal">
+          <div class="terminal-header">
+            <div class="terminal-dots"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span
+                class="dot dot-green"></span></div>
+            <span class="terminal-title">x402 paywall endpoints</span>
+          </div>
+          <div class="terminal-body">
+            <pre><span class="t-green">GET /health</span>          <span class="t-dim">— free</span>
+<span class="t-green">GET /x402/info</span>       <span class="t-dim">— free</span>
+<span class="t-amber">GET /api/signals</span>     <span class="t-purple">— 0.001 USDC per call</span>
+<span class="t-amber">GET /api/research</span>    <span class="t-purple">— 0.001 USDC per call</span>
+<span class="t-amber">GET /api/agent</span>       <span class="t-purple">— 0.001 USDC per call</span></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Hyperliquid -->
+  <section class="section section-dark" id="hyperliquid">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">EVM Perpetuals</span>
+        <h2 class="section-title">📈 Hyperliquid — Trade Perps from Telegram</h2>
+        <p class="section-desc">
+          Full Hyperliquid perpetuals integration — open longs and shorts, manage positions, and cancel orders
+          directly from Telegram. EIP-712 L1 action signing with msgpack encoding, no web UI required.
+        </p>
+      </div>
+
+      <div class="stack-grid" style="margin-bottom:2rem">
+        <div class="stack-card" data-animate>
+          <div class="stack-icon">🔐</div>
+          <h4>EIP-712 Signing</h4>
+          <ul>
+            <li><span class="stack-dot green"></span>Phantom agent EIP-712</li>
+            <li><span class="stack-dot green"></span>msgpack L1 action encoding</li>
+            <li><span class="stack-dot green"></span>chainId 1337 (mainnet)</li>
+            <li><span class="stack-dot green"></span>ECDSA secp256k1</li>
+          </ul>
+        </div>
+        <div class="stack-card" data-animate>
+          <div class="stack-icon">⚡</div>
+          <h4>Order Types</h4>
+          <ul>
+            <li><span class="stack-dot purple"></span>IOC market open (long/short)</li>
+            <li><span class="stack-dot purple"></span>Reduce-only market close</li>
+            <li><span class="stack-dot purple"></span>Configurable slippage %</li>
+            <li><span class="stack-dot purple"></span>Cancel all orders</li>
+          </ul>
+        </div>
+        <div class="stack-card" data-animate>
+          <div class="stack-icon">🤖</div>
+          <h4>Telegram Commands</h4>
+          <ul>
+            <li><span class="stack-dot teal"></span>/hl · /hl_balance</li>
+            <li><span class="stack-dot teal"></span>/hl_positions · /hl_orders</li>
+            <li><span class="stack-dot teal"></span>/hl_open · /hl_close</li>
+            <li><span class="stack-dot teal"></span>/hl_cancel</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="x402-endpoints" data-animate>
+        <div class="terminal">
+          <div class="terminal-header">
+            <div class="terminal-dots"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span></div>
+            <span class="terminal-title">hyperliquid telegram commands</span>
+          </div>
+          <div class="terminal-body">
+            <pre><span class="t-dim"># Setup in .env</span>
+<span class="t-amber">HYPERLIQUID_PRIVATE_KEY</span>=<span class="t-green">0x...</span>
+<span class="t-amber">HYPERLIQUID_WALLET</span>=<span class="t-green">0x...</span>
+
+<span class="t-dim"># Account overview</span>
+<span class="t-green">/hl</span>                           <span class="t-dim">→ account value, margin, open positions</span>
+<span class="t-green">/hl_balance</span>                   <span class="t-dim">→ quick balance + withdrawable</span>
+<span class="t-green">/hl_positions</span>                 <span class="t-dim">→ open perps: side, size, entry, PnL, leverage</span>
+<span class="t-green">/hl_orders</span>                    <span class="t-dim">→ open limit orders</span>
+
+<span class="t-dim"># Trading</span>
+<span class="t-green">/hl_open BTC long 0.01</span>        <span class="t-dim">→ open BTC long, 0.01 BTC, 5% slippage</span>
+<span class="t-green">/hl_open ETH short 0.1 2%</span>     <span class="t-dim">→ open ETH short with 2% slippage</span>
+<span class="t-green">/hl_close BTC</span>                  <span class="t-dim">→ close full BTC position</span>
+<span class="t-green">/hl_close SOL 10</span>               <span class="t-dim">→ partial close 10 SOL</span>
+<span class="t-green">/hl_cancel</span>                     <span class="t-dim">→ cancel all open orders</span></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Local Harness -->
+  <section class="section section-dark" id="local-harness">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">AI Model</span>
+        <h2 class="section-title">🧠 MiniMax M2.7 — Local Harness Default</h2>
+        <p class="section-desc">
+          The live Go runtime now defaults to <code>minimax-m2.7:cloud</code> via Ollama. It sits inside the normal
+          SolanaOS harness, so system prompt, Solana context, Honcho memory, and skill injections all reach the same
+          local-first model path.
+        </p>
+      </div>
+
+      <div class="ds-stats" data-animate>
+        <div class="ds-stat">
+          <div class="ds-stat-value">200K</div>
+          <div class="ds-stat-label">Context Window</div>
+        </div>
+        <div class="ds-stat">
+          <div class="ds-stat-value">Ollama</div>
+          <div class="ds-stat-label">Default Backend</div>
+        </div>
+        <div class="ds-stat">
+          <div class="ds-stat-value">Skills</div>
+          <div class="ds-stat-label">Still In Harness</div>
+        </div>
+        <div class="ds-stat">
+          <div class="ds-stat-value">Claude</div>
+          <div class="ds-stat-label">Native Optional Backend</div>
+        </div>
+        <div class="ds-stat">
+          <div class="ds-stat-value">xAI</div>
+          <div class="ds-stat-label">Search + Media Tools</div>
+        </div>
+      </div>
+
+      <div class="ds-install" data-animate>
+        <div class="ds-card ds-card-primary">
+          <div class="ds-card-header">
+            <span class="ds-card-icon">⚡</span>
+            <span class="ds-card-title">Ollama — One Command</span>
+          </div>
+          <div class="terminal">
+            <div class="terminal-header">
+              <div class="terminal-dots">
+                <span class="dot dot-red"></span>
+                <span class="dot dot-yellow"></span>
+                <span class="dot dot-green"></span>
+              </div>
+              <span class="terminal-title">terminal</span>
+            </div>
+            <div class="terminal-body">
+              <pre><span class="t-dim"># Pull and run the default local harness model</span>
+<span class="t-green">ollama run minimax-m2.7:cloud</span>
+
+<span class="t-dim"># Or pull first, run later</span>
+<span class="t-amber">ollama pull minimax-m2.7:cloud</span></pre>
+            </div>
+          </div>
+          <a href="https://ollama.com/library/minimax-m2.7:cloud" target="_blank" rel="noopener" class="btn btn-primary ds-btn">
+            View on Ollama →
+          </a>
+        </div>
+
+        <div class="ds-card">
+          <div class="ds-card-header">
+            <span class="ds-card-icon">🤖</span>
+            <span class="ds-card-title">Use in Claude Code / Codex / OpenCode</span>
+          </div>
+          <div class="terminal">
+            <div class="terminal-header">
+              <div class="terminal-dots">
+                <span class="dot dot-red"></span>
+                <span class="dot dot-yellow"></span>
+                <span class="dot dot-green"></span>
+              </div>
+              <span class="terminal-title">agent launch</span>
+            </div>
+            <div class="terminal-body">
+              <pre><span class="t-dim"># Claude Code</span>
+<span class="t-green">ollama launch claude --model minimax-m2.7:cloud</span>
+
+<span class="t-dim"># Codex</span>
+<span class="t-green">ollama launch codex --model minimax-m2.7:cloud</span>
+
+<span class="t-dim"># OpenCode</span>
+<span class="t-green">ollama launch opencode --model minimax-m2.7:cloud</span>
+
+<span class="t-dim"># OpenClaw</span>
+<span class="t-green">ollama launch openclaw --model minimax-m2.7:cloud</span></pre>
+            </div>
+          </div>
+        </div>
+
+        <div class="ds-card">
+          <div class="ds-card-header">
+            <span class="ds-card-icon">🔗</span>
+            <span class="ds-card-title">Use with SolanaOS Daemon</span>
+          </div>
+          <div class="terminal">
+            <div class="terminal-header">
+              <div class="terminal-dots">
+                <span class="dot dot-red"></span>
+                <span class="dot dot-yellow"></span>
+                <span class="dot dot-green"></span>
+              </div>
+              <span class="terminal-title">.env</span>
+            </div>
+            <div class="terminal-body">
+              <pre><span class="t-dim"># Make MiniMax the daemon default</span>
+<span class="t-amber">LLM_PROVIDER</span>=<span class="t-green">ollama</span>
+<span class="t-amber">OLLAMA_MODEL</span>=<span class="t-green">minimax-m2.7:cloud</span>
+<span class="t-amber">OLLAMA_BASE_URL</span>=<span class="t-green">http://127.0.0.1:11434</span>
+
+<span class="t-dim"># Optional native Claude backend</span>
+<span class="t-amber">ANTHROPIC_API_KEY</span>=<span class="t-green">sk-ant-...</span>
+<span class="t-amber">ANTHROPIC_MODEL</span>=<span class="t-green">claude-sonnet-4-6</span>
+
+<span class="t-dim"># Restart daemon to pick up</span>
+<span class="t-green">solanaos daemon</span></pre>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ds-bench" data-animate>
+        <h3 class="ds-bench-title">Harness Behavior</h3>
+        <div class="ds-table-wrap">
+          <table class="ds-table">
+            <thead>
+              <tr>
+                <th>Layer</th>
+                <th>Current behavior</th>
+                <th class="ds-highlight">Why it matters</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Default routing</td>
+                <td>Normal chat resolves to Ollama first</td>
+                <td class="ds-highlight">MiniMax is the live default</td>
+              </tr>
+              <tr>
+                <td>System prompt</td>
+                <td>Uses the existing SolanaOS harness prompt</td>
+                <td class="ds-highlight">Solana tools and skills still apply</td>
+              </tr>
+              <tr>
+                <td><code>/deepsolana</code></td>
+                <td>Targets the configured Ollama harness model</td>
+                <td class="ds-highlight">No hardcoded model branch</td>
+              </tr>
+              <tr>
+                <td><code>/model</code></td>
+                <td>Accepts bare Ollama refs like <code>minimax-m2.7:cloud</code></td>
+                <td class="ds-highlight">Cleaner operator switching</td>
+              </tr>
+              <tr>
+                <td>Hosted providers</td>
+                <td>Anthropic and xAI remain available</td>
+                <td class="ds-highlight">Local-first without losing fallbacks</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="ds-cta" data-animate>
+        <a href="/skill.md" target="_blank" class="btn btn-secondary">📄 Download Agent Skill Sheet</a>
+        <span class="ds-cta-desc">Give this file to any AI agent to install SolanaOS in one shot</span>
+      </div>
+
+      <div class="ds-tags" data-animate>
+        <span class="ds-tag">MiniMax M2.7</span>
+        <span class="ds-tag">Local-first</span>
+        <span class="ds-tag">Ollama compatible</span>
+        <span class="ds-tag">Anthropic supported</span>
+        <span class="ds-tag">Skill-aware</span>
+        <span class="ds-tag">Solana-native prompt</span>
+        <span class="ds-tag">Telegram harness</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Quick Start -->
+  <section class="section section-dark" id="quickstart">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Get Started in 60 Seconds</span>
+        <h2 class="section-title">Quick Start</h2>
+      </div>
+
+      <div class="oneshot-install" data-animate>
+        <h3>⚡ One-Shot Install (curl / npm)</h3>
+        <p class="oneshot-desc">Install SolanaOS from GitHub or the published npm package, then run <code>solanaos</code> from anywhere.</p>
+
+        <div class="oneshot-grid">
+          <div class="oneshot-card">
+            <div class="oneshot-card-head">
+              <span>curl install</span>
+              <button class="copy-btn"
+                data-copy='curl -fsSL https://raw.githubusercontent.com/x402agent/Solana-Os-Go/main/install.sh | bash'>Copy</button>
+            </div>
+            <div class="terminal terminal-sm">
+              <div class="terminal-body">
+                <pre>curl -fsSL https://raw.githubusercontent.com/x402agent/Solana-Os-Go/main/install.sh | bash</pre>
+              </div>
+            </div>
+          </div>
+
+          <div class="oneshot-card">
+            <div class="oneshot-card-head">
+              <span>with web console</span>
+              <button class="copy-btn"
+                data-copy='curl -fsSL https://raw.githubusercontent.com/x402agent/Solana-Os-Go/main/install.sh | bash -s -- --with-web'>Copy</button>
+            </div>
+            <div class="terminal terminal-sm">
+              <div class="terminal-body">
+                <pre>curl -fsSL https://raw.githubusercontent.com/x402agent/Solana-Os-Go/main/install.sh | bash -s -- --with-web</pre>
+              </div>
+            </div>
+          </div>
+
+          <div class="oneshot-card">
+            <div class="oneshot-card-head">
+              <span>npm / npx install</span>
+              <button class="copy-btn" data-copy='npx solanaos-computer@latest install --with-web'>Copy</button>
+            </div>
+            <div class="terminal terminal-sm">
+              <div class="terminal-body">
+                <pre>npx solanaos-computer@latest install --with-web</pre>
+              </div>
+            </div>
+          </div>
+
+          <div class="oneshot-card">
+            <div class="oneshot-card-head">
+              <span>global CLI</span>
+              <button class="copy-btn" data-copy='npm install -g solanaos-computer && solanaos version'>Copy</button>
+            </div>
+            <div class="terminal terminal-sm">
+              <div class="terminal-body">
+                <pre>npm install -g solanaos-computer
+solanaos version</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <p class="oneshot-note">Installs: <code>~/solanaos/build/solanaos</code>, a stable CLI at
+          <code>~/.nanosolana/bin/solanaos</code>, the agent wallet, ClawVault workspace, and the optional web console.
+        </p>
+      </div>
+
+      <div class="steps-grid">
+        <div class="step-card" data-animate>
+          <div class="step-num">1</div>
+          <h3>Clone & Build</h3>
+          <div class="terminal terminal-sm">
+            <div class="terminal-body">
+              <pre><span class="t-dim">$</span> git clone https://github.com/x402agent/Solana-Os-Go.git
+<span class="t-dim">$</span> cd Solana-Os-Go
+<span class="t-dim">$</span> cp .env.example .env
+<span class="t-dim">$</span> make build
+<span class="t-dim">$</span> ./build/solanaos version</pre>
+            </div>
+          </div>
+        </div>
+        <div class="step-card" data-animate>
+          <div class="step-num">2</div>
+          <h3>Configure</h3>
+          <div class="terminal terminal-sm">
+            <div class="terminal-body">
+              <pre><span class="t-dim"># Edit .env with your API keys</span>
+<span class="t-green">HELIUS_API_KEY</span>=your_key_here
+<span class="t-green">HELIUS_RPC_URL</span>=https://mainnet.helius-rpc.com/?api-key=KEY
+<span class="t-green">BIRDEYE_API_KEY</span>=optional</pre>
+            </div>
+          </div>
+        </div>
+        <div class="step-card" data-animate>
+          <div class="step-num">3</div>
+          <h3>Run</h3>
+          <div class="terminal terminal-sm">
+            <div class="terminal-body">
+              <pre><span class="t-dim">$</span> solanaos daemon
+<span class="t-green">🖥️ SolanaOS Runtime online</span>
+<span class="t-teal">🔑 Agent wallet: 7xKXqR8...3vBp</span>
+<span class="t-purple">🤖 Telegram: @YourBot connected</span>
+<span class="t-amber">📡 Monitoring signals and operator traffic</span></pre>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="oneshot-install" data-animate>
+        <h3>🧩 Publish Your Own SolanaOS Skill to SolanaOS Hub</h3>
+        <p class="oneshot-desc">Package your skill folder and publish it to <strong>seeker.solanaos.net</strong> via npm.
+        </p>
+
+        <div class="oneshot-grid">
+          <div class="oneshot-card">
+            <div class="oneshot-card-head">
+              <span>1) login</span>
+              <button class="copy-btn" data-copy='npx @solanaos/nanohub login'>Copy</button>
+            </div>
+            <div class="terminal terminal-sm">
+              <div class="terminal-body">
+                <pre>npx @solanaos/nanohub login</pre>
+              </div>
+            </div>
+          </div>
+
+          <div class="oneshot-card">
+            <div class="oneshot-card-head">
+              <span>2) publish</span>
+              <button class="copy-btn"
+                data-copy='npx @solanaos/nanohub publish ./my-skill --slug my-skill --name "My Skill" --version 1.0.0 --tags latest,solana'>Copy</button>
+            </div>
+            <div class="terminal terminal-sm">
+              <div class="terminal-body">
+                <pre>npx @solanaos/nanohub publish ./my-skill \
+  --slug my-skill \
+  --name "My Skill" \
+  --version 1.0.0 \
+  --tags latest,solana</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <p class="oneshot-note">Requirements: <code>SKILL.md</code> (or <code>skills.md</code>), text files only, and a
+          semver version.</p>
+      </div>
+
+      <div class="cta-section" data-animate>
+        <h3>Ready to deploy SolanaOS?</h3>
+        <div class="cta-actions">
+          <a href="https://www.npmjs.com/package/solanaos-computer" target="_blank" class="btn btn-primary btn-lg">
+            <span>Install from npm</span>
+          </a>
+          <a href="https://github.com/x402agent/Solana-Os-Go" target="_blank" class="btn btn-primary btn-lg">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+              <path
+                d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
+            </svg>
+            <span>View the Repo</span>
+          </a>
+          <a href="https://github.com/x402agent/Solana-Os-Go/blob/main/CONTRIBUTING.md" target="_blank"
+            class="btn btn-secondary btn-lg">Contribute</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <span class="footer-logo">🖥️</span>
+          <span>SolanaOS</span>
+        </div>
+        <div class="footer-links">
+          <a href="https://github.com/x402agent/Solana-Os-Go" target="_blank">GitHub</a>
+          <a href="/skill.md" target="_blank">Agent Skill Sheet</a>
+          <a href="https://ollama.com/library/minimax-m2.7:cloud" target="_blank">MiniMax M2.7</a>
+          <a href="https://github.com/x402agent/Solana-Os-Go/blob/main/SECURITY.md" target="_blank">Security</a>
+          <a href="https://github.com/x402agent/Solana-Os-Go/blob/main/CONTRIBUTING.md"
+            target="_blank">Contributing</a>
+          <a href="https://x402.org" target="_blank">x402.org</a>
+        </div>
+        <div class="footer-copy">
+          Built by SolanaOS Labs · Powered by Go on Solana · x402 Protocol · MIT License
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Music Player -->
+  <div class="music-player" id="musicPlayer">
+    <audio id="audioPlayer" preload="metadata"></audio>
+    <div class="player-inner">
+      <button class="player-btn player-skip" id="playerPrev" aria-label="Previous">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M6 6h2v12H6zm3.5 6l8.5 6V6z" />
+        </svg>
+      </button>
+      <button class="player-btn player-play" id="playerPlay" aria-label="Play">
+        <svg class="icon-play" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M8 5v14l11-7z" />
+        </svg>
+        <svg class="icon-pause" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" style="display:none">
+          <path d="M6 4h4v16H6zM14 4h4v16h-4z" />
+        </svg>
+      </button>
+      <button class="player-btn player-skip" id="playerNext" aria-label="Next">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z" />
+        </svg>
+      </button>
+      <div class="player-info">
+        <span class="player-title" id="playerTitle">🐹 SolanaOS</span>
+        <span class="player-track" id="playerTrackName">SolanaOS Theme</span>
+      </div>
+      <div class="player-waveform" id="playerWaveform">
+        <span></span><span></span><span></span><span></span><span></span>
+        <span></span><span></span><span></span><span></span><span></span>
+        <span></span><span></span><span></span><span></span><span></span>
+        <span></span><span></span><span></span><span></span><span></span>
+      </div>
+      <div class="player-progress-wrap">
+        <span class="player-time" id="playerTime">0:00</span>
+        <div class="player-progress" id="playerProgress">
+          <div class="player-progress-bar" id="playerProgressBar"></div>
+        </div>
+        <span class="player-duration" id="playerDuration">0:00</span>
+      </div>
+      <div class="player-volume-wrap">
+        <button class="player-btn player-vol-btn" id="playerVolBtn" aria-label="Volume">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+            <path
+              d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z" />
+          </svg>
+        </button>
+        <input type="range" class="player-volume" id="playerVolume" min="0" max="100" value="60" aria-label="Volume">
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="/docs-assets/main.js"></script>
+</body>
+
+</html>

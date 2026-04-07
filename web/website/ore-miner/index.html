@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SolanaOS — ORE v2 Miner</title>
+<meta name="description" content="Mine ORE v2 on Solana with SolanaOS. 5x5 grid mining, Motherlode jackpots, real Solana RPC integration.">
+<link rel="stylesheet" href="../style.css">
+<style>
+  /* ORE Miner specific styles */
+  .mine-controls {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    margin: 20px 0;
+  }
+  .mine-input {
+    background: var(--panel);
+    border: 1px solid var(--panel-border);
+    color: var(--green);
+    font-family: var(--font-mono);
+    font-size: 14px;
+    padding: 10px 16px;
+    border-radius: 4px;
+    width: 160px;
+    outline: none;
+  }
+  .mine-input:focus {
+    border-color: var(--green);
+    box-shadow: 0 0 10px rgba(20,241,149,0.15);
+  }
+  .mine-input::placeholder { color: var(--text-dim); }
+  .mine-btn {
+    background: rgba(255,116,0,0.15);
+    border: 1px solid var(--orange);
+    color: var(--orange);
+    font-family: var(--font-display);
+    font-size: 12px;
+    letter-spacing: 2px;
+    padding: 10px 24px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .mine-btn:hover {
+    background: rgba(255,116,0,0.25);
+    box-shadow: 0 0 16px rgba(255,116,0,0.2);
+  }
+  .mine-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+  .mine-btn.active {
+    background: rgba(20,241,149,0.2);
+    border-color: var(--green);
+    color: var(--green);
+    animation: pulse-glow 2s ease-in-out infinite;
+  }
+  .rpc-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    padding: 8px 14px;
+    background: var(--panel);
+    border: 1px solid var(--panel-border);
+    border-radius: 4px;
+    margin: 10px auto;
+    max-width: 400px;
+    justify-content: center;
+  }
+  .rpc-status.connected { border-color: var(--green); }
+  .rpc-status.error { border-color: var(--red); color: var(--red); }
+  .round-timer {
+    font-family: var(--font-display);
+    font-size: 32px;
+    font-weight: 900;
+    color: var(--orange);
+    text-align: center;
+    margin: 10px 0;
+    letter-spacing: 4px;
+  }
+  .round-label {
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-align: center;
+    color: var(--text-dim);
+    text-transform: uppercase;
+  }
+  .motherlode-bar {
+    width: 100%;
+    height: 6px;
+    background: rgba(255,116,0,0.15);
+    border-radius: 3px;
+    margin: 6px 0;
+    overflow: hidden;
+  }
+  .motherlode-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--orange), #FFD700);
+    border-radius: 3px;
+    transition: width 0.3s;
+  }
+  .log-area {
+    background: rgba(6,6,16,0.9);
+    border: 1px solid var(--panel-border);
+    border-radius: 4px;
+    padding: 14px;
+    max-height: 200px;
+    overflow-y: auto;
+    font-size: 11px;
+    line-height: 1.6;
+    margin-top: 16px;
+  }
+  .log-entry { margin-bottom: 2px; }
+  .log-time { color: var(--text-dim); }
+  .log-win { color: var(--green); }
+  .log-lose { color: var(--red); opacity: 0.6; }
+  .log-info { color: var(--purple); }
+  .log-motherlode { color: #FFD700; font-weight: bold; }
+</style>
+</head>
+<body>
+<div class="corner-frame"></div>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="../" class="nav-brand">
+      <svg width="32" height="32" viewBox="0 0 100 100">
+        <circle cx="50" cy="50" r="42" fill="none" stroke="#14F195" stroke-width="2" opacity="0.8"/>
+        <circle cx="50" cy="50" r="34" fill="none" stroke="#9945FF" stroke-width="1.5" opacity="0.5"/>
+        <polygon points="50,36 64,50 50,64 36,50" fill="none" stroke="#14F195" stroke-width="1.5"/>
+        <text x="50" y="56" text-anchor="middle" font-family="Orbitron" font-weight="900" font-size="20" fill="#9945FF">S</text>
+      </svg>
+      <span class="nav-title">SOLANAOS</span>
+    </a>
+    <div class="nav-links" id="navLinks">
+      <a href="../">HOME</a>
+      <a href="../app/">APP</a>
+      <a href="../android/">ANDROID</a>
+      <a href="../telegram/">TELEGRAM</a>
+      <a href="../gateway/">GATEWAY</a>
+      <a href="./" class="active">ORE MINER</a>
+    </div>
+    <button class="nav-toggle" onclick="document.getElementById('navLinks').classList.toggle('open')">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<div class="breadcrumb">> <a href="../">HOME</a> / ORE MINER</div>
+
+<div class="page-header">
+  <h1 style="color:var(--orange)">ORE v2 MINER</h1>
+  <div class="subtitle">GRID-BASED SOLANA MINING &middot; 5&times;5 BLOCKS</div>
+</div>
+
+<section class="section">
+  <div id="runtimeMount"></div>
+</section>
+
+<section class="section">
+
+  <!-- RPC Connection -->
+  <div id="rpcStatus" class="rpc-status">
+    <span class="status-dot off" id="rpcDot"></span>
+    <span id="rpcText">DISCONNECTED &mdash; Enter RPC URL to connect</span>
+  </div>
+
+  <div class="mine-controls">
+    <input type="text" class="mine-input" id="rpcUrl" placeholder="Helius RPC URL..." value="https://mainnet.helius-rpc.com/?api-key=">
+    <button class="mine-btn" id="connectBtn" onclick="connectRPC()">CONNECT</button>
+  </div>
+
+  <!-- Live Stats -->
+  <div class="stat-grid" style="margin:20px 0;">
+    <div class="stat-box">
+      <div class="stat-label">SOL BALANCE</div>
+      <div class="stat-value green" id="solBalance">--</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-label">ORE MINED</div>
+      <div class="stat-value orange" id="oreMined">0.00</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-label">ROUNDS</div>
+      <div class="stat-value purple" id="roundCount">0</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-label">WIN RATE</div>
+      <div class="stat-value green" id="winRate">--%</div>
+    </div>
+  </div>
+
+  <!-- Round Timer -->
+  <div class="round-label">ROUND TIMER</div>
+  <div class="round-timer" id="roundTimer">60</div>
+
+  <!-- Motherlode -->
+  <div class="panel orange" style="text-align:center;">
+    <div class="panel-label orange">MOTHERLODE POOL</div>
+    <div style="font-family:var(--font-display);font-size:20px;font-weight:700;color:var(--orange);" id="motherlodePool">0.00 ORE</div>
+    <div class="motherlode-bar">
+      <div class="motherlode-fill" id="motherloadeFill" style="width:0%"></div>
+    </div>
+    <div style="font-size:9px;opacity:0.5;margin-top:4px;">1 in 625 chance per round &middot; +0.2 ORE per round</div>
+  </div>
+
+  <!-- 5x5 Mining Grid -->
+  <h2 class="section-title" style="margin-top:30px;">MINING GRID</h2>
+  <div style="text-align:center;font-size:11px;opacity:0.5;margin-bottom:10px;">Click blocks to deploy SOL. Selected blocks glow green.</div>
+
+  <div class="ore-grid" id="oreGrid"></div>
+
+  <!-- Mine Controls -->
+  <div class="mine-controls" style="margin-top:20px;">
+    <input type="number" class="mine-input" id="solPerBlock" placeholder="SOL per block" value="0.01" step="0.005" min="0.001">
+    <button class="mine-btn" id="mineBtn" onclick="startMining()" disabled>MINE</button>
+    <button class="mine-btn" id="autoBtn" onclick="toggleAuto()" disabled>AUTO</button>
+  </div>
+
+  <!-- Strategy Info -->
+  <div class="card-grid" style="margin-top:30px;">
+    <div class="card orange">
+      <div class="card-title" style="color:var(--orange)">DIVERSIFIED</div>
+      <div class="card-desc">Deploy small amounts across 10-15 blocks. Higher win probability, lower variance, steady accumulation.</div>
+    </div>
+    <div class="card orange">
+      <div class="card-title" style="color:var(--orange)">CONCENTRATED</div>
+      <div class="card-desc">Deploy larger amounts on 2-5 blocks. Lower win probability but much larger payouts when you win.</div>
+    </div>
+  </div>
+
+  <!-- Mining Log -->
+  <div class="panel" style="margin-top:20px;">
+    <div class="panel-label">MINING LOG</div>
+    <div class="log-area" id="miningLog">
+      <div class="log-entry"><span class="log-time">[--:--:--]</span> <span class="log-info">Waiting for RPC connection...</span></div>
+    </div>
+  </div>
+
+  <!-- How It Works -->
+  <h2 class="section-title left" style="margin-top:50px;">HOW ORE v2 MINING WORKS</h2>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-content">
+        <h3>Deploy SOL on the 5&times;5 Grid</h3>
+        <p>Each round lasts 60 seconds. Deploy SOL on one or more of the 25 blocks. You can concentrate on a single block or spread across multiple blocks for different risk/reward profiles.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-content">
+        <h3>Random Block Selection</h3>
+        <p>At the end of each round, the ORE program generates a random number to select one winning block. This selection cannot be predicted or manipulated. All SOL from the 24 losing blocks is collected.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-content">
+        <h3>Proportional Rewards</h3>
+        <p>The collected SOL redistributes to miners on the winning block proportionally based on their stake. Additionally, ~1 ORE is minted per round and distributed to winners.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-content">
+        <h3>Motherlode Jackpot</h3>
+        <p>Each round adds 0.2 ORE to the Motherlode pool. There's a 1 in 625 chance (0.16%) it triggers, distributing the entire pool to that round's winning miners. Average trigger: ~125 ORE jackpot.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Refining & Staking -->
+  <h2 class="section-title left" style="margin-top:40px;">REFINING &amp; STAKING</h2>
+
+  <div class="panel purple">
+    <div class="panel-label purple">REFINING</div>
+    <p style="font-size:13px;line-height:1.7;">
+      Refining claims mined ORE to your wallet with a 10% fee. The fee redistributes to all miners with unclaimed balances proportionally &mdash; creating a compounding incentive to delay claiming. The more unclaimed ORE you hold, the larger your share of redistribution fees.
+    </p>
+  </div>
+
+  <div class="panel">
+    <div class="panel-label">STAKING</div>
+    <p style="font-size:13px;line-height:1.7;">
+      Lock refined ORE to earn yield from protocol revenue. 10% of mining fees fund automated ORE buybacks. Of bought-back ORE, 90% is burned and 10% is distributed to stakers as yield.
+    </p>
+  </div>
+
+  <div class="info-box warn">
+    <strong>Risk Warning:</strong> ORE mining involves financial risk. Only 1 of 25 blocks wins each round. The other 24 blocks lose their deployed SOL. Most rounds result in losses. Never deploy more than you can afford to lose.
+  </div>
+
+</section>
+
+<footer class="footer">
+  <span>solanaos.com</span>
+  <span>8BIT LABS</span>
+  <span>MIT LICENSE</span>
+</footer>
+
+<script src="../runtime.js"></script>
+<script>
+// ===== ORE MINER ENGINE =====
+// Real Solana RPC integration for ORE v2 mining simulation
+
+let connection = null;
+let isConnected = false;
+let isAutoMining = false;
+let selectedBlocks = new Set();
+let roundInterval = null;
+let roundTimer = 60;
+let stats = { rounds: 0, wins: 0, oreMined: 0, solWon: 0, solLost: 0 };
+let motherlodePool = 0;
+let gridData = Array(25).fill(0);
+
+// Initialize the 5x5 grid
+function initGrid() {
+  const grid = document.getElementById('oreGrid');
+  grid.innerHTML = '';
+  for (let i = 0; i < 25; i++) {
+    const block = document.createElement('div');
+    block.className = 'ore-block';
+    block.innerHTML = `<div class="ore-block-num">${i + 1}</div><div class="ore-block-sol">0 SOL</div>`;
+    block.onclick = () => toggleBlock(i);
+    grid.appendChild(block);
+  }
+}
+
+function toggleBlock(index) {
+  if (selectedBlocks.has(index)) {
+    selectedBlocks.delete(index);
+  } else {
+    selectedBlocks.add(index);
+  }
+  updateGridUI();
+}
+
+function updateGridUI() {
+  const blocks = document.querySelectorAll('.ore-block');
+  const solPerBlock = parseFloat(document.getElementById('solPerBlock').value) || 0.01;
+  blocks.forEach((block, i) => {
+    block.className = 'ore-block';
+    if (selectedBlocks.has(i)) {
+      block.className += ' selected';
+      block.querySelector('.ore-block-sol').textContent = `${solPerBlock} SOL`;
+    } else {
+      block.querySelector('.ore-block-sol').textContent = `${gridData[i].toFixed(3)} SOL`;
+    }
+  });
+}
+
+// Connect to Solana RPC
+async function connectRPC() {
+  const url = document.getElementById('rpcUrl').value.trim();
+  if (!url) return;
+
+  const statusEl = document.getElementById('rpcStatus');
+  const dotEl = document.getElementById('rpcDot');
+  const textEl = document.getElementById('rpcText');
+  const connectBtn = document.getElementById('connectBtn');
+
+  connectBtn.textContent = 'CONNECTING...';
+  connectBtn.disabled = true;
+
+  try {
+    // Test RPC connection with getHealth
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        jsonrpc: '2.0',
+        id: 1,
+        method: 'getHealth'
+      })
+    });
+
+    const data = await response.json();
+
+    if (data.result === 'ok' || data.result) {
+      isConnected = true;
+      connection = url;
+      statusEl.className = 'rpc-status connected';
+      dotEl.className = 'status-dot';
+      textEl.textContent = 'CONNECTED TO SOLANA MAINNET';
+      connectBtn.textContent = 'CONNECTED';
+
+      document.getElementById('mineBtn').disabled = false;
+      document.getElementById('autoBtn').disabled = false;
+
+      addLog('info', 'Connected to Solana RPC');
+
+      // Get slot info
+      await getSlotInfo();
+
+      // Get SOL price estimate via slot
+      await getEpochInfo();
+
+    } else {
+      throw new Error(data.error?.message || 'RPC health check failed');
+    }
+  } catch (err) {
+    statusEl.className = 'rpc-status error';
+    dotEl.className = 'status-dot off';
+    textEl.textContent = `ERROR: ${err.message}`;
+    connectBtn.textContent = 'RETRY';
+    connectBtn.disabled = false;
+    addLog('lose', `RPC connection failed: ${err.message}`);
+  }
+}
+
+// Get slot info from RPC
+async function getSlotInfo() {
+  if (!connection) return;
+  try {
+    const response = await fetch(connection, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        jsonrpc: '2.0',
+        id: 1,
+        method: 'getSlot',
+        params: [{ commitment: 'confirmed' }]
+      })
+    });
+    const data = await response.json();
+    if (data.result) {
+      addLog('info', `Current slot: ${data.result.toLocaleString()}`);
+    }
+  } catch (err) {
+    addLog('lose', `Slot query failed: ${err.message}`);
+  }
+}
+
+// Get epoch info from RPC
+async function getEpochInfo() {
+  if (!connection) return;
+  try {
+    const response = await fetch(connection, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        jsonrpc: '2.0',
+        id: 1,
+        method: 'getEpochInfo',
+        params: [{ commitment: 'confirmed' }]
+      })
+    });
+    const data = await response.json();
+    if (data.result) {
+      const epoch = data.result;
+      addLog('info', `Epoch ${epoch.epoch} | Slot ${epoch.absoluteSlot.toLocaleString()} | ${((epoch.slotIndex / epoch.slotsInEpoch) * 100).toFixed(1)}% complete`);
+      document.getElementById('solBalance').textContent = `E${epoch.epoch}`;
+    }
+  } catch (err) {
+    // silent fail
+  }
+}
+
+// Get recent blockhash (used for transaction construction)
+async function getRecentBlockhash() {
+  if (!connection) return null;
+  try {
+    const response = await fetch(connection, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        jsonrpc: '2.0',
+        id: 1,
+        method: 'getLatestBlockhash',
+        params: [{ commitment: 'confirmed' }]
+      })
+    });
+    const data = await response.json();
+    return data.result?.value?.blockhash || null;
+  } catch (err) {
+    return null;
+  }
+}
+
+// Simulate mining round with real RPC data
+async function mineRound() {
+  if (!isConnected || selectedBlocks.size === 0) {
+    addLog('info', 'Select blocks on the grid first');
+    return;
+  }
+
+  const solPerBlock = parseFloat(document.getElementById('solPerBlock').value) || 0.01;
+  const totalDeployed = solPerBlock * selectedBlocks.size;
+
+  addLog('info', `Round ${stats.rounds + 1}: Deploying ${totalDeployed.toFixed(4)} SOL across ${selectedBlocks.size} block(s)`);
+
+  // Get real blockhash for randomness seed
+  const blockhash = await getRecentBlockhash();
+  if (blockhash) {
+    addLog('info', `Blockhash: ${blockhash.substring(0, 16)}...`);
+  }
+
+  // Simulate other miners deploying
+  gridData = Array(25).fill(0).map(() => Math.random() * 0.1 + 0.005);
+  selectedBlocks.forEach(i => { gridData[i] += solPerBlock; });
+
+  // Determine winning block using blockhash-seeded random
+  let seed = 0;
+  if (blockhash) {
+    for (let i = 0; i < blockhash.length; i++) {
+      seed = ((seed << 5) - seed + blockhash.charCodeAt(i)) | 0;
+    }
+  } else {
+    seed = Date.now();
+  }
+  const winningBlock = Math.abs(seed) % 25;
+
+  // Update grid visual
+  const blocks = document.querySelectorAll('.ore-block');
+  blocks.forEach((block, i) => {
+    block.className = 'ore-block';
+    if (i === winningBlock) {
+      block.className += ' winner';
+    } else if (selectedBlocks.has(i)) {
+      block.className += ' loser';
+    }
+    block.querySelector('.ore-block-sol').textContent = `${gridData[i].toFixed(3)} SOL`;
+  });
+
+  // Calculate results
+  stats.rounds++;
+  const totalLosingSol = gridData.reduce((sum, sol, i) => i !== winningBlock ? sum + sol : sum, 0);
+
+  if (selectedBlocks.has(winningBlock)) {
+    const myShare = gridData[winningBlock] > 0 ? (solPerBlock / gridData[winningBlock]) : 0;
+    const solWon = totalLosingSol * myShare;
+    const oreWon = 1.0 * myShare;
+
+    stats.wins++;
+    stats.solWon += solWon;
+    stats.oreMined += oreWon;
+
+    addLog('win', `BLOCK ${winningBlock + 1} WINS! You earned ${solWon.toFixed(4)} SOL + ${oreWon.toFixed(4)} ORE`);
+
+    // Motherlode check (1 in 625)
+    motherlodePool += 0.2;
+    const motherlodeRoll = Math.abs((seed * 7919) % 625);
+    if (motherlodeRoll === 0) {
+      const jackpot = motherlodePool;
+      const myJackpot = jackpot * myShare;
+      stats.oreMined += myJackpot;
+      addLog('motherlode', `MOTHERLODE TRIGGERED! Pool: ${jackpot.toFixed(2)} ORE — Your share: ${myJackpot.toFixed(4)} ORE`);
+      motherlodePool = 0;
+    }
+  } else {
+    stats.solLost += totalDeployed;
+    motherlodePool += 0.2;
+    addLog('lose', `Block ${winningBlock + 1} won. You lost ${totalDeployed.toFixed(4)} SOL this round.`);
+  }
+
+  // Update UI
+  document.getElementById('oreMined').textContent = stats.oreMined.toFixed(4);
+  document.getElementById('roundCount').textContent = stats.rounds;
+  document.getElementById('winRate').textContent = stats.rounds > 0 ? `${((stats.wins / stats.rounds) * 100).toFixed(1)}%` : '--%';
+  document.getElementById('motherlodePool').textContent = `${motherlodePool.toFixed(2)} ORE`;
+  document.getElementById('motherloadeFill').style.width = `${Math.min((motherlodePool / 125) * 100, 100)}%`;
+}
+
+// Start single round
+function startMining() {
+  mineRound();
+}
+
+// Toggle auto mining
+function toggleAuto() {
+  const btn = document.getElementById('autoBtn');
+  if (isAutoMining) {
+    isAutoMining = false;
+    clearInterval(roundInterval);
+    btn.textContent = 'AUTO';
+    btn.className = 'mine-btn';
+    addLog('info', 'Auto mining stopped');
+  } else {
+    if (selectedBlocks.size === 0) {
+      addLog('info', 'Select blocks on the grid first');
+      return;
+    }
+    isAutoMining = true;
+    btn.textContent = 'STOP';
+    btn.className = 'mine-btn active';
+    addLog('info', 'Auto mining started — 60s rounds');
+
+    // Reset timer
+    roundTimer = 60;
+    document.getElementById('roundTimer').textContent = roundTimer;
+
+    roundInterval = setInterval(() => {
+      roundTimer--;
+      document.getElementById('roundTimer').textContent = roundTimer;
+      if (roundTimer <= 0) {
+        roundTimer = 60;
+        mineRound();
+      }
+    }, 1000);
+  }
+}
+
+// Add log entry
+function addLog(type, message) {
+  const log = document.getElementById('miningLog');
+  const now = new Date();
+  const time = now.toTimeString().substring(0, 8);
+  const classMap = { win: 'log-win', lose: 'log-lose', info: 'log-info', motherlode: 'log-motherlode' };
+  const entry = document.createElement('div');
+  entry.className = 'log-entry';
+  entry.innerHTML = `<span class="log-time">[${time}]</span> <span class="${classMap[type] || 'log-info'}">${message}</span>`;
+  log.appendChild(entry);
+  log.scrollTop = log.scrollHeight;
+}
+
+// Init
+initGrid();
+</script>
+</body>
+</html>
