@@ -1324,22 +1324,119 @@ HONCHO_API_KEY=hch-v3-...
 
 SolanaOS can talk to several model providers:
 
-- OpenRouter
+- OpenRouter (multi-model race, reasoning, embeddings)
 - xAI / Grok
-- Anthropic
-- Ollama
-- OpenAI
+- Anthropic (direct API)
+- Ollama (local, including `8bit/DeepSolana`)
+- Together AI
+- llama.cpp (OpenAI-compatible local server)
 
 The gateway implements a unified `LLMProvider` interface. When `chat.send` arrives over WebSocket, the gateway routes to the configured provider and streams the response back as `chat` events. The gateway prints `LLM attached: <provider> / <model>` on startup. Provider and model are configured via `~/.nanosolana/solanaos.json` (written by `solanaos onboard`) or environment variables.
 
-Current notable paths:
+### OpenRouter Model Presets
 
-- `OPENROUTER_MODEL` for general OpenRouter chat
-- `OPENROUTER_OMNI_MODEL` for omni/multimodal routing
-- `OPENROUTER_MIMO_MODEL=xiaomi/mimo-v2-pro` for `/mimo`
-- `XAI_IMAGE_MODEL` for `/image`
-- `XAI_VIDEO_MODEL` for `/video`
-- `OLLAMA_MODEL=minimax-m2.7:cloud` for local fallback and `/deepsolana`
+Switch models at runtime from Telegram with `/model <preset>`:
+
+| Command | Env var | Default model | Notes |
+|---------|---------|---------------|-------|
+| `/model 1` | `OPENROUTER_MODEL1` | `nvidia/nemotron-3-super-120b-a12b:free` | Free reasoning |
+| `/model 2` | `OPENROUTER_MODEL2` | `nousresearch/hermes-3-llama-3.1-405b:free` | Free 405B |
+| `/model 3` | `OPENROUTER_MODEL3` | `minimax/minimax-m2.5:free` | Free MiniMax |
+| `/model 4` | `OPENROUTER_MODEL4` | `z-ai/glm-5.1` | GLM-5 reasoning |
+| `/model claude` | `OPENROUTER_CLAUDE` | `anthropic/claude-opus-4.6-fast` | Claude via OpenRouter (no Anthropic key needed) |
+| `/model gemma` | `OPENROUTER_GEMMA` | `google/gemma-4-26b-a4b-it:free` | Gemma 4 free |
+| `/model mimo` | `OPENROUTER_MIMO_MODEL` | `xiaomi/mimo-v2-pro` | Mimo reasoning |
+| `/model omni` | `OPENROUTER_OMNI_MODEL` | `xiaomi/mimo-v2-pro` | Multimodal |
+| `/model anthropic <model>` | `ANTHROPIC_API_KEY` | `claude-sonnet-4-6` | Direct Anthropic |
+| `/model xai <model>` | `XAI_API_KEY` | `grok-4-1-fast` | xAI / Grok |
+| `/model ollama <model>` | `OLLAMA_MODEL` | `minimax-m2.7:cloud` | Local Ollama |
+
+**Natural language switching also works** from chat: `"use claude"`, `"switch to gemma"`, `"use model 4"`.
+
+### Free model chain
+
+`OPENROUTER_FREE_MODELS` (comma-separated) sets the fallback chain. Defaults to all free presets:
+
+```bash
+OPENROUTER_FREE_MODELS=nvidia/nemotron-3-super-120b-a12b:free,nousresearch/hermes-3-llama-3.1-405b:free,minimax/minimax-m2.5:free,z-ai/glm-5.1,google/gemma-4-26b-a4b-it:free
+```
+
+### Reasoning (multi-turn)
+
+Claude-via-OpenRouter, GLM-5, and Mimo all support extended reasoning with `reasoning_details` preserved across turns. SolanaOS passes `reasoning_details` back unmodified in session history so the model continues its chain of thought.
+
+```bash
+# Use Claude opus reasoning via OpenRouter (no Anthropic key required)
+OPENROUTER_CLAUDE=anthropic/claude-opus-4.6-fast
+# Then switch to it: /model claude
+```
+
+### Semantic Memory Search (Embeddings)
+
+When `OPENROUTER_API_KEY` is set, SolanaOS automatically enables **vector semantic search** for memory recall using the OpenRouter Embeddings API:
+
+```
+POST https://openrouter.ai/api/v1/embeddings
+model: openai/text-embedding-3-small (default)
+```
+
+- Memory `Recall` / `/memory_search` / `/recall` use **cosine similarity** instead of keyword matching
+- Results are cached in-memory to avoid re-embedding identical strings
+- Override the embedding model: `OPENROUTER_EMBEDDING_MODEL=openai/text-embedding-3-large`
+- On startup you'll see: `[MEMORY] ✅ semantic search enabled (model: openai/text-embedding-3-small)`
+
+### Local DeepSolana (Ollama)
+
+Run the Solana-specialized reasoning model locally:
+
+```bash
+ollama pull 8bit/DeepSolana
+OLLAMA_MODEL=8bit/DeepSolana
+# or switch at runtime: /model ollama 8bit/DeepSolana
+```
+
+Model source: [HuggingFace ordlibrary/DeepSeek-R1-Solana-Reasoning](https://huggingface.co/ordlibrary/DeepSeek-R1-Solana-Reasoning) · [Ollama 8bit/DeepSolana](https://ollama.com/8bit/DeepSolana)
+
+### All LLM env vars
+
+```bash
+# OpenRouter
+OPENROUTER_API_KEY=sk-or-v1-...         # required for OpenRouter + semantic memory
+OPENROUTER_MODEL=minimax/minimax-m2.7   # default active model
+OPENROUTER_MODEL1=nvidia/nemotron-3-super-120b-a12b:free
+OPENROUTER_MODEL2=nousresearch/hermes-3-llama-3.1-405b:free
+OPENROUTER_MODEL3=minimax/minimax-m2.5:free
+OPENROUTER_MODEL4=z-ai/glm-5.1
+OPENROUTER_CLAUDE=anthropic/claude-opus-4.6-fast
+OPENROUTER_GEMMA=google/gemma-4-26b-a4b-it:free
+OPENROUTER_MIMO_MODEL=xiaomi/mimo-v2-pro
+OPENROUTER_OMNI_MODEL=xiaomi/mimo-v2-pro
+OPENROUTER_FREE_MODELS=                 # comma-separated fallback chain (auto-built from presets if empty)
+OPENROUTER_EMBEDDING_MODEL=openai/text-embedding-3-small
+
+# Anthropic (direct)
+ANTHROPIC_API_KEY=sk-ant-...
+ANTHROPIC_MODEL=claude-sonnet-4-6
+
+# xAI
+XAI_API_KEY=...
+XAI_IMAGE_MODEL=grok-imagine-image      # /image
+XAI_VIDEO_MODEL=grok-imagine-video      # /video
+
+# Ollama (local)
+OLLAMA_MODEL=8bit/DeepSolana            # or minimax-m2.7:cloud
+OLLAMA_BASE_URL=http://127.0.0.1:11434
+OLLAMA_FALLBACK_ENABLED=true
+
+# Together AI
+TOGETHER_API_KEY=...
+TOGETHER_MODEL=zai-org/GLM-5
+
+# llama.cpp server (OpenAI-compatible)
+LLAMA_CPP_URL=http://127.0.0.1:8079
+LLAMA_CPP_MODEL=gemma4
+LLAMA_CPP_ENABLED=false
+```
 
 ## Trading Stack
 

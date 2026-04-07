@@ -56,6 +56,7 @@ type Bridge struct {
 	llm         LLMProvider    // optional chat inference
 	skills      SkillsProvider // optional skills catalog
 	honcho      HonchoProvider // optional Honcho memory
+	dreamer     DreamerProvider // optional dreaming engine
 	startedAt   time.Time
 	reloadLLM   func() LLMProvider          // callback to reload LLM from config
 	chatHistory map[string][]map[string]any // session -> messages
@@ -123,6 +124,27 @@ type HonchoProvider interface {
 // SetHoncho attaches a Honcho memory provider.
 func (b *Bridge) SetHoncho(provider HonchoProvider) {
 	b.honcho = provider
+}
+
+// DreamerProvider gives the gateway read/trigger access to the dreaming engine.
+type DreamerProvider interface {
+	// Status returns a human-readable status string.
+	Status() string
+	// LastSweepAt returns the RFC3339 timestamp of the last sweep, or "".
+	LastSweepAt() string
+	// LastPromoted returns the count of entries promoted in the last sweep.
+	LastPromoted() int
+	// LastStaged returns the count of signals staged in the last sweep.
+	LastStaged() int
+	// DiaryEntry returns the last dream diary entry, or "".
+	DiaryEntry() string
+	// RunSweep triggers an immediate sweep. Returns a summary string.
+	RunSweep(ctx context.Context) (string, error)
+}
+
+// SetDreamer attaches a dreaming provider.
+func (b *Bridge) SetDreamer(provider DreamerProvider) {
+	b.dreamer = provider
 }
 
 // configFilePath returns the path to solanaos.json.
