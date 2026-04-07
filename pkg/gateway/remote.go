@@ -23,11 +23,11 @@ type RemoteTunnelSpec struct {
 
 func RemoteTunnelSpecFromConfig(cfg *config.Config) RemoteTunnelSpec {
 	spec := RemoteTunnelSpec{
-		Alias:            "nanosolana-remote-gateway",
+		Alias:            "solanaos-remote-gateway",
 		LocalPort:        18790,
 		RemotePort:       18790,
 		RemoteBindHost:   "127.0.0.1",
-		LaunchAgentLabel: "ai.nanosolana.ssh-tunnel",
+		LaunchAgentLabel: "ai.solanaos.ssh-tunnel",
 	}
 	if cfg == nil {
 		return spec
@@ -49,7 +49,7 @@ func RemoteTunnelSpecFromConfig(cfg *config.Config) RemoteTunnelSpec {
 
 func (s RemoteTunnelSpec) SSHConfigEntry() string {
 	var b strings.Builder
-	alias := firstNonEmptyTrimmed(s.Alias, "nanosolana-remote-gateway")
+	alias := firstNonEmptyTrimmed(s.Alias, "solanaos-remote-gateway")
 	fmt.Fprintf(&b, "Host %s\n", alias)
 	if host := strings.TrimSpace(s.Host); host != "" {
 		fmt.Fprintf(&b, "    HostName %s\n", host)
@@ -71,7 +71,7 @@ func (s RemoteTunnelSpec) SSHConfigEntry() string {
 }
 
 func (s RemoteTunnelSpec) TunnelCommand() string {
-	return fmt.Sprintf("ssh -N %s", firstNonEmptyTrimmed(s.Alias, "nanosolana-remote-gateway"))
+	return fmt.Sprintf("ssh -N %s", firstNonEmptyTrimmed(s.Alias, "solanaos-remote-gateway"))
 }
 
 func (s RemoteTunnelSpec) DirectTunnelCommand() string {
@@ -95,12 +95,12 @@ func (s RemoteTunnelSpec) LocalForwardURL(scheme string) string {
 }
 
 func (s RemoteTunnelSpec) LaunchAgentFilename() string {
-	return firstNonEmptyTrimmed(s.LaunchAgentLabel, "ai.nanosolana.ssh-tunnel") + ".plist"
+	return firstNonEmptyTrimmed(s.LaunchAgentLabel, "ai.solanaos.ssh-tunnel") + ".plist"
 }
 
 func (s RemoteTunnelSpec) LaunchAgentPlist() (string, error) {
-	label := firstNonEmptyTrimmed(s.LaunchAgentLabel, "ai.nanosolana.ssh-tunnel")
-	alias := firstNonEmptyTrimmed(s.Alias, "nanosolana-remote-gateway")
+	label := firstNonEmptyTrimmed(s.LaunchAgentLabel, "ai.solanaos.ssh-tunnel")
+	alias := firstNonEmptyTrimmed(s.Alias, "solanaos-remote-gateway")
 	type plistDict struct {
 		XMLName          xml.Name `xml:"plist"`
 		Version          string   `xml:"version,attr"`

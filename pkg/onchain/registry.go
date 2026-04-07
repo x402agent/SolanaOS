@@ -201,7 +201,7 @@ type localRegistration struct {
 }
 
 func saveRegistration(result *RegistrationResult, metadata *AgentMetadata) error {
-	dir := filepath.Join(os.Getenv("HOME"), ".nanosolana", "registry")
+	dir := filepath.Join(os.Getenv("HOME"), ".solanaos", "registry")
 	if err := os.MkdirAll(dir, 0o755); err != nil {
 		return err
 	}
@@ -223,7 +223,7 @@ func saveRegistration(result *RegistrationResult, metadata *AgentMetadata) error
 
 // LoadRegistration loads the local registration if it exists.
 func LoadRegistration() (*localRegistration, error) {
-	path := filepath.Join(os.Getenv("HOME"), ".nanosolana", "registry", "registration.json")
+	path := filepath.Join(os.Getenv("HOME"), ".solanaos", "registry", "registration.json")
 	data, err := os.ReadFile(path)
 	if err != nil {
 		return nil, err

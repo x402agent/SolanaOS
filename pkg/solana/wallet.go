@@ -1,10 +1,10 @@
-// Package solana — NanoSolana wallet management.
+// Package solana — SolanaOS wallet management.
 // Wraps gagliardetto/solana-go keypair and wallet primitives
 // for signing transactions, managing keys, and deriving PDAs.
 //
 // On first heartbeat, EnsureAgentWallet auto-generates a Solana keypair
 // and persists it in standard Solana keygen JSON format at
-// ~/.nanosolana/wallet/agent-wallet.json.
+// ~/.solanaos/wallet/agent-wallet.json.
 package solana
 
 import (
@@ -23,7 +23,7 @@ var (
 	agentWallet     *Wallet
 )
 
-// ── NanoSolana Wallet wrapper ─────────────────────────────────────────
+// ── SolanaOS Wallet wrapper ─────────────────────────────────────────
 // Adapts gagliardetto/solana-go wallet types for the trading agent.
 
 // Wallet holds the private key and provides signing operations.
@@ -190,7 +190,7 @@ const (
 // Called on first heartbeat. Thread-safe via sync.Once.
 //   - If walletKeyPath is set and exists, uses it.
 //   - If SOLANA_PRIVATE_KEY env is set, uses it.
-//   - Otherwise generates a new keypair at ~/.nanosolana/wallet/agent-wallet.json.
+//   - Otherwise generates a new keypair at ~/.solanaos/wallet/agent-wallet.json.
 //
 // Returns the wallet (may be the same across all calls).
 func EnsureAgentWallet(walletKeyPath string) (*Wallet, error) {
@@ -212,7 +212,7 @@ func EnsureAgentWallet(walletKeyPath string) (*Wallet, error) {
 
 		// 2. Check if we already generated one previously
 		home, _ := os.UserHomeDir()
-		agentPath := filepath.Join(home, ".nanosolana", defaultWalletDir, defaultWalletFile)
+		agentPath := filepath.Join(home, ".solanaos", defaultWalletDir, defaultWalletFile)
 		if _, err := os.Stat(agentPath); err == nil {
 			w, err = WalletFromKeygenFile(agentPath)
 			if err != nil {

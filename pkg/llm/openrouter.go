@@ -1233,7 +1233,7 @@ func loadSoulPrompt() string {
 
 func soulPromptCandidatePaths() []string {
 	candidates := make([]string, 0, 8)
-	if explicit := strings.TrimSpace(firstNonEmptyEnv(soulPathEnvKey, "NANOSOLANA_SOUL_PATH")); explicit != "" {
+	if explicit := strings.TrimSpace(firstNonEmptyEnv(soulPathEnvKey, "SOLANAOS_SOUL_PATH")); explicit != "" {
 		candidates = append(candidates, explicit)
 	}
 	if wd, err := os.Getwd(); err == nil && strings.TrimSpace(wd) != "" {
@@ -1257,14 +1257,14 @@ func soulPromptCandidatePaths() []string {
 }
 
 func defaultSolanaOSHome() string {
-	if h := strings.TrimSpace(firstNonEmptyEnv("SOLANAOS_HOME", "NANOSOLANA_HOME", "MAWDBOT_HOME")); h != "" {
+	if h := strings.TrimSpace(firstNonEmptyEnv("SOLANAOS_HOME", "SOLANAOS_HOME", "MAWDBOT_HOME")); h != "" {
 		return h
 	}
 	home, err := os.UserHomeDir()
 	if err != nil || strings.TrimSpace(home) == "" {
 		return ""
 	}
-	return filepath.Join(home, ".nanosolana")
+	return filepath.Join(home, ".solanaos")
 }
 
 func (c *Client) chatOpenRouter(ctx context.Context, endpoint, model, sessionID, titleOverride string, payload map[string]interface{}) (string, json.RawMessage, error) {

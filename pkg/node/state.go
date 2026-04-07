@@ -82,7 +82,7 @@ func DefaultStatePath() string {
 	if err != nil {
 		return "./nanosolana-node.json"
 	}
-	return filepath.Join(home, ".nanosolana", "node.json")
+	return filepath.Join(home, ".solanaos", "node.json")
 }
 
 // LoadOrInitState loads existing state or creates a new identity.

@@ -1,0 +1,11 @@
+{
+	"extName": {
+		"message": "SolanaOS Agent"
+	},
+	"extDescription": {
+		"message": "SolanaOS Browser Agent — AI-powered browsing with Solana wallet integration."
+	},
+	"extActionTitle": {
+		"message": "Open SolanaOS Agent"
+	}
+}

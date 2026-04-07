@@ -1,4 +1,4 @@
-// Package telegram provides the Telegram channel for NanoSolana.
+// Package telegram provides the Telegram channel for SolanaOS.
 // Uses github.com/mymmrac/telego for the bot API client.
 // Features: long polling, typing indicators, placeholder edit, forum threads,
 // markdown→HTML, allowlist, jitter retry for command registration.

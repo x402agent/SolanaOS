@@ -1,0 +1,37 @@
+{
+    "name": "@solanaos/browser-mcp",
+    "private": false,
+    "version": "1.6.2",
+    "type": "module",
+    "bin": {
+        "solanaos-browser-mcp": "src/index.js"
+    },
+    "files": [
+        "src/"
+    ],
+    "description": "SolanaOS Browser MCP server — AI-powered browser control via the SolanaOS Agent extension",
+    "keywords": [
+        "solanaos",
+        "mcp",
+        "browser-automation",
+        "chrome-extension",
+        "solana",
+        "page-agent"
+    ],
+    "author": "SolanaOS",
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/x402agent/SolanaOS.git",
+        "directory": "chrome-extension/mcp"
+    },
+    "homepage": "https://solanaos.net",
+    "engines": {
+        "node": ">=20"
+    },
+    "dependencies": {
+        "@modelcontextprotocol/sdk": "^1.27.1",
+        "ws": "^8.20.0",
+        "zod": "^4.3.5"
+    }
+}

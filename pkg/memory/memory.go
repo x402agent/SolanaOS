@@ -54,6 +54,7 @@ type EngineOpts struct {
 	OpenAIAPIKey       string
 	VaultPath          string
 	SessionID          string
+	Embedder           Embedder // optional; enables semantic Recall
 }
 
 func NewMemoryEngine(opts EngineOpts) *MemoryEngine {
@@ -67,7 +68,7 @@ func NewMemoryEngine(opts EngineOpts) *MemoryEngine {
 		sessionID = fmt.Sprintf("session-%d", time.Now().UnixMilli())
 	}
 
-	return &MemoryEngine{
+	me := &MemoryEngine{
 		supabaseURL:  opts.SupabaseURL,
 		supabaseKey:  opts.SupabaseServiceKey,
 		openaiKey:    opts.OpenAIAPIKey,
@@ -76,6 +77,16 @@ func NewMemoryEngine(opts EngineOpts) *MemoryEngine {
 		useSupabase:  opts.SupabaseURL != "" && opts.SupabaseServiceKey != "",
 		httpClient:   &http.Client{Timeout: 15 * time.Second},
 	}
+	if opts.Embedder != nil {
+		vault.SetEmbedder(opts.Embedder)
+	}
+	return me
+}
+
+// SetEmbedder injects a semantic embedding client into the vault.
+// Safe to call after construction; takes effect on the next Recall.
+func (me *MemoryEngine) SetEmbedder(e Embedder) {
+	me.vault.SetEmbedder(e)
 }
 
 func (me *MemoryEngine) Init() error {

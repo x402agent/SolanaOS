@@ -211,7 +211,7 @@ func (s *Server) authMiddleware(next http.Handler) http.Handler {
 
 func (s *Server) handleRoot(w http.ResponseWriter, r *http.Request) {
 	jsonResp(w, map[string]any{
-		"service": "nanosolana-agent-wallet",
+		"service": "solanaos-agent-wallet",
 		"version": "1.0.0",
 		"chains":  []string{"solana", "evm"},
 	})

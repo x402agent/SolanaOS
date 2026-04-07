@@ -244,12 +244,14 @@ npx solanaos-cli@latest --help
 npx nanosolana-cli@latest --help
 ```
 
-| Package | Purpose |
-| --- | --- |
-| [`solanaos-computer`](https://www.npmjs.com/package/solanaos-computer) | Main one-shot installer |
-| [`solanaos-cli`](https://www.npmjs.com/package/solanaos-cli) | Primary CLI package alias |
-| [`nanosolana-cli`](https://www.npmjs.com/package/nanosolana-cli) | Compatibility installer alias |
-| [`@nanosolana/nanohub`](https://www.npmjs.com/package/@nanosolana/nanohub) | Skill registry CLI |
+| Package | Source | Purpose |
+| --- | --- | --- |
+| [`solanaos-computer`](https://www.npmjs.com/package/solanaos-computer) | `npm/solanaos/` | Main one-shot installer (v1.1.1) |
+| [`solanaos-cli`](https://www.npmjs.com/package/solanaos-cli) | `npm/solanaos-installer/` | Primary CLI package alias (v2.1.1) |
+| [`nanosolana-cli`](https://www.npmjs.com/package/nanosolana-cli) | `npm/mawdbot-installer/` | Legacy compat alias (v2.1.1) |
+| [`@nanosolana/nanohub`](https://www.npmjs.com/package/@nanosolana/nanohub) | separate repo | Skill registry CLI |
+
+> **Note:** `new/npm/` contains older draft versions — the canonical packages are in `npm/`. Use `make npm-sync` to check for version drift.
 
 ### Authentication
 
@@ -792,12 +794,31 @@ Compatibility npm packages still exist:
 ```bash
 git clone https://github.com/x402agent/SolanaOS.git
 cd solanaos
-cp .env.example .env
-make build                        # builds UI (npm ci + vite) then Go binary with //go:embed
-./build/solanaos onboard          # or edit .env manually
-./build/solanaos version
-./build/solanaos server            # Control UI at http://localhost:7777
-./build/solanaos daemon
+cp .env.example .env              # fill in keys (see Minimum useful .env below)
+
+# Build everything
+make build                        # solanaos binary (UI embed + Go)
+make build-agent-wallet           # agent-wallet binary (port 8421)
+make build-gateway-api            # standalone gateway-api binary (port 18790)
+make build-mcp                    # solanaos-mcp TypeScript server (port 3001)
+
+# Start all services in one shot
+bash start.sh                     # agent-wallet → daemon → mcp
+bash start.sh --status            # check what's running
+bash start.sh --stop              # stop everything
+
+# Or start individually
+./build/solanaos onboard          # interactive setup wizard
+./build/solanaos server           # Control UI at http://localhost:7777
+./build/solanaos daemon           # full autonomous agent
+./build/agent-wallet              # encrypted wallet vault API
+```
+
+Alternatively, the one-shot installer handles all builds:
+
+```bash
+bash install.sh                   # build + install all binaries to ~/.nanosolana/bin
+bash install.sh --with-web        # also build the web console
 ```
 
 ### Minimum useful `.env`
@@ -1467,8 +1488,8 @@ On every startup the agent wallet bootstraps two dedicated AES-256-GCM encrypted
 
 | Key | File | Purpose |
 | --- | --- | --- |
-| `dev` | `~/.nanosolana/signers/dev.enc` | Devnet / local development signing |
-| `trade` | `~/.nanosolana/signers/trade.enc` | Mainnet trading and live transactions |
+| `dev` | `~/.solanaos/signers/dev.enc` | Devnet / local development signing |
+| `trade` | `~/.solanaos/signers/trade.enc` | Mainnet trading and live transactions |
 
 Key loading priority: `LOCAL_SIGNER_{MODE}_KEY` env var → disk `.enc` file → fresh generated keypair. Each file is an AES-256-GCM envelope:
 
@@ -1505,8 +1526,8 @@ solanaos wallet-api
 ```
 
 This single command:
-1. Initializes the AES-256-GCM encrypted vault at `~/.nanosolana/vault/`
-2. Generates (or loads) `dev` and `trade` signing keys at `~/.nanosolana/signers/`
+1. Initializes the AES-256-GCM encrypted vault at `~/.solanaos/vault/`
+2. Generates (or loads) `dev` and `trade` signing keys at `~/.solanaos/signers/`
 3. Creates a default Solana vault wallet if no wallets exist
 4. Connects to Solana RPC and any configured EVM chains
 5. Starts the wallet API server on port 8421
@@ -1643,6 +1664,60 @@ PRIVY_APP_SECRET=             # Privy app secret
 | Avalanche | 43114 | evm | AVAX |
 | Zora | 7777777 | evm | ETH |
 | PulseChain | 369 | evm | PLS |
+
+## Cloudflare Workers
+
+SolanaOS ships two Cloudflare Worker deployments for edge-side execution:
+
+### Agent Wallet Worker (`workers/agent-wallet/`)
+
+Edge version of the agent wallet vault — AES-256-GCM encrypted keys stored in Cloudflare KV, same REST API as the Go service (`/v1/wallets`, `/v1/local-signers`, etc.). Useful when you need global low-latency wallet access without running a Go process.
+
+```bash
+cd workers/agent-wallet
+wrangler secret put VAULT_PASSPHRASE
+wrangler secret put WALLET_API_KEY
+wrangler secret put SOLANA_RPC_URL
+wrangler deploy
+```
+
+Worker name: `nanosolana-agent-wallet` — deployed to `nanosolana-agent-wallet.<account>.workers.dev`
+
+### Pump.fun MCP Worker (`pumpfun-mcp-worker/`)
+
+Cloudflare Worker that runs a pump.fun token scanner on a 15-minute cron trigger and exposes results via MCP. Stores scan results in KV, surfaces them as MCP tools for AI agents.
+
+```bash
+cd pumpfun-mcp-worker
+wrangler deploy
+```
+
+Worker name: `pumpfun-mcp-server` — cron: `*/15 * * * *`
+
+---
+
+## Standalone Trading Bots (`bots/`)
+
+Two standalone pump.fun bots — separate Node.js projects, independent of the main daemon. Use them if you want a focused single-purpose trading bot without the full SolanaOS stack.
+
+| Bot | Path | What |
+| --- | --- | --- |
+| **AI Trading Bot** | `bots/pumpfun-mayhem-ai-trading-bot-main/` | Express API + AI-driven trade decisions |
+| **Sniper Bot** | `bots/pumpfun-mayhem-sniper-main/` | Fast entry sniper with MAYHEM_MODE |
+
+```bash
+# AI Trading Bot
+cd bots/pumpfun-mayhem-ai-trading-bot-main
+npm install && npm run dev       # API on port 3001
+
+# Sniper
+cd bots/pumpfun-mayhem-sniper-main
+npm install && npm start
+```
+
+See [pump.md](pump.md) for live scanner output format and token screening criteria.
+
+---
 
 ## ACP Registry Generator
 
@@ -1843,7 +1918,12 @@ Notes:
 - `solanaos` is the name users see; `nanosolana` is the supported legacy alias throughout
 - `npm/` is the canonical npm workspace — `new/npm/` contains older drafts and is not published
 - Workers in `workers/` and `pumpfun-mcp-worker/` are deployed separately via Wrangler/Cloudflare
-- `bots/`, `WatchApp/`, `page-agent-main/`, `extensions/` are standalone sub-projects with their own build systems
+- `bots/` — two standalone pump.fun bots (AI trading + sniper); independent Node.js projects
+- `WatchApp/` — Apple Watch app (Swift/WatchOS) for wallet balance glances; built with Xcode
+- `page-agent-main/` — web UI automation agent (AI-powered browser control)
+- `extensions/bluebubbles/` — iMessage bridge integration via BlueBubbles server
+- `workers/` and `pumpfun-mcp-worker/` — deployed separately to Cloudflare via `wrangler deploy`
+- `new/npm/` — stale draft packages; canonical npm packages live in `npm/`
 
 ## Configuration Notes
 

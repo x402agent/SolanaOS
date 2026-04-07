@@ -199,7 +199,7 @@ func findConverterScript() string {
 		"pdf_to_md.py",
 		filepath.Join("scripts", "pdf_to_md.py"),
 		filepath.Join(os.Getenv("SOLANAOS_HOME"), "scripts", "pdf_to_md.py"),
-		filepath.Join(os.Getenv("HOME"), ".nanosolana", "scripts", "pdf_to_md.py"),
+		filepath.Join(os.Getenv("HOME"), ".solanaos", "scripts", "pdf_to_md.py"),
 	}
 
 	for _, c := range candidates {

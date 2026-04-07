@@ -223,7 +223,7 @@ func safeSlug(input string) string {
 func defaultPythonTemplate() string {
 	return `#!/usr/bin/env python3
 """
-NanoSolana delegate worker template.
+SolanaOS delegate worker template.
 Implement your RPC bridge in execute_tool() and keep the worker stateless.
 """
 
@@ -254,7 +254,7 @@ if __name__ == "__main__":
 func renderPythonWorker(spec WorkerSpec) string {
 	return fmt.Sprintf(`#!/usr/bin/env python3
 """
-Auto-scaffolded NanoSolana delegate worker.
+Auto-scaffolded SolanaOS delegate worker.
 Role: %s
 Task: %s
 Backend: %s

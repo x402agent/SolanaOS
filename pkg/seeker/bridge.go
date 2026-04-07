@@ -237,7 +237,7 @@ type SeekerConfig struct {
 // DefaultSeekerConfig returns Seeker-optimized defaults.
 func DefaultSeekerConfig() SeekerConfig {
 	home, _ := os.UserHomeDir()
-	ws := filepath.Join(home, ".nanosolana", "workspace")
+	ws := filepath.Join(home, ".solanaos", "workspace")
 
 	return SeekerConfig{
 		BridgePort:        DefaultBridgePort,

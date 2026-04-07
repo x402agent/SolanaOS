@@ -9,7 +9,7 @@ const defaultPublicHubURL = "https://seeker.solanaos.net"
 
 func PublicHubURL() string {
 	return normalizePublicURL(
-		firstNonEmptyEnv("SEEKER_SITE_URL", "NANOSOLANA_SITE_URL", "SOLANAOS_SITE_URL"),
+		firstNonEmptyEnv("SEEKER_SITE_URL", "SOLANAOS_SITE_URL", "SOLANAOS_SITE_URL"),
 		defaultPublicHubURL,
 	)
 }

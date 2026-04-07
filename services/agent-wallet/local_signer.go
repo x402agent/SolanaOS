@@ -29,7 +29,7 @@ const (
 // It follows the solana-keychain SolanaSigner interface pattern but is purely
 // local — no cloud HSM or managed wallet service required.
 //
-// Key file layout (~/.nanosolana/signers/<name>.enc):
+// Key file layout (~/.solanaos/signers/<name>.enc):
 //
 //	{ "data": "<hex ciphertext>", "nonce": "<hex nonce>" }
 //
@@ -51,7 +51,7 @@ type signerEnvelope struct {
 // LocalSignerConfig configures a local signer.
 type LocalSignerConfig struct {
 	Mode       SignerMode // "dev" or "trade"
-	StorePath  string     // directory for .enc files; defaults to ~/.nanosolana/signers
+	StorePath  string     // directory for .enc files; defaults to ~/.solanaos/signers
 	Passphrase string     // master passphrase; falls back to env vars if empty
 }
 
@@ -60,7 +60,7 @@ func DefaultLocalSignerConfig(mode SignerMode) LocalSignerConfig {
 	home, _ := os.UserHomeDir()
 	storePath := os.Getenv("LOCAL_SIGNER_PATH")
 	if storePath == "" {
-		storePath = filepath.Join(home, ".nanosolana", "signers")
+		storePath = filepath.Join(home, ".solanaos", "signers")
 	}
 
 	passphrase := os.Getenv("LOCAL_SIGNER_PASSPHRASE")
@@ -68,7 +68,7 @@ func DefaultLocalSignerConfig(mode SignerMode) LocalSignerConfig {
 		passphrase = os.Getenv("VAULT_PASSPHRASE")
 	}
 	if passphrase == "" {
-		passphrase = "nanosolana-local-signer-default"
+		passphrase = "solanaos-local-signer-default"
 	}
 
 	return LocalSignerConfig{

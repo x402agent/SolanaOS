@@ -748,7 +748,7 @@ func (b *Bridge) handleWSRequest(writeJSON func(map[string]any), id, method stri
 			"payload": map[string]any{
 				"skills":           skillsList,
 				"workspaceDir":     "skills/",
-				"managedSkillsDir": "~/.nanosolana/skills",
+				"managedSkillsDir": "~/.solanaos/skills",
 			},
 		})
 

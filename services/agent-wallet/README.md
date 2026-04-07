@@ -23,7 +23,7 @@ Two dedicated AES-256-GCM encrypted keypairs — `dev` (devnet / testing) and `t
 ### Key lifecycle
 
 1. Check `LOCAL_SIGNER_DEV_KEY` / `LOCAL_SIGNER_TRADE_KEY` env vars (base58 private key)
-2. Load from disk at `~/.nanosolana/signers/{dev,trade}.enc`
+2. Load from disk at `~/.solanaos/signers/{dev,trade}.enc`
 3. Generate a fresh keypair and persist it
 
 Keys are encrypted with AES-256-GCM. The master key is derived from `VAULT_PASSPHRASE` (or `TRADE_SIGNER_PASSPHRASE` for the trade key) via SHA-256. The envelope format stored on disk:
@@ -139,7 +139,7 @@ The agent wallet is embedded into the main `solanaos` binary and started automat
 | `TRADE_SIGNER_PASSPHRASE` | _(uses VAULT_PASSPHRASE)_ | Separate passphrase for trade key |
 | `LOCAL_SIGNER_DEV_KEY` | _(generated)_ | Seed dev signer with base58 private key |
 | `LOCAL_SIGNER_TRADE_KEY` | _(generated)_ | Seed trade signer with base58 private key |
-| `LOCAL_SIGNER_PATH` | `~/.nanosolana/signers` | Directory for `.enc` key files |
+| `LOCAL_SIGNER_PATH` | `~/.solanaos/signers` | Directory for `.enc` key files |
 | `SOLANA_RPC_URL` | Solana mainnet | Solana RPC endpoint |
 | `E2B_API_KEY` | _(none)_ | E2B API key for cloud sandboxes |
 | `LOCAL_SANDBOX_BASE_PORT` | `8430` | Base port for local sandbox processes |

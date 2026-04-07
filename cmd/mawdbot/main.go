@@ -41,12 +41,12 @@ const (
 	colorReset  = "\033[0m"
 
 	banner = "\r\n" +
-		colorGreen + "    ███╗   ██╗ █████╗ ███╗   ██╗ ██████╗ " + colorPurple + "███████╗ ██████╗ ██╗      █████╗ ███╗   ██╗ █████╗ \n" +
-		colorGreen + "    ████╗  ██║██╔══██╗████╗  ██║██╔═══██╗" + colorPurple + "██╔════╝██╔═══██╗██║     ██╔══██╗████╗  ██║██╔══██╗\n" +
-		colorGreen + "    ██╔██╗ ██║███████║██╔██╗ ██║██║   ██║" + colorPurple + "███████╗██║   ██║██║     ███████║██╔██╗ ██║███████║\n" +
-		colorGreen + "    ██║╚██╗██║██╔══██║██║╚██╗██║██║   ██║" + colorPurple + "╚════██║██║   ██║██║     ██╔══██║██║╚██╗██║██╔══██║\n" +
-		colorGreen + "    ██║ ╚████║██║  ██║██║ ╚████║╚██████╔╝" + colorPurple + "███████║╚██████╔╝███████╗██║  ██║██║ ╚████║██║  ██║\n" +
-		colorGreen + "    ╚═╝  ╚═══╝╚═╝  ╚═╝╚═╝  ╚═══╝ ╚═════╝ " + colorPurple + "╚══════╝ ╚═════╝ ╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝  ╚═╝\n" +
+		colorGreen + "    ███████╗ ██████╗ ██╗      █████╗ ███╗   ██╗ █████╗ " + colorPurple + " ██████╗ ███████╗\n" +
+		colorGreen + "    ██╔════╝██╔═══██╗██║     ██╔══██╗████╗  ██║██╔══██╗" + colorPurple + "██╔═══██╗██╔════╝\n" +
+		colorGreen + "    ███████╗██║   ██║██║     ███████║██╔██╗ ██║███████║" + colorPurple + "██║   ██║███████╗\n" +
+		colorGreen + "    ╚════██║██║   ██║██║     ██╔══██║██║╚██╗██║██╔══██║" + colorPurple + "██║   ██║╚════██║\n" +
+		colorGreen + "    ███████║╚██████╔╝███████╗██║  ██║██║ ╚████║██║  ██║" + colorPurple + "╚██████╔╝███████║\n" +
+		colorGreen + "    ╚══════╝ ╚═════╝ ╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝  ╚═╝" + colorPurple + " ╚═════╝ ╚══════╝\n" +
 		colorReset + "\n" +
 		colorDim + "    ┌──────────────────────────────────────────────────────────────────┐\n" +
 		colorDim + "    │" + colorTeal + "  🖥️  SolanaOS Computer · Operator-Grade Solana Runtime" + colorDim + "          │\n" +
@@ -223,7 +223,7 @@ func NewGatewayRemoteCommand() *cobra.Command {
 			}
 			fmt.Printf("%s🖥️ SolanaOS Remote Gateway%s\n\n", colorGreen, colorReset)
 			fmt.Printf("Local forwarded URL: %s%s%s\n", colorTeal, spec.LocalForwardURL(firstNonEmptyString(scheme, "ws")), colorReset)
-			fmt.Printf("SSH alias:           %s\n", firstNonEmptyString(spec.Alias, "nanosolana-remote-gateway"))
+			fmt.Printf("SSH alias:           %s\n", firstNonEmptyString(spec.Alias, "solanaos-remote-gateway"))
 			fmt.Printf("Tunnel command:      %s\n", spec.TunnelCommand())
 			fmt.Printf("Direct command:      %s\n", spec.DirectTunnelCommand())
 			if cfg != nil {

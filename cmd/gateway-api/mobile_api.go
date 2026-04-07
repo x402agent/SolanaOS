@@ -158,7 +158,7 @@ func registerLegacyControlRoutes(mux *http.ServeMux, api *mobileAPI) {
 }
 
 func newMobileAPI(cfg config, fleet *fleetStore) (*mobileAPI, error) {
-	identity, err := loadOrCreateDeviceIdentity(filepath.Join(userHomeDir(), ".nanosolana"))
+	identity, err := loadOrCreateDeviceIdentity(filepath.Join(userHomeDir(), ".solanaos"))
 	if err != nil {
 		return nil, err
 	}
@@ -556,7 +556,7 @@ func (a *mobileAPI) handleSetupCode(w http.ResponseWriter, r *http.Request) {
 		"deviceId":  a.identity.DeviceID,
 		"publicKey": a.identity.PublicKeyBase64URL(),
 		"protocol":  gatewayProtocolVersion,
-		"filePath":  filepath.Join(userHomeDir(), ".nanosolana", "connect", "setup-code.txt"),
+		"filePath":  filepath.Join(userHomeDir(), ".solanaos", "connect", "setup-code.txt"),
 	})
 }
 
@@ -776,7 +776,7 @@ func (a *mobileAPI) prefsPayload() map[string]any {
 		"autoStartOnBoot":          true,
 		"darkMode":                 true,
 		"voiceWakeMode":            "foreground",
-		"wakeWords":                []string{"nanosolana", "seeker"},
+		"wakeWords":                []string{"solanaos", "seeker"},
 		"talkEnabled":              false,
 		"speakerEnabled":           true,
 		"onboardingCompleted":      true,
@@ -1031,7 +1031,7 @@ func (a *mobileAPI) processInvoke(command string, params json.RawMessage) invoke
 	case "camera.clip":
 		return invokeOK(map[string]any{"format": "mp4", "durationMs": 3000})
 	case "voicewake.get":
-		return invokeOK(map[string]any{"triggers": []string{"nanosolana", "seeker"}})
+		return invokeOK(map[string]any{"triggers": []string{"solanaos", "seeker"}})
 	case "voicewake.set":
 		var req struct {
 			Triggers []string `json:"triggers"`
@@ -1344,7 +1344,7 @@ func sanitizeWakeWords(words []string) []string {
 		}
 	}
 	if len(out) == 0 {
-		return []string{"nanosolana", "seeker"}
+		return []string{"solanaos", "seeker"}
 	}
 	return out
 }

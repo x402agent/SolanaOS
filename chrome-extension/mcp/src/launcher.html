@@ -1,0 +1,85 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>SolanaOS Browser MCP</title>
+		<style>
+			* { margin: 0; padding: 0; box-sizing: border-box; }
+			body { font-family: system-ui, -apple-system, sans-serif; background: #0a0a0f; color: #e5e5e5; display: flex; align-items: center; justify-content: center; min-height: 100vh; }
+			.card { text-align: center; max-width: 480px; padding: 3rem 2rem; }
+			.badge { font-size: 0.7rem; font-weight: 500; color: #14f195; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 1.5rem; }
+			h1 { font-size: 1.35rem; font-weight: 600; margin-bottom: 0.5rem; }
+			.sub { font-size: 0.875rem; color: #a1a1aa; line-height: 1.7; }
+			.spinner { width: 32px; height: 32px; border: 3px solid #27272a; border-top-color: #14f195; border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 1.5rem; }
+			@keyframes spin { to { transform: rotate(360deg); } }
+			a { color: #14f195; text-decoration: none; }
+			a:hover { text-decoration: underline; }
+			.install { display: none; }
+			.install.show { display: block; }
+			.tips { margin-top: 1.75rem; text-align: left; background: #111118; border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 1.25rem 1.5rem; }
+			.tips li { font-size: 0.8125rem; color: #a1a1aa; line-height: 1.7; margin-left: 1rem; }
+			.tips li + li { margin-top: 0.35rem; }
+			.store-btn { display: inline-flex; align-items: center; gap: 0.625rem; margin-top: 1.5rem; padding: 0.625rem 1.5rem; background: rgba(20,241,149,0.1); border: 1px solid #14f195; color: #14f195; border-radius: 10px; font-size: 0.875rem; font-weight: 500; transition: background 0.15s; }
+			.store-btn:hover { background: rgba(20,241,149,0.2); text-decoration: none; }
+			.links { margin-top: 1.75rem; display: flex; justify-content: center; gap: 1.5rem; font-size: 0.8125rem; }
+			.links a { color: #71717a; transition: color 0.15s; }
+			.links a:hover { color: #14f195; text-decoration: none; }
+		</style>
+	</head>
+	<body>
+		<div class="card">
+			<div class="badge">SolanaOS Browser MCP</div>
+
+			<div id="connecting">
+				<div class="spinner"></div>
+				<h1>Connecting to SolanaOS Agent</h1>
+				<p class="sub">Opening the browser hub…</p>
+			</div>
+
+			<div id="install" class="install">
+				<h1>Extension Required</h1>
+				<p class="sub">SolanaOS Browser Agent extension is required.</p>
+				<a class="store-btn" href="__STORE_URL__" target="_blank">Install SolanaOS Agent</a>
+				<ul class="tips">
+					<li>If the extension is outdated, update it to the latest version.</li>
+					<li>If using a different browser, open this page from the browser with the extension.</li>
+					<li>Refresh this page after installing or updating.</li>
+				</ul>
+			</div>
+
+			<div class="links">
+				<a href="https://seeker.solanaos.net" target="_blank">SolanaOS Hub</a>
+				<a href="https://github.com/x402agent/SolanaOS" target="_blank">GitHub</a>
+			</div>
+		</div>
+
+		<script>
+			{
+				const EXT_ID = '__EXT_ID__'
+				const wsPort = __WS_PORT__
+
+				const showInstall = () => {
+					document.getElementById('connecting').style.display = 'none'
+					document.getElementById('install').classList.add('show')
+				}
+
+				try {
+					if (!globalThis.chrome?.runtime?.sendMessage) {
+						showInstall()
+					} else {
+						chrome.runtime.sendMessage(
+							EXT_ID,
+							{ type: 'OPEN_HUB', wsPort },
+							(response) => {
+								if (chrome.runtime.lastError || !response?.ok) showInstall()
+							}
+						)
+					}
+				} catch {
+					showInstall()
+				}
+			}
+		</script>
+	</body>
+</html>

@@ -1,4 +1,4 @@
-// NanoSolana Agent Wallet — Deployable Service Entry Point
+// SolanaOS Agent Wallet — Deployable Service Entry Point
 //
 // Starts the agentic wallet HTTP API server with:
 //   - Encrypted vault for Solana + EVM keypairs
@@ -41,7 +41,7 @@ func main() {
 	config.BootstrapEnv()
 
 	log.Println("┌─────────────────────────────────────────────────────┐")
-	log.Println("│  NanoSolana Agent Wallet · Deployable Vault Service │")
+	log.Println("│  SolanaOS Agent Wallet · Deployable Vault Service │")
 	log.Println("│  Solana + EVM · E2B Sandboxes · Privy Integration   │")
 	log.Println("└─────────────────────────────────────────────────────┘")
 

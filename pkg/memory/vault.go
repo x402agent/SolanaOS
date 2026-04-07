@@ -844,6 +844,32 @@ func (v *ClawVault) loadEntry(filePath string) *VaultEntry {
 	return entry
 }
 
+// VaultPath returns the root path of the vault.
+func (v *ClawVault) VaultPath() string {
+	return v.vaultPath
+}
+
+// ListEntries returns all persisted entries, optionally filtered by category and
+// a minimum updated_at timestamp. Pass an empty VaultCategory ("") for all categories.
+// Pass a zero time.Time for no time filter.
+func (v *ClawVault) ListEntries(category VaultCategory, since time.Time) []VaultEntry {
+	entries := v.loadAllEntries(category)
+	if since.IsZero() {
+		return entries
+	}
+	var filtered []VaultEntry
+	for _, e := range entries {
+		ts, err := time.Parse(time.RFC3339, e.UpdatedAt)
+		if err != nil {
+			ts, err = time.Parse(time.RFC3339, e.CreatedAt)
+		}
+		if err != nil || ts.After(since) {
+			filtered = append(filtered, e)
+		}
+	}
+	return filtered
+}
+
 func (v *ClawVault) loadAllEntries(category VaultCategory) []VaultEntry {
 	categories := allCategories
 	if category != "" {

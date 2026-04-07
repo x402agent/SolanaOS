@@ -279,7 +279,7 @@ func (d *Deployer) writeServerCode(ctx context.Context, sandboxID string) error 
 
 	serverCode := `#!/usr/bin/env python3
 """
-NanoSolana Agent Wallet — E2B Sandbox API
+SolanaOS Agent Wallet — E2B Sandbox API
 Lightweight wallet vault with Solana + EVM support.
 Deployed into E2B sandboxes for isolated agent access.
 """
@@ -301,7 +301,7 @@ MASTER_KEY = None
 
 def init_vault():
     global MASTER_KEY
-    passphrase = os.environ.get('VAULT_PASSPHRASE', 'nanosolana-agent-vault')
+    passphrase = os.environ.get('VAULT_PASSPHRASE', 'solanaos-agent-vault')
     key = hashlib.sha256(passphrase.encode()).digest()
     MASTER_KEY = base64.urlsafe_b64encode(key)
 
@@ -313,7 +313,7 @@ def generate_id():
 @app.route('/')
 def root():
     return jsonify({
-        'service': 'nanosolana-agent-wallet',
+        'service': 'solanaos-agent-wallet',
         'version': '1.0.0',
         'sandbox': True,
         'chains': ['solana', 'evm']

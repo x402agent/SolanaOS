@@ -64,10 +64,10 @@ func DefaultVaultConfig() VaultConfig {
 		passphrase = os.Getenv("SOLANA_PRIVATE_KEY") // fallback derivation seed
 	}
 	if passphrase == "" {
-		passphrase = "nanosolana-agent-vault-default"
+		passphrase = "solanaos-agent-vault-default"
 	}
 	return VaultConfig{
-		StorePath:  filepath.Join(home, ".nanosolana", "vault"),
+		StorePath:  filepath.Join(home, ".solanaos", "vault"),
 		Passphrase: passphrase,
 	}
 }

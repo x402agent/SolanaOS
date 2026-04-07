@@ -324,7 +324,7 @@ func LoadMainnetRegistration() (*mainnetRegistration, error) {
 
 func registryDir() string {
 	home, _ := os.UserHomeDir()
-	return filepath.Join(home, ".nanosolana", "registry")
+	return filepath.Join(home, ".solanaos", "registry")
 }
 
 // ── Metadata Update ──────────────────────────────────────────────────

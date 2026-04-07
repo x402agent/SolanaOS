@@ -255,13 +255,13 @@ func (s *Service) runSync(ctx context.Context, input SyncInput) error {
 		"AGENT_REGISTRY_STATE_PATH="+StatePath(),
 		"AGENT_REGISTRY_WATCHLIST="+strings.Join(input.Watchlist, ","),
 		"SOLANAOS_VERSION="+config.GetVersion(),
-		"NANOSOLANA_VERSION="+config.GetVersion(),
+		"SOLANAOS_VERSION="+config.GetVersion(),
 		"AGENT_REGISTRY_SITE_URL="+config.PublicHubURL(),
 		"AGENT_REGISTRY_DASHBOARD_URL="+config.PublicDashboardURL(),
 		"AGENT_REGISTRY_PAIR_URL="+config.PublicPairURL(),
-		"AGENT_REGISTRY_SYNC_URL="+strings.TrimRight(config.PublicHubURL(), "/")+"/nanosolana/agents/sync",
+		"AGENT_REGISTRY_SYNC_URL="+strings.TrimRight(config.PublicHubURL(), "/")+"/solanaos/agents/sync",
 	)
-	if syncKey := strings.TrimSpace(firstNonEmptyEnv("NANOSOLANA_AGENT_SYNC_KEY", "CONVEX_NANOSOLANA_AGENT_SYNC_KEY", s.cfg.Convex.DeployKey)); syncKey != "" {
+	if syncKey := strings.TrimSpace(firstNonEmptyEnv("SOLANAOS_AGENT_SYNC_KEY", "CONVEX_SOLANAOS_AGENT_SYNC_KEY", s.cfg.Convex.DeployKey)); syncKey != "" {
 		env = append(env, "AGENT_REGISTRY_SYNC_KEY="+syncKey)
 	}
 
@@ -371,7 +371,7 @@ func appendCapabilityEnv(env []string, input SyncInput) []string {
 func resolveScriptPath() (string, error) {
 	candidates := make([]string, 0, 8)
 
-	if override := strings.TrimSpace(firstNonEmptyEnv("SOLANAOS_AGENT_REGISTRY_SCRIPT", "NANOSOLANA_AGENT_REGISTRY_SCRIPT")); override != "" {
+	if override := strings.TrimSpace(firstNonEmptyEnv("SOLANAOS_AGENT_REGISTRY_SCRIPT", "SOLANAOS_AGENT_REGISTRY_SCRIPT")); override != "" {
 		candidates = append(candidates, override)
 	}
 	if cwd, err := os.Getwd(); err == nil {
@@ -397,7 +397,7 @@ func resolveScriptPath() (string, error) {
 			return c, nil
 		}
 	}
-	return "", fmt.Errorf("agent registry helper not found (set SOLANAOS_AGENT_REGISTRY_SCRIPT or NANOSOLANA_AGENT_REGISTRY_SCRIPT to override)")
+	return "", fmt.Errorf("agent registry helper not found (set SOLANAOS_AGENT_REGISTRY_SCRIPT or SOLANAOS_AGENT_REGISTRY_SCRIPT to override)")
 }
 
 func firstNonEmptyEnv(keys ...string) string {

@@ -41,6 +41,9 @@ type Config struct {
 	Pinata      PinataHubConfig     `json:"pinata"`
 	Hume        HumeConfig          `json:"hume"`
 
+	// Dreaming — background memory consolidation
+	Dreaming DreamingConfig `json:"dreaming"`
+
 	// Node + Gateway
 	Node         NodeClientConfig   `json:"node"`
 	GatewaySpawn GatewaySpawnConfig `json:"gateway_spawn"`
@@ -364,6 +367,27 @@ type HonchoConfig struct {
 	DialecticEnabled bool   `json:"dialectic_enabled"` // proactive user modeling via PeerChat
 }
 
+// DreamingConfig controls the background memory consolidation sweep.
+type DreamingConfig struct {
+	// Enabled toggles dreaming (default false — opt-in).
+	Enabled bool `json:"enabled"`
+	// Schedule sets the cron interval for automated sweeps (default "0 3 * * *" → 3 AM daily).
+	// Accepts the same format as AutomationJobConfig.Schedule.
+	Schedule string `json:"schedule"`
+	// Timezone for cron scheduling (e.g. "America/Los_Angeles"). Not used by the Go cron
+	// package directly, but recorded here for human reference / future use.
+	Timezone string `json:"timezone"`
+	// MinScore is the minimum weighted deep-phase score for promotion (default 0.55).
+	MinScore float64 `json:"min_score"`
+	// MinRecallCount is the minimum estimated recall count for promotion (default 1).
+	MinRecallCount int `json:"min_recall_count"`
+	// DiaryEnabled controls whether a narrative diary entry is written to DREAMS.md (default true).
+	DiaryEnabled bool `json:"diary_enabled"`
+	// Channel / ChatID to deliver the sweep summary to via Telegram (optional).
+	Channel string `json:"channel"`
+	ChatID  string `json:"chat_id"`
+}
+
 type AutomationsConfig struct {
 	Enabled bool                  `json:"enabled"`
 	Jobs    []AutomationJobConfig `json:"jobs"`
@@ -549,7 +573,7 @@ func DefaultConfig() *Config {
 	return &Config{
 		Agents: AgentsConfig{
 			Defaults: AgentDefaults{
-				Workspace:           "~/.nanosolana/workspace",
+				Workspace:           "~/.solanaos/workspace",
 				RestrictToWorkspace: true,
 				ModelName:           "openai/gpt-5.4-mini",
 				MaxTokens:           8192,
@@ -601,11 +625,11 @@ func DefaultConfig() *Config {
 			Remote: GatewayRemoteConfig{
 				Mode: "local",
 				SSH: GatewaySSHConfig{
-					Alias:            "nanosolana-remote-gateway",
+					Alias:            "solanaos-remote-gateway",
 					LocalPort:        18790,
 					RemotePort:       18790,
 					RemoteBindHost:   "127.0.0.1",
-					LaunchAgentLabel: "ai.nanosolana.ssh-tunnel",
+					LaunchAgentLabel: "ai.solanaos.ssh-tunnel",
 				},
 			},
 			Tailscale: GatewayTailscaleConfig{
@@ -714,6 +738,14 @@ func DefaultConfig() *Config {
 				{Enabled: true, Name: "weekly-audit", Kind: "weekly_audit", Schedule: "weekly", IncludeLearning: true},
 			},
 		},
+		Dreaming: DreamingConfig{
+			Enabled:        false,
+			Schedule:       "0 3 * * *",
+			Timezone:       "UTC",
+			MinScore:       0.55,
+			MinRecallCount: 1,
+			DiaryEnabled:   true,
+		},
 		Runtime: RuntimeConfig{
 			Enabled:               true,
 			DefaultBackend:        "local",
@@ -761,15 +793,15 @@ func DefaultConfig() *Config {
 // ── Path Helpers ─────────────────────────────────────────────────────
 
 func DefaultHome() string {
-	if h := firstNonEmptyEnv("SOLANAOS_HOME", "NANOSOLANA_HOME", "MAWDBOT_HOME"); h != "" {
+	if h := firstNonEmptyEnv("SOLANAOS_HOME", "SOLANAOS_HOME", "MAWDBOT_HOME"); h != "" {
 		return h
 	}
 	home, _ := os.UserHomeDir()
-	return filepath.Join(home, ".nanosolana")
+	return filepath.Join(home, ".solanaos")
 }
 
 func DefaultConfigPath() string {
-	if p := firstNonEmptyEnv("SOLANAOS_CONFIG", "NANOSOLANA_CONFIG", "MAWDBOT_CONFIG"); p != "" {
+	if p := firstNonEmptyEnv("SOLANAOS_CONFIG", "SOLANAOS_CONFIG", "MAWDBOT_CONFIG"); p != "" {
 		return p
 	}
 	return filepath.Join(DefaultHome(), "config.json")
@@ -1752,10 +1784,10 @@ func normalizeLegacyBranding(cfg *Config) {
 	if cfg == nil {
 		return
 	}
-	if strings.EqualFold(strings.TrimSpace(cfg.Honcho.WorkspaceID), "nanosolana") {
+	if strings.EqualFold(strings.TrimSpace(cfg.Honcho.WorkspaceID), "solanaos") {
 		cfg.Honcho.WorkspaceID = "solanaos"
 	}
-	if strings.EqualFold(strings.TrimSpace(cfg.Honcho.AgentPeerID), "nanosolana-agent") {
+	if strings.EqualFold(strings.TrimSpace(cfg.Honcho.AgentPeerID), "solanaos-agent") {
 		cfg.Honcho.AgentPeerID = "solanaos-agent"
 	}
 }

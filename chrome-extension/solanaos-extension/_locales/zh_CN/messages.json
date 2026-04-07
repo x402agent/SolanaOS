@@ -1,0 +1,11 @@
+{
+	"extName": {
+		"message": "SolanaOS Agent"
+	},
+	"extDescription": {
+		"message": "SolanaOS 浏览器代理 — AI 驱动的浏览器自动化，集成 Solana 钱包。"
+	},
+	"extActionTitle": {
+		"message": "打开 SolanaOS Agent"
+	}
+}

@@ -22,7 +22,7 @@ const (
 
 func ParseClientInfo(raw map[string]any) ClientInfo {
 	info := ClientInfo{
-		Name:    "nanosolana-ui",
+		Name:    "solanaos-ui",
 		Version: "1.0.0",
 	}
 	if raw == nil {

@@ -2,24 +2,32 @@
 # ║  SolanaOS :: Makefile                                               ║
 # ║  Build targets for x86_64, ARM64 (NVIDIA Orin Nano), RISC-V        ║
 # ╠══════════════════════════════════════════════════════════════════════╣
-# ║  make start          One-shot: build + start all services           ║
-# ║  make dev            One-shot: start all services + UI dev server   ║
-# ║  make stop           Stop all background services                   ║
-# ║  make status         Show running service status                    ║
-# ║  make build          Build for current platform                     ║
-# ║  make slim           Build extra-slim daemon binary profile         ║
-# ║  make size-report    Compare standard vs slim binary sizes          ║
-# ║  make orin           Cross-compile for NVIDIA Orin Nano (arm64)     ║
-# ║  make tui            Build TUI launcher                             ║
-# ║  make all            Build all targets                              ║
-# ║  make docker         Build Docker image                             ║
-# ║  make docker-up      Docker Compose: start all services             ║
-# ║  make docker-down    Docker Compose: stop all services              ║
-# ║  make clean          Remove build artifacts                         ║
-# ║  make install        Install to /usr/local/bin                      ║
-# ║  make test           Run tests                                      ║
-# ║  make build-control-api Build the SolanaOS Control API binary       ║
-# ║  make scan-i2c       Scan I2C bus for Modulino® sensors             ║
+# ║  make start               Build + start all services (start.sh)    ║
+# ║  make dev                 Start all services + UI dev server        ║
+# ║  make stop                Stop all background services              ║
+# ║  make status              Show running service status               ║
+# ║  make build               Build solanaos binary (current platform)  ║
+# ║  make build-agent-wallet  Build agent-wallet service (port 8421)    ║
+# ║  make build-gateway-api   Build standalone gateway-api (port 18790) ║
+# ║  make build-mcp           Build solanaos-mcp TypeScript server      ║
+# ║  make build-control-api   Build solanaos-control-api (port 18789)   ║
+# ║  make start-agent-wallet  Start agent-wallet in background          ║
+# ║  make start-mcp           Start MCP server in background            ║
+# ║  make slim                Build extra-slim daemon binary profile     ║
+# ║  make size-report         Compare standard vs slim binary sizes      ║
+# ║  make orin                Cross-compile for NVIDIA Orin Nano        ║
+# ║  make tui                 Build TUI launcher                        ║
+# ║  make all                 Build solanaos + TUI                      ║
+# ║  make docker              Build Docker image                        ║
+# ║  make docker-up           Docker Compose: start all services        ║
+# ║  make docker-down         Docker Compose: stop all services         ║
+# ║  make clean               Remove build artifacts                    ║
+# ║  make install             Install all binaries to /usr/local/bin    ║
+# ║  make test                Run tests                                 ║
+# ║  make npm-pack            Dry-run pack the solanaos-cli npm package  ║
+# ║  make npm-sync            Check npm/ vs new/npm/ version drift       ║
+# ║  make scan-i2c            Scan I2C bus for Modulino® sensors         ║
+# ║  make help                Full target reference                     ║
 # ╚══════════════════════════════════════════════════════════════════════╝
 
 VERSION   := $(shell git describe --tags --always --dirty 2>/dev/null || echo "dev")

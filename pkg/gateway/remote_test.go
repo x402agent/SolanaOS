@@ -33,14 +33,14 @@ func TestRemoteTunnelSpecSSHConfigEntry(t *testing.T) {
 func TestRemoteTunnelSpecLaunchAgentPlist(t *testing.T) {
 	spec := RemoteTunnelSpec{
 		Alias:            "remote-gateway",
-		LaunchAgentLabel: "ai.nanosolana.ssh-tunnel",
+		LaunchAgentLabel: "ai.solanaos.ssh-tunnel",
 	}
 	got, err := spec.LaunchAgentPlist()
 	if err != nil {
 		t.Fatalf("LaunchAgentPlist error: %v", err)
 	}
 	for _, want := range []string{
-		"<string>ai.nanosolana.ssh-tunnel</string>",
+		"<string>ai.solanaos.ssh-tunnel</string>",
 		"<string>/usr/bin/ssh</string>",
 		"<string>-N</string>",
 		"<string>remote-gateway</string>",

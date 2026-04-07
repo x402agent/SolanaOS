@@ -1,4 +1,4 @@
-// Package solana provides Solana data clients for NanoSolana.
+// Package solana provides Solana data clients for SolanaOS.
 package solana
 
 import (

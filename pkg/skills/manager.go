@@ -32,7 +32,7 @@ func NewManager(baseDir string) (*Manager, error) {
 // ResolveSkillsDir returns the first existing skills/ directory from candidates:
 // env override → CWD/skills → exe-dir/../skills → common install paths.
 func ResolveSkillsDir() string {
-	if v := strings.TrimSpace(firstNonEmptyEnv("SOLANAOS_SKILLS_DIR", "NANOSOLANA_SKILLS_DIR")); v != "" {
+	if v := strings.TrimSpace(firstNonEmptyEnv("SOLANAOS_SKILLS_DIR", "SOLANAOS_SKILLS_DIR")); v != "" {
 		return v
 	}
 	candidates := []string{}
@@ -49,7 +49,7 @@ func ResolveSkillsDir() string {
 	for _, extra := range []string{
 		"/app/skills",
 		"/workspace/skills",
-		filepath.Join(os.Getenv("HOME"), "nanosolana", "skills"),
+		filepath.Join(os.Getenv("HOME"), "solanaos", "skills"),
 	} {
 		candidates = append(candidates, extra)
 	}
@@ -292,9 +292,9 @@ func (m *Manager) CategoryGroups() map[string][]*Skill {
 			return "🎵  Media"
 		case hasAny(n, "healthcheck", "weather", "openhue", "goplaces", "ordercli", "xurl", "blogwatcher"):
 			return "🔧  System / Ops"
-		case hasAny(n, "nanosolana", "nano-banana", "clawhub", "gateway-node", "seeker-daemon", "canvas", "1password"):
+		case hasAny(n, "solanaos", "nano-banana", "clawhub", "gateway-node", "seeker-daemon", "canvas", "1password"):
 			return "🤖  SolanaOS"
-		case strings.Contains(desc, "nanosolana") || strings.Contains(desc, "seeker"):
+		case strings.Contains(desc, "solanaos") || strings.Contains(desc, "seeker"):
 			return "🤖  SolanaOS"
 		default:
 			return "📦  Other"

@@ -65,7 +65,7 @@ func TestApplyEnvOverridesHonchoKeyEnablesIntegrationAndBaseURLAlias(t *testing.
 
 func TestPublicHubURLDefaultsAndOverrides(t *testing.T) {
 	t.Setenv("SEEKER_SITE_URL", "")
-	t.Setenv("NANOSOLANA_SITE_URL", "")
+	t.Setenv("SOLANAOS_SITE_URL", "")
 	t.Setenv("SOLANAOS_SITE_URL", "")
 	if got := PublicHubURL(); got != "https://seeker.solanaos.net" {
 		t.Fatalf("PublicHubURL() = %q, want %q", got, "https://seeker.solanaos.net")

@@ -13,7 +13,7 @@ import (
 	"time"
 )
 
-const defaultConvexMemoryRoute = "/nanosolana/memory/append"
+const defaultConvexMemoryRoute = "/solanaos/memory/append"
 
 type RecursiveRecorder struct {
 	vault        *ClawVault
@@ -51,6 +51,19 @@ func NewRecursiveRecorder(vaultPath, convexURL, authToken string) *RecursiveReco
 		sessionHeads: make(map[string]string),
 		headsPath:    filepath.Join(filepath.Dir(abs), ".clawvault", "session-heads.json"),
 	}
+}
+
+// VaultPath returns the root path of the underlying ClawVault.
+func (r *RecursiveRecorder) VaultPath() string {
+	if r == nil || r.vault == nil {
+		return ""
+	}
+	return r.vault.VaultPath()
+}
+
+// SetEmbedder injects a semantic embedding client into the underlying vault.
+func (r *RecursiveRecorder) SetEmbedder(e Embedder) {
+	r.vault.SetEmbedder(e)
 }
 
 func (r *RecursiveRecorder) Init() error {

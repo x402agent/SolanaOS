@@ -242,7 +242,10 @@ echo -e "    ${GREEN}./build/solanaos solana health${RESET}        ${DIM}# Check
 echo -e "    ${GREEN}./build/solanaos ooda --sim${RESET}           ${DIM}# Simulated trading${RESET}"
 echo -e "    ${GREEN}./build/solanaos daemon${RESET}               ${DIM}# Full autonomous agent${RESET}"
 echo -e "    ${GREEN}./build/agent-wallet${RESET}                  ${DIM}# Agent wallet API + local signing keys${RESET}"
-echo -e "    ${GREEN}bash start.sh${RESET}                         ${DIM}# Start all services (daemon + wallet)${RESET}"
+echo -e "    ${GREEN}./build/gateway-api${RESET}                   ${DIM}# Standalone gateway (port 18790)${RESET}"
+echo -e "    ${GREEN}bash start.sh${RESET}                         ${DIM}# Start all services (wallet + daemon + mcp)${RESET}"
+echo -e "    ${GREEN}bash start.sh --status${RESET}                ${DIM}# Check what's running${RESET}"
+echo -e "    ${GREEN}bash start.sh --stop${RESET}                  ${DIM}# Stop everything${RESET}"
 echo -e "    ${GREEN}$BIN_DIR/solanaos gateway start${RESET}      ${DIM}# Start the native gateway${RESET}"
 echo -e "    ${GREEN}$BIN_DIR/solanaos gateway setup-code${RESET} ${DIM}# Print Seeker setup code${RESET}"
 if $WITH_WEB; then

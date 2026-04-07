@@ -241,7 +241,7 @@ func updateStatus(view *tview.TextView) {
   Modulinos: (scan on connect)
 
 [%s]Memory[%s]
-  Vault:     ~/.nanosolana/workspace/vault
+  Vault:     ~/.solanaos/workspace/vault
   Supabase:  %s
 `,
 		mawdGreen, "",
@@ -365,8 +365,8 @@ func runGoBot(subcmd string) {
 	// Try the canonical CLI name first, then compatibility aliases.
 	binary := "solanaos"
 	if _, err := exec.LookPath(binary); err != nil {
-		if _, compatErr := exec.LookPath("nanosolana"); compatErr == nil {
-			binary = "nanosolana"
+		if _, compatErr := exec.LookPath("solanaos"); compatErr == nil {
+			binary = "solanaos"
 		} else if _, localErr := os.Stat("./build/solanaos"); localErr == nil {
 			binary = "./build/solanaos"
 		} else {

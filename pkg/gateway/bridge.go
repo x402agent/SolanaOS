@@ -128,7 +128,7 @@ func (b *Bridge) SetHoncho(provider HonchoProvider) {
 // configFilePath returns the path to solanaos.json.
 func configFilePath() string {
 	home, _ := os.UserHomeDir()
-	return filepath.Join(home, ".nanosolana", "solanaos.json")
+	return filepath.Join(home, ".solanaos", "solanaos.json")
 }
 
 // LoadConfigFilePublic is the exported version of loadConfigFile.

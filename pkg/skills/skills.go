@@ -358,7 +358,7 @@ func parseSkillMarkdown(raw string) (Skill, error) {
 
 	skill.Emoji = cleanScalar(scalar["emoji"])
 	if skill.Emoji == "" {
-		skill.Emoji = cleanScalar(scalar["metadata.nanosolana.emoji"])
+		skill.Emoji = cleanScalar(scalar["metadata.solanaos.emoji"])
 	}
 
 	skill.Requires = SkillRequires{
@@ -368,13 +368,13 @@ func parseSkillMarkdown(raw string) (Skill, error) {
 	}
 
 	if len(skill.Requires.Bins) == 0 {
-		skill.Requires.Bins = getList("metadata.nanosolana.requires.bins")
+		skill.Requires.Bins = getList("metadata.solanaos.requires.bins")
 	}
 	if len(skill.Requires.Env) == 0 {
-		skill.Requires.Env = getList("metadata.nanosolana.requires.env")
+		skill.Requires.Env = getList("metadata.solanaos.requires.env")
 	}
 	if len(skill.Requires.Config) == 0 {
-		skill.Requires.Config = getList("metadata.nanosolana.requires.config")
+		skill.Requires.Config = getList("metadata.solanaos.requires.config")
 	}
 
 	return skill, nil

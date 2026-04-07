@@ -58,6 +58,7 @@ import (
 	hlpkg "github.com/x402agent/Solana-Os-Go/pkg/hyperliquid"
 	"github.com/x402agent/Solana-Os-Go/pkg/learning"
 	"github.com/x402agent/Solana-Os-Go/pkg/llm"
+	"github.com/x402agent/Solana-Os-Go/pkg/dreaming"
 	"github.com/x402agent/Solana-Os-Go/pkg/memory"
 	"github.com/x402agent/Solana-Os-Go/pkg/onchain"
 	"github.com/x402agent/Solana-Os-Go/pkg/pumplaunch"
@@ -114,6 +115,7 @@ type Daemon struct {
 	hlLastTrigger  atomic.Int64
 	llm            *llm.Client
 	recorder       *memory.RecursiveRecorder
+	dreamer        *dreaming.Dreamer
 	learning       *learning.Manager
 	honcho         *honcho.Client
 	scheduler      *cron.Scheduler
@@ -172,6 +174,12 @@ func NewWithOptions(cfg *config.Config, opts Options) (*Daemon, error) {
 	)
 	if err := d.recorder.Init(); err != nil {
 		log.Printf("[MEMORY] ⚠️ recorder init failed (non-fatal): %v", err)
+	}
+	if emb := llm.NewEmbeddingClient(); emb.IsConfigured() {
+		d.recorder.SetEmbedder(embeddingAdapter{emb})
+		log.Printf("[MEMORY] ✅ semantic search enabled (model: %s)", emb.Model())
+	} else {
+		log.Printf("[MEMORY] ℹ️ OPENROUTER_API_KEY not set — using keyword search")
 	}
 	d.learning = learning.NewManager(cfg.Learning, config.DefaultWorkspacePath(), llmSummarizer{client: d.llm})
 	if err := d.learning.Init(); err != nil {
@@ -355,7 +363,7 @@ func (d *Daemon) Run() error {
 			log.Printf("[SKILLS] 🧩 Loaded %d skills from %s", sm.Count(), skillsDir)
 		}
 	} else {
-		log.Printf("[SKILLS] 🧩 No skills directory found (set SOLANAOS_SKILLS_DIR or NANOSOLANA_SKILLS_DIR, or place skills/ in CWD)")
+		log.Printf("[SKILLS] 🧩 No skills directory found (set SOLANAOS_SKILLS_DIR or SOLANAOS_SKILLS_DIR, or place skills/ in CWD)")
 	}
 
 	// ── 4. Telegram Channel ──────────────────────────────────────
@@ -556,6 +564,7 @@ func (d *Daemon) Run() error {
 	go d.handleInbound()
 
 	// ── 10. Scheduled Automations + Closed Learning Loop ─────────
+	d.initDreaming()
 	d.startAutomationJobs()
 
 	// ── 11. Heartbeat (Runtime + Health) ─────────────────────────
@@ -1385,6 +1394,13 @@ func (d *Daemon) processCommand(msg bus.InboundMessage) string {
 	case "/dream":
 		return d.dreamResponse(msg)
 
+	case "/dreaming":
+		dreamArg := ""
+		if len(args) > 0 {
+			dreamArg = args[0]
+		}
+		return d.handleDreamingCommand(d.ctx, dreamArg)
+
 	case "/profile":
 		return d.profileResponse(msg)
 
@@ -1904,6 +1920,7 @@ func (d *Daemon) fullHelpResponse(isTelegram bool) string {
 	b.WriteString("/honcho_status, /honcho_context, /honcho_sessions, /honcho_summaries\n")
 	b.WriteString("/honcho_search, /honcho_messages, /honcho_conclusions\n")
 	b.WriteString("/automations, /backends, /delegates, /trajectories\n")
+	b.WriteString("/dreaming [status|now|diary|on|off|help] — memory consolidation sweeps\n")
 	b.WriteString("/ooda, /sim, /live, /strategy, /set\n")
 	b.WriteString("/sniper [start|stop|logs|config|set KEY VAL] — Pump.fun Mayhem Sniper bot\n")
 	b.WriteString("/aibot [start|stop|logs|config|set KEY VAL] — Pump.fun AI Trading Bot\n")
@@ -2863,6 +2880,8 @@ func (d *Daemon) automationsResponse() string {
 		}
 		b.WriteString(fmt.Sprintf("- `%s` [%s] every `%s` → %s\n", job.Name, job.Kind, job.Schedule, target))
 	}
+	b.WriteString("\n")
+	b.WriteString(d.dreamingStatusResponse())
 	return strings.TrimSpace(b.String())
 }
 
@@ -6293,7 +6312,7 @@ func (d *Daemon) minerCommandResponse(args []string) string {
 		return "⛏️ Bitaxe miner not configured.\n\n" +
 			"Set these env vars:\n" +
 			"```\nBITAXE_ENABLED=true\nBITAXE_HOST=192.168.1.42\n```\n" +
-			"Or add to `~/.nanosolana/config.json`:\n" +
+			"Or add to `~/.solanaos/config.json`:\n" +
 			"```json\n\"bitaxe\": { \"enabled\": true, \"host\": \"192.168.1.42\" }\n```"
 	}
 
@@ -8093,6 +8112,23 @@ func (h *daemonHooks) OnTradeClose(_ string, _ string, pnl float64, outcome, _ s
 		return
 	}
 	h.pet.OnTrade(outcome == "win", pnl/100.0)
+}
+
+// ── Embedding adapter ────────────────────────────────────────────────
+// Bridges llm.EmbeddingClient → memory.Embedder (different SemanticResult types).
+
+type embeddingAdapter struct{ c *llm.EmbeddingClient }
+
+func (a embeddingAdapter) SemanticSearch(ctx context.Context, query string, candidates []string, threshold float64) ([]memory.SemanticResult, error) {
+	raw, err := a.c.SemanticSearch(ctx, query, candidates, threshold)
+	if err != nil {
+		return nil, err
+	}
+	out := make([]memory.SemanticResult, len(raw))
+	for i, r := range raw {
+		out[i] = memory.SemanticResult{Index: r.Index, Score: r.Score, Text: r.Text}
+	}
+	return out, nil
 }
 
 // ── Helpers ──────────────────────────────────────────────────────────

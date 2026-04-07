@@ -56,12 +56,12 @@ const (
 	colorReset  = "\033[0m"
 
 	banner = "\r\n" +
-		colorGreen + "    ███╗   ██╗ █████╗ ███╗   ██╗ ██████╗ " + colorPurple + "███████╗ ██████╗ ██╗      █████╗ ███╗   ██╗ █████╗ \n" +
-		colorGreen + "    ████╗  ██║██╔══██╗████╗  ██║██╔═══██╗" + colorPurple + "██╔════╝██╔═══██╗██║     ██╔══██╗████╗  ██║██╔══██╗\n" +
-		colorGreen + "    ██╔██╗ ██║███████║██╔██╗ ██║██║   ██║" + colorPurple + "███████╗██║   ██║██║     ███████║██╔██╗ ██║███████║\n" +
-		colorGreen + "    ██║╚██╗██║██╔══██║██║╚██╗██║██║   ██║" + colorPurple + "╚════██║██║   ██║██║     ██╔══██║██║╚██╗██║██╔══██║\n" +
-		colorGreen + "    ██║ ╚████║██║  ██║██║ ╚████║╚██████╔╝" + colorPurple + "███████║╚██████╔╝███████╗██║  ██║██║ ╚████║██║  ██║\n" +
-		colorGreen + "    ╚═╝  ╚═══╝╚═╝  ╚═╝╚═╝  ╚═══╝ ╚═════╝ " + colorPurple + "╚══════╝ ╚═════╝ ╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝  ╚═╝\n" +
+		colorGreen + "    ███████╗ ██████╗ ██╗      █████╗ ███╗   ██╗ █████╗ " + colorPurple + " ██████╗ ███████╗\n" +
+		colorGreen + "    ██╔════╝██╔═══██╗██║     ██╔══██╗████╗  ██║██╔══██╗" + colorPurple + "██╔═══██╗██╔════╝\n" +
+		colorGreen + "    ███████╗██║   ██║██║     ███████║██╔██╗ ██║███████║" + colorPurple + "██║   ██║███████╗\n" +
+		colorGreen + "    ╚════██║██║   ██║██║     ██╔══██║██║╚██╗██║██╔══██║" + colorPurple + "██║   ██║╚════██║\n" +
+		colorGreen + "    ███████║╚██████╔╝███████╗██║  ██║██║ ╚████║██║  ██║" + colorPurple + "╚██████╔╝███████║\n" +
+		colorGreen + "    ╚══════╝ ╚═════╝ ╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝  ╚═╝" + colorPurple + " ╚═════╝ ╚══════╝\n" +
 		colorReset + "\n" +
 		colorDim + "    ┌──────────────────────────────────────────────────────────────────┐\n" +
 		colorDim + "    │" + colorTeal + "  🖥️  SolanaOS Computer · Operator-Grade Solana Runtime" + colorDim + "          │\n" +
@@ -1046,7 +1046,7 @@ func NewOnboardCommand() *cobra.Command {
 
 Sets up your LLM provider (Ollama, OpenRouter, Anthropic, xAI, OpenAI),
 Solana RPC keys, Birdeye API, and Telegram bot. Writes config to
-~/.nanosolana/solanaos.json.`,
+~/.solanaos/solanaos.json.`,
 		Example: `  solanaos onboard
   solanaos onboard --provider ollama`,
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -1647,7 +1647,7 @@ Devnet SOL is auto-airdropped if needed (zero cost).`,
 				fmt.Printf("  %sMint:%s    %s\n", colorDim, colorReset, result.MintAddress)
 				fmt.Printf("  %sTx:%s      %s\n", colorDim, colorReset, result.TxSignature[:16]+"...")
 				fmt.Printf("  %sNetwork:%s %s\n", colorDim, colorReset, result.Network)
-				fmt.Printf("  %sSaved:%s   ~/.nanosolana/registry/registration.json\n\n", colorDim, colorReset)
+				fmt.Printf("  %sSaved:%s   ~/.solanaos/registry/registration.json\n\n", colorDim, colorReset)
 				fmt.Printf("  %sExplorer: https://explorer.solana.com/tx/%s?cluster=devnet%s\n\n",
 					colorAmber, result.TxSignature, colorReset)
 				return nil
@@ -2414,7 +2414,7 @@ func runInteractiveAgent(cfg *config.Config) error {
 		case input == "!trades":
 			fmt.Printf("%s📊 Trade history: use `solanaos ooda` to start trading%s\n", colorDim, colorReset)
 		case input == "!lessons":
-			fmt.Printf("%s🧠 Learned patterns: stored in ~/.nanosolana/workspace/vault/lessons/%s\n", colorDim, colorReset)
+			fmt.Printf("%s🧠 Learned patterns: stored in ~/.solanaos/workspace/vault/lessons/%s\n", colorDim, colorReset)
 		case input == "!status":
 			fmt.Printf("%sModel: %s | Mode: %s%s\n", colorDim, cfg.Agents.Defaults.ModelName, cfg.OODA.Mode, colorReset)
 		case len(input) > 10 && input[:10] == "!remember ":

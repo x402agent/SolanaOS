@@ -38,7 +38,7 @@ func envCandidates() []string {
 		candidates = append(candidates, clean)
 	}
 
-	if p := firstNonEmptyEnv("SOLANAOS_ENV_FILE", "NANOSOLANA_ENV_FILE", "MAWDBOT_ENV_FILE"); p != "" {
+	if p := firstNonEmptyEnv("SOLANAOS_ENV_FILE", "SOLANAOS_ENV_FILE", "MAWDBOT_ENV_FILE"); p != "" {
 		add(p)
 	}
 

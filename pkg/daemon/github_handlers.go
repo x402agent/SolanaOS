@@ -541,7 +541,7 @@ func gitOutput(ctx context.Context, workdir string, extraEnv []string, args ...s
 }
 
 func githubGitAuthEnv(token string) ([]string, func(), error) {
-	f, err := os.CreateTemp("", "nanosolana-gh-askpass-*")
+	f, err := os.CreateTemp("", "solanaos-gh-askpass-*")
 	if err != nil {
 		return nil, nil, err
 	}

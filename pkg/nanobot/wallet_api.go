@@ -37,7 +37,7 @@ func NewWalletAPI() (*WalletAPI, error) {
 
 	// Ensure agent wallet exists
 	home, _ := os.UserHomeDir()
-	walletPath := filepath.Join(home, ".nanosolana", "wallet", "agent-wallet.json")
+	walletPath := filepath.Join(home, ".solanaos", "wallet", "agent-wallet.json")
 	wallet, err := sol.EnsureAgentWallet(walletPath)
 	if err != nil {
 		return nil, fmt.Errorf("wallet init: %w", err)

@@ -1,4 +1,4 @@
-// Package hyperliquid provides a focused Hyperliquid perpetuals client for NanoSolana.
+// Package hyperliquid provides a focused Hyperliquid perpetuals client for SolanaOS.
 // The implementation is adapted from the upstream go-hyperliquid library while keeping
 // a narrow surface area for bot account, market, and trading commands.
 package hyperliquid

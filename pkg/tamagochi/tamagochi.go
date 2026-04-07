@@ -92,7 +92,7 @@ type TamaGOchi struct {
 // the previous state; otherwise it hatches a new pet.
 func New(name string) *TamaGOchi {
 	home, _ := os.UserHomeDir()
-	savePath := filepath.Join(home, ".nanosolana", "tamagochi.json")
+	savePath := filepath.Join(home, ".solanaos", "tamagochi.json")
 
 	t := &TamaGOchi{
 		savePath: savePath,
@@ -101,7 +101,7 @@ func New(name string) *TamaGOchi {
 	// Try to load existing pet
 	if data, err := os.ReadFile(savePath); err == nil {
 		if err := json.Unmarshal(data, &t.state); err == nil {
-			if strings.EqualFold(strings.TrimSpace(t.state.Name), "NanoSolana") {
+			if strings.EqualFold(strings.TrimSpace(t.state.Name), "SolanaOS") {
 				t.state.Name = name
 				t.save()
 			}

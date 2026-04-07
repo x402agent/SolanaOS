@@ -121,7 +121,7 @@ func ensureHelperDeps(scriptPath string) error {
 
 func resolveScriptPath() (string, error) {
 	candidates := make([]string, 0, 6)
-	if override := strings.TrimSpace(firstNonEmptyEnv("SOLANAOS_PUMP_LAUNCH_SCRIPT", "NANOSOLANA_PUMP_LAUNCH_SCRIPT")); override != "" {
+	if override := strings.TrimSpace(firstNonEmptyEnv("SOLANAOS_PUMP_LAUNCH_SCRIPT", "SOLANAOS_PUMP_LAUNCH_SCRIPT")); override != "" {
 		candidates = append(candidates, override)
 	}
 	if cwd, err := os.Getwd(); err == nil {

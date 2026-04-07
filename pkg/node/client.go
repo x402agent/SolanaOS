@@ -1,5 +1,5 @@
-// Package node provides a headless bridge client for connecting NanoSolana
-// hardware nodes (Raspberry Pi, NVIDIA Orin Nano, etc.) to a NanoSolana
+// Package node provides a headless bridge client for connecting SolanaOS
+// hardware nodes (Raspberry Pi, NVIDIA Orin Nano, etc.) to a SolanaOS
 // gateway over TCP. Adapted from ClawGo for the MawdBot Go monorepo.
 //
 // The client handles:

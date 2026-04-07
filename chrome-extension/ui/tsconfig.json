@@ -1,0 +1,19 @@
+{
+    "extends": "../../tsconfig.base.json",
+    "compilerOptions": {
+        "composite": true,
+        "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.tsbuildinfo",
+        "noEmit": false,
+        "allowImportingTsExtensions": false,
+        "baseUrl": ".",
+        "outDir": "dist",
+        "paths": {
+            "@page-agent/core": ["../core/src/PageAgentCore.ts"]
+        }
+    },
+    "include": ["**/*.ts"],
+    "exclude": ["dist", "node_modules"],
+    "references": [
+        { "path": "../core" }
+    ]
+}

@@ -167,8 +167,8 @@ info "Starting Agent Wallet service..."
 WALLET_PORT="${WALLET_API_PORT:-8421}"
 start_service "agent-wallet" "$BUILD_DIR/agent-wallet"
 dim "API:      http://localhost:$WALLET_PORT/v1/health"
-dim "Dev key:  ~/.nanosolana/signers/dev.enc"
-dim "Trade key:~/.nanosolana/signers/trade.enc"
+dim "Dev key:  ~/.solanaos/signers/dev.enc"
+dim "Trade key:~/.solanaos/signers/trade.enc"
 
 # Short pause so the wallet API is up before the daemon queries it
 sleep 1
@@ -213,7 +213,7 @@ fi
 echo ""
 echo -e "  ${GREEN}✓ SolanaOS running${RESET}"
 echo -e "  ${DIM}Wallet API:${RESET}   http://localhost:$WALLET_PORT/v1/health"
-echo -e "  ${DIM}Local keys:${RESET}   ~/.nanosolana/signers/{dev,trade}.enc"
+echo -e "  ${DIM}Local keys:${RESET}   ~/.solanaos/signers/{dev,trade}.enc"
 echo -e "  ${DIM}Gateway:${RESET}      http://localhost:${GATEWAY_PORT:-18790}"
 echo -e "  ${DIM}Control UI:${RESET}   http://localhost:${CONTROL_PORT:-7777}"
 echo -e "  ${DIM}MCP:${RESET}          http://localhost:$MCP_PORT/mcp  ${DIM}(if built)${RESET}"
