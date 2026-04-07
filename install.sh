@@ -158,6 +158,23 @@ AGENT_WALLET_BINARY="$INSTALL_DIR/build/agent-wallet"
   && info "Installed agent-wallet at $BIN_DIR/agent-wallet" \
   || warn "agent-wallet build failed — run: make build-agent-wallet"
 
+info "Building Gateway API..."
+GATEWAY_API_BINARY="$INSTALL_DIR/build/gateway-api"
+"$GO_BIN" build -ldflags="-s -w" -o "$GATEWAY_API_BINARY" \
+  "$INSTALL_DIR/cmd/gateway-api" 2>&1 \
+  && install -m 755 "$GATEWAY_API_BINARY" "$BIN_DIR/solanaos-gateway" \
+  && info "Installed solanaos-gateway at $BIN_DIR/solanaos-gateway" \
+  || warn "gateway-api build failed — run: make build-gateway-api"
+
+if command -v npm >/dev/null 2>&1 && [ -f "$INSTALL_DIR/mcp-server/package.json" ]; then
+  info "Building SolanaOS MCP server..."
+  (cd "$INSTALL_DIR/mcp-server" && npm install --silent && npm run build 2>&1) \
+    && info "MCP server built at mcp-server/dist/" \
+    || warn "MCP server build failed — run: make build-mcp"
+else
+  dim "Skipping MCP server build (npm not found or mcp-server/ missing)"
+fi
+
 info "Initializing local signing keys (dev + trade)..."
 SIGNERS_DIR="$HOME/.nanosolana/signers"
 mkdir -p "$SIGNERS_DIR"

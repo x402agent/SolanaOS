@@ -325,6 +325,47 @@ func (v *ClawVault) recallKeyword(query string, opts RecallOpts) []VaultEntry {
 	return out
 }
 
+func (v *ClawVault) recallSemantic(query string, opts RecallOpts, embedder Embedder) []VaultEntry {
+	v.mu.RLock()
+	entries := v.loadAllEntries(opts.Category)
+	v.mu.RUnlock()
+
+	limit := opts.Limit
+	if limit <= 0 {
+		limit = 10
+	}
+
+	if len(entries) == 0 {
+		return nil
+	}
+
+	// Build candidate strings: title + content summary for each entry
+	candidates := make([]string, len(entries))
+	for i, e := range entries {
+		candidates[i] = e.Title + " " + truncateStr(e.Content, 400)
+	}
+
+	threshold := opts.MinScore
+	if threshold <= 0 {
+		threshold = 0.25
+	}
+
+	ranked, err := embedder.SemanticSearch(context.Background(), query, candidates, threshold)
+	if err != nil {
+		// Fallback to keyword search on error
+		return v.recallKeyword(query, opts)
+	}
+
+	out := make([]VaultEntry, 0, limit)
+	for _, r := range ranked {
+		if len(out) >= limit {
+			break
+		}
+		out = append(out, entries[r.Index])
+	}
+	return out
+}
+
 // GetShortTermContext returns recent entries from the in-memory buffer.
 func (v *ClawVault) GetShortTermContext(limit int) []VaultEntry {
 	v.mu.RLock()

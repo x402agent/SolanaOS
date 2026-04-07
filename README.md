@@ -1552,22 +1552,60 @@ solanaos wallet-api --skip-setup  # just start the API, no auto-creation
 | `POST` | `/v1/privy/wallets/{id}/send` | Send via Privy wallet |
 | `GET` | `/v1/health` | Health check |
 
-### MCP Server
+### MCP Servers
 
-The wallet also ships as an MCP server for AI agent integration (VS Code, Cursor, Zed):
+SolanaOS ships two MCP servers for AI agent integration (Claude Desktop, Cursor, VS Code, Zed):
+
+#### 1. solanaos-mcp — Full SolanaOS MCP server (`mcp-server/`)
+
+Exposes the full SolanaOS tool registry, agent fleet, memory, and skills to any MCP client.
+
+```bash
+make build-mcp        # build once
+make start-mcp        # start HTTP server on port 3001
+```
+
+Claude Desktop config (`~/.claude.json` or Claude Desktop settings):
+
+```json
+{
+  "mcpServers": {
+    "solanaos": {
+      "command": "node",
+      "args": ["<path-to-repo>/mcp-server/dist/index.js"],
+      "env": {
+        "SOLANAOS_GATEWAY_URL": "http://localhost:18790",
+        "SOLANAOS_GATEWAY_API_KEY": ""
+      }
+    }
+  }
+}
+```
+
+Tools: `solana.price`, `solana.trending`, `solana.token_info`, `solana.wallet_pnl`, `solana.search`, `agent.spawn`, `agent.list`, `agent.stop`, `memory.recall`, `memory.write`, `task.create`, `task.list`, `skill.list`, `skill.run`, `gateway.health`
+
+Resources: `solanaos://soul`, `solanaos://skills`, `solanaos://tools`, `solanaos://source/{path}`
+
+#### 2. Agent Wallet MCP (`services/agent-wallet/mcp/`)
+
+Exposes wallet vault operations directly to AI agents.
 
 ```json
 {
   "mcpServers": {
     "agent-wallet": {
       "command": "npx",
-      "args": ["tsx", "services/agent-wallet/mcp/index.ts"]
+      "args": ["tsx", "services/agent-wallet/mcp/index.ts"],
+      "env": {
+        "WALLET_API_URL": "http://localhost:8421/v1",
+        "WALLET_API_KEY": ""
+      }
     }
   }
 }
 ```
 
-MCP tools: `create_wallet`, `list_wallets`, `get_balance`, `transfer`, `transfer_token`, `sign_message`, `pause_wallet`, `unpause_wallet`, `deploy_sandbox`, `teardown_sandbox`, `privy_create_wallet`, `privy_sign`, `privy_send`.
+Tools: `create_wallet`, `list_wallets`, `get_balance`, `transfer`, `transfer_token`, `sign_message`, `pause_wallet`, `unpause_wallet`, `deploy_sandbox`, `teardown_sandbox`, `privy_create_wallet`, `privy_sign`, `privy_send`
 
 ### Docker
 
@@ -1794,10 +1832,10 @@ solanaos/
 
 | Binary | Port | Start command |
 | --- | --- | --- |
-| solanaos daemon | 18790 (gateway), 7777 (control UI) | `make start` or `bash start.sh` |
-| agent-wallet | 8421 | `make start-agent-wallet` |
-| solanaos-mcp | stdio | `make start-mcp` or Claude Desktop config |
-| gateway-api | 18790 | built into daemon; standalone via `./build/gateway-api` |
+| solanaos daemon | 18790 (gateway), 7777 (control UI) | `bash start.sh` or `make start` |
+| agent-wallet | 8421 | auto-started by `start.sh`; standalone: `make start-agent-wallet` |
+| solanaos-mcp | 3001 (HTTP) or stdio | auto-started by `start.sh`; standalone: `make start-mcp` |
+| gateway-api | 18790 | built into daemon; standalone: `./build/gateway-api` |
 | control-api | 18789 | `make run-control-api` |
 
 Notes:
