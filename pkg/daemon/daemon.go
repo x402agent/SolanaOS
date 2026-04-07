@@ -219,6 +219,13 @@ func NewWithOptions(cfg *config.Config, opts Options) (*Daemon, error) {
 	d.remoteControl = newRemoteControlStore(
 		filepath.Join(config.DefaultWorkspacePath(), "state", "remote-control.json"),
 	)
+	// Resolve the repo root from the binary location (one level up from bin/).
+	// Falls back to cwd so it works during `go run`.
+	if exe, exeErr := os.Executable(); exeErr == nil {
+		d.pumpfunMgr = pumpfun.NewManager(filepath.Dir(filepath.Dir(exe)))
+	} else if cwd, cwdErr := os.Getwd(); cwdErr == nil {
+		d.pumpfunMgr = pumpfun.NewManager(cwd)
+	}
 	d.mistralAudio = llm.NewMistralAudioClient()
 	if d.mistralAudio != nil && d.mistralAudio.IsConfigured() {
 		log.Printf("[DAEMON] 🎙️ Mistral Audio (TTS+STT) initialized")
@@ -1434,6 +1441,38 @@ func (d *Daemon) processCommand(msg bus.InboundMessage) string {
 
 	case "/trades":
 		return d.tradesResponse()
+
+	case "/sniper", "/sniper_start", "/sniper_stop", "/sniper_logs", "/sniper_config":
+		// normalise sub-commands delivered as separate slash commands
+		switch cmd {
+		case "/sniper_start":
+			return d.sniperResponse([]string{"start"})
+		case "/sniper_stop":
+			return d.sniperResponse([]string{"stop"})
+		case "/sniper_logs":
+			return d.sniperResponse(append([]string{"logs"}, args...))
+		case "/sniper_config":
+			return d.sniperResponse([]string{"config"})
+		default:
+			return d.sniperResponse(args)
+		}
+
+	case "/aibot", "/aibot_start", "/aibot_stop", "/aibot_logs", "/aibot_config":
+		switch cmd {
+		case "/aibot_start":
+			return d.aibotResponse([]string{"start"})
+		case "/aibot_stop":
+			return d.aibotResponse([]string{"stop"})
+		case "/aibot_logs":
+			return d.aibotResponse(append([]string{"logs"}, args...))
+		case "/aibot_config":
+			return d.aibotResponse([]string{"config"})
+		default:
+			return d.aibotResponse(args)
+		}
+
+	case "/bots":
+		return d.botsResponse()
 
 	case "/ooda":
 		return d.oodaResponse()
