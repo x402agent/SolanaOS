@@ -1715,55 +1715,97 @@ The Fly path is intended for persistent daemon state plus the web console. Start
 
 ## Repo Layout
 
-This is the trimmed map of the repo:
-
 ```text
-nanosolana-go/
-├── main.go
+solanaos/
+├── main.go                    # root Go binary (solanaos daemon)
+├── start.sh                   # unified service start/stop/status script
+├── install.sh                 # one-shot installer (build + workspace + keys)
+├── Makefile                   # all build targets
+│
 ├── cmd/
-│   ├── mawdbot/              # primary CLI entrypoint package
-│   └── mawdbot-tui/          # TUI launcher package
-├── ui/                        # Lit + Vite Control UI (//go:embed into binary)
-├── Claw3D-main/               # SolanaOS Office (3D workspace → office.solanaos.net)
-├── pkg/
-│   ├── daemon/               # daemon orchestration
-│   ├── agent/                # OODA loop
-│   ├── nanobot/              # SolanaOS Control
-│   ├── solana/               # Solana clients and tx helpers
-│   ├── onchain/              # swap / chain engine
-│   ├── hyperliquid/          # Hyperliquid perps
-│   ├── memory/               # local memory
-│   ├── honcho/               # Honcho client
-│   ├── gateway/              # native gateway
-│   ├── hardware/             # Modulino drivers
-│   └── x402/                 # payment stack
+│   ├── mawdbot/               # primary daemon CLI entrypoint
+│   ├── gateway-api/           # standalone gateway binary (port 18790)
+│   ├── mawdbot-tui/           # TUI launcher
+│   └── solanaos-control-api/  # control API binary (port 18789)
+│
+├── pkg/                       # 55 Go library packages (see pkg/ table above)
+│   ├── daemon/                # 8,400-line orchestrator
+│   ├── agent/                 # OODA loop + tool-calling
+│   ├── llm/                   # multi-provider LLM + God Mode pipeline
+│   ├── solana/                # SolanaTracker RPC, Birdeye v3, Jupiter
+│   ├── gateway/               # TCP + WebSocket gateway
+│   ├── nanobot/               # Control UI server (port 7777)
+│   ├── hardware/              # Modulino I2C drivers
+│   ├── x402/                  # x402 payment protocol
+│   └── ...                    # 45 more — see pkg/ section
+│
 ├── services/
-│   └── agent-wallet/         # agent wallet vault + API
-│       ├── cmd/              # standalone binary entrypoint
-│       └── mcp/              # MCP server for AI agents
-├── acp_registry/
-│   ├── agent.example.json    # reference ACP config
-│   └── generate.mjs          # interactive agent.json generator
-├── skills/                   # bundled skills
-├── docs/                     # markdown docs
-├── docs-site/                # static docs site
-├── chrome-extension/         # browser extension
-├── apps/
-│   ├── macos/
-│   └── android/
-├── nanohub/                  # SolanaOS Hub app
-├── npm/
-│   ├── solanaos/
-│   ├── solanaos-installer/
-│   └── mawdbot-installer/
-└── build/
+│   └── agent-wallet/          # AES-256 encrypted wallet vault + REST API (port 8421)
+│       ├── cmd/               # standalone agent-wallet binary
+│       └── mcp/               # MCP server for AI agent tooling
+│
+├── mcp-server/                # solanaos-mcp — local MCP server (Claude Desktop / Cursor)
+│
+├── workers/                   # Cloudflare Workers monorepo
+│   ├── agents/                # agent task dispatch worker
+│   ├── gateway/               # gateway proxy worker
+│   ├── routing/               # request routing worker
+│   ├── sessions/              # session management worker
+│   ├── commands/              # command handler worker
+│   ├── cron/                  # scheduled job worker
+│   ├── auto-reply/            # auto-reply worker
+│   ├── infra/                 # infra shared utilities
+│   └── shared/                # shared types + helpers
+│
+├── pumpfun-mcp-worker/        # pump.fun MCP server (Cloudflare Worker + Cron)
+│
+├── npm/                       # canonical npm packages (published to npmjs.com)
+│   ├── solanaos/              # solanaos-computer (v1.1.1) — one-shot installer
+│   ├── solanaos-installer/    # solanaos-cli (v2.1.1) — CLI alias
+│   └── mawdbot-installer/     # nanosolana-cli (v2.1.1) — legacy compat alias
+│
+├── new/npm/                   # ⚠️  older package drafts — npm/ is canonical
+│
+├── acp_registry/              # ACP 8004 agent registry tooling
+│   ├── agent.example.json     # reference ACP config
+│   └── generate.mjs           # interactive agent.json builder
+│
+├── skills/                    # bundled SKILL.md files for agent context
+├── bots/                      # standalone trading bots (pump.fun sniper + AI)
+├── mawdbot-bitaxe/            # MawdAxe BitAxe ASIC miner agent (own Makefile)
+├── g0dm0d3-main/              # God Mode source (Rust/Python ML components)
+├── page-agent-main/           # web UI automation agent
+├── extensions/bluebubbles/    # iMessage bridge via BlueBubbles
+├── WatchApp/                  # Apple Watch app (Swift / WatchOS)
+│
+├── ui/                        # Lit + Vite Control UI (//go:embed into binary)
+├── web/                       # web backend + frontend (optional solanaos-web)
+├── src/                       # TypeScript shared sources (workers / web)
+│
+├── db/                        # database schema (index.ts, schema.ts)
+├── internal/                  # Go internal packages (hal)
+├── scripts/                   # release, deploy, seeker, pump scripts
+├── deploy/                    # Fly.io deployment package
+├── docs/                      # markdown documentation
+└── build/                     # compiled binaries (gitignored)
 ```
+
+**Service port map:**
+
+| Binary | Port | Start command |
+| --- | --- | --- |
+| solanaos daemon | 18790 (gateway), 7777 (control UI) | `make start` or `bash start.sh` |
+| agent-wallet | 8421 | `make start-agent-wallet` |
+| solanaos-mcp | stdio | `make start-mcp` or Claude Desktop config |
+| gateway-api | 18790 | built into daemon; standalone via `./build/gateway-api` |
+| control-api | 18789 | `make run-control-api` |
 
 Notes:
 
-- `solanaos` is the runtime name users should see first
-- some package and directory names still keep compatibility-era naming
-- `nanosolana` remains a supported alias
+- `solanaos` is the name users see; `nanosolana` is the supported legacy alias throughout
+- `npm/` is the canonical npm workspace — `new/npm/` contains older drafts and is not published
+- Workers in `workers/` and `pumpfun-mcp-worker/` are deployed separately via Wrangler/Cloudflare
+- `bots/`, `WatchApp/`, `page-agent-main/`, `extensions/` are standalone sub-projects with their own build systems
 
 ## Configuration Notes
 
