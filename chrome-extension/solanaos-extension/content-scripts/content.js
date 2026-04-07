@@ -2686,7 +2686,12 @@ ${pi.pixels_above > 4 && viewportExpansion !== -1 ? `... ${pi.pixels_above} pixe
 			});
 			return pageController;
 		}
-		window.setInterval(async () => {
+		const _solanaosIntervalId = window.setInterval(async () => {
+			if (!chrome?.storage?.local) {
+				window.clearInterval(_solanaosIntervalId);
+				if (pageController) { pageController.dispose(); pageController = null; }
+				return;
+			}
 			const agentHeartbeat = (await chrome.storage.local.get("agentHeartbeat")).agentHeartbeat;
 			const agentInTouch = typeof agentHeartbeat === "number" && Date.now() - agentHeartbeat < 2e3;
 			const isAgentRunning = (await chrome.storage.local.get("isAgentRunning")).isAgentRunning;

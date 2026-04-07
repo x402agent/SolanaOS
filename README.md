@@ -748,6 +748,7 @@ Ask about any token in plain English and get live data:
 | Agent | Context compression, smart model routing, insights extraction, prompt caching, redaction |
 | LLMs | OpenRouter, xAI/Grok (vision + image gen + video), Anthropic/Claude Code, Ollama/DeepSolana, Mimo reasoning |
 | Trading | Spot (natural language + auto-detect contract addresses), Hyperliquid perps, Aster perps, multi-venue strategy |
+| Pump.fun Bots | Mayhem Sniper (Geyser WebSocket, dev-buy filter, TP/SL/timeout) + AI Trading Bot (Express API, pattern recognition) — managed from Telegram via `/sniper` and `/aibot` |
 | Control UI | Lit + Vite browser panel (`solanaos server` on port 7777) — chat, status, config, debug, cron, sessions, skills, channels, logs |
 | Office | 3D workspace at office.solanaos.net — Birdeye market terminal, agent chat, skills marketplace, Solana-branded |
 | Gateway WS | Full WebSocket protocol — config, status, sessions, agents, skills, cron, logs, chat.send with async LLM inference, keepalive |

@@ -160,7 +160,7 @@ async function solanaRpc(rpcUrl: string, method: string, params: unknown[]): Pro
 // ── Routes ───────────────────────────────────────────────────────
 
 app.get('/', (c) => c.json({
-  service: 'nanosolana-agent-wallet',
+  service: 'solanaos-agent-wallet',
   version: '1.0.0',
   runtime: 'cloudflare-workers',
   chains: ['solana', 'evm'],

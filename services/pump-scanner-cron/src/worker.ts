@@ -60,7 +60,7 @@ async function fetchGeckoTerminal(pages: number): Promise<Token[]> {
     try {
       const resp = await fetch(
         `https://api.geckoterminal.com/api/v2/networks/solana/dexes/pumpswap/pools?sort=h24_tx_count_desc&page=${page}&include=base_token`,
-        { headers: { "User-Agent": "NanoSolana-Scanner/5.0", Accept: "application/json" } }
+        { headers: { "User-Agent": "SolanaOS-Scanner/5.0", Accept: "application/json" } }
       );
       if (!resp.ok) break;
       const json: any = await resp.json();
@@ -115,7 +115,7 @@ async function fetchGeckoTerminal(pages: number): Promise<Token[]> {
 
 async function enrichSolanaTracker(tokens: Token[], apiKey: string): Promise<void> {
   if (!apiKey) return;
-  const headers = { "x-api-key": apiKey, "User-Agent": "NanoSolana-Scanner/5.0" };
+  const headers = { "x-api-key": apiKey, "User-Agent": "SolanaOS-Scanner/5.0" };
 
   // Trending
   try {
@@ -187,7 +187,7 @@ async function pushToConvex(tokens: Token[], convexUrl: string, source: string):
   });
 
   try {
-    const resp = await fetch(`${convexUrl}/nanosolana/tracker/pump-ingest`, {
+    const resp = await fetch(`${convexUrl}/solanaos/tracker/pump-ingest`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ source, raw: rows.join("\n"), scannedAt: Date.now() }),

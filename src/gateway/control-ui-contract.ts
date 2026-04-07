@@ -1,4 +1,4 @@
-export const CONTROL_UI_BOOTSTRAP_CONFIG_PATH = "/__nanosolana/control-ui-config.json";
+export const CONTROL_UI_BOOTSTRAP_CONFIG_PATH = "/__solanaos/control-ui-config.json";
 
 export const SOLANAOS_CONNECT_BUNDLE_VERSION = 1;
 export const SOLANAOS_DEFAULT_CONTROL_API_URL = "http://127.0.0.1:7777";

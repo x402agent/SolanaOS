@@ -65,7 +65,7 @@ function jsonResponse(data: unknown) {
 
 const server = new McpServer(
   {
-    name: "nanosolana-agent-wallet",
+    name: "solanaos-agent-wallet",
     version: "1.0.0",
   },
   {
