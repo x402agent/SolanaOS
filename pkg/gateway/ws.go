@@ -133,7 +133,7 @@ func (b *Bridge) handleWebSocketConn(ctx context.Context, ws *websocket.Conn) {
 			id, _ := frame["id"].(string)
 			method, _ := frame["method"].(string)
 			params, _ := frame["params"].(map[string]any)
-			b.handleWSRequest(writeJSON, id, method, params, &nodeID, &role, &authenticated)
+			b.handleWSRequest(ctx, writeJSON, id, method, params, &nodeID, &role, &authenticated)
 
 		case "ping":
 			pingID, _ := frame["id"].(string)
