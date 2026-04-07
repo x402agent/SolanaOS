@@ -39,6 +39,8 @@ const (
 	DefaultXAIImageModel      = "grok-imagine-image"
 	DefaultXAIVideoModel      = "grok-imagine-video"
 	DefaultXAIMultiModel      = "grok-4.20-multi-agent-beta-0309"
+	DefaultTogetherBaseURL    = "https://api.together.xyz/v1"
+	DefaultTogetherModel      = "zai-org/GLM-5"
 	maxHistory                = 40 // messages per session (20 turns)
 )
 
@@ -149,6 +151,14 @@ type Client struct {
 	xaiMultiAgentModel string
 	ollamaBaseURL      string
 	ollamaModel        string
+	togetherAPIKey     string
+	togetherBaseURL    string
+	togetherModel      string
+	llamaCppURL        string // llama.cpp server URL (OpenAI-compatible)
+	llamaCppModel      string // model name for llama.cpp requests
+	llamaCppEnabled    bool   // whether llama.cpp backend is active
+	cfAigToken         string // Cloudflare AI Gateway token
+	cfAigBaseURL       string // Cloudflare AI Gateway compat endpoint
 	activeProvider     string
 	fallbackToOllama   bool
 	leaderboardMode    bool   // OPENROUTER_LEADERBOARD_MODE — enables OpenRouter attribution headers
@@ -241,7 +251,44 @@ func New() *Client {
 	if ollamaBaseURL == "" {
 		ollamaBaseURL = DefaultOllamaBaseURL
 	}
-	activeProvider := resolveActiveProvider(strings.TrimSpace(os.Getenv("LLM_PROVIDER")), key, anthropicKey, xaiKey, ollamaModel)
+	// ── Together AI ──────────────────────────────────────────────
+	togetherKey := strings.TrimSpace(os.Getenv("TOGETHER_API_KEY"))
+	togetherBaseURL := strings.TrimRight(strings.TrimSpace(os.Getenv("TOGETHER_BASE_URL")), "/")
+	if togetherBaseURL == "" {
+		togetherBaseURL = DefaultTogetherBaseURL
+	}
+	togetherModel := strings.TrimSpace(os.Getenv("TOGETHER_MODEL"))
+	if togetherModel == "" {
+		togetherModel = DefaultTogetherModel
+	}
+	// ── llama.cpp server ─────────────────────────────────────────
+	llamaCppURL := strings.TrimRight(strings.TrimSpace(os.Getenv("LLAMA_CPP_URL")), "/")
+	if llamaCppURL == "" {
+		llamaCppURL = DefaultLlamaCppURL
+	}
+	llamaCppModelVal := strings.TrimSpace(os.Getenv("LLAMA_CPP_MODEL"))
+	if llamaCppModelVal == "" {
+		llamaCppModelVal = DefaultLlamaCppModel
+	}
+	llamaCppEnabled := parseBool(os.Getenv("LLAMA_CPP_ENABLED"), false)
+	// ── Cloudflare AI Gateway ────────────────────────────────────
+	cfAigToken := strings.TrimSpace(firstNonEmptyEnv("AI_GATEWAY_TOKEN", "CF_AIG_TOKEN"))
+	cfAigAccountID := strings.TrimSpace(firstNonEmptyEnv("CF_ACCOUNT_ID", "CLOUDFLARE_ACCOUNT_ID"))
+	if cfAigAccountID == "" {
+		cfAigAccountID = "18ed6c94a5311ad325315a5cd8bee8cd"
+	}
+	cfAigGateway := strings.TrimSpace(firstNonEmptyEnv("CF_AIG_GATEWAY", "AI_GATEWAY_ID"))
+	if cfAigGateway == "" {
+		cfAigGateway = "default"
+	}
+	cfAigBaseURL := ""
+	cfAigDisable := strings.TrimSpace(firstNonEmptyEnv("CF_AIG_DISABLE", "DISABLE_CF_GATEWAY"))
+	if cfAigToken != "" && cfAigDisable == "" {
+		cfAigBaseURL = fmt.Sprintf("https://gateway.ai.cloudflare.com/v1/%s/%s", cfAigAccountID, cfAigGateway)
+		anthropicBaseURL = cfAigBaseURL + "/anthropic"
+		xaiBaseURL = cfAigBaseURL + "/grok"
+	}
+	activeProvider := resolveActiveProvider(strings.TrimSpace(os.Getenv("LLM_PROVIDER")), key, anthropicKey, xaiKey, togetherKey, ollamaModel)
 	return &Client{
 		apiKey:             key,
 		model:              model,
@@ -267,6 +314,14 @@ func New() *Client {
 		xaiMultiAgentModel: xaiMultiAgentModel,
 		ollamaBaseURL:      ollamaBaseURL,
 		ollamaModel:        ollamaModel,
+		togetherAPIKey:     togetherKey,
+		togetherBaseURL:    togetherBaseURL,
+		togetherModel:      togetherModel,
+		llamaCppURL:        llamaCppURL,
+		llamaCppModel:      llamaCppModelVal,
+		llamaCppEnabled:    llamaCppEnabled,
+		cfAigToken:         cfAigToken,
+		cfAigBaseURL:       cfAigBaseURL,
 		activeProvider:     activeProvider,
 		fallbackToOllama:   parseBool(os.Getenv("OLLAMA_FALLBACK_ENABLED"), true),
 		leaderboardMode:    parseBool(os.Getenv("OPENROUTER_LEADERBOARD_MODE"), true),
@@ -280,7 +335,7 @@ func New() *Client {
 	}
 }
 
-func resolveActiveProvider(requestedProvider, openrouterKey, anthropicKey, xaiKey, ollamaModel string) string {
+func resolveActiveProvider(requestedProvider, openrouterKey, anthropicKey, xaiKey, togetherKey, ollamaModel string) string {
 	requestedProvider = strings.ToLower(strings.TrimSpace(requestedProvider))
 	switch requestedProvider {
 	case "anthropic", "claude":
@@ -295,6 +350,12 @@ func resolveActiveProvider(requestedProvider, openrouterKey, anthropicKey, xaiKe
 		if strings.TrimSpace(xaiKey) != "" {
 			return "xai"
 		}
+	case "together", "togetherai":
+		if strings.TrimSpace(togetherKey) != "" {
+			return "together"
+		}
+	case "llamacpp", "llama.cpp", "llama":
+		return "llamacpp"
 	case "ollama":
 		if strings.TrimSpace(ollamaModel) != "" {
 			return "ollama"
@@ -308,6 +369,8 @@ func resolveActiveProvider(requestedProvider, openrouterKey, anthropicKey, xaiKe
 		return "anthropic"
 	case strings.TrimSpace(xaiKey) != "":
 		return "xai"
+	case strings.TrimSpace(togetherKey) != "":
+		return "together"
 	case strings.TrimSpace(ollamaModel) != "":
 		return "ollama"
 	default:
@@ -317,7 +380,7 @@ func resolveActiveProvider(requestedProvider, openrouterKey, anthropicKey, xaiKe
 
 // IsConfigured returns true if an API key is present.
 func (c *Client) IsConfigured() bool {
-	return c.IsOpenRouterConfigured() || c.IsAnthropicConfigured() || c.IsXAIConfigured() || c.IsOllamaConfigured()
+	return c.IsOpenRouterConfigured() || c.IsAnthropicConfigured() || c.IsXAIConfigured() || c.IsOllamaConfigured() || c.IsLlamaCppConfigured()
 }
 
 func (c *Client) IsOpenRouterConfigured() bool {

@@ -1,0 +1,31 @@
+name = "pumpfun-mcp-server"
+main = "src/index.ts"
+compatibility_date = "2024-12-01"
+compatibility_flags = ["nodejs_compat"]
+
+# ── KV namespace for storing scan results ──
+[[kv_namespaces]]
+binding = "SCANS"
+id = "2920464b410144b3bb7dcdd3f567ed73"
+preview_id = "2920464b410144b3bb7dcdd3f567ed73"
+
+# ── Cron Triggers — every 15 minutes, 24/7 ──
+[triggers]
+crons = ["*/15 * * * *"]
+
+# ── Environment variables (set via `wrangler secret put`) ──
+# These are referenced in code via env.VAR_NAME
+# Do NOT put secrets in this file — use `wrangler secret put` instead.
+#
+# Required secrets:
+#   wrangler secret put SOLANA_TRACKER_API_KEY
+#   wrangler secret put HELIUS_API_KEY
+#   wrangler secret put TELEGRAM_BOT_TOKEN
+#   wrangler secret put TELEGRAM_CHAT_ID
+#   wrangler secret put CONVEX_SITE_URL
+#
+# Optional (for tweet generation — read-only, no posting):
+#   wrangler secret put TWITTER_BEARER_TOKEN
+
+[vars]
+ENVIRONMENT = "production"

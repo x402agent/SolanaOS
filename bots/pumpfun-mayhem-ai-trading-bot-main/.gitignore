@@ -1,0 +1,14 @@
+node_modules/
+dist/
+.env
+*.log
+logs/
+.DS_Store
+*.tsbuildinfo
+coverage/
+.vscode/
+.idea/
+models/
+*.pkl
+*.h5
+

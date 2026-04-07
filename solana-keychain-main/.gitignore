@@ -1,0 +1,26 @@
+# Rust
+/Cargo.lock
+**/target
+**/*.rs.bk
+*.pdb
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# AI – ignore .claude/ except shared commands and skills
+.claude/*
+!.claude/commands/
+!.claude/skills/
+
+.env
+test-ledger/
+validator.log
+/node_modules/

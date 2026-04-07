@@ -13,12 +13,23 @@
 export interface Env {
   CONVEX_SITE_URL: string;
   SOLANA_TRACKER_API_KEY: string;
+  SOLANA_TRACKER_DATA_API_KEY: string;
+  SOLANA_TRACKER_RPC_API_KEY: string;
+  BIRDEYE_API_KEY: string;
   HONCHO_API_KEY: string;
   HONCHO_WORKSPACE: string;
   GECKO_PAGES: string;
   SOURCE_TAG: string;
   TELEGRAM_BOT_TOKEN: string;
   TELEGRAM_CHAT_ID: string;
+  OPENROUTER_API_KEY: string;
+  QUICKNODE_RPC_URL: string;
+  QUICKNODE_WSS_URL: string;
+  SOLANA_RPC_URL: string;
+  SOLANA_WSS_URL: string;
+  BIRDEYE_WSS_URL: string;
+  SOLANA_TRACKER_RPC_URL: string;
+  SOLANA_TRACKER_WS_URL: string;
 }
 
 interface Token {

@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>pump.fun Scanner Dashboard</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.26.2/babel.min.js"></script>
+<style>
+  :root {
+    --bg: #0a0a0f; --surface: #12121a; --surface2: #1a1a2e; --border: #2a2a3e;
+    --text: #e4e4ef; --text2: #8888aa; --accent: #7c5cfc; --accent2: #5c3cdc;
+    --green: #22c55e; --red: #ef4444; --yellow: #eab308; --cyan: #06b6d4;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family: 'SF Mono', 'Fira Code', 'JetBrains Mono', monospace; background:var(--bg); color:var(--text); }
+  .app { max-width:1400px; margin:0 auto; padding:16px; }
+
+  /* Header */
+  .header { display:flex; justify-content:space-between; align-items:center; padding:16px 0; border-bottom:1px solid var(--border); margin-bottom:16px; }
+  .header h1 { font-size:18px; font-weight:600; }
+  .header h1 span { color:var(--accent); }
+  .status { display:flex; align-items:center; gap:8px; font-size:12px; color:var(--text2); }
+  .dot { width:8px; height:8px; border-radius:50%; }
+  .dot.live { background:var(--green); box-shadow:0 0 6px var(--green); }
+  .dot.off { background:var(--red); }
+
+  /* Stats Row */
+  .stats { display:grid; grid-template-columns:repeat(auto-fit, minmax(180px,1fr)); gap:12px; margin-bottom:16px; }
+  .stat { background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:14px; }
+  .stat-label { font-size:10px; text-transform:uppercase; letter-spacing:1px; color:var(--text2); margin-bottom:4px; }
+  .stat-value { font-size:22px; font-weight:700; }
+  .stat-sub { font-size:11px; color:var(--text2); margin-top:2px; }
+
+  /* Actions */
+  .actions { display:flex; gap:8px; margin-bottom:16px; flex-wrap:wrap; }
+  .btn { background:var(--accent); color:#fff; border:none; border-radius:6px; padding:8px 16px; font-size:12px; font-family:inherit; cursor:pointer; transition:all .15s; }
+  .btn:hover { background:var(--accent2); }
+  .btn:disabled { opacity:.4; cursor:not-allowed; }
+  .btn.outline { background:transparent; border:1px solid var(--border); color:var(--text2); }
+  .btn.outline:hover { border-color:var(--accent); color:var(--text); }
+
+  /* Tabs */
+  .tabs { display:flex; gap:0; margin-bottom:16px; border-bottom:1px solid var(--border); }
+  .tab { padding:8px 16px; font-size:12px; cursor:pointer; color:var(--text2); border-bottom:2px solid transparent; font-family:inherit; background:none; border-top:none; border-left:none; border-right:none; }
+  .tab.active { color:var(--accent); border-bottom-color:var(--accent); }
+
+  /* Token Table */
+  .table-wrap { overflow-x:auto; background:var(--surface); border:1px solid var(--border); border-radius:8px; }
+  table { width:100%; border-collapse:collapse; font-size:12px; }
+  th { text-align:left; padding:10px 12px; font-size:10px; text-transform:uppercase; letter-spacing:1px; color:var(--text2); background:var(--surface2); position:sticky; top:0; }
+  td { padding:8px 12px; border-top:1px solid var(--border); }
+  tr:hover td { background:var(--surface2); }
+  .mc { color:var(--green); font-weight:600; }
+  .pct { font-weight:600; }
+  .pct.high { color:var(--green); }
+  .pct.mid { color:var(--yellow); }
+  .pct.low { color:var(--text2); }
+  .mint { font-size:10px; color:var(--text2); max-width:120px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; cursor:pointer; }
+  .mint:hover { color:var(--cyan); }
+  .age { color:var(--text2); }
+  .age.fresh { color:var(--cyan); font-weight:600; }
+  .rank { color:var(--text2); width:30px; }
+  .src { font-size:9px; padding:2px 6px; border-radius:3px; background:var(--surface2); color:var(--text2); }
+
+  /* Tweet Panel */
+  .tweet-panel { background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:16px; margin-bottom:16px; }
+  .tweet-text { white-space:pre-wrap; font-size:13px; line-height:1.5; padding:12px; background:var(--bg); border-radius:6px; border:1px solid var(--border); }
+  .tweet-meta { display:flex; justify-content:space-between; margin-top:8px; font-size:11px; color:var(--text2); }
+
+  /* Search */
+  .search { background:var(--surface); border:1px solid var(--border); border-radius:6px; padding:8px 12px; font-size:12px; color:var(--text); font-family:inherit; width:240px; outline:none; }
+  .search:focus { border-color:var(--accent); }
+  .search::placeholder { color:var(--text2); }
+
+  /* Loading */
+  .loading { text-align:center; padding:40px; color:var(--text2); }
+  @keyframes pulse { 0%,100%{opacity:.4} 50%{opacity:1} }
+  .loading span { animation:pulse 1.5s infinite; }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width:6px; height:6px; }
+  ::-webkit-scrollbar-track { background:var(--bg); }
+  ::-webkit-scrollbar-thumb { background:var(--border); border-radius:3px; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const { useState, useEffect, useCallback, useMemo } = React;
+
+const API = "https://pumpfun-mcp-server.x402.workers.dev";
+
+function App() {
+  const [scan, setScan] = useState(null);
+  const [health, setHealth] = useState(null);
+  const [tweet, setTweet] = useState(null);
+  const [tab, setTab] = useState("tokens");
+  const [search, setSearch] = useState("");
+  const [scanning, setScanning] = useState(false);
+  const [error, setError] = useState(null);
+  const [autoRefresh, setAutoRefresh] = useState(true);
+  const [lastFetch, setLastFetch] = useState(null);
+
+  const fetchData = useCallback(async () => {
+    try {
+      const [latestRes, healthRes] = await Promise.all([
+        fetch(`${API}/api/latest`),
+        fetch(`${API}/`),
+      ]);
+      if (latestRes.ok) {
+        const data = await latestRes.json();
+        setScan(data);
+        setLastFetch(new Date());
+      }
+      if (healthRes.ok) setHealth(await healthRes.json());
+      setError(null);
+    } catch (e) {
+      setError(e.message);
+    }
+  }, []);
+
+  const triggerScan = async () => {
+    setScanning(true);
+    try {
+      const res = await fetch(`${API}/api/scan`);
+      if (res.ok) {
+        await fetchData();
+      }
+    } catch (e) { setError(e.message); }
+    setScanning(false);
+  };
+
+  const fetchTweet = async () => {
+    try {
+      const res = await fetch(`${API}/api/tweet`);
+      if (res.ok) setTweet(await res.json());
+    } catch {}
+  };
+
+  useEffect(() => { fetchData(); fetchTweet(); }, [fetchData]);
+
+  useEffect(() => {
+    if (!autoRefresh) return;
+    const id = setInterval(fetchData, 60000);
+    return () => clearInterval(id);
+  }, [autoRefresh, fetchData]);
+
+  const filteredTokens = useMemo(() => {
+    if (!scan?.tokens) return [];
+    if (!search) return scan.tokens;
+    const q = search.toLowerCase();
+    return scan.tokens.filter(t =>
+      t.name.toLowerCase().includes(q) ||
+      t.symbol.toLowerCase().includes(q) ||
+      t.mint.toLowerCase().includes(q)
+    );
+  }, [scan, search]);
+
+  const pctClass = (v) => v >= 90 ? "high" : v >= 50 ? "mid" : "low";
+  const ageClass = (m) => m !== null && m <= 10 ? "fresh" : "";
+
+  const copyMint = (mint) => {
+    navigator.clipboard?.writeText(mint);
+  };
+
+  if (!scan) return (
+    <div className="app">
+      <div className="loading"><span>Loading scanner data...</span></div>
+    </div>
+  );
+
+  const s = scan.summary;
+  const scanAge = Math.round((Date.now() - new Date(scan.timestamp).getTime()) / 60000);
+
+  return (
+    <div className="app">
+      {/* Header */}
+      <div className="header">
+        <h1><span>pump</span>.fun Scanner</h1>
+        <div className="status">
+          <div className={`dot ${scanAge < 20 ? "live" : "off"}`} />
+          {scanAge < 20 ? "Live" : `${scanAge}m ago`}
+          {" · "}
+          Cron: */15 min
+          {lastFetch && ` · Fetched ${new Date(lastFetch).toLocaleTimeString()}`}
+        </div>
+      </div>
+
+      {/* Stats */}
+      <div className="stats">
+        <div className="stat">
+          <div className="stat-label">Tokens</div>
+          <div className="stat-value">{s.totalTokens}</div>
+          <div className="stat-sub">blocklist filtered</div>
+        </div>
+        <div className="stat">
+          <div className="stat-label">Top Market Cap</div>
+          <div className="stat-value mc">{s.highestMcToken?.mc || "—"}</div>
+          <div className="stat-sub">{s.highestMcToken?.name} ({s.highestMcToken?.symbol})</div>
+        </div>
+        <div className="stat">
+          <div className="stat-label">Near Graduation</div>
+          <div className="stat-value" style={{color:"var(--yellow)"}}>{s.nearGraduation}</div>
+          <div className="stat-sub">≥90% bonding</div>
+        </div>
+        <div className="stat">
+          <div className="stat-label">Fresh Tokens</div>
+          <div className="stat-value" style={{color:"var(--cyan)"}}>{s.freshTokens}</div>
+          <div className="stat-sub">≤10 min old</div>
+        </div>
+        <div className="stat">
+          <div className="stat-label">Last Scan</div>
+          <div className="stat-value" style={{fontSize:14}}>{new Date(scan.timestamp).toLocaleTimeString()}</div>
+          <div className="stat-sub">{scan.source}</div>
+        </div>
+      </div>
+
+      {/* Actions */}
+      <div className="actions">
+        <button className="btn" onClick={triggerScan} disabled={scanning}>
+          {scanning ? "Scanning..." : "⚡ Run Scan"}
+        </button>
+        <button className="btn outline" onClick={fetchData}>↻ Refresh</button>
+        <button className="btn outline" onClick={() => setAutoRefresh(!autoRefresh)}>
+          {autoRefresh ? "⏸ Pause Auto" : "▶ Resume Auto"}
+        </button>
+        <button className="btn outline" onClick={() => window.open(`${API}/api/pump.md`)}>
+          📄 pump.md
+        </button>
+        {error && <span style={{color:"var(--red)", fontSize:11, alignSelf:"center"}}>{error}</span>}
+      </div>
+
+      {/* Tabs */}
+      <div className="tabs">
+        <button className={`tab ${tab==="tokens"?"active":""}`} onClick={()=>setTab("tokens")}>
+          Tokens ({filteredTokens.length})
+        </button>
+        <button className={`tab ${tab==="top5"?"active":""}`} onClick={()=>setTab("top5")}>
+          Top 5
+        </button>
+        <button className={`tab ${tab==="tweet"?"active":""}`} onClick={()=>{setTab("tweet"); fetchTweet();}}>
+          Tweet Draft
+        </button>
+      </div>
+
+      {/* Tab Content */}
+      {tab === "tokens" && (
+        <>
+          <div style={{marginBottom:12}}>
+            <input
+              className="search"
+              placeholder="Search name, symbol, or mint..."
+              value={search}
+              onChange={e => setSearch(e.target.value)}
+            />
+          </div>
+          <div className="table-wrap" style={{maxHeight:"65vh", overflow:"auto"}}>
+            <table>
+              <thead>
+                <tr>
+                  <th>#</th><th>Name</th><th>Symbol</th><th>Mint</th>
+                  <th>Market Cap</th><th>Age</th><th>Bonding %</th><th>Source</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredTokens.map(t => (
+                  <tr key={t.mint}>
+                    <td className="rank">{t.rank}</td>
+                    <td>{t.name}</td>
+                    <td><strong>{t.symbol}</strong></td>
+                    <td className="mint" title={t.mint} onClick={() => copyMint(t.mint)}>
+                      {t.mint.slice(0,6)}...{t.mint.slice(-4)}
+                    </td>
+                    <td className="mc">{t.marketCap}</td>
+                    <td className={`age ${ageClass(t.ageMinutes)}`}>{t.age}</td>
+                    <td className={`pct ${pctClass(t.bondingPctNum)}`}>{t.bondingPct}</td>
+                    <td><span className="src">{t.source === "geckoterminal" ? "GT" : "ST"}</span></td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </>
+      )}
+
+      {tab === "top5" && (
+        <div style={{display:"grid", gap:12}}>
+          {s.top5ByMc.map((t, i) => (
+            <div key={i} className="stat" style={{display:"flex", alignItems:"center", gap:16}}>
+              <div style={{fontSize:28, fontWeight:800, color:"var(--accent)", width:40, textAlign:"center"}}>
+                {i+1}
+              </div>
+              <div style={{flex:1}}>
+                <div style={{fontSize:16, fontWeight:600}}>{t.name}</div>
+                <div style={{fontSize:12, color:"var(--text2)"}}>{t.symbol}</div>
+              </div>
+              <div className="mc" style={{fontSize:20}}>{t.mc}</div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {tab === "tweet" && tweet && (
+        <div className="tweet-panel">
+          <div className="tweet-text">{tweet.tweet}</div>
+          <div className="tweet-meta">
+            <span>{tweet.length}/280 chars</span>
+            <button className="btn" style={{padding:"4px 12px", fontSize:11}}
+              onClick={() => navigator.clipboard?.writeText(tweet.tweet)}>
+              Copy
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+</script>
+</body>
+</html>

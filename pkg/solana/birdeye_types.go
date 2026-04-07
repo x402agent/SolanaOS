@@ -38,6 +38,11 @@ type TokenMarketData struct {
 	Multiplier        *float64 `json:"multiplier"`
 }
 
+type TokenLiquidityData struct {
+	Address   string  `json:"address"`
+	Liquidity float64 `json:"liquidity"`
+}
+
 // ── Token Overview (full v1 overview) ────────────────────────────────
 
 type TokenOverviewV3 struct {
@@ -374,4 +379,352 @@ type HolderDistribution struct {
 	Whale   int `json:"whale"`
 	Fish    int `json:"fish"`
 	Shrimp  int `json:"shrimp"`
+}
+
+type TokenExitLiquidityPrice struct {
+	Value          float64 `json:"value"`
+	UpdateUnixTime int64   `json:"update_unix_time"`
+	UpdateHumanTime string `json:"update_human_time"`
+	UpdateInSlot   int64   `json:"update_in_slot"`
+}
+
+type TokenExitLiquidity struct {
+	Token         string                  `json:"token"`
+	ExitLiquidity float64                 `json:"exit_liquidity"`
+	Liquidity     float64                 `json:"liquidity"`
+	Price         TokenExitLiquidityPrice `json:"price"`
+	Currency      string                  `json:"currency"`
+	Address       string                  `json:"address"`
+	Name          string                  `json:"name"`
+	Symbol        string                  `json:"symbol"`
+	Decimals      int                     `json:"decimals"`
+	Extensions    map[string]any          `json:"extensions"`
+	LogoURI       string                  `json:"logo_uri"`
+}
+
+// ── Token List (V3 Scroll / V1 / Markets) ──────────────────────────
+
+type TokenListScrollPage struct {
+	NextScrollID string          `json:"next_scroll_id"`
+	ScrollTime   string          `json:"scroll_time"`
+	Items        []TokenListItem `json:"items"`
+}
+
+type TokenListV1Item struct {
+	Address          string   `json:"address"`
+	Decimals         int      `json:"decimals"`
+	Price            float64  `json:"price"`
+	LastTradeUnixTime int64   `json:"lastTradeUnixTime"`
+	Liquidity        float64  `json:"liquidity"`
+	LogoURI          string   `json:"logoURI"`
+	MC               float64  `json:"mc"`
+	Name             string   `json:"name"`
+	Symbol           string   `json:"symbol"`
+	V24hChangePct    float64  `json:"v24hChangePercent"`
+	V24hUSD          float64  `json:"v24hUSD"`
+	IsScaledUIToken  bool     `json:"isScaledUiToken"`
+	Multiplier       *float64 `json:"multiplier"`
+}
+
+type MarketListAsset struct {
+	Address  string `json:"address"`
+	Decimals int    `json:"decimals"`
+	Symbol   string `json:"symbol"`
+	Icon     string `json:"icon"`
+}
+
+type MarketListItem struct {
+	Address                     string          `json:"address"`
+	Base                        MarketListAsset `json:"base"`
+	Quote                       MarketListAsset `json:"quote"`
+	CreatedAt                   string          `json:"createdAt"`
+	Name                        string          `json:"name"`
+	Source                      string          `json:"source"`
+	Liquidity                   float64         `json:"liquidity"`
+	Price                       float64         `json:"price"`
+	Trade24h                    int             `json:"trade24h"`
+	Trade24hChangePercent       float64         `json:"trade24hChangePercent"`
+	UniqueWallet24h             int             `json:"uniqueWallet24h"`
+	UniqueWallet24hChangePercent float64        `json:"uniqueWallet24hChangePercent"`
+	Volume24h                   float64         `json:"volume24h"`
+}
+
+// ── Pair Transactions ────────────────────────────────────────────────
+
+type PairTradeToken struct {
+	Symbol             string   `json:"symbol"`
+	Address            string   `json:"address"`
+	Decimals           int      `json:"decimals"`
+	Price              float64  `json:"price"`
+	Amount             *float64 `json:"amount,omitempty"`
+	UIAmount           *float64 `json:"uiAmount,omitempty"`
+	UIChangeAmount     *float64 `json:"uiChangeAmount,omitempty"`
+	TypeSwap           string   `json:"typeSwap,omitempty"`
+	IsScaledUIToken    bool     `json:"isScaledUiToken"`
+	Multiplier         *float64 `json:"multiplier"`
+}
+
+type PairTradeItem struct {
+	TxHash        string         `json:"txHash"`
+	Source        string         `json:"source"`
+	BlockUnixTime int64          `json:"blockUnixTime"`
+	TxType        string         `json:"txType"`
+	Address       string         `json:"address"`
+	Owner         string         `json:"owner"`
+	From          PairTradeToken `json:"from"`
+	To            PairTradeToken `json:"to"`
+}
+
+// ── Wallet Net Worth / PnL ──────────────────────────────────────────
+
+type WalletCurrentNetWorthItem struct {
+	Address  string  `json:"address"`
+	Decimals int     `json:"decimals"`
+	Price    float64 `json:"price"`
+	Balance  string  `json:"balance"`
+	Amount   float64 `json:"amount"`
+	Network  string  `json:"network"`
+	Name     string  `json:"name"`
+	Symbol   string  `json:"symbol"`
+	LogoURI  string  `json:"logo_uri"`
+	Value    string  `json:"value"`
+}
+
+type WalletCurrentNetWorth struct {
+	WalletAddress    string                     `json:"wallet_address"`
+	Currency         string                     `json:"currency"`
+	TotalValue       string                     `json:"total_value"`
+	CurrentTimestamp string                     `json:"current_timestamp"`
+	Items            []WalletCurrentNetWorthItem `json:"items"`
+}
+
+type WalletNetWorthHistoryPoint struct {
+	Timestamp             string  `json:"timestamp"`
+	NetWorth              float64 `json:"net_worth"`
+	NetWorthChange        float64 `json:"net_worth_change"`
+	NetWorthChangePercent float64 `json:"net_worth_change_percent"`
+}
+
+type WalletNetWorthHistory struct {
+	WalletAddress     string                      `json:"wallet_address"`
+	Currency          string                      `json:"currency"`
+	CurrentTimestamp  string                      `json:"current_timestamp"`
+	PastTimestamp     string                      `json:"past_timestamp"`
+	History           []WalletNetWorthHistoryPoint `json:"history"`
+}
+
+type WalletSummaryValue struct {
+	Value string `json:"value"`
+}
+
+type WalletNetWorthAsset struct {
+	Symbol       string  `json:"symbol"`
+	TokenAddress string  `json:"token_address"`
+	Decimal      int     `json:"decimal"`
+	Balance      string  `json:"balance"`
+	Price        float64 `json:"price"`
+	Value        float64 `json:"value"`
+}
+
+type WalletNetWorthDetails struct {
+	WalletAddress     string                `json:"wallet_address"`
+	Currency          string                `json:"currency"`
+	NetWorth          float64               `json:"net_worth"`
+	RequestedTimestamp string               `json:"requested_timestamp"`
+	ResolvedTimestamp string                `json:"resolved_timestamp"`
+	NetAssets         []WalletNetWorthAsset `json:"net_assets"`
+}
+
+type WalletPnLCounts struct {
+	TotalBuy   int     `json:"total_buy"`
+	TotalSell  int     `json:"total_sell"`
+	TotalTrade int     `json:"total_trade"`
+	TotalWin   int     `json:"total_win"`
+	TotalLoss  int     `json:"total_loss"`
+	WinRate    float64 `json:"win_rate"`
+}
+
+type WalletPnLCashflow struct {
+	TotalInvested    float64 `json:"total_invested"`
+	CostOfQuantitySold float64 `json:"cost_of_quantity_sold"`
+	TotalSold        float64 `json:"total_sold"`
+	CurrentValue     float64 `json:"current_value"`
+}
+
+type WalletPnLMetrics struct {
+	RealizedProfitUSD      float64 `json:"realized_profit_usd"`
+	RealizedProfitPercent  float64 `json:"realized_profit_percent"`
+	UnrealizedUSD          float64 `json:"unrealized_usd"`
+	UnrealizedPercent      float64 `json:"unrealized_percent"`
+	TotalUSD               float64 `json:"total_usd"`
+	TotalPercent           float64 `json:"total_percent"`
+	AvgProfitPerTradeUSD   float64 `json:"avg_profit_per_trade_usd"`
+}
+
+type WalletPnLSummaryData struct {
+	UniqueTokens int             `json:"unique_tokens"`
+	Counts       WalletPnLCounts `json:"counts"`
+	CashflowUSD  WalletPnLCashflow `json:"cashflow_usd"`
+	PnL          WalletPnLMetrics `json:"pnl"`
+}
+
+type WalletPnLSummary struct {
+	Summary WalletPnLSummaryData `json:"summary"`
+}
+
+type WalletPnLQuantity struct {
+	TotalBoughtAmount float64 `json:"total_bought_amount"`
+	TotalSoldAmount   float64 `json:"total_sold_amount"`
+	Holding           float64 `json:"holding"`
+}
+
+type WalletPnLPricing struct {
+	CurrentPrice float64 `json:"current_price"`
+	AvgBuyCost   float64 `json:"avg_buy_cost"`
+	AvgSellCost  float64 `json:"avg_sell_cost"`
+}
+
+type WalletPnLToken struct {
+	Symbol    string            `json:"symbol"`
+	Decimals  int               `json:"decimals"`
+	Address   string            `json:"address"`
+	Counts    WalletPnLCounts   `json:"counts"`
+	Quantity  WalletPnLQuantity `json:"quantity"`
+	Cashflow  WalletPnLCashflow `json:"cashflow_usd"`
+	PnL       WalletPnLMetrics  `json:"pnl"`
+	Pricing   WalletPnLPricing  `json:"pricing"`
+}
+
+type WalletPnLMeta struct {
+	Address      string `json:"address"`
+	Currency     string `json:"currency"`
+	HoldingCheck bool   `json:"holding_check"`
+	Time         string `json:"time"`
+}
+
+type WalletPnLDetails struct {
+	Meta    WalletPnLMeta    `json:"meta"`
+	Tokens  []WalletPnLToken `json:"tokens"`
+	Summary map[string]any   `json:"summary"`
+}
+
+// ── Smart Money / All-time / Meme ───────────────────────────────────
+
+type SmartMoneyToken struct {
+	Token            string  `json:"token"`
+	Price            float64 `json:"price"`
+	Liquidity        float64 `json:"liquidity"`
+	MarketCap        float64 `json:"market_cap"`
+	NetFlow          float64 `json:"net_flow"`
+	SmartTradersNo   int     `json:"smart_traders_no"`
+	TraderStyle      string  `json:"trader_style"`
+	VolumeUSD        float64 `json:"volume_usd"`
+	VolumeBuyUSD     float64 `json:"volume_buy_usd"`
+	VolumeSellUSD    float64 `json:"volume_sell_usd"`
+	Symbol           string  `json:"symbol"`
+	Name             string  `json:"name"`
+	LogoURI          string  `json:"logo_uri"`
+	PriceChangePct   float64 `json:"price_change_percent"`
+}
+
+type AllTimeTradesItem struct {
+	Address        string  `json:"address"`
+	TotalVolume    float64 `json:"total_volume"`
+	TotalVolumeUSD float64 `json:"total_volume_usd"`
+	VolumeBuyUSD   float64 `json:"volume_buy_usd"`
+	VolumeSellUSD  float64 `json:"volume_sell_usd"`
+	VolumeBuy      float64 `json:"volume_buy"`
+	VolumeSell     float64 `json:"volume_sell"`
+	TotalTrade     int     `json:"total_trade"`
+	Buy            int     `json:"buy"`
+	Sell           int     `json:"sell"`
+}
+
+type MemeTokenDetail struct {
+	Address          string                 `json:"address"`
+	Name             string                 `json:"name"`
+	Symbol           string                 `json:"symbol"`
+	Decimals         int                    `json:"decimals"`
+	Extensions       map[string]any         `json:"extensions"`
+	LogoURI          string                 `json:"logo_uri"`
+	Price            float64                `json:"price"`
+	Liquidity        float64                `json:"liquidity"`
+	CirculatingSupply float64               `json:"circulating_supply"`
+	MarketCap        float64                `json:"market_cap"`
+	TotalSupply      float64                `json:"total_supply"`
+	FDV              float64                `json:"fdv"`
+	MemeInfo         map[string]any         `json:"meme_info"`
+}
+
+// ── OHLCV V3 ────────────────────────────────────────────────────────
+
+type BirdeyeOHLCVV3Item struct {
+	O        float64 `json:"o"`
+	H        float64 `json:"h"`
+	L        float64 `json:"l"`
+	C        float64 `json:"c"`
+	V        float64 `json:"v"`
+	VUSD     float64 `json:"v_usd"`
+	UnixTime int64   `json:"unix_time"`
+	Address  string  `json:"address"`
+	Type     string  `json:"type"`
+	Currency string  `json:"currency"`
+}
+
+type BirdeyeOHLCVV3Response struct {
+	IsScaledUIToken bool                  `json:"is_scaled_ui_token"`
+	Multiplier      *float64              `json:"multiplier"`
+	Items           []BirdeyeOHLCVV3Item  `json:"items"`
+}
+
+// ── Historical Price ─────────────────────────────────────────────────
+
+type BirdeyeHistoryPriceItem struct {
+	UnixTime int64   `json:"unixTime"`
+	Value    float64 `json:"value"`
+}
+
+type BirdeyeHistoryPriceResponse struct {
+	IsScaledUIToken bool                      `json:"isScaledUiToken"`
+	Items           []BirdeyeHistoryPriceItem `json:"items"`
+}
+
+// ── Multi-Price ──────────────────────────────────────────────────────
+
+type BirdeyeMultiPriceItem struct {
+	Value          float64 `json:"value"`
+	UpdateUnixTime int64   `json:"updateUnixTime"`
+	PriceChange24h float64 `json:"priceChange24h"`
+	PriceInNative  float64 `json:"priceInNative"`
+	Liquidity      float64 `json:"liquidity"`
+}
+
+// ── Price Volume ─────────────────────────────────────────────────────
+
+type BirdeyePriceVolumeItem struct {
+	Price     float64 `json:"price"`
+	Volume    float64 `json:"volume"`
+	VolumeUSD float64 `json:"volumeUSD"`
+	UnixTime  int64   `json:"unixTime"`
+}
+
+type MemeTokenListItem struct {
+	Address            string  `json:"address"`
+	LogoURI            string  `json:"logo_uri"`
+	Name               string  `json:"name"`
+	Symbol             string  `json:"symbol"`
+	Decimals           int     `json:"decimals"`
+	MarketCap          float64 `json:"market_cap"`
+	FDV                float64 `json:"fdv"`
+	Liquidity          float64 `json:"liquidity"`
+	Price              float64 `json:"price"`
+	Holder             int     `json:"holder"`
+	Volume24hUSD       float64 `json:"volume_24h_usd"`
+	PriceChange24hPct  float64 `json:"price_change_24h_percent"`
+	Trade24hCount      int     `json:"trade_24h_count"`
+	ProgressPercent    float64 `json:"progress_percent"`
+	Source             string  `json:"source"`
+	CreationTime       int64   `json:"creation_time"`
+	Graduated          bool    `json:"graduated"`
+	GraduatedTime      int64   `json:"graduated_time"`
 }

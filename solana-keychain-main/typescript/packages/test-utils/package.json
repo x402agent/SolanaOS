@@ -1,0 +1,43 @@
+{
+    "name": "@solana/keychain-test-utils",
+    "author": "Solana Foundation",
+    "license": "MIT",
+    "repository": "https://github.com/solana-foundation/solana-keychain",
+    "version": "1.0.1",
+    "description": "Shared testing utilities for Solana signer integration tests",
+    "keywords": [
+        "solana",
+        "testing",
+        "integration-tests",
+        "litesvm"
+    ],
+    "type": "module",
+    "sideEffects": false,
+    "private": true,
+    "main": "./dist/index.js",
+    "types": "./dist/index.d.ts",
+    "exports": {
+        ".": {
+            "types": "./dist/index.d.ts",
+            "import": "./dist/index.js"
+        }
+    },
+    "files": [
+        "dist",
+        "src"
+    ],
+    "scripts": {
+        "build": "tsc --build",
+        "clean": "rm -rf dist *.tsbuildinfo",
+        "typecheck": "tsc --noEmit"
+    },
+    "dependencies": {
+        "@solana-program/system": "^0.11.0",
+        "@solana/keychain-core": "workspace:*",
+        "@solana/kit": "^6.0.1",
+        "litesvm": "^0.3.3"
+    },
+    "devDependencies": {
+        "@types/node": "^24.10.1"
+    }
+}
