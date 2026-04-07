@@ -600,6 +600,10 @@ func (c *Client) Model() string {
 		return c.anthropicModel
 	case "xai":
 		return c.xaiModel
+	case "together":
+		return c.togetherModel
+	case "llamacpp":
+		return c.llamaCppModel
 	default:
 		return c.model
 	}
@@ -906,6 +910,14 @@ func (c *Client) Chat(ctx context.Context, sessionID, userMsg, contextStr string
 	canFallback := c.fallbackToOllama && strings.TrimSpace(c.ollamaModel) != ""
 	c.mu.Unlock()
 
+	c.mu.Lock()
+	togetherKey := c.togetherAPIKey
+	togetherBaseURL2 := c.togetherBaseURL
+	togetherModel2 := c.togetherModel
+	llamaCppURL2 := c.llamaCppURL
+	llamaCppModel2 := c.llamaCppModel
+	c.mu.Unlock()
+
 	var (
 		reply            string
 		reasoningDetails json.RawMessage
@@ -914,6 +926,49 @@ func (c *Client) Chat(ctx context.Context, sessionID, userMsg, contextStr string
 	)
 
 	switch activeProvider {
+	case "llamacpp":
+		reply, err = c.chatLlamaCpp(ctx, llamaCppURL2, llamaCppModel2, messages)
+		usedBackend = "llamacpp"
+		if err != nil && openrouterConfigured {
+			reply, reasoningDetails, activeModel, err = c.tryOpenRouterFreeChain(ctx, activeEndpoint, freeModels, messages)
+			if err == nil {
+				usedBackend = "openrouter-free:" + activeModel
+			}
+		}
+	case "together":
+		// Together AI uses the OpenAI-compatible API at a different base URL.
+		togetherPayload := map[string]interface{}{"model": togetherModel2, "messages": messages}
+		togetherEndpoint := strings.TrimRight(togetherBaseURL2, "/") + "/chat/completions"
+		togetherBody, _ := json.Marshal(togetherPayload)
+		togetherReq, togetherErr := http.NewRequestWithContext(ctx, http.MethodPost, togetherEndpoint, bytes.NewReader(togetherBody))
+		if togetherErr == nil {
+			togetherReq.Header.Set("Authorization", "Bearer "+togetherKey)
+			togetherReq.Header.Set("Content-Type", "application/json")
+			if togetherResp, doErr := c.http.Do(togetherReq); doErr == nil {
+				defer togetherResp.Body.Close()
+				var togetherResult struct {
+					Choices []struct {
+						Message struct{ Content string `json:"content"` } `json:"message"`
+					} `json:"choices"`
+				}
+				if jsonErr := json.NewDecoder(togetherResp.Body).Decode(&togetherResult); jsonErr == nil && len(togetherResult.Choices) > 0 {
+					reply = togetherResult.Choices[0].Message.Content
+				} else {
+					err = fmt.Errorf("together: no choices in response")
+				}
+			} else {
+				err = doErr
+			}
+		} else {
+			err = togetherErr
+		}
+		usedBackend = "together"
+		if err != nil && openrouterConfigured {
+			reply, reasoningDetails, activeModel, err = c.tryOpenRouterFreeChain(ctx, activeEndpoint, freeModels, messages)
+			if err == nil {
+				usedBackend = "openrouter-free:" + activeModel
+			}
+		}
 	case "ollama":
 		reply, err = c.chatOllama(ctx, ollamaBaseURL, ollamaModel, messages)
 		usedBackend = "ollama"
