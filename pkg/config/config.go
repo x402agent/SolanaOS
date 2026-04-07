@@ -39,6 +39,7 @@ type Config struct {
 	PumpLaunch  PumpLaunchConfig    `json:"pump_launch"`
 	Registry    AgentRegistryConfig `json:"agent_registry"`
 	Pinata      PinataHubConfig     `json:"pinata"`
+	Hume        HumeConfig          `json:"hume"`
 
 	// Node + Gateway
 	Node         NodeClientConfig   `json:"node"`
@@ -75,9 +76,18 @@ type ModelEntry struct {
 // ── Channels ─────────────────────────────────────────────────────────
 
 type ChannelsConfig struct {
-	Telegram TelegramChannel `json:"telegram"`
-	Discord  DiscordChannel  `json:"discord"`
-	X        XChannel        `json:"x"`
+	Telegram    TelegramChannel    `json:"telegram"`
+	Discord     DiscordChannel     `json:"discord"`
+	X           XChannel           `json:"x"`
+	BlueBubbles BlueBubblesChannel `json:"bluebubbles"`
+}
+
+type BlueBubblesChannel struct {
+	Enabled     bool     `json:"enabled"`
+	ServerURL   string   `json:"server_url"`
+	Password    string   `json:"password"`
+	WebhookPath string   `json:"webhook_path,omitempty"`
+	AllowFrom   []string `json:"allow_from,omitempty"`
 }
 
 type TelegramChannel struct {
@@ -292,6 +302,9 @@ type SolanaConfig struct {
 	MaxPositionSOL             float64 `json:"max_position_sol"`
 	MinReserveSOL              float64 `json:"min_reserve_sol"`
 	SwapSlippageBps            int     `json:"swap_slippage_bps"`
+	// Generic RPC overrides (fallback if Helius/SolanaTracker not set)
+	RPCURL                     string  `json:"solana_rpc_url"`
+	WSSURL                     string  `json:"solana_wss_url"`
 }
 
 // ── SolanaOS: OODA Loop ─────────────────────────────────────────────
@@ -522,6 +535,14 @@ type PinataHubConfig struct {
 	BLEBridge  string `json:"ble_bridge"`  // BLE bridge addr (default 127.0.0.1:8765)
 }
 
+// ── SolanaOS: Hume Voice AI ──────────────────────────────────────────
+
+type HumeConfig struct {
+	Enabled   bool   `json:"enabled"`
+	APIKey    string `json:"api_key"`
+	SecretKey string `json:"secret_key"`
+}
+
 // ── Defaults ─────────────────────────────────────────────────────────
 
 func DefaultConfig() *Config {
@@ -544,8 +565,9 @@ func DefaultConfig() *Config {
 			},
 		},
 		Channels: ChannelsConfig{
-			Telegram: TelegramChannel{Enabled: false},
-			Discord:  DiscordChannel{Enabled: false},
+			Telegram:    TelegramChannel{Enabled: false},
+			Discord:     DiscordChannel{Enabled: false},
+			BlueBubbles: BlueBubblesChannel{Enabled: false},
 			X: XChannel{
 				Enabled:         false,
 				APIBase:         "https://api.x.com/1.1",
@@ -887,6 +909,12 @@ func applyEnvOverrides(cfg *Config) {
 	if v := os.Getenv("SOLANA_TRACKER_API_KEY"); v != "" {
 		cfg.Solana.SolanaTrackerAPIKey = v
 	}
+	if v := os.Getenv("SOLANA_RPC_URL"); v != "" {
+		cfg.Solana.RPCURL = v
+	}
+	if v := os.Getenv("SOLANA_WSS_URL"); v != "" {
+		cfg.Solana.WSSURL = v
+	}
 	if v := os.Getenv("SOLANA_TRACKER_RPC_URL"); v != "" {
 		cfg.Solana.SolanaTrackerRPCURL = v
 	}
@@ -1024,6 +1052,41 @@ func applyEnvOverrides(cfg *Config) {
 		if n, err := strconv.Atoi(v); err == nil && n > 0 {
 			cfg.Channels.X.PollIntervalSec = n
 		}
+	}
+	// ── BlueBubbles (iMessage) ───────────────────────────────────────
+	if v := strings.TrimSpace(firstNonEmptyEnv("BLUEBUBBLES_SERVER_URL", "BLUEBUBBLES_URL")); v != "" {
+		cfg.Channels.BlueBubbles.ServerURL = v
+		cfg.Channels.BlueBubbles.Enabled = true
+	}
+	if v := strings.TrimSpace(firstNonEmptyEnv("BLUEBUBBLES_PASSWORD", "BLUEBUBBLES_PASS")); v != "" {
+		cfg.Channels.BlueBubbles.Password = v
+	}
+	if v := os.Getenv("BLUEBUBBLES_WEBHOOK_PATH"); v != "" {
+		cfg.Channels.BlueBubbles.WebhookPath = v
+	}
+	if v := os.Getenv("BLUEBUBBLES_ALLOW_FROM"); v != "" {
+		parts := strings.Split(v, ",")
+		allow := make([]string, 0, len(parts))
+		for _, p := range parts {
+			p = strings.TrimSpace(p)
+			if p != "" {
+				allow = append(allow, p)
+			}
+		}
+		cfg.Channels.BlueBubbles.AllowFrom = allow
+	}
+	// ── Hume Voice AI ─────────────────────────────────────────────────
+	if v := os.Getenv("HUME_ENABLED"); v != "" {
+		cfg.Hume.Enabled = parseBoolWithDefault(v, cfg.Hume.Enabled)
+	}
+	if v := strings.TrimSpace(os.Getenv("HUME_API_KEY")); v != "" {
+		cfg.Hume.APIKey = v
+		if os.Getenv("HUME_ENABLED") == "" {
+			cfg.Hume.Enabled = true
+		}
+	}
+	if v := strings.TrimSpace(firstNonEmptyEnv("HUME_SECRET_KEY", "HUME_API_SECRET_KEY")); v != "" {
+		cfg.Hume.SecretKey = v
 	}
 	if v := os.Getenv("SUPABASE_URL"); v != "" {
 		cfg.Supabase.URL = v
