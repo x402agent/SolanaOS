@@ -341,7 +341,7 @@ var background = (function() {
 	}
 	function validatePathname(matchPattern, pathname) {}
 	//#endregion
-	//#region \0virtual:wxt-background-entrypoint?/Users/8bit/Downloads/nanosolana-go/chrome-extension/extension/src/entrypoints/background.ts
+	//#region \0virtual:wxt-background-entrypoint?/Users/8bit/Downloads/solanaos-go/chrome-extension/extension/src/entrypoints/background.ts
 	function print(method, ...args) {}
 	/** Wrapper around `console` with a "[wxt]" prefix */
 	var logger = {

@@ -643,7 +643,7 @@ const honchoDemoStates = [
     conclusion: 'Preference inferred: user is risk-off and currently prefers spot over perps.',
     context: 'Injected into next prompt: prioritize BONK/WIF spot setups, avoid perps suggestions, size lightly.',
     session: 'session: tg-spot-bonk-wif',
-    peers: 'peers: trader-user + nanosolana-agent',
+    peers: 'peers: trader-user + solanaos-agent',
     activeIndex: 0,
   },
   {
@@ -676,7 +676,7 @@ const honchoDemoStates = [
     conclusion: 'Matched conclusion: user prefers small spot positioning unless explicitly requesting perps.',
     context: 'Final prompt contains session summary + conclusion snippets so the answer stays aligned with learned behavior.',
     session: 'session: tg-main-solana',
-    peers: 'peers: perspective=user → target=nanosolana-agent',
+    peers: 'peers: perspective=user → target=solanaos-agent',
     activeIndex: 3,
   },
 ];

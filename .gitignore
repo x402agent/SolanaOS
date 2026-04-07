@@ -148,7 +148,7 @@ x402-go-main/
 hermes-agent-main/
 
 # Python agent/ACP adapter (Hermes copies, replaced by Go in pkg/acp/)
-agent/
+/agent/
 acp_adapter/
 
 # Private solanaos-memory standalone module (merged into pkg/)

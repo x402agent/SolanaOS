@@ -55,7 +55,7 @@ function gatewayAuthHeaders(secret = gatewaySecret) {
   return {
     'Authorization': `Bearer ${trimmed}`,
     'X-SolanaOS-Secret': trimmed,
-    'X-NanoSolana-Secret': trimmed,
+    'X-SolanaOS-Secret': trimmed,
   };
 }
 
@@ -333,7 +333,7 @@ function renderRuntimeStatus(status) {
     return;
   }
 
-  title.textContent = status.agent || 'NanoSolana';
+  title.textContent = status.agent || 'SolanaOS';
   daemon.textContent = titleCase(status.daemon || 'unknown');
   mode.textContent = titleCase(status.oodaMode || 'unknown');
   watchlist.textContent = String(status.watchlistCount ?? 0);
@@ -1278,7 +1278,7 @@ function seekerBuildClientInfo() {
   const manifest = chrome.runtime.getManifest();
   const version = manifest.version || 'dev';
   return {
-    id: 'nanosolana-extension',
+    id: 'solanaos-extension',
     displayName: 'SolanaOS Chrome',
     version,
     platform: 'chrome-extension',
@@ -1613,7 +1613,7 @@ async function seekerConnect() {
   if (setupRaw) {
     const decoded = decodeConnectImport(setupRaw);
     if (decoded?.error === 'node-identity') {
-      seekerLog('Use ~/.nanosolana/connect/solanaos-connect.json or setup-code.txt, not ~/.nanosolana/node.json', 'warn');
+      seekerLog('Use ~/.solanaos/connect/solanaos-connect.json or setup-code.txt, not ~/.solanaos/node.json', 'warn');
       return;
     }
     if (!decoded) {

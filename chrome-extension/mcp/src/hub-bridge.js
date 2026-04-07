@@ -30,6 +30,9 @@ export class HubBridge {
 	/** @type {import('ws').WebSocket | null} */
 	#hub = null
 
+	/** @type {boolean} */
+	#hubReady = false
+
 	/** @type {{ resolve: (r: {success: boolean, data: string}) => void, reject: (e: Error) => void } | null} */
 	#pendingTask = null
 
@@ -68,7 +71,7 @@ export class HubBridge {
 	}
 
 	get connected() {
-		return this.#hub?.readyState === 1
+		return this.#hub?.readyState === 1 && this.#hubReady
 	}
 
 	get busy() {
@@ -117,7 +120,10 @@ export class HubBridge {
 				return
 			}
 
-			if (msg.type === 'result') {
+			if (msg.type === 'ready') {
+				this.#hubReady = true
+				console.error('[solanaos-mcp] Hub ready')
+			} else if (msg.type === 'result') {
 				this.#pendingTask?.resolve({ success: msg.success ?? false, data: msg.data ?? '' })
 				this.#pendingTask = null
 			} else if (msg.type === 'error') {
@@ -128,7 +134,10 @@ export class HubBridge {
 
 		ws.on('close', () => {
 			console.error('[solanaos-mcp] Hub disconnected')
-			if (this.#hub === ws) this.#hub = null
+			if (this.#hub === ws) {
+				this.#hub = null
+				this.#hubReady = false
+			}
 			if (this.#pendingTask) {
 				this.#pendingTask.reject(new Error('Hub disconnected while task was running'))
 				this.#pendingTask = null

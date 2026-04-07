@@ -76,7 +76,7 @@ var mainWorld = (function() {
 		};
 	});
 	//#endregion
-	//#region \0virtual:wxt-unlisted-script-entrypoint?/Users/8bit/Downloads/nanosolana-go/chrome-extension/extension/src/entrypoints/main-world.ts
+	//#region \0virtual:wxt-unlisted-script-entrypoint?/Users/8bit/Downloads/solanaos-go/chrome-extension/extension/src/entrypoints/main-world.ts
 	function print(method, ...args) {}
 	/** Wrapper around `console` with a "[wxt]" prefix */
 	var logger = {

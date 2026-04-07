@@ -724,6 +724,19 @@ Ask about any token in plain English and get live data:
 | `/remote send <instruction>` | Send natural language command to your Mac |
 | `/remote stop` | Stop remote session |
 | `/vision` | Analyze images with Grok Vision |
+| `/bots` | Status overview of both pump.fun bots |
+| `/sniper` | Pump.fun Mayhem Sniper — status, start, stop, logs, config |
+| `/sniper start` | Start the Geyser WebSocket sniper subprocess |
+| `/sniper stop` | Stop the sniper |
+| `/sniper logs [N]` | Last N log lines from the sniper (default 20) |
+| `/sniper config` | Show sniper .env (secrets redacted) |
+| `/sniper set KEY VAL` | Write a .env key (restart bot to apply) |
+| `/aibot` | AI Trading Bot — status, start, stop, logs, config |
+| `/aibot start` | Start the AI bot (Express API on :3001) |
+| `/aibot stop` | Stop the AI bot |
+| `/aibot logs [N]` | Last N log lines from the AI bot |
+| `/aibot config` | Show AI bot .env (secrets redacted) |
+| `/aibot set KEY VAL` | Write a .env key (restart bot to apply) |
 
 ### Previous Changes (v2)
 
@@ -950,6 +963,11 @@ For the full grouped command set, including Hyperliquid, Aster, memory, skills, 
 
 **Skills & Media:**
 `/skills`, `/skill <name>`, `/skill_find <query>`, `/mimo <prompt>`, `/web <query>`, `/xsearch <query>`, `/image <prompt>`, `/video <prompt>`
+
+**Pump.fun Bots:**
+`/bots` — status of both bots
+`/sniper [start|stop|logs|config|set KEY VAL]` — Mayhem Sniper bot control
+`/aibot [start|stop|logs|config|set KEY VAL]` — AI Trading Bot control
 
 ### Natural Language Trading
 
@@ -1698,26 +1716,118 @@ Worker name: `pumpfun-mcp-server` — cron: `*/15 * * * *`
 
 ---
 
-## Standalone Trading Bots (`bots/`)
+## Pump.fun Bots (`bots/`)
 
-Two standalone pump.fun bots — separate Node.js projects, independent of the main daemon. Use them if you want a focused single-purpose trading bot without the full SolanaOS stack.
+Two pump.fun TypeScript bots are bundled in `bots/` and fully integrated into the SolanaOS daemon runtime via `pkg/pumpfun/`. The daemon manages them as supervised subprocesses — start, stop, log streaming, and .env config — all from Telegram without touching a terminal.
 
 | Bot | Path | What |
 | --- | --- | --- |
-| **AI Trading Bot** | `bots/pumpfun-mayhem-ai-trading-bot-main/` | Express API + AI-driven trade decisions |
-| **Sniper Bot** | `bots/pumpfun-mayhem-sniper-main/` | Fast entry sniper with MAYHEM_MODE |
+| **Mayhem Sniper** | `bots/pumpfun-mayhem-sniper-main/` | Geyser WebSocket new-token detector with Mayhem Mode filter, dev-buy validation, and TP/SL/timeout exit |
+| **AI Trading Bot** | `bots/pumpfun-mayhem-ai-trading-bot-main/` | Express HTTP API (`:3001`) + AI pattern recognition trading loop |
 
-```bash
-# AI Trading Bot
-cd bots/pumpfun-mayhem-ai-trading-bot-main
-npm install && npm run dev       # API on port 3001
+### Bot Architecture
 
-# Sniper
-cd bots/pumpfun-mayhem-sniper-main
-npm install && npm start
+Both bots run as `ts-node` child processes under the Go daemon. The `pkg/pumpfun` manager captures their stdout/stderr into a 40-line ring buffer per bot, sources each bot's `.env`, and inherits `SOLANA_TRACKER_RPC_URL` and `WSS` from the daemon config automatically.
+
+```text
+SolanaOS Daemon (Go)
+  └── pkg/pumpfun.Manager
+       ├── KindSniper  → ts-node src/index.ts  (bots/pumpfun-mayhem-sniper-main/)
+       │    └── Geyser WS → pump.fun program → InitializeMint2 → buy/sell
+       └── KindAIBot   → ts-node src/index.ts  (bots/pumpfun-mayhem-ai-trading-bot-main/)
+            └── Express :3001 → /api/health, /api/trading
 ```
 
-See [pump.md](pump.md) for live scanner output format and token screening criteria.
+### Bot Telegram Commands
+
+```text
+/bots                    — status of both bots
+/sniper start            — launch the Mayhem Sniper
+/sniper stop             — kill it
+/sniper logs [N]         — last N lines of stdout/stderr (default 20)
+/sniper config           — show .env (private keys redacted)
+/sniper set KEY VALUE    — update a .env key (restart bot to apply)
+
+/aibot start             — launch the AI Trading Bot
+/aibot stop              — kill it
+/aibot logs [N]          — last N lines
+/aibot config            — show .env
+/aibot set KEY VALUE     — update a .env key
+```
+
+### Sniper Bot Config (`.env`)
+
+```bash
+GEYSER_RPC=wss://...                # Geyser WebSocket endpoint
+PRIVATE_KEY=...                     # Wallet private key (base58)
+RPC_ENDPOINT=https://...            # Solana HTTP RPC
+RPC_WEBSOCKET_ENDPOINT=wss://...    # Solana WebSocket RPC
+BUY_AMOUNT=0.1                      # SOL per trade
+SLIPPAGE=10                         # Slippage %
+TAKE_PROFIT=20                      # % gain to auto-sell
+STOP_LOSS=15                        # % loss to auto-sell
+TIME_OUT=60                         # Max hold seconds before forced exit
+CHECK_DEV_BUY=true                  # Require dev to invest ≥ MIN_DEV_BUY_AMOUNT
+MIN_DEV_BUY_AMOUNT=0.5              # Minimum dev buy in SOL
+MAYHEM_MODE_ONLY=false              # Only snipe tokens with Mayhem Mode flag
+```
+
+**How the sniper works:**
+
+1. Subscribes to the pump.fun program (`6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P`) via Geyser WebSocket
+2. Detects `InitializeMint2` instructions — new token creation events
+3. Optionally checks for the Mayhem Mode flag via `isMayhemMode()`
+4. Validates the developer's initial buy against `MIN_DEV_BUY_AMOUNT`
+5. Executes `buyToken()` via `@cryptoscan/pumpfun-sdk` with configured slippage
+6. Polls the bonding curve price every 500ms until TP, SL, or timeout triggers
+7. Executes `sellToken()` on exit
+
+### AI Bot Config (`.env`)
+
+```bash
+PORT=3001                           # HTTP server port
+AI_ENABLED=true                     # Activate AI trading loop on startup
+SOLANA_PRIVATE_KEY=...              # Wallet private key (base58)
+SOLANA_RPC_URL=https://...          # Solana HTTP RPC
+```
+
+**API endpoints (when running):**
+
+| Method | Path | What |
+| --- | --- | --- |
+| `GET` | `http://localhost:3001/api/health` | Liveness check + bot status |
+| `POST` | `http://localhost:3001/api/trading` | Place a trade order |
+
+### Running standalone (without daemon integration)
+
+```bash
+# Sniper
+cd bots/pumpfun-mayhem-sniper-main
+cp .env.example .env    # fill in GEYSER_RPC, PRIVATE_KEY, etc.
+npm install && npm start
+
+# AI Trading Bot
+cd bots/pumpfun-mayhem-ai-trading-bot-main
+cp .env.example .env    # fill in SOLANA_PRIVATE_KEY, etc.
+npm install && npm run dev
+```
+
+### Token Scanner Output (`pump.md`)
+
+The pump.fun scanner pipeline (see [Pump.fun Token Scanner](#pumpfun-token-scanner) below) writes its output to [`pump.md`](pump.md). It scans ~100 tokens per run, filters spam, classifies by trading tier, and sends a Telegram digest. Example output format:
+
+```markdown
+Date: 2026-03-26  |  Scanned: 113  |  Blocked (spam): 14  |  Clean: 99
+
+| # | Name            | Ticker   | Mint         | MCap | Change  | Age    |
+|---|-----------------|----------|--------------|------|---------|--------|
+| 1 | Pippin          | pippin   | Dfh5Dz...   | N/A  | +3.79%  | N/A    |
+| 2 | Penguin Empress | kolwaii  | 4BZSEBVk...  | N/A  | +33.02% | N/A    |
+| 5 | シコク           | Shikoku  | 4xU6BSLz...  | N/A  | +204%   | 3m ago |
+...
+```
+
+The sniper bot targets fresh tokens from this feed. The AI bot uses it for pattern recognition and market sentiment analysis.
 
 ---
 

@@ -9336,7 +9336,7 @@ ${llmsTxt}
 	//#region \0virtual:wxt-plugins
 	function initPlugins() {}
 	//#endregion
-	//#region \0virtual:wxt-content-script-isolated-world-entrypoint?/Users/8bit/Downloads/nanosolana-go/chrome-extension/extension/src/entrypoints/content.ts
+	//#region \0virtual:wxt-content-script-isolated-world-entrypoint?/Users/8bit/Downloads/solanaos-go/chrome-extension/extension/src/entrypoints/content.ts
 	function print(method, ...args) {}
 	/** Wrapper around `console` with a "[wxt]" prefix */
 	var logger = {

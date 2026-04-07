@@ -22,7 +22,7 @@ function gatewayAuthHeaders(secret) {
   return {
     'Authorization': `Bearer ${trimmed}`,
     'X-SolanaOS-Secret': trimmed,
-    'X-NanoSolana-Secret': trimmed,
+    'X-SolanaOS-Secret': trimmed,
   };
 }
 
