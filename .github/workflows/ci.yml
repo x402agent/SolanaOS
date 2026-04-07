@@ -25,18 +25,33 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '20'
           cache: 'npm'
           cache-dependency-path: 'ui/package-lock.json'
 
       - name: Build Control UI
         run: cd ui && npm ci && npm run build
 
-      - name: Build
-        run: go build -v ./...
+      - name: Build solanaos binary
+        run: go build -v -ldflags="-s -w" -o build/solanaos .
 
-      - name: Test
+      - name: Build agent-wallet
+        run: go build -v -ldflags="-s -w" -o build/agent-wallet ./services/agent-wallet/cmd
+
+      - name: Build gateway-api
+        run: go build -v -ldflags="-s -w" -o build/gateway-api ./cmd/gateway-api
+
+      - name: Build control-api
+        run: go build -v -ldflags="-s -w" -o build/solanaos-control-api ./cmd/solanaos-control-api
+
+      - name: Run tests
         run: go test -v -race -timeout 120s ./...
+
+      - name: Build MCP server
+        run: |
+          if [ -f mcp-server/package.json ]; then
+            cd mcp-server && npm ci && npm run build
+          fi
 
   lint:
     name: Lint
@@ -70,5 +85,26 @@ jobs:
           ! grep -rn "sk-or-v1-\|hch-v3-\|AKIA[0-9A-Z]\{16\}" \
             --include="*.go" --include="*.ts" --include="*.js" \
             --include="*.json" --include="*.yaml" --include="*.yml" \
+            --exclude-dir=node_modules --exclude-dir=.git \
             . || (echo "Potential secrets found!" && exit 1)
           echo "No hardcoded secrets detected"
+
+  npm:
+    name: npm packages
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Verify solanaos-computer package
+        run: cd npm/solanaos && npm pack --dry-run
+
+      - name: Verify solanaos-cli package
+        run: cd npm/solanaos-installer && npm pack --dry-run
+
+      - name: Verify nanosolana-cli package
+        run: cd npm/mawdbot-installer && npm pack --dry-run

@@ -1,1 +1,0 @@
-pub const EXPECTED_SIGNATURE_LENGTH: usize = 64;

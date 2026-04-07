@@ -1,5 +1,5 @@
 /**
- * NanoSolana Agent Wallet — Cloudflare Worker
+ * SolanaOS Agent Wallet — Cloudflare Worker
  *
  * Deployable agentic wallet vault on the edge.
  * AES-256-GCM encrypted keys in KV, Solana + EVM support,

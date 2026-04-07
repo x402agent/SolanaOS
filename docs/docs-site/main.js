@@ -306,7 +306,7 @@ function initMusicPlayer() {
   // ── Playlist ──
   const playlist = [
     {
-      src: 'https://pub-9530d10930474af1865d0724e40aab55.r2.dev/nanosolana.mp3',
+      src: 'https://pub-9530d10930474af1865d0724e40aab55.r2.dev/solanaos.mp3',
       title: '🖥️ SolanaOS',
       track: 'SolanaOS Theme',
     },
@@ -438,7 +438,7 @@ function initMusicPlayer() {
 
 // ── Live Runtime Stats ────────────────────────────────────────────
 
-const LIVE_API_STORAGE_KEY = 'nanosolana.liveApiBase';
+const LIVE_API_STORAGE_KEY = 'solanaos.liveApiBase';
 
 function liveEl(id) {
   return document.getElementById(id);
@@ -592,7 +592,7 @@ async function refreshLiveStats() {
     if (jsonEl) {
       jsonEl.textContent = JSON.stringify({
         error: error?.message || 'Unable to fetch /api/status',
-        hint: 'Start SolanaOS Control with `./build/nanosolana nanobot` or the full daemon and keep the API reachable.',
+        hint: 'Start SolanaOS Control with `./build/solanaos nanobot` or the full daemon and keep the API reachable.',
       }, null, 2);
     }
     setLiveConnection('Offline or unreachable', 'is-error');

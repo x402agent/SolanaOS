@@ -390,7 +390,7 @@ async function main() {
   const siteUrl = env("AGENT_REGISTRY_SITE_URL");
   const dashboardUrl = env("AGENT_REGISTRY_DASHBOARD_URL");
   const pairUrl = env("AGENT_REGISTRY_PAIR_URL");
-  const runtimeVersion = env("SOLANAOS_VERSION") || env("NANOSOLANA_VERSION");
+  const runtimeVersion = env("SOLANAOS_VERSION") || env("SOLANAOS_VERSION");
   const capabilities = Array.from(
     new Set([...(acp ? ["acp"] : []), ...csv("AGENT_CAPABILITIES")]),
   );

@@ -1,8 +1,8 @@
 #!/usr/bin/env npx tsx
 /**
- * NanoSolana Agent Wallet — MCP Server
+ * SolanaOS Agent Wallet — MCP Server
  *
- * Gives AI agents access to the NanoSolana wallet vault:
+ * Gives AI agents access to the SolanaOS wallet vault:
  * create wallets (Solana + EVM), check balances, sign transactions,
  * transfer tokens, deploy wallet APIs into E2B sandboxes,
  * and manage Privy-hosted wallets.
@@ -69,7 +69,7 @@ const server = new McpServer(
     version: "1.0.0",
   },
   {
-    instructions: `NanoSolana Agent Wallet gives AI agents their own blockchain wallets with two modes:
+    instructions: `SolanaOS Agent Wallet gives AI agents their own blockchain wallets with two modes:
 
 ## Vault Wallets (Self-Custodial)
 Private keys are AES-256-GCM encrypted in a local vault. Full control, no third-party dependency.
