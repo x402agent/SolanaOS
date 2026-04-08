@@ -223,6 +223,14 @@ export class OpenClawApp extends LitElement {
   @state() skillsBusyKey: string | null = null;
   @state() skillMessages: Record<string, SkillMessage> = {};
 
+  // Memory tab
+  @state() memoryLoading = false;
+  @state() memoryStatus: import("./controllers/memory").MemoryState["memoryStatus"] = null;
+  @state() memoryError: string | null = null;
+  @state() memorySweeping = false;
+  @state() memorySweepResult: string | null = null;
+  @state() memoryDiaryEntry: string | null = null;
+
   @state() debugLoading = false;
   @state() debugStatus: StatusSummary | null = null;
   @state() debugHealth: HealthSnapshot | null = null;

@@ -419,6 +419,37 @@ export function renderApp(state: AppViewState) {
         }
 
         ${
+          state.tab === "memory"
+            ? renderMemory({
+                loading: state.memoryLoading,
+                status: state.memoryStatus,
+                error: state.memoryError,
+                sweeping: state.memorySweeping,
+                sweepResult: state.memorySweepResult,
+                diaryEntry: state.memoryDiaryEntry,
+                onRefresh: () => {
+                  void (async () => {
+                    const { loadMemoryStatus } = await import("./controllers/memory");
+                    await loadMemoryStatus(state);
+                  })();
+                },
+                onSweepNow: () => {
+                  void (async () => {
+                    const { runDreamingSweep } = await import("./controllers/memory");
+                    await runDreamingSweep(state);
+                  })();
+                },
+                onLoadDiary: () => {
+                  void (async () => {
+                    const { loadDreamDiary } = await import("./controllers/memory");
+                    await loadDreamDiary(state);
+                  })();
+                },
+              })
+            : nothing
+        }
+
+        ${
           state.tab === "chat"
             ? renderChat({
                 sessionKey: state.sessionKey,

@@ -191,6 +191,10 @@ export async function refreshActiveTab(host: SettingsHost) {
     await loadConfig(host as unknown as OpenClawApp);
     await loadExecApprovals(host as unknown as OpenClawApp);
   }
+  if (host.tab === "memory") {
+    const { loadMemoryStatus } = await import("./controllers/memory");
+    await loadMemoryStatus(host as unknown as OpenClawApp);
+  }
   if (host.tab === "chat") {
     await refreshChat(host as unknown as Parameters<typeof refreshChat>[0]);
     scheduleChatScroll(
