@@ -614,12 +614,28 @@ This monorepo contains product code, client apps, deployment config, registry me
 
 ### What to read first
 
-1. `README.md`, `strategy.md`, `SOUL.md`, and `docs/` for the product and operator model.
-2. `cmd/` to see the binaries and how the system is launched.
-3. `pkg/` to understand the real runtime, gateway, Solana, memory, and trading internals.
-4. `nanohub/` for the public web surfaces, Netlify deployment path, mobile dapp page, and pairing funnel.
-5. `apps/android/`, `apps/macos/`, and `chrome-extension/` for the user-facing clients.
-6. `skills/`, `acp_registry/`, and `.agents/` for the distribution and agent-tooling layers.
+**Quick start:**
+1. Run `bash start.sh` — one command to build and start everything (see [One-Shot Start](#one-shot-start)).
+2. Edit `.env` with your API keys — `.env.example` has the full template with descriptions.
+
+**Architecture docs (read in order):**
+3. [DAEMON.md](DAEMON.md) — full system picture: every subsystem, the OODA loop, all 55 packages, hardware layer.
+4. [SOUL.md](SOUL.md) — agent identity and trading philosophy; use as the system prompt for any LLM.
+5. [SKILL.md](SKILL.md) — complete agent skill file; give to any AI to install and operate SolanaOS in one shot.
+6. [STRATEGY.md](STRATEGY.md) — multi-venue trading playbook: Solana spot, Hyperliquid perps, Aster perps, confidence model.
+7. [TRADE.md](TRADE.md) — pump.fun trading agent skill: token tier classification and Jupiter execution workflow.
+8. [TOKEN.md](TOKEN.md) — $CLAWD, the first AI-deployed token on pump.fun; tokenized agent + automated buybacks.
+9. [PUMP.md](PUMP.md) — pump.fun scanner report format, meta analysis pipeline, token data schema.
+10. [META.md](META.md) — live board meta: cycle position, dominant themes, sniper candidates.
+
+**Code structure:**
+11. `cmd/` — Go binary entrypoints: daemon, gateway API, control API, TUI.
+12. `pkg/` — 55 Go packages: runtime, gateway, Solana, trading, memory, hardware, x402, and integrations.
+13. `solana-claude/` — open-source TypeScript MCP agent framework (Claude Code architecture ported to Solana).
+14. `mcp-server/` — SolanaOS MCP server exposing all tools to Claude Desktop, Cursor, VS Code.
+15. `skills/` — 80+ agent skill bundles (`SKILL.md` format); `acp_registry/` for on-chain agent registration.
+16. `nanohub/` — public web surfaces, Netlify deployment, mobile dapp page, and Seeker pairing funnel.
+17. `apps/android/`, `apps/macos/`, and `chrome-extension/` — user-facing client apps.
 
 ## Public Links
 
