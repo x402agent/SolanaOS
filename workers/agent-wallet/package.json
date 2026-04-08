@@ -8,7 +8,7 @@
     "secrets": "echo 'Run: wrangler secret put VAULT_PASSPHRASE && wrangler secret put WALLET_API_KEY && wrangler secret put SOLANA_RPC_URL'"
   },
   "dependencies": {
-    "hono": "^4.6.0",
+    "hono": "^4.12.12",
     "tweetnacl": "^1.0.3",
     "bs58": "^6.0.0"
   },
