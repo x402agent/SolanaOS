@@ -341,9 +341,9 @@ WantedBy=multi-user.target
 EOF
 
 sudo systemctl daemon-reload
-sudo systemctl enable nanosolana
-sudo systemctl start nanosolana
-sudo journalctl -u nanosolana -f</pre>
+sudo systemctl enable solanaos
+sudo systemctl start solanaos
+sudo journalctl -u solanaos -f</pre>
           </div>
         </div>
       </div>
@@ -376,7 +376,7 @@ sudo i2cdetect -y 1</pre>
           <div class="terminal-body">
             <pre><span class="t-dim"># On your dev machine:</span>
 make rpi
-scp build/solanaos-rpi pi@raspberrypi:~/nanosolana</pre>
+scp build/solanaos-rpi pi@raspberrypi:~/solanaos</pre>
           </div>
         </div>
       </div>

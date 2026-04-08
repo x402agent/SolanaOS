@@ -27,8 +27,8 @@ Autonomous local-first runtime for Solana trading, research, wallets, automation
 <p>
   <a href="https://www.npmjs.com/package/solanaos-computer"><img src="https://img.shields.io/badge/npm-solanaos--computer-CB3837?style=flat&logo=npm&logoColor=white" alt="solanaos-computer"></a>
   <a href="https://www.npmjs.com/package/solanaos-cli"><img src="https://img.shields.io/badge/npm-solanaos--cli-CB3837?style=flat&logo=npm&logoColor=white" alt="solanaos-cli"></a>
-  <a href="https://www.npmjs.com/package/solanaos-cli"><img src="https://img.shields.io/badge/npm-nanosolana--cli-CB3837?style=flat&logo=npm&logoColor=white" alt="solanaos-cli"></a>
-  <a href="https://www.npmjs.com/package/@solanaos/nanohub"><img src="https://img.shields.io/badge/npm-@nanosolana%2Fnanohub-CB3837?style=flat&logo=npm&logoColor=white" alt="@solanaos/nanohub"></a>
+  <a href="https://www.npmjs.com/package/solanaos-cli"><img src="https://img.shields.io/badge/npm-solanaos--cli-CB3837?style=flat&logo=npm&logoColor=white" alt="solanaos-cli"></a>
+  <a href="https://www.npmjs.com/package/@solanaos/nanohub"><img src="https://img.shields.io/badge/npm-@solanaos%2Fnanohub-CB3837?style=flat&logo=npm&logoColor=white" alt="@solanaos/nanohub"></a>
 </p>
 
 <p>
@@ -647,7 +647,7 @@ This monorepo contains product code, client apps, deployment config, registry me
 
 - Primary public repo: `https://github.com/x402agent/SolanaOS`
 - Primary binary / CLI name: `solanaos`
-- Compatibility alias: `nanosolana`
+- 
 - Secrets belong in `.env` or deployment environment variables only
 
 ## IPFS Hub + Mainnet Deployment Pipeline
@@ -892,7 +892,7 @@ The `onboard` wizard walks you through selecting an LLM provider (Ollama, OpenRo
 Primary command names:
 
 - `solanaos` is the primary binary and CLI name
-- `nanosolana` remains available as a compatibility alias
+- `solanaos` is the canonical CLI name
 
 Compatibility npm packages still exist:
 
@@ -1559,7 +1559,7 @@ PINATA_JWT=<Pinata JWT for IPFS>
 **Nanohub integration:**
 - `/st/agent-registry?asset=<address>` — edge function returning agent reputation from 8004 indexer
 - `AgentStatus` component in the Pump Scanner tab shows live trust tier + ATOM score
-- `nanosolanaAgentReputation` Convex table stores periodic reputation snapshots
+- `solanaosAgentReputation` Convex table stores periodic reputation snapshots
 
 ## Agent Registration (Metaplex 014)
 
@@ -2317,7 +2317,7 @@ solanaos/
 
 Notes:
 
-- `solanaos` is the name users see; `nanosolana` is the supported legacy alias throughout
+- `solanaos` is the canonical name throughout
 - `npm/` is the canonical npm workspace — `new/npm/` contains older drafts and is not published
 - Workers in `workers/` and `pumpfun-mcp-worker/` are deployed separately via Wrangler/Cloudflare
 - `bots/` — two standalone pump.fun bots (AI trading + sniper); independent Node.js projects

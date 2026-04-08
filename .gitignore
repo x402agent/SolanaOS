@@ -108,9 +108,9 @@ nanohub/test-results/
 # ── Binary artifacts ─────────────────────────────────────────────────
 *.apk
 /mawdbot
-/nanosolana
+# (legacy binary names removed)
 /solanaos
-/nanosolana-new
+
 /solanaos
 /solanaos-control-api
 /gateway-api

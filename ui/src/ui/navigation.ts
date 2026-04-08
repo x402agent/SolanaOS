@@ -139,6 +139,8 @@ export function iconForTab(tab: Tab): IconName {
       return "zap";
     case "nodes":
       return "monitor";
+    case "memory":
+      return "brain";
     case "config":
       return "settings";
     case "debug":
@@ -168,6 +170,8 @@ export function titleForTab(tab: Tab) {
       return "Nodes";
     case "chat":
       return "Chat";
+    case "memory":
+      return "Memory";
     case "config":
       return "Config";
     case "debug":
@@ -197,6 +201,8 @@ export function subtitleForTab(tab: Tab) {
       return "Paired devices, capabilities, and command exposure.";
     case "chat":
       return "Direct gateway chat session for quick interventions.";
+    case "memory":
+      return "ClawVault, Honcho v3, and Dreaming — the three-layer agent memory stack.";
     case "config":
       return "Edit ~/.solanaos/solanaos.json safely.";
     case "debug":
