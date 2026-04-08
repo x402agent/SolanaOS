@@ -2,6 +2,7 @@ import type { EventLogEntry } from "./app-events";
 import type { DevicePairingList } from "./controllers/devices";
 import type { ExecApprovalRequest } from "./controllers/exec-approval";
 import type { ExecApprovalsFile, ExecApprovalsSnapshot } from "./controllers/exec-approvals";
+import type { MemoryState } from "./controllers/memory";
 import type { SkillMessage } from "./controllers/skills";
 import type { GatewayBrowserClient, GatewayHelloOk } from "./gateway";
 import type { Tab } from "./navigation";
@@ -128,6 +129,13 @@ export type AppViewState = {
   skillEdits: Record<string, string>;
   skillMessages: Record<string, SkillMessage>;
   skillsBusyKey: string | null;
+  // Memory tab (ClawVault + Honcho + Dreaming)
+  memoryLoading: boolean;
+  memoryStatus: MemoryState["memoryStatus"];
+  memoryError: string | null;
+  memorySweeping: boolean;
+  memorySweepResult: string | null;
+  memoryDiaryEntry: string | null;
   debugLoading: boolean;
   debugStatus: StatusSummary | null;
   debugHealth: HealthSnapshot | null;

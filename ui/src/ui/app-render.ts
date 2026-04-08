@@ -57,6 +57,7 @@ import { renderGatewayUrlConfirmation } from "./views/gateway-url-confirmation";
 import { renderInstances } from "./views/instances";
 import { renderLogs } from "./views/logs";
 import { renderNodes } from "./views/nodes";
+import { renderMemory } from "./views/memory";
 import { renderOverview } from "./views/overview";
 import { renderSessions } from "./views/sessions";
 import { renderSkills } from "./views/skills";

@@ -2355,14 +2355,6 @@ Useful overrides:
 - `SOLANAOS_SOUL_PATH`
 - `SOLANAOS_SKILLS_DIR`
 
-Compatibility aliases remain supported:
-
-- `NANOSOLANA_HOME`
-- `NANOSOLANA_CONFIG`
-- `NANOSOLANA_ENV_FILE`
-- `NANOSOLANA_SOUL_PATH`
-- `NANOSOLANA_SKILLS_DIR`
-
 ## Security
 
 - no API keys should be committed
