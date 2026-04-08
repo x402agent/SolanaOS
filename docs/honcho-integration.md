@@ -26,7 +26,7 @@ SolanaOS uses Honcho for four concrete jobs:
 3. Durable conclusions about trading behavior and preferences
 4. Natural-language recall through `peer.chat()` from Telegram commands
 
-This sits beside the local vault under `~/.nanosolana/memory/`. Local memory captures raw history. Honcho adds cross-session reasoning and retrieval.
+This sits beside the local vault under `~/.solanaos/memory/`. Local memory captures raw history. Honcho adds cross-session reasoning and retrieval.
 
 ## Runtime Mapping
 

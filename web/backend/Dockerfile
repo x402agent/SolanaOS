@@ -22,8 +22,8 @@ WORKDIR /app
 COPY --from=backend-builder /out/solanaos-web ./solanaos-web
 COPY --from=frontend-builder /src/web/frontend/dist ./web/frontend/dist
 
-RUN mkdir -p /root/.nanosolana && \
-    echo '{"agent":"SolanaOS Control","version":"1.0.0"}' > /root/.nanosolana/config.json
+RUN mkdir -p /root/.solanaos && \
+    echo '{"agent":"SolanaOS Control","version":"1.0.0"}' > /root/.solanaos/config.json
 
 ENV PORT=18800
 EXPOSE 18800

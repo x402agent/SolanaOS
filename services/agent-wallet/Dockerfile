@@ -1,4 +1,4 @@
-# NanoSolana Agent Wallet — Multi-stage Docker build
+# SolanaOS Agent Wallet — Multi-stage Docker build
 # Produces a <15MB container with the wallet API binary
 
 FROM golang:1.25-alpine AS builder

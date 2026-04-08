@@ -7,7 +7,7 @@
 
 This skill tells trading agents how to interpret pump.md data and execute
 trades on Solana pump.fun tokens using Jupiter aggregator or direct AMM routes.
-All trades go through the NanoSolana-Go trading system.
+All trades go through the SolanaOS-Go trading system.
 
 ## Data Schema (pump.md columns)
 
@@ -78,7 +78,7 @@ All trades go through the NanoSolana-Go trading system.
    d. Build swap transaction via Jupiter Quote API
       GET https://quote-api.jup.ag/v6/quote?inputMint=So11111111111111111111111111111111111111112
          &outputMint={MINT}&amount={LAMPORTS}&slippageBps=500
-   e. Execute swap via NanoSolana send_transaction()
+   e. Execute swap via SolanaOS send_transaction()
    f. Log result to trade journal
 4. Monitor open positions every 30s
 5. Exit on: target hit | stop hit | TTL expired | bonding=100%
@@ -130,7 +130,7 @@ def is_valid_mint(mint: str) -> bool:
 |------|----------|
 | Get token price | `GET https://price.jup.ag/v6/price?ids={mint}` |
 | Build swap tx | Jupiter Quote + Swap API v6 |
-| Send transaction | `NanoSolana.send_transaction(tx)` |
+| Send transaction | `SolanaOS.send_transaction(tx)` |
 | Monitor bonding | `GET https://frontend-api.pump.fun/coins/{mint}` |
 | Refresh token list | Re-run pump.fun scanner skill (updates pump.md) |
 

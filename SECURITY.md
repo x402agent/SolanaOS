@@ -51,7 +51,7 @@ git diff --cached | grep -iE "(sk-|api[_-]?key\s*[:=]\s*['\"][A-Za-z0-9]|private
 
 ### Wallet Security
 
-- Agent wallets are stored under `~/.nanosolana/` with owner-only permissions where supported
+- Agent wallets are stored under `~/.solanaos/` with owner-only permissions where supported
 - Private keys are never logged — only the public key (address) appears in logs
 - Use `SOLANA_PRIVATE_KEY` env var for existing wallets, or let SolanaOS auto-generate
 

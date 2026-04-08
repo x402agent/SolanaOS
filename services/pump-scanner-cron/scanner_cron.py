@@ -45,7 +45,7 @@ def log(msg, level="INFO"):
 
 def http_json(url, headers=None, method="GET", body=None, timeout=15):
     req = Request(url, method=method)
-    req.add_header("User-Agent", "NanoSolana-Scanner/5.0 (+https://solanaos.net)")
+    req.add_header("User-Agent", "SolanaOS-Scanner/5.0 (+https://solanaos.net)")
     req.add_header("Accept", "application/json")
     if headers:
         for k, v in headers.items():
@@ -241,7 +241,7 @@ def classify_tokens(tokens):
 def push_to_convex(tokens):
     """Push classified tokens to Convex for the frontend terminal."""
     log("Pushing to Convex...")
-    url = f"{CONVEX_SITE_URL}/nanosolana/tracker/pump-ingest"
+    url = f"{CONVEX_SITE_URL}/solanaos/tracker/pump-ingest"
 
     # Build pipe-delimited rows (same format push_to_convex.py uses)
     rows = []

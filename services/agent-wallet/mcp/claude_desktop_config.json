@@ -1,6 +1,6 @@
 {
   "mcpServers": {
-    "nanosolana-agent-wallet": {
+    "solanaos-agent-wallet": {
       "command": "npx",
       "args": ["tsx", "index.ts"],
       "cwd": "./services/agent-wallet/mcp",

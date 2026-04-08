@@ -66,10 +66,10 @@ echo -e "${PURPLE}╚═══════════════════�
 echo ""
 
 WITH_WEB=false
-INSTALL_DIR="${SOLANAOS_DIR:-${NANOSOLANA_DIR:-$HOME/solanaos}}"
+INSTALL_DIR="${SOLANAOS_DIR:-${SOLANAOS_DIR:-$HOME/solanaos}}"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" 2>/dev/null && pwd || pwd)"
 LOCAL_SOURCE=false
-REPO_URL="${SOLANAOS_REPO_URL:-${NANOSOLANA_REPO_URL:-https://github.com/x402agent/SolanaOS.git}}"
+REPO_URL="${SOLANAOS_REPO_URL:-${SOLANAOS_REPO_URL:-https://github.com/x402agent/SolanaOS.git}}"
 
 for arg in "$@"; do
   case "$arg" in

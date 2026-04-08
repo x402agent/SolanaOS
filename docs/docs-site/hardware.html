@@ -285,11 +285,11 @@ sudo i2cdetect -y 1</pre>
           <div class="terminal-body">
             <pre><span class="t-dim"># On your dev machine:</span>
 make orin
-scp build/nanosolana-orin user@orin-nano:~/
+scp build/solanaos-orin user@orin-nano:~/
 
 <span class="t-dim"># On the Orin Nano:</span>
-chmod +x ~/nanosolana-orin
-sudo mv nanosolana-orin /usr/local/bin/nanosolana
+chmod +x ~/solanaos-orin
+sudo mv solanaos-orin /usr/local/bin/solanaos
 
 <span class="t-dim"># Add user to i2c group (logout/login after)</span>
 sudo usermod -aG i2c $USER
@@ -310,7 +310,7 @@ nanosolana hardware test</pre>
         <h3>Systemd Service</h3>
         <div class="terminal terminal-sm">
           <div class="terminal-body">
-            <pre>sudo tee /etc/systemd/system/nanosolana.service &lt;&lt; 'EOF'
+            <pre>sudo tee /etc/systemd/system/solanaos.service &lt;&lt; 'EOF'
 [Unit]
 Description=SolanaOS Runtime
 After=network-online.target
@@ -329,7 +329,7 @@ RestartSec=10
 # Security
 NoNewPrivileges=true
 ProtectSystem=strict
-ReadWritePaths=/home/nanosolana
+ReadWritePaths=/home/solanaos
 PrivateTmp=true
 
 # Device access
@@ -376,7 +376,7 @@ sudo i2cdetect -y 1</pre>
           <div class="terminal-body">
             <pre><span class="t-dim"># On your dev machine:</span>
 make rpi
-scp build/nanosolana-rpi pi@raspberrypi:~/nanosolana</pre>
+scp build/solanaos-rpi pi@raspberrypi:~/nanosolana</pre>
           </div>
         </div>
       </div>
@@ -485,7 +485,7 @@ scp build/nanosolana-rpi pi@raspberrypi:~/nanosolana</pre>
           <h3>Build Image</h3>
           <div class="terminal terminal-sm">
             <div class="terminal-body">
-              <pre>docker build -t nanosolana .</pre>
+              <pre>docker build -t solanaos .</pre>
             </div>
           </div>
         </div>

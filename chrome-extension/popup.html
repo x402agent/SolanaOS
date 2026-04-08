@@ -262,7 +262,7 @@
             <option value="password">Auth Mode: Password</option>
           </select>
           <input class="seeker-input" id="seekerToken" type="password" placeholder="Gateway token or password">
-          <textarea class="seeker-input" id="seekerSetupCode" rows="3" placeholder="Paste ~/.nanosolana/connect/setup-code.txt or solanaos-connect.json (not ~/.nanosolana/node.json)" style="resize:none"></textarea>
+          <textarea class="seeker-input" id="seekerSetupCode" rows="3" placeholder="Paste ~/.solanaos/connect/setup-code.txt or solanaos-connect.json (not ~/.solanaos/node.json)" style="resize:none"></textarea>
           <button class="seeker-btn" id="seekerConnectBtn">Connect to Gateway</button>
           <div style="display:flex;gap:6px;margin-top:6px">
             <button class="seeker-btn seeker-btn-secondary" id="seekerPingBtn" style="flex:1">Ping</button>
@@ -359,7 +359,7 @@
         <label class="setting-label">SolanaOS Server URL</label>
         <input type="text" class="setting-input" id="settingUrl" placeholder="http://127.0.0.1:7777">
         <label class="setting-label">SolanaOS Setup Import</label>
-        <textarea class="setting-input" id="settingSetupCode" rows="3" placeholder="Paste ~/.nanosolana/connect/setup-code.txt or solanaos-connect.json (not ~/.nanosolana/node.json)"></textarea>
+        <textarea class="setting-input" id="settingSetupCode" rows="3" placeholder="Paste ~/.solanaos/connect/setup-code.txt or solanaos-connect.json (not ~/.solanaos/node.json)"></textarea>
         <button class="save-btn" id="importSetupCode">Import Setup Code</button>
         <label class="setting-label">Gateway Secret</label>
         <input type="password" class="setting-input" id="settingGatewaySecret" placeholder="Optional bearer token or password">
@@ -377,7 +377,7 @@
         <label class="setting-label">AI Model</label>
         <input type="text" class="setting-input" id="settingOrModel" placeholder="openai/gpt-5.4-nano" value="openai/gpt-5.4-nano">
         <button class="save-btn" id="saveSettings">Save Settings</button>
-        <div class="setting-note">Start locally with <code>solanaos nanobot</code>. The shared setup code lives at <code>~/.nanosolana/connect/setup-code.txt</code>.</div>
+        <div class="setting-note">Start locally with <code>solanaos nanobot</code>. The shared setup code lives at <code>~/.solanaos/connect/setup-code.txt</code>.</div>
       </div>
     </div>
 

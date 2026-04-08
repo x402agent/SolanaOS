@@ -35,20 +35,20 @@ COPY scripts /app/scripts
 COPY --from=registry-deps /opt/solanaos-scripts/node_modules /app/scripts/node_modules
 
 # Create workspace directories
-RUN mkdir -p /root/.nanosolana/workspace/vault/decisions \
-             /root/.nanosolana/workspace/vault/lessons \
-             /root/.nanosolana/workspace/vault/trades \
-             /root/.nanosolana/workspace/vault/research \
-             /root/.nanosolana/workspace/vault/inbox \
-             /root/.nanosolana/wallet \
-             /root/.nanosolana/registry \
+RUN mkdir -p /root/.solanaos/workspace/vault/decisions \
+             /root/.solanaos/workspace/vault/lessons \
+             /root/.solanaos/workspace/vault/trades \
+             /root/.solanaos/workspace/vault/research \
+             /root/.solanaos/workspace/vault/inbox \
+             /root/.solanaos/wallet \
+             /root/.solanaos/registry \
              /root/.config/solana
 
 # Copy .env.example as reference
 COPY .env.example /app/.env.example
 
 # Run as non-root user
-RUN adduser -D -u 1000 solanaos && chown -R solanaos:solanaos /app /root/.nanosolana /root/.config
+RUN adduser -D -u 1000 solanaos && chown -R solanaos:solanaos /app /root/.solanaos /root/.config
 USER solanaos
 
 EXPOSE 18790

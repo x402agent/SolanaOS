@@ -22,7 +22,7 @@ npx solanaos-cli install
 1. Animated terminal boot sequence with Unicode matrix frames
 2. Clones the [SolanaOS repo](https://github.com/x402agent/SolanaOS)
 3. Builds the <10MB Go binary
-4. Creates `~/.nanosolana/` workspace + wallet
+4. Creates `~/.solanaos/` workspace + wallet
 5. Installs `solanaos` CLI globally
 6. Prints your gateway setup code + QR for Seeker pairing
 7. Ready to connect to [seeker.solanaos.net](https://seeker.solanaos.net)
@@ -107,7 +107,7 @@ TELEGRAM_ID=your-chat-id
 
 ```bash
 npx solanaos-computer@latest install    # Primary installer
-npx nanosolana-cli install              # Legacy alias
+npx solanaos-cli install              # Legacy alias
 ```
 
 MIT License · SolanaOS Labs · Built on Solana

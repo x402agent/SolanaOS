@@ -32,6 +32,7 @@ import (
 	browserusepkg "github.com/x402agent/Solana-Os-Go/pkg/browseruse"
 	"github.com/x402agent/Solana-Os-Go/pkg/config"
 	"github.com/x402agent/Solana-Os-Go/pkg/daemon"
+	"github.com/x402agent/Solana-Os-Go/pkg/dreaming"
 	gw "github.com/x402agent/Solana-Os-Go/pkg/gateway"
 	"github.com/x402agent/Solana-Os-Go/pkg/hardware"
 	"github.com/x402agent/Solana-Os-Go/pkg/llm"
@@ -199,6 +200,59 @@ func (a *honchoAdapter) GetContext(ctx context.Context, sessionID, query string)
 		return "", nil
 	}
 	return strings.Join(parts, "\n"), nil
+}
+
+// dreamerAdapter bridges pkg/dreaming.Dreamer to gw.DreamerProvider.
+type dreamerAdapter struct {
+	dr *dreaming.Dreamer
+}
+
+func (a *dreamerAdapter) Status() string {
+	cp := a.dr.LastSweep()
+	if cp == nil {
+		return "enabled — no sweep run yet"
+	}
+	return fmt.Sprintf("last sweep %s — staged %d, promoted %d", cp.LastSweep.UTC().Format("2006-01-02 15:04 UTC"), cp.Reflected, cp.Promoted)
+}
+
+func (a *dreamerAdapter) LastSweepAt() string {
+	cp := a.dr.LastSweep()
+	if cp == nil {
+		return ""
+	}
+	return cp.LastSweep.UTC().Format(time.RFC3339)
+}
+
+func (a *dreamerAdapter) LastPromoted() int {
+	cp := a.dr.LastSweep()
+	if cp == nil {
+		return 0
+	}
+	return cp.Promoted
+}
+
+func (a *dreamerAdapter) LastStaged() int {
+	cp := a.dr.LastSweep()
+	if cp == nil {
+		return 0
+	}
+	return cp.Reflected
+}
+
+func (a *dreamerAdapter) DiaryEntry() string {
+	cp := a.dr.LastSweep()
+	if cp == nil {
+		return ""
+	}
+	return cp.DiaryEntry
+}
+
+func (a *dreamerAdapter) RunSweep(ctx context.Context) (string, error) {
+	result, err := a.dr.RunSweep(ctx)
+	if err != nil {
+		return "", err
+	}
+	return fmt.Sprintf("staged %d, promoted %d", result.LightStaged, result.DeepPromoted), nil
 }
 
 type gatewayConnectFiles struct {
@@ -934,6 +988,18 @@ No external dependencies required.`,
 				hClient := honcho.NewClient(hCfg)
 				bridge.SetHoncho(&honchoAdapter{client: hClient})
 				fmt.Printf("%s🧠 Honcho v3 memory attached: %s%s\n", colorGreen, hCfg.WorkspaceID, colorReset)
+			}
+
+			// Attach dreaming engine (if enabled via env or config).
+			dreamingEnabled := strings.ToLower(strings.TrimSpace(os.Getenv("DREAMING_ENABLED"))) == "true"
+			if dreamingEnabled {
+				vaultPath := config.DefaultWorkspacePath() + "/vault"
+				if dr, err := dreaming.New(vaultPath, dreaming.Config{}); err == nil {
+					bridge.SetDreamer(&dreamerAdapter{dr: dr})
+					fmt.Printf("%s🌙 Dreaming engine attached: %s%s\n", colorGreen, vaultPath, colorReset)
+				} else {
+					fmt.Printf("%s⚠️  Dreaming init failed: %v%s\n", colorAmber, err, colorReset)
+				}
 			}
 
 			ctx, cancel := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)

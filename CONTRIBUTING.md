@@ -82,7 +82,7 @@ solanaos/
 ├── npm/                       # canonical npm packages (publish from here)
 │   ├── solanaos/              # solanaos-computer
 │   ├── solanaos-installer/    # solanaos-cli
-│   └── mawdbot-installer/     # nanosolana-cli (legacy alias)
+│   └── mawdbot-installer/     # solanaos-cli (legacy alias)
 │
 ├── skills/                    # SKILL.md bundles
 ├── SOUL.md                    # agent identity / system prompt

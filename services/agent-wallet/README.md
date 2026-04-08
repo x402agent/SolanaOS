@@ -135,7 +135,7 @@ The agent wallet is embedded into the main `solanaos` binary and started automat
 |----------|---------|-------------|
 | `WALLET_API_PORT` | `8421` | HTTP listen port |
 | `WALLET_API_KEY` | _(none)_ | Bearer token for API auth |
-| `VAULT_PASSPHRASE` | `nanosolana-agent-vault-default` | Master AES key passphrase |
+| `VAULT_PASSPHRASE` | `solanaos-agent-vault-default` | Master AES key passphrase |
 | `TRADE_SIGNER_PASSPHRASE` | _(uses VAULT_PASSPHRASE)_ | Separate passphrase for trade key |
 | `LOCAL_SIGNER_DEV_KEY` | _(generated)_ | Seed dev signer with base58 private key |
 | `LOCAL_SIGNER_TRADE_KEY` | _(generated)_ | Seed trade signer with base58 private key |

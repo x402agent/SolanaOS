@@ -109,7 +109,7 @@ nanohub/test-results/
 *.apk
 /mawdbot
 /nanosolana
-/nanosolana-go
+/solanaos
 /nanosolana-new
 /solanaos
 /solanaos-control-api

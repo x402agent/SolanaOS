@@ -12,7 +12,7 @@ frontend:
 # Build Go backend
 backend:
 	go build -o ../build/solanaos-web ./backend/
-	ln -sf solanaos-web ../build/nanosolana-web
+	ln -sf solanaos-web ../build/solanaos-web
 
 # Dev mode — run both frontend and backend
 dev:
@@ -25,8 +25,8 @@ dev:
 # Cross-compile backend for ARM64 (Orin Nano)
 orin:
 	GOOS=linux GOARCH=arm64 go build -o ../build/solanaos-web-orin ./backend/
-	ln -sf solanaos-web-orin ../build/nanosolana-web-orin
+	ln -sf solanaos-web-orin ../build/solanaos-web-orin
 
 clean:
 	rm -rf frontend/dist frontend/node_modules
-	rm -f ../build/solanaos-web ../build/solanaos-web-orin ../build/nanosolana-web ../build/nanosolana-web-orin
+	rm -f ../build/solanaos-web ../build/solanaos-web-orin ../build/solanaos-web ../build/solanaos-web-orin

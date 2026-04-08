@@ -141,7 +141,7 @@ start-agent-wallet: build-agent-wallet
 	 $(BIN_AGENT_WALLET) & echo $$! > /tmp/agent-wallet.pid
 	@echo "✓ Agent Wallet running (pid $$(cat /tmp/agent-wallet.pid))"
 	@echo "  API:  http://localhost:$${WALLET_API_PORT:-8421}/v1/health"
-	@echo "  Keys: ~/.nanosolana/signers/{dev,trade}.enc"
+	@echo "  Keys: ~/.solanaos/signers/{dev,trade}.enc"
 
 stop-agent-wallet:
 	@if [ -f /tmp/agent-wallet.pid ]; then \
@@ -212,7 +212,7 @@ slim:
 	@mkdir -p $(BUILD_DIR)
 	@mkdir -p $(GOCACHE_DIR) $(GOTMPDIR_DIR) $(GOMODCACHE_DIR)
 	CGO_ENABLED=0 $(GOBUILD_SLIM) -o $(BIN_SLIM) .
-	@ln -sf solanaos-slim $(BUILD_DIR)/nanosolana-slim
+	@ln -sf solanaos-slim $(BUILD_DIR)/solanaos-slim
 	@echo "✓ $(BIN_SLIM) built"
 	@ls -lh $(BIN_SLIM)
 	@echo "ℹ️ Optional extra compression: upx --best --lzma $(BIN_SLIM)"
@@ -234,7 +234,7 @@ tui:
 	@mkdir -p $(BUILD_DIR)
 	@mkdir -p $(GOCACHE_DIR) $(GOTMPDIR_DIR) $(GOMODCACHE_DIR)
 	$(GOBUILD) -o $(BIN_TUI) ./cmd/mawdbot-tui
-	@ln -sf solanaos-tui $(BUILD_DIR)/nanosolana-tui
+	@ln -sf solanaos-tui $(BUILD_DIR)/solanaos-tui
 	@echo "✓ $(BIN_TUI) built"
 	@ls -lh $(BIN_TUI)
 
@@ -250,8 +250,8 @@ orin:
 		$(GOBUILD) -o $(BUILD_DIR)/solanaos-orin .
 	GOOS=linux GOARCH=arm64 CGO_ENABLED=0 \
 		$(GOBUILD) -o $(BUILD_DIR)/solanaos-tui-orin ./cmd/mawdbot-tui
-	@ln -sf solanaos-orin $(BUILD_DIR)/nanosolana-orin
-	@ln -sf solanaos-tui-orin $(BUILD_DIR)/nanosolana-tui-orin
+	@ln -sf solanaos-orin $(BUILD_DIR)/solanaos-orin
+	@ln -sf solanaos-tui-orin $(BUILD_DIR)/solanaos-tui-orin
 	@echo "✓ Orin Nano binaries:"
 	@ls -lh $(BUILD_DIR)/solanaos-orin $(BUILD_DIR)/solanaos-tui-orin
 	@echo ""
@@ -267,7 +267,7 @@ rpi:
 	@mkdir -p $(GOCACHE_DIR) $(GOTMPDIR_DIR) $(GOMODCACHE_DIR)
 	GOOS=linux GOARCH=arm64 CGO_ENABLED=0 \
 		$(GOBUILD) -o $(BUILD_DIR)/solanaos-rpi .
-	@ln -sf solanaos-rpi $(BUILD_DIR)/nanosolana-rpi
+	@ln -sf solanaos-rpi $(BUILD_DIR)/solanaos-rpi
 	@echo "✓ $(BUILD_DIR)/solanaos-rpi built"
 
 # ── RISC-V ────────────────────────────────────────────────────────────
@@ -278,7 +278,7 @@ riscv:
 	@mkdir -p $(GOCACHE_DIR) $(GOTMPDIR_DIR) $(GOMODCACHE_DIR)
 	GOOS=linux GOARCH=riscv64 CGO_ENABLED=0 \
 		$(GOBUILD) -o $(BUILD_DIR)/solanaos-riscv .
-	@ln -sf solanaos-riscv $(BUILD_DIR)/nanosolana-riscv
+	@ln -sf solanaos-riscv $(BUILD_DIR)/solanaos-riscv
 	@echo "✓ $(BUILD_DIR)/solanaos-riscv built"
 
 # ── macOS (Apple Silicon) ─────────────────────────────────────────────
@@ -289,7 +289,7 @@ macos:
 	@mkdir -p $(GOCACHE_DIR) $(GOTMPDIR_DIR) $(GOMODCACHE_DIR)
 	GOOS=darwin GOARCH=arm64 \
 		$(GOBUILD) -o $(BUILD_DIR)/solanaos-macos .
-	@ln -sf solanaos-macos $(BUILD_DIR)/nanosolana-macos
+	@ln -sf solanaos-macos $(BUILD_DIR)/solanaos-macos
 	@echo "✓ $(BUILD_DIR)/solanaos-macos built"
 
 # ── All platforms ─────────────────────────────────────────────────────
@@ -303,8 +303,8 @@ cross: build orin rpi riscv macos
 
 docker:
 	@echo "🐳 Building SolanaOS Docker image..."
-	docker build -t solanaos:$(VERSION) -t solanaos:latest -t nanosolana:$(VERSION) -t nanosolana:latest .
-	@echo "✓ Docker images built: solanaos:$(VERSION) (compat: nanosolana:$(VERSION))"
+	docker build -t solanaos:$(VERSION) -t solanaos:latest -t solanaos:$(VERSION) -t solanaos:latest .
+	@echo "✓ Docker images built: solanaos:$(VERSION) (compat: solanaos:$(VERSION))"
 
 docker-fly:
 	@echo "🐳 Building Fly.io image..."
@@ -316,8 +316,8 @@ docker-orin:
 	docker buildx build --platform linux/arm64 \
 		-t solanaos:$(VERSION)-orin \
 		-t solanaos:latest-orin \
-		-t nanosolana:$(VERSION)-orin \
-		-t nanosolana:latest-orin .
+		-t solanaos:$(VERSION)-orin \
+		-t solanaos:latest-orin .
 	@echo "✓ Docker image built: solanaos:$(VERSION)-orin (compat tag also published)"
 
 # ── Install ───────────────────────────────────────────────────────────
@@ -328,10 +328,10 @@ install: build tui build-agent-wallet build-gateway-api
 	install -m 755 $(BIN_TUI) /usr/local/bin/solanaos-tui
 	install -m 755 $(BIN_AGENT_WALLET) /usr/local/bin/agent-wallet
 	install -m 755 $(BIN_GATEWAY_API) /usr/local/bin/solanaos-gateway
-	ln -sf /usr/local/bin/solanaos /usr/local/bin/nanosolana
-	ln -sf /usr/local/bin/solanaos-tui /usr/local/bin/nanosolana-tui
+	ln -sf /usr/local/bin/solanaos /usr/local/bin/solanaos
+	ln -sf /usr/local/bin/solanaos-tui /usr/local/bin/solanaos-tui
 	@echo "✓ Installed: solanaos, solanaos-tui, agent-wallet, solanaos-gateway"
-	@echo "  Compat aliases: nanosolana, nanosolana-tui"
+	@echo "  Compat aliases: solanaos, solanaos-tui"
 
 # ── Test ──────────────────────────────────────────────────────────────
 

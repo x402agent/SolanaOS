@@ -66,9 +66,9 @@ sudo usermod -aG i2c $USER
 Create your runtime home and env:
 
 ```bash
-mkdir -p ~/.nanosolana
-cp /path/to/repo/.env.example ~/.nanosolana/.env
-nano ~/.nanosolana/.env
+mkdir -p ~/.solanaos
+cp /path/to/repo/.env.example ~/.solanaos/.env
+nano ~/.solanaos/.env
 ```
 
 ### 4. Verify hardware
@@ -166,14 +166,14 @@ Wants=network-online.target
 Type=simple
 User=solanaos
 Group=i2c
-EnvironmentFile=/home/solanaos/.nanosolana/.env
+EnvironmentFile=/home/solanaos/.solanaos/.env
 ExecStart=/usr/local/bin/solanaos ooda --interval 60 --hw-bus 1
 Restart=always
 RestartSec=10
 NoNewPrivileges=true
 PrivateTmp=true
 ProtectSystem=strict
-ReadWritePaths=/home/solanaos/.nanosolana
+ReadWritePaths=/home/solanaos/.solanaos
 SupplementaryGroups=i2c
 DeviceAllow=/dev/i2c-1 rw
 

@@ -106,5 +106,5 @@ jobs:
       - name: Verify solanaos-cli package
         run: cd npm/solanaos-installer && npm pack --dry-run
 
-      - name: Verify nanosolana-cli package
+      - name: Verify solanaos-cli package
         run: cd npm/mawdbot-installer && npm pack --dry-run

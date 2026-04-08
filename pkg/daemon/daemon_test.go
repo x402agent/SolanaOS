@@ -100,16 +100,16 @@ func TestExtractModelSelection(t *testing.T) {
 }
 
 func TestExtractNaturalModelSwitchMimoAndOmni(t *testing.T) {
-	presets := [3]string{"model-1", "model-2", "model-3"}
+	presets := [4]string{"model-1", "model-2", "model-3", "model-4"}
 
 	got, ok := extractNaturalModelSwitch("switch to mimo", presets)
-	if !ok || got != 4 {
-		t.Fatalf("extractNaturalModelSwitch(mimo) = (%d, %v), want (4, true)", got, ok)
+	if !ok || got != 5 {
+		t.Fatalf("extractNaturalModelSwitch(mimo) = (%d, %v), want (5, true)", got, ok)
 	}
 
 	got, ok = extractNaturalModelSwitch("switch to omni", presets)
-	if !ok || got != 5 {
-		t.Fatalf("extractNaturalModelSwitch(omni) = (%d, %v), want (5, true)", got, ok)
+	if !ok || got != 6 {
+		t.Fatalf("extractNaturalModelSwitch(omni) = (%d, %v), want (6, true)", got, ok)
 	}
 }
 

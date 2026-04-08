@@ -469,7 +469,7 @@ Examples:
 
   <section class="guide-section guide-section-dark" id="s11"><div class="container"><h2 class="guide-h2">11. Gateway Architecture</h2><p>A single long-lived <strong>SolanaOS Gateway</strong> owns all communication surfaces. WebSocket + text frames with JSON payloads. First frame must be <code>auth</code> with HMAC-SHA256 signature. HTTP endpoints at <code>/api/status</code>, <code>/api/framework</code>, <code>/api/memory</code> require <code>X-SolanaOS-Secret</code> header.</p></div></section>
 
-  <section class="guide-section" id="s12"><div class="container"><h2 class="guide-h2">12. Sessions & Persistence</h2><p>Session types: Main, Telegram DM/group, Discord, Nostr, Trading. Persisted to <code>~/.nanosolana/sessions/</code> as JSONL. Telegram stores up to 200 messages per chat with auto-summarization. Idle sessions expire after 7 days.</p></div></section>
+  <section class="guide-section" id="s12"><div class="container"><h2 class="guide-h2">12. Sessions & Persistence</h2><p>Session types: Main, Telegram DM/group, Discord, Nostr, Trading. Persisted to <code>~/.solanaos/sessions/</code> as JSONL. Telegram stores up to 200 messages per chat with auto-summarization. Idle sessions expire after 7 days.</p></div></section>
 
   <section class="guide-section guide-section-dark" id="s13"><div class="container"><h2 class="guide-h2">13. Multi-Channel Communication</h2><p><strong>14+ channel plugins:</strong> Telegram (full persistence), Discord, Nostr, iMessage, Google Chat, Web UI, Slack, Matrix, Signal, WhatsApp, Teams, and more. Build your own with the plugin SDK. Telegram is built-in with zero-dep HTTP client, long polling, and allowlist filtering.</p></div></section>
 

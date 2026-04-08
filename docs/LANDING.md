@@ -47,7 +47,7 @@ SolanaOS collapses that stack into one runtime with one identity, one wallet sur
 npx solanaos-computer@latest install --with-web
 cd ~/solanaos
 $EDITOR .env
-~/.nanosolana/bin/solanaos daemon
+~/.solanaos/bin/solanaos daemon
 ```
 
 ## Minimum env

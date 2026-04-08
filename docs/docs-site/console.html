@@ -597,17 +597,17 @@ function InstallPage() {
         <div><span className="prompt">$</span> npx solanaos-computer@latest install --with-web</div>
         <div><span className="prompt">$</span> cd ~/solanaos</div>
         <div><span className="prompt">$</span> cp .env.example .env && $EDITOR .env</div>
-        <div><span className="prompt">$</span> ~/.nanosolana/bin/solanaos version</div>
+        <div><span className="prompt">$</span> ~/.solanaos/bin/solanaos version</div>
         <div className="output">solanaos v2.1.0 (go1.25, linux/arm64)</div>
-        <div><span className="prompt">$</span> ~/.nanosolana/bin/solanaos daemon</div>
+        <div><span className="prompt">$</span> ~/.solanaos/bin/solanaos daemon</div>
         <div className="output">{'\u25B8'} OODA engine started</div>
         <div className="output">{'\u25B8'} Telegram bot connected</div>
         <div className="output">{'\u25B8'} SolanaOS Control listening on :7777</div>
       </div>
       <div className="section-header" style={{fontSize: 22, marginTop: 32}}>{'>'} FROM SOURCE</div>
       <div className="terminal">
-        <div><span className="prompt">$</span> git clone https://github.com/x402agent/NanoSolana.git</div>
-        <div><span className="prompt">$</span> cd NanoSolana</div>
+        <div><span className="prompt">$</span> git clone https://github.com/x402agent/SolanaOS.git</div>
+        <div><span className="prompt">$</span> cd SolanaOS</div>
         <div><span className="prompt">$</span> cp .env.example .env && $EDITOR .env</div>
         <div><span className="prompt">$</span> make build</div>
         <div className="output">{'\u25B8'} build/solanaos (9.2 MB)</div>
@@ -842,7 +842,7 @@ function App() {
           </div>
           <div className="main-content">{renderPage()}</div>
           <div className="footer">
-            SolanaOS v2.1 \u2014 The Solana Computer \xB7 <a href="https://github.com/x402agent/NanoSolana">GitHub</a> \xB7 <a href="/">Main Site</a> \xB7 <a href="/guide">Guide</a> \xB7 <a href="/hardware">Hardware Guide</a>
+            SolanaOS v2.1 \u2014 The Solana Computer \xB7 <a href="https://github.com/x402agent/SolanaOS">GitHub</a> \xB7 <a href="/">Main Site</a> \xB7 <a href="/guide">Guide</a> \xB7 <a href="/hardware">Hardware Guide</a>
           </div>
         </div>
       ) : null}

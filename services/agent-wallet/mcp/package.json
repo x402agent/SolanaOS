@@ -1,11 +1,11 @@
 {
-  "name": "nanosolana-agent-wallet-mcp",
+  "name": "solanaos-agent-wallet-mcp",
   "version": "1.0.0",
-  "description": "MCP server for NanoSolana agent wallet — Solana + EVM vault with E2B deployment",
+  "description": "MCP server for SolanaOS agent wallet — Solana + EVM vault with E2B deployment",
   "type": "module",
   "main": "index.ts",
   "bin": {
-    "nanosolana-wallet-mcp": "./index.ts"
+    "solanaos-wallet-mcp": "./index.ts"
   },
   "scripts": {
     "start": "npx tsx index.ts",

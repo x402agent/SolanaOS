@@ -1,5 +1,5 @@
 {
-  "name": "nanosolana-cli",
+  "name": "solanaos-cli",
   "version": "2.1.1",
   "description": "SolanaOS CLI bootstrapper and launcher for the Solana-native autonomous trading computer",
   "license": "MIT",

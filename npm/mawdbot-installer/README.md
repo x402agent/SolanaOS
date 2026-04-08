@@ -1,4 +1,4 @@
-# nanosolana-cli
+# solanaos-cli
 
 Legacy compatibility package for installing and running SolanaOS from npm.
 
@@ -13,14 +13,14 @@ npm install -g solanaos-cli
 
 ```bash
 # Run directly with npx
-npx nanosolana-cli version
+npx solanaos-cli version
 
 # Explicit first-time install or update
-npx nanosolana-cli install
-npx nanosolana-cli install --with-web
+npx solanaos-cli install
+npx solanaos-cli install --with-web
 
 # Global install
-npm install -g nanosolana-cli
+npm install -g solanaos-cli
 nanosolana version
 ```
 
@@ -28,12 +28,12 @@ nanosolana version
 
 1. ✅ Clones the SolanaOS repo
 2. ✅ Builds the `nanosolana` 10MB binary (Go)
-3. ✅ Creates `~/.nanosolana/` workspace + wallet
-4. ✅ Installs a stable CLI at `~/.nanosolana/bin/nanosolana`
-5. ✅ Optionally builds the web console and installs `~/.nanosolana/bin/nanosolana-web`
+3. ✅ Creates `~/.solanaos/` workspace + wallet
+4. ✅ Installs a stable CLI at `~/.solanaos/bin/nanosolana`
+5. ✅ Optionally builds the web console and installs `~/.solanaos/bin/solanaos-web`
 
 After the first bootstrap, `nanosolana ...` proxies straight to the Go binary from any working directory.
-If you use `--with-web`, `nanosolana-web ...` does the same for the web console backend.
+If you use `--with-web`, `solanaos-web ...` does the same for the web console backend.
 
 ## After install
 
@@ -51,7 +51,7 @@ nanosolana ooda --sim
 nanosolana daemon
 
 # Local web console
-nanosolana-web --no-browser
+solanaos-web --no-browser
 ```
 
 ## Links
@@ -66,10 +66,10 @@ SolanaOS Hub supports publishing user-created skills via npm CLI.
 
 ```bash
 # Login to SolanaOS Hub
-npx @nanosolana/nanohub login
+npx @solanaos/nanohub login
 
 # Publish a local skill folder (must contain SKILL.md)
-npx @nanosolana/nanohub publish ./my-skill \
+npx @solanaos/nanohub publish ./my-skill \
   --slug my-skill \
   --name "My Skill" \
   --version 1.0.0 \

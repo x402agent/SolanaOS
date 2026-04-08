@@ -28,12 +28,12 @@ Why:
 
 ## What Already Exists In This Repo
 
-- Main SolanaOS Fly config: [fly.toml](/Users/8bit/Downloads/nanosolana-go/fly.toml)
-- Main image: [Dockerfile.fly](/Users/8bit/Downloads/nanosolana-go/Dockerfile.fly)
-- Main entrypoint: [scripts/fly-start.sh](/Users/8bit/Downloads/nanosolana-go/scripts/fly-start.sh)
-- Standalone MawdAxe Fly config: [mawdbot-bitaxe/fly.toml](/Users/8bit/Downloads/nanosolana-go/mawdbot-bitaxe/fly.toml)
-- Standalone MawdAxe image: [mawdbot-bitaxe/Dockerfile.fly](/Users/8bit/Downloads/nanosolana-go/mawdbot-bitaxe/Dockerfile.fly)
-- Deploy helper: [scripts/fly-deploy.sh](/Users/8bit/Downloads/nanosolana-go/scripts/fly-deploy.sh)
+- Main SolanaOS Fly config: [fly.toml](/Users/8bit/Downloads/solanaos/fly.toml)
+- Main image: [Dockerfile.fly](/Users/8bit/Downloads/solanaos/Dockerfile.fly)
+- Main entrypoint: [scripts/fly-start.sh](/Users/8bit/Downloads/solanaos/scripts/fly-start.sh)
+- Standalone MawdAxe Fly config: [mawdbot-bitaxe/fly.toml](/Users/8bit/Downloads/solanaos/mawdbot-bitaxe/fly.toml)
+- Standalone MawdAxe image: [mawdbot-bitaxe/Dockerfile.fly](/Users/8bit/Downloads/solanaos/mawdbot-bitaxe/Dockerfile.fly)
+- Deploy helper: [scripts/fly-deploy.sh](/Users/8bit/Downloads/solanaos/scripts/fly-deploy.sh)
 
 ## Required Token
 
@@ -69,7 +69,7 @@ The script will:
 - create the Fly app if missing
 - create the `solanaos_data` volume if missing
 - set supported secrets from your local `.env`
-- deploy with [fly.toml](/Users/8bit/Downloads/nanosolana-go/fly.toml)
+- deploy with [fly.toml](/Users/8bit/Downloads/solanaos/fly.toml)
 
 ### Secrets it can push
 

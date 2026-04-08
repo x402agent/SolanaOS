@@ -57,7 +57,7 @@ What this does:
 - verifies the device really looks like AxeOS
 - configures the miner with your own BTC payout address
 - writes local Bitaxe settings into the SolanaOS `.env`
-- generates a Seeker setup bundle in `~/.nanosolana/connect/`
+- generates a Seeker setup bundle in `~/.solanaos/connect/`
 
 If your miner is already configured and you do not want the script touching pool settings:
 
@@ -133,8 +133,8 @@ launchctl kickstart -k gui/$(id -u)/com.solanaos.daemon
 The quickstart generates:
 
 ```bash
-cat ~/.nanosolana/connect/setup-code.txt
-cat ~/.nanosolana/connect/solanaos-connect.json
+cat ~/.solanaos/connect/setup-code.txt
+cat ~/.solanaos/connect/solanaos-connect.json
 ```
 
 On the Seeker or Android app:
@@ -222,7 +222,7 @@ solanaos daemon
 solanaos gateway start --no-tailscale
 
 # 4. Open the setup code
-cat ~/.nanosolana/connect/setup-code.txt
+cat ~/.solanaos/connect/setup-code.txt
 
 # 5. Verify Bitaxe inside SolanaOS
 curl http://127.0.0.1:7777/api/miner

@@ -14,8 +14,8 @@ except ImportError:
     _sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
     from blocklist_filter import is_blocked, load_blocked_domains
 
-PUMP_MD   = os.path.expanduser('~/Downloads/nanosolana-go/pump.md')
-DRAFT_OUT = os.path.expanduser('~/Downloads/nanosolana-go/tweet_draft.txt')
+PUMP_MD   = os.path.expanduser('~/Downloads/solanaos/pump.md')
+DRAFT_OUT = os.path.expanduser('~/Downloads/solanaos/tweet_draft.txt')
 
 def parse_mc(mc):
     s = mc.replace('$','').replace(',','')

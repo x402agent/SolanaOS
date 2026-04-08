@@ -1,5 +1,5 @@
 {
-  "name": "nanosolana-agent-wallet-worker",
+  "name": "solanaos-agent-wallet-worker",
   "version": "1.0.0",
   "private": true,
   "scripts": {

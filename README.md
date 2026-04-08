@@ -27,8 +27,8 @@ Autonomous local-first runtime for Solana trading, research, wallets, automation
 <p>
   <a href="https://www.npmjs.com/package/solanaos-computer"><img src="https://img.shields.io/badge/npm-solanaos--computer-CB3837?style=flat&logo=npm&logoColor=white" alt="solanaos-computer"></a>
   <a href="https://www.npmjs.com/package/solanaos-cli"><img src="https://img.shields.io/badge/npm-solanaos--cli-CB3837?style=flat&logo=npm&logoColor=white" alt="solanaos-cli"></a>
-  <a href="https://www.npmjs.com/package/nanosolana-cli"><img src="https://img.shields.io/badge/npm-nanosolana--cli-CB3837?style=flat&logo=npm&logoColor=white" alt="nanosolana-cli"></a>
-  <a href="https://www.npmjs.com/package/@nanosolana/nanohub"><img src="https://img.shields.io/badge/npm-@nanosolana%2Fnanohub-CB3837?style=flat&logo=npm&logoColor=white" alt="@nanosolana/nanohub"></a>
+  <a href="https://www.npmjs.com/package/solanaos-cli"><img src="https://img.shields.io/badge/npm-nanosolana--cli-CB3837?style=flat&logo=npm&logoColor=white" alt="solanaos-cli"></a>
+  <a href="https://www.npmjs.com/package/@solanaos/nanohub"><img src="https://img.shields.io/badge/npm-@nanosolana%2Fnanohub-CB3837?style=flat&logo=npm&logoColor=white" alt="@solanaos/nanohub"></a>
 </p>
 
 <p>
@@ -219,7 +219,7 @@ This README is the GitHub front door. Use it to install, explore the live surfac
 | If you want to... | Use SolanaOS for... |
 | --- | --- |
 | ship a local-first Solana agent | Go runtime + gateway + Telegram + wallet control |
-| distribute reusable agent workflows | `@nanosolana/nanohub` + the public Hub registry |
+| distribute reusable agent workflows | `@solanaos/nanohub` + the public Hub registry |
 | build Seeker/mobile wallet experiences | Android app + Mobile Wallet Adapter + Phantom + pairing flow |
 | experiment with agent identity | [`SOUL.md`](SOUL.md) + Souls registry + strategy docs |
 | give agents their own wallets | `solanaos wallet-api` — one-shot vault + API + MCP server for Solana + EVM; AES-256 local dev + trade signing keys auto-generated on first run |
@@ -314,7 +314,7 @@ Send `chat.feedback` via the WebSocket gateway with `rating: 1` (thumbs up) or `
 | **SolanaOS Control UI** | `solanaos server` → `localhost:7777` | Lit + Vite browser control panel: chat, status, config, debug, cron, sessions, skills, channels, logs |
 | **SolanaOS Office** | [office.solanaos.net](https://office.solanaos.net) | 3D retro office workspace with Solana market terminal (Birdeye), agent chat, skills marketplace |
 | **Android App** | Solana Seeker | Mobile control surface with MWA wallet |
-| **CLI** | `npx @nanosolana/nanohub` | Install, search, publish skills from terminal |
+| **CLI** | `npx @solanaos/nanohub` | Install, search, publish skills from terminal |
 
 ### Setup Guides
 
@@ -330,22 +330,22 @@ Send `chat.feedback` via the WebSocket gateway with `rating: 1` (thumbs up) or `
 
 ```bash
 # Public Hub CLI — search, install, publish skills
-npx @nanosolana/nanohub --help
+npx @solanaos/nanohub --help
 
 # One-shot installer — binary + web + daemon
 npx solanaos-computer@latest install --with-web
 
 # Compatibility CLI aliases
 npx solanaos-cli@latest --help
-npx nanosolana-cli@latest --help
+npx solanaos-cli@latest --help
 ```
 
 | Package | Source | Purpose |
 | --- | --- | --- |
 | [`solanaos-computer`](https://www.npmjs.com/package/solanaos-computer) | `npm/solanaos/` | Main one-shot installer (v1.1.1) |
 | [`solanaos-cli`](https://www.npmjs.com/package/solanaos-cli) | `npm/solanaos-installer/` | Primary CLI package alias (v2.1.1) |
-| [`nanosolana-cli`](https://www.npmjs.com/package/nanosolana-cli) | `npm/mawdbot-installer/` | Legacy compat alias (v2.1.1) |
-| [`@nanosolana/nanohub`](https://www.npmjs.com/package/@nanosolana/nanohub) | separate repo | Skill registry CLI |
+| [`solanaos-cli`](https://www.npmjs.com/package/solanaos-cli) | `npm/mawdbot-installer/` | Legacy compat alias (v2.1.1) |
+| [`@solanaos/nanohub`](https://www.npmjs.com/package/@solanaos/nanohub) | separate repo | Skill registry CLI |
 
 > **Note:** `new/npm/` contains older draft versions — the canonical packages are in `npm/`. Use `make npm-sync` to check for version drift.
 
@@ -365,7 +365,7 @@ All methods link to the same Convex user record. Phantom wallets auto-link to Gi
 The SolanaOS skill is published to the Hub and can be installed by any AI agent:
 
 ```bash
-npx @nanosolana/nanohub install solanaos
+npx @solanaos/nanohub install solanaos
 ```
 
 Browse all 80+ skills at [seeker.solanaos.net/skills](https://seeker.solanaos.net/skills).
@@ -535,7 +535,7 @@ Local Operator Machine
      │    │    ├── WebSocket protocol (config, status, sessions, agents, skills, cron, logs, chat)
      │    │    ├── LLM chat integration (Ollama, OpenRouter, Anthropic, xAI)
      │    │    ├── Keepalive (30s ping, 90s read deadline)
-     │    │    └── Config read/write (~/.nanosolana/solanaos.json)
+     │    │    └── Config read/write (~/.solanaos/solanaos.json)
      │    └── Honcho v3 + vault memory
      ├── SolanaOS Control UI (port 7777, `solanaos server`)
      │    ├── Lit + Vite SPA (//go:embed into binary)
@@ -748,7 +748,7 @@ Interactive setup wizard that configures your SolanaOS instance in one step:
 2. Enter Solana API keys (SolanaTracker, Birdeye)
 3. Configure Telegram bot (token + chat ID)
 
-Writes everything to `~/.nanosolana/solanaos.json`. Replaces the manual `.env` editing workflow for new users.
+Writes everything to `~/.solanaos/solanaos.json`. Replaces the manual `.env` editing workflow for new users.
 
 ### SolanaOS Office (3D Workspace)
 
@@ -861,7 +861,7 @@ Ask about any token in plain English and get live data:
 | Control UI | Lit + Vite browser panel (`solanaos server` on port 7777) — chat, status, config, debug, cron, sessions, skills, channels, logs |
 | Office | 3D workspace at office.solanaos.net — Birdeye market terminal, agent chat, skills marketplace, Solana-branded |
 | Gateway WS | Full WebSocket protocol — config, status, sessions, agents, skills, cron, logs, chat.send with async LLM inference, keepalive |
-| Onboarding | `solanaos onboard` interactive wizard — LLM provider, Solana keys, Telegram bot → `~/.nanosolana/solanaos.json` |
+| Onboarding | `solanaos onboard` interactive wizard — LLM provider, Solana keys, Telegram bot → `~/.solanaos/solanaos.json` |
 | Channels | Telegram (60+ commands + image understanding + remote control), Chrome extension, macOS, Android Seeker, web gateway, Control UI |
 | Remote Control | Claude Code remote-control server, Telegram-driven Mac control, natural language dispatch |
 | Vision | Grok Vision image understanding from Telegram photos, URL-based analysis, auto-detect photo messages |
@@ -881,13 +881,13 @@ Ask about any token in plain English and get live data:
 ```bash
 npx solanaos-computer@latest install --with-web
 cd ~/solanaos
-~/.nanosolana/bin/solanaos onboard        # interactive wizard: LLM, Solana keys, Telegram
-~/.nanosolana/bin/solanaos version
-~/.nanosolana/bin/solanaos server          # Control UI on port 7777
-~/.nanosolana/bin/solanaos daemon
+~/.solanaos/bin/solanaos onboard        # interactive wizard: LLM, Solana keys, Telegram
+~/.solanaos/bin/solanaos version
+~/.solanaos/bin/solanaos server          # Control UI on port 7777
+~/.solanaos/bin/solanaos daemon
 ```
 
-The `onboard` wizard walks you through selecting an LLM provider (Ollama, OpenRouter, Anthropic, xAI, OpenAI), entering Solana API keys (SolanaTracker, Birdeye), and configuring a Telegram bot. It writes everything to `~/.nanosolana/solanaos.json` so you can skip the manual `.env` setup.
+The `onboard` wizard walks you through selecting an LLM provider (Ollama, OpenRouter, Anthropic, xAI, OpenAI), entering Solana API keys (SolanaTracker, Birdeye), and configuring a Telegram bot. It writes everything to `~/.solanaos/solanaos.json` so you can skip the manual `.env` setup.
 
 Primary command names:
 
@@ -898,7 +898,7 @@ Compatibility npm packages still exist:
 
 - `solanaos-computer`
 - `solanaos-cli`
-- `nanosolana-cli`
+- `solanaos-cli`
 
 ### Fast local dev path
 
@@ -928,7 +928,7 @@ bash start.sh --stop              # stop everything
 Alternatively, the one-shot installer handles all builds:
 
 ```bash
-bash install.sh                   # build + install all binaries to ~/.nanosolana/bin
+bash install.sh                   # build + install all binaries to ~/.solanaos/bin
 bash install.sh --with-web        # also build the web console
 ```
 
@@ -982,19 +982,19 @@ HELIUS_RPC_URL=https://mainnet.helius-rpc.com/?api-key=...
 For Android/Seeker onboarding, generate or reprint the shared gateway setup code:
 
 ```bash
-~/.nanosolana/bin/solanaos gateway start
-~/.nanosolana/bin/solanaos gateway setup-code
-cat ~/.nanosolana/connect/setup-code.txt
+~/.solanaos/bin/solanaos gateway start
+~/.solanaos/bin/solanaos gateway setup-code
+cat ~/.solanaos/connect/setup-code.txt
 ```
 
-If Seeker should connect over LAN/manual host instead of Tailscale, start the bridge with `~/.nanosolana/bin/solanaos gateway start --no-tailscale`. If you moved the bridge off the default raw native port, use `~/.nanosolana/bin/solanaos gateway start --port <port>` and regenerate `~/.nanosolana/connect/setup-code.txt`.
+If Seeker should connect over LAN/manual host instead of Tailscale, start the bridge with `~/.solanaos/bin/solanaos gateway start --no-tailscale`. If you moved the bridge off the default raw native port, use `~/.solanaos/bin/solanaos gateway start --port <port>` and regenerate `~/.solanaos/connect/setup-code.txt`.
 
-Use the printed code or `~/.nanosolana/connect/setup-code.txt` in:
+Use the printed code or `~/.solanaos/connect/setup-code.txt` in:
 
 - Solana Seeker onboarding
 - the Connect tab setup code field
 
-The one-shot installer already writes the bundle to `~/.nanosolana/connect/`, and `solanaos gateway start` now prints the setup code path on launch.
+The one-shot installer already writes the bundle to `~/.solanaos/connect/`, and `solanaos gateway start` now prints the setup code path on launch.
 
 ## Daily Operator Commands
 
@@ -1331,7 +1331,7 @@ SolanaOS can talk to several model providers:
 - Together AI
 - llama.cpp (OpenAI-compatible local server)
 
-The gateway implements a unified `LLMProvider` interface. When `chat.send` arrives over WebSocket, the gateway routes to the configured provider and streams the response back as `chat` events. The gateway prints `LLM attached: <provider> / <model>` on startup. Provider and model are configured via `~/.nanosolana/solanaos.json` (written by `solanaos onboard`) or environment variables.
+The gateway implements a unified `LLMProvider` interface. When `chat.send` arrives over WebSocket, the gateway routes to the configured provider and streams the response back as `chat` events. The gateway prints `LLM attached: <provider> / <model>` on startup. Provider and model are configured via `~/.solanaos/solanaos.json` (written by `solanaos onboard`) or environment variables.
 
 ### OpenRouter Model Presets
 
@@ -1540,7 +1540,7 @@ node scripts/register-scanner-agent.mjs
 3. Registers on the 8004 agent registry with ATOM enabled
 4. Sets on-chain metadata (scanner_type, pipeline, endpoints)
 5. Syncs to the nanohub Convex backend
-6. Saves state to `~/.nanosolana/registry/scanner-agent.json`
+6. Saves state to `~/.solanaos/registry/scanner-agent.json`
 
 **Required env vars:**
 ```
@@ -1727,7 +1727,7 @@ The gateway on port 18790 exposes a full WebSocket protocol used by both the Con
 
 | Method | What |
 | --- | --- |
-| `config.get` / `config.set` / `config.schema` | Read/write `~/.nanosolana/solanaos.json`, schema with sections for LLM, Solana, Telegram, Gateway |
+| `config.get` / `config.set` / `config.schema` | Read/write `~/.solanaos/solanaos.json`, schema with sections for LLM, Solana, Telegram, Gateway |
 | `status` / `health` | Runtime status and health check |
 | `system-presence` | Online presence signal |
 | `sessions.list` | Active session listing |
@@ -1991,7 +1991,7 @@ wrangler secret put SOLANA_RPC_URL
 wrangler deploy
 ```
 
-Worker name: `nanosolana-agent-wallet` — deployed to `nanosolana-agent-wallet.<account>.workers.dev`
+Worker name: `solanaos-agent-wallet` — deployed to `solanaos-agent-wallet.<account>.workers.dev`
 
 ### Pump.fun MCP Worker (`pumpfun-mcp-worker/`)
 
@@ -2277,7 +2277,7 @@ solanaos/
 ├── npm/                       # canonical npm packages (published to npmjs.com)
 │   ├── solanaos/              # solanaos-computer (v1.1.1) — one-shot installer
 │   ├── solanaos-installer/    # solanaos-cli (v2.1.1) — CLI alias
-│   └── mawdbot-installer/     # nanosolana-cli (v2.1.1) — legacy compat alias
+│   └── mawdbot-installer/     # solanaos-cli (v2.1.1) — legacy compat alias
 │
 ├── new/npm/                   # ⚠️  older package drafts — npm/ is canonical
 │
@@ -2329,9 +2329,9 @@ Notes:
 
 ## Configuration Notes
 
-### JSON config (`~/.nanosolana/solanaos.json`)
+### JSON config (`~/.solanaos/solanaos.json`)
 
-The gateway and Control UI read/write a structured JSON config file at `~/.nanosolana/solanaos.json`. This file is created by `solanaos onboard` or by editing the Config tab in the Control UI. It contains sections for:
+The gateway and Control UI read/write a structured JSON config file at `~/.solanaos/solanaos.json`. This file is created by `solanaos onboard` or by editing the Config tab in the Control UI. It contains sections for:
 
 - **LLM** — provider, model, API key (Ollama, OpenRouter, Anthropic, xAI, OpenAI)
 - **Solana** — SolanaTracker API key, Birdeye API key
@@ -2345,7 +2345,7 @@ The config schema is served via the `config.schema` WebSocket method so the UI c
 - current working directory `.env`
 - executable directory `.env`
 - parent of executable directory `.env`
-- `~/.nanosolana/.env`
+- `~/.solanaos/.env`
 
 Useful overrides:
 

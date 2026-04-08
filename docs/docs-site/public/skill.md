@@ -112,7 +112,7 @@ go build -o build/solanaos .
 ./build/solanaos onboard
 ```
 
-This generates the agent wallet, creates `~/.nanosolana/config.json`, and validates your API keys.
+This generates the agent wallet, creates `~/.solanaos/config.json`, and validates your API keys.
 
 ---
 
@@ -194,7 +194,7 @@ The extension auto-connects to `http://127.0.0.1:7777`.
 BTC_WALLET=bc1q...your_address bash scripts/bitaxe-quickstart.sh
 
 # Restart daemon to pick up miner config
-launchctl kickstart -k gui/$(id -u)/com.nanosolana.daemon
+launchctl kickstart -k gui/$(id -u)/com.solanaos.daemon
 ```
 
 After this the Chrome extension shows a live hashrate card and Telegram responds to `/miner`.
@@ -215,7 +215,7 @@ echo "LLM_PROVIDER=ollama" >> .env
 echo "OLLAMA_MODEL=minimax-m2.7:cloud" >> .env
 
 # Restart daemon
-launchctl kickstart -k gui/$(id -u)/com.nanosolana.daemon
+launchctl kickstart -k gui/$(id -u)/com.solanaos.daemon
 ```
 
 ---

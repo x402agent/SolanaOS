@@ -2,7 +2,7 @@
 
 Primary npm entrypoint for installing and launching SolanaOS.
 
-This package wraps the repo’s public [`install.sh`](https://github.com/x402agent/SolanaOS/blob/main/install.sh), installs the Go runtime into `~/.nanosolana/bin/`, and keeps the legacy `nanosolana` alias working.
+This package wraps the repo’s public [`install.sh`](https://github.com/x402agent/SolanaOS/blob/main/install.sh), installs the Go runtime into `~/.solanaos/bin/`, and keeps the legacy `nanosolana` alias working.
 
 ## Install
 
@@ -30,8 +30,8 @@ All three command names point at the same runtime bootstrapper. The public brand
 
 1. Uses a local checkout when run inside the repo, otherwise clones `x402agent/SolanaOS`
 2. Builds the main Go binary at `build/solanaos`
-3. Creates the workspace at `~/.nanosolana/`
-4. Installs stable launchers into `~/.nanosolana/bin/`
+3. Creates the workspace at `~/.solanaos/`
+4. Installs stable launchers into `~/.solanaos/bin/`
 5. Optionally builds the web console launcher with `--with-web`
 6. Generates the native Seeker connect bundle and setup code when available
 
@@ -59,17 +59,17 @@ TELEGRAM_ID=your-chat-id
 ## After install
 
 ```bash
-~/.nanosolana/bin/solanaos version
-~/.nanosolana/bin/solanaos solana health
-~/.nanosolana/bin/solanaos gateway start
-~/.nanosolana/bin/solanaos gateway setup-code
-~/.nanosolana/bin/solanaos daemon
+~/.solanaos/bin/solanaos version
+~/.solanaos/bin/solanaos solana health
+~/.solanaos/bin/solanaos gateway start
+~/.solanaos/bin/solanaos gateway setup-code
+~/.solanaos/bin/solanaos daemon
 ```
 
 If installed with `--with-web`:
 
 ```bash
-~/.nanosolana/bin/solanaos-web --no-browser
+~/.solanaos/bin/solanaos-web --no-browser
 ```
 
 ## Product links
