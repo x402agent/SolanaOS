@@ -8,7 +8,7 @@
 
 **SolanaOS Companion** — an autonomous Solana trading agent by SolanaOS Labs.
 
-- Single ~10MB Go binary (`nanosolana`)
+- Single ~10MB Go binary (`solanaos`)
 - Runs a full OODA trading loop (RSI + EMA + ATR strategy)
 - Telegram bot with live strategy controls
 - Chrome extension with wallet + miner card
@@ -34,8 +34,8 @@ The agent should verify these exist before proceeding:
 ## Step 1 — Clone the Repo
 
 ```bash
-git clone https://github.com/x402agent/SolanaOS nanosolana
-cd nanosolana
+git clone https://github.com/x402agent/SolanaOS solanaos
+cd solanaos
 ```
 
 ---
@@ -132,7 +132,7 @@ bash scripts/install-service.sh
 bash scripts/install-service.sh --status
 
 # View logs
-tail -f ~/Library/Logs/nanosolana/daemon.out.log
+tail -f ~/Library/Logs/solanaos/daemon.out.log
 ```
 
 ### Option C: Docker
@@ -280,8 +280,8 @@ launchctl kickstart -k gui/$(id -u)/com.solanaos.daemon
 | Problem | Fix |
 |---------|-----|
 | Port 7777 in use | `lsof -i :7777` → kill the process |
-| Telegram 409 Conflict | `pkill -f "nanosolana"` then restart |
-| Wallet not found | Run `nanosolana onboard` |
+| Telegram 409 Conflict | `pkill -f "solanaos"` then restart |
+| Wallet not found | Run `solanaos onboard` |
 | Extension shows offline | Make sure daemon is running, check `curl http://127.0.0.1:7777/api/status` |
 | Build fails | Run `go mod tidy` then `make build` |
 

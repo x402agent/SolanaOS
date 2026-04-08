@@ -5,7 +5,7 @@
   "license": "MIT",
   "type": "module",
   "bin": {
-    "nanosolana": "bin/nanosolana.mjs"
+    "solanaos": "bin/solanaos.mjs"
   },
   "files": [
     "bin",
@@ -24,7 +24,7 @@
     "solana",
     "trading",
     "agent",
-    "nanosolana",
+    "solanaos",
     "solanaos",
     "helius",
     "jupiter",

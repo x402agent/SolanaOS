@@ -295,12 +295,12 @@ sudo mv solanaos-orin /usr/local/bin/solanaos
 sudo usermod -aG i2c $USER
 
 <span class="t-dim"># Initialize, configure, scan</span>
-nanosolana onboard
+solanaos onboard
 cp .env.example .env
 nano .env
 
-nanosolana hardware scan
-nanosolana hardware test</pre>
+solanaos hardware scan
+solanaos hardware test</pre>
           </div>
         </div>
       </div>
@@ -498,7 +498,7 @@ scp build/solanaos-rpi pi@raspberrypi:~/nanosolana</pre>
               <pre>docker run --rm \
   --device /dev/i2c-1 \
   --env-file .env \
-  nanosolana ooda --interval 60</pre>
+  solanaos ooda --interval 60</pre>
             </div>
           </div>
         </div>
@@ -511,7 +511,7 @@ scp build/solanaos-rpi pi@raspberrypi:~/nanosolana</pre>
               <pre>docker run --rm \
   --privileged \
   --env-file .env \
-  nanosolana ooda --interval 60</pre>
+  solanaos ooda --interval 60</pre>
             </div>
           </div>
         </div>

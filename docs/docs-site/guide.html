@@ -229,7 +229,7 @@ solanaos browseruse status <span class="t-dim"># Browser Use readiness</span></p
       <h3 class="guide-h3">Core Module Map (TypeScript — nano-core)</h3>
       <div class="terminal"><div class="terminal-header"><div class="terminal-dots"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span></div><span class="terminal-title">module map</span></div><div class="terminal-body"><pre><span class="t-purple">nano-core/src/</span>
 ├── <span class="t-green">ai/</span>          → OpenRouter AI provider (multimodal)
-├── <span class="t-green">cli/</span>         → nanosolana CLI (25+ commands)
+├── <span class="t-green">cli/</span>         → solanaos CLI (25+ commands)
 ├── <span class="t-green">config/</span>      → AES-256-GCM encrypted vault & Zod config
 ├── <span class="t-green">gateway/</span>     → HMAC-SHA256 WebSocket + HTTP server
 ├── <span class="t-green">hub/</span>         → SolanaOS Hub bridge for UI communication
@@ -457,7 +457,7 @@ Examples:
           <tr><td>Rate Limit</td><td>10 connections/min per IP, 100 messages/min per agent</td></tr>
           <tr><td>Permissions</td><td><code>0600</code> files, <code>0700</code> directories on every write</td></tr>
           <tr><td>Wallet</td><td>Ed25519 private key never leaves the encrypted vault</td></tr>
-          <tr><td>Audit</td><td><code>nanosolana security audit --deep</code></td></tr>
+          <tr><td>Audit</td><td><code>solanaos security audit --deep</code></td></tr>
         </tbody>
       </table>
     </div>
@@ -466,7 +466,7 @@ Examples:
   <!-- Sections 9-25: Remaining content -->
   <section class="guide-section guide-section-dark" id="s9"><div class="container"><h2 class="guide-h2">9. On-Chain Identity</h2><p>Every agent mints a <strong>Metaplex NFT</strong> birth certificate on Solana devnet at creation — a tamper-proof record of when and how the agent was created. <code>solanaos solana register</code> mints a separate identity NFT with the agent's public key, version, registered skills, and SHA-256 fingerprint.</p></div></section>
 
-  <section class="guide-section" id="s10"><div class="container"><h2 class="guide-h2">10. Mesh Networking</h2><p>Agents form a <strong>peer-to-peer mesh network</strong> over Tailscale VPN. Shared: trading signals, learned patterns, price feeds, pet status. <strong>NEVER shared:</strong> wallet keys, private keys. Setup: install Tailscale, configure peers in <code>config.json</code>, run <code>nanosolana gateway run --bind tailnet</code>.</p></div></section>
+  <section class="guide-section" id="s10"><div class="container"><h2 class="guide-h2">10. Mesh Networking</h2><p>Agents form a <strong>peer-to-peer mesh network</strong> over Tailscale VPN. Shared: trading signals, learned patterns, price feeds, pet status. <strong>NEVER shared:</strong> wallet keys, private keys. Setup: install Tailscale, configure peers in <code>config.json</code>, run <code>solanaos gateway run --bind tailnet</code>.</p></div></section>
 
   <section class="guide-section guide-section-dark" id="s11"><div class="container"><h2 class="guide-h2">11. Gateway Architecture</h2><p>A single long-lived <strong>SolanaOS Gateway</strong> owns all communication surfaces. WebSocket + text frames with JSON payloads. First frame must be <code>auth</code> with HMAC-SHA256 signature. HTTP endpoints at <code>/api/status</code>, <code>/api/framework</code>, <code>/api/memory</code> require <code>X-SolanaOS-Secret</code> header.</p></div></section>
 
@@ -495,7 +495,7 @@ npx @solanaos/nanohub publish ./my-skill \
   --tags latest,solana</pre></div></div>
   </div></section>
 
-  <section class="guide-section guide-section-dark" id="s21"><div class="container"><h2 class="guide-h2">21. Deployment & Infrastructure</h2><p><strong>Docker:</strong> <code>make docker</code> → ~15MB image. <strong>Cross-compile:</strong> <code>make orin</code> (ARM64), <code>make rpi</code>, <code>make riscv</code>, <code>make macos</code>, <code>make cross</code> (all). <strong>Brev.dev:</strong> <code>brev create nanosolana --gpu</code>. <strong>systemd:</strong> unit file included for Linux/Orin Nano. <strong>Remote access:</strong> loopback-first SSH gateway plus Tailscale Serve/Funnel for secure control UI exposure. <strong>Database:</strong> optional Supabase (PostgreSQL + pgvector) at <code>schema.sql</code>.</p></div></section>
+  <section class="guide-section guide-section-dark" id="s21"><div class="container"><h2 class="guide-h2">21. Deployment & Infrastructure</h2><p><strong>Docker:</strong> <code>make docker</code> → ~15MB image. <strong>Cross-compile:</strong> <code>make orin</code> (ARM64), <code>make rpi</code>, <code>make riscv</code>, <code>make macos</code>, <code>make cross</code> (all). <strong>Brev.dev:</strong> <code>brev create solanaos --gpu</code>. <strong>systemd:</strong> unit file included for Linux/Orin Nano. <strong>Remote access:</strong> loopback-first SSH gateway plus Tailscale Serve/Funnel for secure control UI exposure. <strong>Database:</strong> optional Supabase (PostgreSQL + pgvector) at <code>schema.sql</code>.</p></div></section>
 
   <section class="guide-section" id="s22"><div class="container"><h2 class="guide-h2">22. Configuration Reference</h2>
     <h3 class="guide-h3">Core Environment Variables</h3>

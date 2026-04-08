@@ -123,7 +123,7 @@ build:
 	@mkdir -p $(BUILD_DIR)
 	@mkdir -p $(GOCACHE_DIR) $(GOTMPDIR_DIR) $(GOMODCACHE_DIR)
 	$(GOBUILD) -o $(BIN_CLI) .
-	@ln -sf solanaos $(BUILD_DIR)/nanosolana
+	@# legacy symlink removed
 	@echo "✓ $(BIN_CLI) built"
 	@ls -lh $(BIN_CLI)
 
@@ -362,7 +362,7 @@ seeker-logcat:
 
 connect-bundle:
 	@bash ./scripts/write-connect-bundle.sh \
-		--workspace "$(HOME)/.nanosolana" \
+		--workspace "$(HOME)/.solanaos" \
 		--install-dir "$(CURDIR)" \
 		--env-file "$(CURDIR)/.env"
 

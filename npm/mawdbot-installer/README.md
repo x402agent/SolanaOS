@@ -21,34 +21,34 @@ npx solanaos-cli install --with-web
 
 # Global install
 npm install -g solanaos-cli
-nanosolana version
+solanaos version
 ```
 
 ## What it does
 
 1. ✅ Clones the SolanaOS repo
-2. ✅ Builds the `nanosolana` 10MB binary (Go)
+2. ✅ Builds the `solanaos` 10MB binary (Go)
 3. ✅ Creates `~/.solanaos/` workspace + wallet
-4. ✅ Installs a stable CLI at `~/.solanaos/bin/nanosolana`
+4. ✅ Installs a stable CLI at `~/.solanaos/bin/solanaos`
 5. ✅ Optionally builds the web console and installs `~/.solanaos/bin/solanaos-web`
 
-After the first bootstrap, `nanosolana ...` proxies straight to the Go binary from any working directory.
+After the first bootstrap, `solanaos ...` proxies straight to the Go binary from any working directory.
 If you use `--with-web`, `solanaos-web ...` does the same for the web console backend.
 
 ## After install
 
 ```bash
 # Check mainnet health
-nanosolana solana health
+solanaos solana health
 
 # Register agent on-chain (devnet NFT)
-nanosolana solana register
+solanaos solana register
 
 # Start paper trading
-nanosolana ooda --sim
+solanaos ooda --sim
 
 # Full autonomous daemon
-nanosolana daemon
+solanaos daemon
 
 # Local web console
 solanaos-web --no-browser

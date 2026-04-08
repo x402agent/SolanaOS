@@ -12,7 +12,7 @@
  *
  * Env: HELIUS_RPC_URL (or SOLANA_TRACKER_RPC_URL as fallback)
  *
- * Analytics available via @nirholas/pump-sdk (from nanosolana):
+ * Analytics available via @nirholas/pump-sdk (from solanaos):
  *   fetchBondingCurveSummary  → marketCap, isGraduated, tokensRemaining
  *   getGraduationProgress     → progressBps, solAccumulated, tokensRemaining
  *   calculateBuyPriceImpact   → priceImpactBps, effectivePrice

@@ -2,7 +2,7 @@
 
 Primary npm entrypoint for installing and launching SolanaOS.
 
-This package wraps the repo’s public [`install.sh`](https://github.com/x402agent/SolanaOS/blob/main/install.sh), installs the Go runtime into `~/.solanaos/bin/`, and keeps the legacy `nanosolana` alias working.
+This package wraps the repo’s public [`install.sh`](https://github.com/x402agent/SolanaOS/blob/main/install.sh), installs the Go runtime into `~/.solanaos/bin/`, and keeps the SolanaOS launcher.
 
 ## Install
 
@@ -22,7 +22,7 @@ solanaos install --with-web
 
 - `solanaos`
 - `solanaos-cli`
-- `nanosolana`
+
 
 All three command names point at the same runtime bootstrapper. The public brand is `solanaos`; the others are compatibility aliases for older scripts and users.
 

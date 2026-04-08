@@ -7,6 +7,7 @@ export const TAB_GROUPS = [
     tabs: ["overview", "channels", "instances", "sessions", "cron"],
   },
   { label: "Agent", tabs: ["skills", "nodes"] },
+  { label: "Memory", tabs: ["memory"] },
   { label: "Settings", tabs: ["config", "debug", "logs"] },
 ] as const;
 
@@ -18,6 +19,7 @@ export type Tab =
   | "cron"
   | "skills"
   | "nodes"
+  | "memory"
   | "chat"
   | "config"
   | "debug"
@@ -31,6 +33,7 @@ const TAB_PATHS: Record<Tab, string> = {
   cron: "/cron",
   skills: "/skills",
   nodes: "/nodes",
+  memory: "/memory",
   chat: "/chat",
   config: "/config",
   debug: "/debug",
