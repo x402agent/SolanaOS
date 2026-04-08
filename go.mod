@@ -7,7 +7,7 @@ require (
 	github.com/gagliardetto/solana-go v1.14.0
 	github.com/gdamore/tcell/v2 v2.13.8
 	github.com/google/uuid v1.6.0
-	github.com/gorilla/websocket v1.4.2
+	github.com/gorilla/websocket v1.5.3
 	github.com/mark3labs/x402-go v0.13.0
 	github.com/mymmrac/telego v1.7.0
 	github.com/rivo/tview v0.42.0
