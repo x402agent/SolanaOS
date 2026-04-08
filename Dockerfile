@@ -24,7 +24,7 @@ COPY scripts/package.json ./
 RUN npm install --omit=dev --ignore-scripts
 
 # ── Stage 2: Runtime ──────────────────────────────────────────────────
-FROM alpine:3.21
+FROM alpine:3.23
 
 RUN apk add --no-cache ca-certificates tzdata i2c-tools nodejs sqlite
 
