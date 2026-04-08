@@ -4,10 +4,10 @@ go 1.25.7
 
 require (
 	github.com/ethereum/go-ethereum v1.17.1
-	github.com/gagliardetto/solana-go v1.14.0
+	github.com/gagliardetto/solana-go v1.16.0
 	github.com/gdamore/tcell/v2 v2.13.8
 	github.com/google/uuid v1.6.0
-	github.com/gorilla/websocket v1.4.2
+	github.com/gorilla/websocket v1.5.3
 	github.com/mark3labs/x402-go v0.13.0
 	github.com/mymmrac/telego v1.7.0
 	github.com/rivo/tview v0.42.0
@@ -38,7 +38,7 @@ require (
 	github.com/gagliardetto/binary v0.8.0 // indirect
 	github.com/gagliardetto/treeout v0.1.4 // indirect
 	github.com/gdamore/encoding v1.0.1 // indirect
-	github.com/gorilla/rpc v1.2.0 // indirect
+	github.com/gorilla/rpc v1.2.1 // indirect
 	github.com/grbit/go-json v0.11.0 // indirect
 	github.com/holiman/uint256 v1.3.2 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
@@ -68,7 +68,7 @@ require (
 	go.uber.org/ratelimit v0.3.1 // indirect
 	go.uber.org/zap v1.27.0 // indirect
 	golang.org/x/arch v0.8.0 // indirect
-	golang.org/x/crypto v0.46.0 // indirect
+	golang.org/x/crypto v0.47.0 // indirect
 	golang.org/x/sync v0.19.0 // indirect
 	golang.org/x/sys v0.41.0 // indirect
 	golang.org/x/term v0.40.0 // indirect
