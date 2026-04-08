@@ -8,6 +8,10 @@
 /____/\____/_/\__,_/_/ /_/\__,_/     \____//____/
                 S O L A N A O S
 ```
+Powered by $CLAWD Token 
+8cHzQHUS2s2h8TzCmfqPKYiM4dSt4roa3n7MyRLApump
+
+SolanaClawd.com
 
 # SolanaOS
 
@@ -160,36 +164,6 @@ TELEGRAM_BOT_TOKEN=...            # optional — Telegram control surface
 
 ---
 
-## Deploy on Fly.io
-
-Deploy SolanaOS to Fly.io with a single command. Download the deploy package and run the script — it handles app creation, volumes, secrets, and deployment.
-
-```bash
-git clone https://github.com/x402agent/SolanaOS.git
-cd SolanaOS
-bash deploy/deploy.sh
-```
-
-You'll need [flyctl](https://fly.io/docs/flyctl/install/) installed, a Fly.io account (free trial works), and an LLM API key (OpenRouter, Anthropic, xAI, OpenAI, or Ollama).
-
-The script prompts for your app name, region, LLM provider, Solana RPC keys, and optional channel tokens (Telegram, Discord). All credentials are stored as encrypted Fly secrets. State lives on a persistent volume at `/data`, so configuration, wallet, conversation history, and skills survive restarts and redeployments.
-
-```text
-Internet --> Fly.io proxy --> SolanaOS Web Console (:18800)
-                                 |
-                                 +--> SolanaOS Daemon
-                                 +--> Gateway (:18790)
-                                 +--> Skills Engine
-                                 +--> Channel Bridges (Telegram, Discord, iMessage, etc.)
-```
-
-After deploy, connect your local CLI:
-
-```bash
-solanaos config set gateway.mode remote
-solanaos config set gateway.remote.url wss://your-app.fly.dev
-solanaos config set gateway.remote.token <your-gateway-token>
-```
 
 See [deploy/README.md](deploy/README.md) for full configuration, VM sizing, troubleshooting, and post-deploy setup.
 
@@ -245,6 +219,36 @@ User Input
     ├─→ [5] STM: Strip hedges, preambles, formalize → Clean output
     │
     └─→ Response with full pipeline metadata
+```
+## Deploy on Fly.io
+
+Deploy SolanaOS to Fly.io with a single command. Download the deploy package and run the script — it handles app creation, volumes, secrets, and deployment.
+
+```bash
+git clone https://github.com/x402agent/SolanaOS.git
+cd SolanaOS
+bash deploy/deploy.sh
+```
+
+You'll need [flyctl](https://fly.io/docs/flyctl/install/) installed, a Fly.io account (free trial works), and an LLM API key (OpenRouter, Anthropic, xAI, OpenAI, or Ollama).
+
+The script prompts for your app name, region, LLM provider, Solana RPC keys, and optional channel tokens (Telegram, Discord). All credentials are stored as encrypted Fly secrets. State lives on a persistent volume at `/data`, so configuration, wallet, conversation history, and skills survive restarts and redeployments.
+
+```text
+Internet --> Fly.io proxy --> SolanaOS Web Console (:18800)
+                                 |
+                                 +--> SolanaOS Daemon
+                                 +--> Gateway (:18790)
+                                 +--> Skills Engine
+                                 +--> Channel Bridges (Telegram, Discord, iMessage, etc.)
+```
+
+After deploy, connect your local CLI:
+
+```bash
+solanaos config set gateway.mode remote
+solanaos config set gateway.remote.url wss://your-app.fly.dev
+solanaos config set gateway.remote.token <your-gateway-token>
 ```
 
 ### Modules
