@@ -13,7 +13,7 @@ require (
 	github.com/rivo/tview v0.42.0
 	github.com/spf13/cobra v1.10.2
 	github.com/vmihailenco/msgpack/v5 v5.4.1
-	periph.io/x/conn/v3 v3.7.2
+	periph.io/x/conn/v3 v3.7.3
 	periph.io/x/host/v3 v3.8.5
 )
 
