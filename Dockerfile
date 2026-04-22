@@ -17,7 +17,7 @@ COPY . .
 RUN make build
 
 # ── Stage 1.5: Agent Registry Helper Dependencies ────────────────────
-FROM node:22-alpine AS registry-deps
+FROM node:25-alpine AS registry-deps
 
 WORKDIR /opt/solanaos-scripts
 COPY scripts/package.json ./
