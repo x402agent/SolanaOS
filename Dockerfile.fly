@@ -29,7 +29,7 @@ RUN mkdir -p /out && \
     GOCACHE=/tmp/go-build GOTMPDIR=/tmp GOMODCACHE=/tmp/gomodcache GOPROXY=https://proxy.golang.org,direct \
     go build -trimpath -ldflags "-s -w" -o /out/solanaos-web ./web/backend
 
-FROM node:25-alpine AS frontend-builder
+FROM node:26-alpine AS frontend-builder
 
 RUN apk add --no-cache python3 make g++ linux-headers eudev-dev libusb-dev
 
@@ -40,7 +40,7 @@ COPY web/frontend ./
 COPY docs/docs-site /src/docs-site
 RUN npm run build
 
-FROM node:25-alpine AS registry-deps
+FROM node:26-alpine AS registry-deps
 
 WORKDIR /opt/solanaos-scripts
 COPY scripts/package.json ./
