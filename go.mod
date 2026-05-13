@@ -3,7 +3,7 @@ module github.com/x402agent/Solana-Os-Go
 go 1.25.7
 
 require (
-	github.com/ethereum/go-ethereum v1.17.2
+	github.com/ethereum/go-ethereum v1.17.3
 	github.com/gagliardetto/solana-go v1.17.0
 	github.com/gdamore/tcell/v2 v2.13.9
 	github.com/google/uuid v1.6.0
