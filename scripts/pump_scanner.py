@@ -36,8 +36,8 @@ if not HELIUS_RPC_URL and HELIUS_API_KEY:
 ST_API_KEY  = os.environ.get("SOLANA_TRACKER_API_KEY", "")
 ST_RPC_URL  = os.environ.get("SOLANA_TRACKER_RPC_URL", "")
 
-TG_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN", "8738647936:AAEfTT4Kc_GIWdBk_vhhB2GFHVQavNXcFis")
-TG_CHAT  = os.environ.get("TELEGRAM_ID", "1740095485")
+TG_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN", "").strip()
+TG_CHAT = os.environ.get("TELEGRAM_ID", "").strip()
 
 REPO_ROOT   = Path(os.environ.get("REPO_ROOT", Path(__file__).parent.parent))
 SCRIPT_DIR  = Path(os.environ.get("SCRIPT_DIR", Path(__file__).parent))
@@ -49,6 +49,17 @@ TIMESTAMP   = NOW.strftime("%Y-%m-%dT%H:%M:%SZ")
 TIME_SHORT  = NOW.strftime("%H:%M")
 
 Token = dict[str, Any]
+
+
+
+def require_telegram_env() -> None:
+    missing = [name for name, val in (("TELEGRAM_BOT_TOKEN", TG_TOKEN), ("TELEGRAM_ID", TG_CHAT)) if not val]
+    if missing:
+        print(
+            "pump_scanner requires " + ", ".join(missing) + " in the environment; no hardcoded defaults are provided.",
+            file=sys.stderr,
+        )
+        sys.exit(1)
 
 
 # ─── HTTP helpers ─────────────────────────────────────────────────────────────
@@ -672,6 +683,7 @@ def _telegram_plain(tokens: list[Token]) -> None:
 # ─── Main ─────────────────────────────────────────────────────────────────────
 
 def main() -> None:
+    require_telegram_env()
     print(f"[pump-scanner] {TIMESTAMP}", file=sys.stderr)
 
     # 1. Fetch data sources

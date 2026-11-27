@@ -179,3 +179,6 @@ apps/android/.signing/
 /Solana-Os-Go
 /mawdbot-tui
 /SeekerClaw-*.apk
+
+# Accidental archive leftovers
+/chrome-extension copy.zip
