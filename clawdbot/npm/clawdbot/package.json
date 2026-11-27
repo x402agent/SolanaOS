@@ -1,0 +1,45 @@
+{
+  "name": "@clawd/clawdbot",
+  "version": "1.0.0",
+  "description": "The Clawd Bot \u2014 sovereign Solana trading intelligence CLI with zero-knowledge zk primitives",
+  "license": "MIT",
+  "bin": {
+    "clawdbot": "bin/clawdbot.js"
+  },
+  "files": [
+    "bin/",
+    "lib/",
+    "vendor/",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/x402agent/SolanaOS.git",
+    "directory": "clawdbot/npm/clawdbot"
+  },
+  "homepage": "https://musebook.trade/clawdbot",
+  "bugs": {
+    "url": "https://github.com/x402agent/SolanaOS/issues"
+  },
+  "keywords": [
+    "clawdbot",
+    "clawd-bot",
+    "clawd",
+    "solana",
+    "trading",
+    "cli",
+    "ooda",
+    "zero-knowledge",
+    "zk-primitives",
+    "zkrouter"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "postinstall": "node lib/install.js"
+  }
+}

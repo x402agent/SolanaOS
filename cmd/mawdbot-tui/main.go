@@ -161,7 +161,7 @@ func main() {
 	infoBar := tview.NewTextView().
 		SetDynamicColors(true).
 		SetTextAlign(tview.AlignCenter).
-		SetText(fmt.Sprintf("[%s]SolanaOS :: solanaos.net :: seeker.solanaos.net :: github.com/x402agent/Solana-Os-Go[-]", mawdDim))
+		SetText(fmt.Sprintf("[%s]SolanaOS :: solanaos.net :: seeker.solanaos.net :: github.com/x402agent/SolanaOS[-]", mawdDim))
 	infoBar.SetBackgroundColor(tcell.ColorBlack)
 
 	// ── Layout ───────────────────────────────────────────────

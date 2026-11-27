@@ -908,7 +908,7 @@ function ConnectScreen({ runtime }) {
           <a href="/app/setup" style={{ flex: 1, textDecoration: "none" }}>
             <Btn tone="green" full style={{ width: "100%" }}>Open Setup</Btn>
           </a>
-          <a href={runtime.downloads?.android?.releases || "https://github.com/x402agent/Solana-Os-Go/releases/latest"} target="_blank" rel="noreferrer" style={{ flex: 1, textDecoration: "none" }}>
+          <a href={runtime.downloads?.android?.releases || "https://github.com/x402agent/SolanaOS/releases/latest"} target="_blank" rel="noreferrer" style={{ flex: 1, textDecoration: "none" }}>
             <Btn tone="purple" full style={{ width: "100%" }}>Android Release</Btn>
           </a>
         </div>
