@@ -1,6 +1,7 @@
 package learning
 
 import (
+	"encoding/hex"
 	"encoding/json"
 	"fmt"
 	"hash/fnv"
@@ -114,36 +115,39 @@ func (s *SessionSearchStore) IndexTurn(turn TurnRecord) error {
 		}
 	}
 
+	id := sqlText(turn.ID)
 	sql := fmt.Sprintf(`
-DELETE FROM turns WHERE id = '%s';
-DELETE FROM turns_fts WHERE id = '%s';
+BEGIN;
+DELETE FROM turns WHERE id = %s;
+DELETE FROM turns_fts WHERE id = %s;
 INSERT INTO turns (
 	id, session_id, user_id, user_name, channel, role, content, summary, intent, metadata_json, created_at_ms
 ) VALUES (
-	'%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d
+	%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %d
 );
 INSERT INTO turns_fts (id, content, summary, intent, user_name) VALUES (
-	'%s', '%s', '%s', '%s', '%s'
+	%s, %s, %s, %s, %s
 );
+COMMIT;
 `,
-		sqliteQuote(turn.ID),
-		sqliteQuote(turn.ID),
-		sqliteQuote(turn.ID),
-		sqliteQuote(turn.SessionID),
-		sqliteQuote(turn.UserID),
-		sqliteQuote(turn.UserName),
-		sqliteQuote(turn.Channel),
-		sqliteQuote(turn.Role),
-		sqliteQuote(turn.Content),
-		sqliteQuote(turn.Summary),
-		sqliteQuote(turn.Intent),
-		sqliteQuote(metadataJSON),
+		id,
+		id,
+		id,
+		sqlText(turn.SessionID),
+		sqlText(turn.UserID),
+		sqlText(turn.UserName),
+		sqlText(turn.Channel),
+		sqlText(turn.Role),
+		sqlText(turn.Content),
+		sqlText(turn.Summary),
+		sqlText(turn.Intent),
+		sqlText(metadataJSON),
 		turn.CreatedAt.UnixMilli(),
-		sqliteQuote(turn.ID),
-		sqliteQuote(turn.Content),
-		sqliteQuote(turn.Summary),
-		sqliteQuote(turn.Intent),
-		sqliteQuote(turn.UserName),
+		id,
+		sqlText(turn.Content),
+		sqlText(turn.Summary),
+		sqlText(turn.Intent),
+		sqlText(turn.UserName),
 	)
 
 	_, err := s.runSQL(sql)
@@ -165,7 +169,7 @@ func (s *SessionSearchStore) Search(query string, opts SearchOptions) ([]SearchR
 
 	whereUser := ""
 	if strings.TrimSpace(opts.UserID) != "" {
-		whereUser = fmt.Sprintf("AND t.user_id = '%s'", sqliteQuote(opts.UserID))
+		whereUser = "AND t.user_id = " + sqlText(opts.UserID)
 	}
 
 	sql := fmt.Sprintf(`
@@ -195,12 +199,12 @@ FROM (
 		t.created_at_ms
 	FROM turns t
 	JOIN turns_fts ON turns_fts.id = t.id
-	WHERE turns_fts MATCH '%s'
+	WHERE turns_fts MATCH %s
 	%s
 	ORDER BY t.created_at_ms DESC
 	LIMIT %d
 );
-`, sqliteQuote(ftsQuery(query)), whereUser, limit)
+`, sqlText(ftsQuery(query)), whereUser, limit)
 
 	raw, err := s.runSQL(sql)
 	if err != nil {
@@ -227,7 +231,7 @@ func (s *SessionSearchStore) Recent(limit int, userID string) ([]SearchResult, e
 	}
 	whereUser := ""
 	if strings.TrimSpace(userID) != "" {
-		whereUser = fmt.Sprintf("WHERE user_id = '%s'", sqliteQuote(userID))
+		whereUser = "WHERE user_id = " + sqlText(userID)
 	}
 	sql := fmt.Sprintf(`
 SELECT COALESCE(json_group_array(json_object(
@@ -276,10 +280,16 @@ func (r SearchResult) CreatedAt() time.Time {
 	return time.UnixMilli(r.CreatedAtMS).UTC()
 }
 
+// runSQL executes a script with the sqlite3 CLI. The script is fed on stdin
+// (never argv, so content does not show up in `ps` or hit ARG_MAX), ~/.sqliterc
+// is ignored, and execution stops on the first error. All caller-supplied
+// values in the script are produced by sqlText, so no user content can
+// terminate a literal or start a dot-command line.
 func (s *SessionSearchStore) runSQL(sql string) (string, error) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
-	cmd := exec.Command("sqlite3", s.dbPath, sql)
+	cmd := exec.Command("sqlite3", "-batch", "-bail", "-init", os.DevNull, s.dbPath)
+	cmd.Stdin = strings.NewReader(sql)
 	out, err := cmd.CombinedOutput()
 	if err != nil {
 		return "", fmt.Errorf("sqlite3: %v: %s", err, strings.TrimSpace(string(out)))
@@ -287,8 +297,13 @@ func (s *SessionSearchStore) runSQL(sql string) (string, error) {
 	return strings.TrimSpace(string(out)), nil
 }
 
-func sqliteQuote(v string) string {
-	return strings.ReplaceAll(v, "'", "''")
+// sqlText encodes an arbitrary Go string as a SQLite TEXT expression built
+// from a hex blob literal: CAST(X'<hex>' AS TEXT). The literal contains only
+// [0-9a-f], so there is nothing to escape and no way to break out of it,
+// unlike quote-doubling. The sqlite3 CLI has no bound-parameter API usable
+// from a single process invocation, and no SQLite driver is in go.mod yet.
+func sqlText(v string) string {
+	return "CAST(X'" + hex.EncodeToString([]byte(v)) + "' AS TEXT)"
 }
 
 func ftsQuery(query string) string {

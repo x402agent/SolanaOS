@@ -72,10 +72,10 @@ func DetectPlatform() Platform {
 // ── Linux I2C Bus ────────────────────────────────────────────────────
 
 type linuxBus struct {
-	bus    i2c.BusCloser
-	name   string
-	mu     sync.Mutex
-	devs   map[uint16]*linuxDevice
+	bus  i2c.BusCloser
+	name string
+	mu   sync.Mutex
+	devs map[uint16]*linuxDevice
 }
 
 // OpenBus opens an I2C bus by path or name.
@@ -167,7 +167,7 @@ func (d *linuxDevice) Write(reg byte, data []byte) error {
 	return d.dev.Tx(payload, nil)
 }
 
-func (d *linuxDevice) ReadByte(reg byte) (byte, error) {
+func (d *linuxDevice) ReadReg8(reg byte) (byte, error) {
 	buf := make([]byte, 1)
 	if err := d.Read(reg, buf); err != nil {
 		return 0, err
@@ -175,7 +175,7 @@ func (d *linuxDevice) ReadByte(reg byte) (byte, error) {
 	return buf[0], nil
 }
 
-func (d *linuxDevice) WriteByte(reg byte, val byte) error {
+func (d *linuxDevice) WriteReg8(reg byte, val byte) error {
 	return d.Write(reg, []byte{val})
 }
 

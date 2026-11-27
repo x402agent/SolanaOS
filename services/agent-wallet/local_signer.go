@@ -1,10 +1,10 @@
 package agentwallet
 
 import (
+	"bytes"
 	"crypto/aes"
 	"crypto/cipher"
 	"crypto/rand"
-	"crypto/sha256"
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
@@ -43,7 +43,10 @@ type LocalSigner struct {
 }
 
 // signerEnvelope is the on-disk JSON format.
+// signerEnvelope is the on-disk key file. Legacy files have no kdfHeader
+// fields (SHA-256 KDF); new files carry argon2id parameters.
 type signerEnvelope struct {
+	kdfHeader
 	Data  string `json:"data"`
 	Nonce string `json:"nonce"`
 }
@@ -85,7 +88,6 @@ func NewLocalSigner(cfg LocalSignerConfig) (*LocalSigner, error) {
 		return nil, fmt.Errorf("create signer dir: %w", err)
 	}
 
-	masterKey := deriveKey(cfg.Passphrase)
 	s := &LocalSigner{
 		name:      cfg.Mode,
 		storePath: cfg.StorePath,
@@ -109,7 +111,7 @@ func NewLocalSigner(cfg LocalSignerConfig) (*LocalSigner, error) {
 
 		// Persist to disk if not already there
 		if _, err := os.Stat(keyFile); os.IsNotExist(err) {
-			if err := saveEncryptedKey(keyFile, masterKey, []byte(pk)); err != nil {
+			if err := saveEncryptedKey(keyFile, cfg.Passphrase, []byte(pk)); err != nil {
 				log.Printf("[LOCAL-SIGNER] ⚠️  Could not persist key to disk: %v", err)
 			}
 		}
@@ -120,9 +122,12 @@ func NewLocalSigner(cfg LocalSignerConfig) (*LocalSigner, error) {
 
 	// Try loading from disk
 	if raw, err := os.ReadFile(keyFile); err == nil {
-		privKeyBytes, err := loadEncryptedKey(raw, masterKey)
+		privKeyBytes, legacy, err := loadEncryptedKey(raw, cfg.Passphrase)
 		if err != nil {
 			return nil, fmt.Errorf("decrypt %s key: %w", cfg.Mode, err)
+		}
+		if legacy {
+			log.Printf("[LOCAL-SIGNER] ℹ️  %s key file uses the legacy SHA-256 KDF; run `agent-wallet migrate-kdf` to re-encrypt with argon2id", cfg.Mode)
 		}
 		s.privKey = solanago.PrivateKey(privKeyBytes)
 		s.pubkey = s.privKey.PublicKey()
@@ -135,7 +140,7 @@ func NewLocalSigner(cfg LocalSignerConfig) (*LocalSigner, error) {
 	s.privKey = wallet.PrivateKey
 	s.pubkey = wallet.PublicKey()
 
-	if err := saveEncryptedKey(keyFile, masterKey, []byte(wallet.PrivateKey)); err != nil {
+	if err := saveEncryptedKey(keyFile, cfg.Passphrase, []byte(wallet.PrivateKey)); err != nil {
 		return nil, fmt.Errorf("save %s key: %w", cfg.Mode, err)
 	}
 
@@ -185,14 +190,21 @@ func (s *LocalSigner) Mode() SignerMode {
 
 // ── AES-256-GCM helpers ──────────────────────────────────────────
 
-// deriveKey derives a 32-byte AES key from a passphrase via SHA-256.
-func deriveKey(passphrase string) []byte {
-	h := sha256.Sum256([]byte(passphrase))
-	return h[:]
+// saveEncryptedKey encrypts privKeyBytes with AES-256-GCM under an argon2id
+// key (fresh random salt) and writes a versioned envelope atomically.
+func saveEncryptedKey(path, passphrase string, privKeyBytes []byte) error {
+	hdr, err := newKDFHeader()
+	if err != nil {
+		return err
+	}
+	return saveEncryptedKeyWith(path, passphrase, hdr, privKeyBytes)
 }
 
-// saveEncryptedKey encrypts privKeyBytes with AES-256-GCM and writes to path.
-func saveEncryptedKey(path string, masterKey, privKeyBytes []byte) error {
+func saveEncryptedKeyWith(path, passphrase string, hdr kdfHeader, privKeyBytes []byte) error {
+	masterKey, err := deriveKeyWith(passphrase, hdr)
+	if err != nil {
+		return err
+	}
 	block, err := aes.NewCipher(masterKey)
 	if err != nil {
 		return err
@@ -210,43 +222,96 @@ func saveEncryptedKey(path string, masterKey, privKeyBytes []byte) error {
 	ciphertext := gcm.Seal(nil, nonce, privKeyBytes, nil)
 
 	env := signerEnvelope{
-		Data:  hex.EncodeToString(ciphertext),
-		Nonce: hex.EncodeToString(nonce),
+		kdfHeader: hdr,
+		Data:      hex.EncodeToString(ciphertext),
+		Nonce:     hex.EncodeToString(nonce),
 	}
 	data, err := json.MarshalIndent(env, "", "  ")
 	if err != nil {
 		return err
 	}
 
-	return os.WriteFile(path, data, 0o600)
+	return writeFileAtomic(path, data, 0o600)
 }
 
-// loadEncryptedKey decrypts AES-256-GCM key data from an envelope.
-func loadEncryptedKey(raw, masterKey []byte) ([]byte, error) {
+// loadEncryptedKey decrypts an envelope using the KDF recorded in its header
+// (legacy envelopes without a header use SHA-256). legacy reports which.
+func loadEncryptedKey(raw []byte, passphrase string) (key []byte, legacy bool, err error) {
 	var env signerEnvelope
 	if err := json.Unmarshal(raw, &env); err != nil {
-		return nil, fmt.Errorf("decode envelope: %w", err)
+		return nil, false, fmt.Errorf("decode envelope: %w", err)
 	}
 
 	ciphertext, err := hex.DecodeString(env.Data)
 	if err != nil {
-		return nil, fmt.Errorf("decode ciphertext: %w", err)
+		return nil, false, fmt.Errorf("decode ciphertext: %w", err)
 	}
 	nonce, err := hex.DecodeString(env.Nonce)
 	if err != nil {
-		return nil, fmt.Errorf("decode nonce: %w", err)
+		return nil, false, fmt.Errorf("decode nonce: %w", err)
 	}
 
+	masterKey, err := deriveKeyWith(passphrase, env.kdfHeader)
+	if err != nil {
+		return nil, false, err
+	}
 	block, err := aes.NewCipher(masterKey)
 	if err != nil {
-		return nil, err
+		return nil, false, err
 	}
 	gcm, err := cipher.NewGCM(block)
 	if err != nil {
-		return nil, err
+		return nil, false, err
 	}
 
-	return gcm.Open(nil, nonce, ciphertext, nil)
+	pt, err := gcm.Open(nil, nonce, ciphertext, nil)
+	if err != nil {
+		return nil, false, err
+	}
+	return pt, env.isLegacy(), nil
+}
+
+// MigrateLocalSignerKDF re-encrypts a legacy <mode>.enc key file with
+// argon2id. Opt-in only (`agent-wallet migrate-kdf`). The legacy file is kept
+// as <mode>.enc.legacy-<unix>.bak. Returns migrated=false if there is no file
+// or it is already argon2id.
+func MigrateLocalSignerKDF(cfg LocalSignerConfig) (migrated bool, backup string, err error) {
+	keyFile := filepath.Join(cfg.StorePath, string(cfg.Mode)+".enc")
+	raw, err := os.ReadFile(keyFile)
+	if os.IsNotExist(err) {
+		return false, "", nil
+	}
+	if err != nil {
+		return false, "", err
+	}
+	pk, legacy, err := loadEncryptedKey(raw, cfg.Passphrase)
+	if err != nil {
+		return false, "", fmt.Errorf("decrypt %s key: %w", cfg.Mode, err)
+	}
+	defer func() {
+		for i := range pk {
+			pk[i] = 0
+		}
+	}()
+	if !legacy {
+		return false, "", nil
+	}
+	backup, err = backupFile(keyFile)
+	if err != nil {
+		return false, "", fmt.Errorf("backup legacy %s key: %w", cfg.Mode, err)
+	}
+	if err := saveEncryptedKey(keyFile, cfg.Passphrase, pk); err != nil {
+		return false, backup, fmt.Errorf("write migrated %s key (legacy backup kept at %s): %w", cfg.Mode, backup, err)
+	}
+	raw2, err := os.ReadFile(keyFile)
+	if err != nil {
+		return false, backup, fmt.Errorf("verify migrated %s key; restore from %s: %w", cfg.Mode, backup, err)
+	}
+	got, legacy2, err := loadEncryptedKey(raw2, cfg.Passphrase)
+	if err != nil || legacy2 || !bytes.Equal(got, pk) {
+		return false, backup, fmt.Errorf("verification of migrated %s key failed; restore from %s", cfg.Mode, backup)
+	}
+	return true, backup, nil
 }
 
 // ── LocalSignerManager ───────────────────────────────────────────
@@ -257,15 +322,20 @@ type LocalSignerManager struct {
 	Trade *LocalSigner
 }
 
+// DefaultLocalSignerConfigs returns the dev and trade signer configs exactly as
+// NewLocalSignerManager resolves them (trade may use TRADE_SIGNER_PASSPHRASE).
+func DefaultLocalSignerConfigs() (dev, trade LocalSignerConfig) {
+	dev = DefaultLocalSignerConfig(SignerModeDev)
+	trade = DefaultLocalSignerConfig(SignerModeTrade)
+	if tp := os.Getenv("TRADE_SIGNER_PASSPHRASE"); tp != "" {
+		trade.Passphrase = tp
+	}
+	return dev, trade
+}
+
 // NewLocalSignerManager creates both dev and trade signers from environment config.
 func NewLocalSignerManager() (*LocalSignerManager, error) {
-	devCfg := DefaultLocalSignerConfig(SignerModeDev)
-	tradeCfg := DefaultLocalSignerConfig(SignerModeTrade)
-
-	// Trade signer uses a separate passphrase if set
-	if tp := os.Getenv("TRADE_SIGNER_PASSPHRASE"); tp != "" {
-		tradeCfg.Passphrase = tp
-	}
+	devCfg, tradeCfg := DefaultLocalSignerConfigs()
 
 	dev, err := NewLocalSigner(devCfg)
 	if err != nil {

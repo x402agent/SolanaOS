@@ -6,7 +6,8 @@
 // and signal-based execution.
 //
 // Flow:
-//   Signal → Validate → Size → Execute → Monitor → Record
+//
+//	Signal → Validate → Size → Execute → Monitor → Record
 package aster
 
 import (
@@ -29,12 +30,16 @@ type TraderConfig struct {
 	Vault           *memory.ClawVault
 	MemEngine       *memory.MemoryEngine
 	DefaultLeverage int
-	MaxPositions    int
-	MaxPositionPct  float64 // max % of balance per position
-	MinNotional     float64 // min order value in USD
-	StopLossPct     float64 // default stop loss %
-	TakeProfitPct   float64 // default take profit %
-	DryRun          bool    // simulate only, no real orders
+	// MaxLeverage is the operator-configured ceiling for any signal-requested
+	// leverage. Zero means "same as DefaultLeverage". Never exceeds
+	// ExchangeMaxLeverage.
+	MaxLeverage    int
+	MaxPositions   int
+	MaxPositionPct float64 // max % of balance per position
+	MinNotional    float64 // min order value in USD
+	StopLossPct    float64 // default stop loss %
+	TakeProfitPct  float64 // default take profit %
+	DryRun         bool    // simulate only, no real orders
 }
 
 // ── PerpTrader ───────────────────────────────────────────────────────
@@ -44,6 +49,7 @@ type PerpTrader struct {
 	vault           *memory.ClawVault
 	memEngine       *memory.MemoryEngine
 	defaultLeverage int
+	maxLeverage     int
 	maxPositions    int
 	maxPositionPct  float64
 	minNotional     float64
@@ -111,6 +117,15 @@ func NewPerpTrader(cfg TraderConfig) *PerpTrader {
 	if cfg.DefaultLeverage <= 0 {
 		cfg.DefaultLeverage = 5
 	}
+	if cfg.MaxLeverage <= 0 {
+		cfg.MaxLeverage = cfg.DefaultLeverage
+	}
+	if cfg.MaxLeverage > ExchangeMaxLeverage {
+		cfg.MaxLeverage = ExchangeMaxLeverage
+	}
+	if cfg.DefaultLeverage > cfg.MaxLeverage {
+		cfg.DefaultLeverage = cfg.MaxLeverage
+	}
 	if cfg.MaxPositions <= 0 {
 		cfg.MaxPositions = 5
 	}
@@ -132,6 +147,7 @@ func NewPerpTrader(cfg TraderConfig) *PerpTrader {
 		vault:           cfg.Vault,
 		memEngine:       cfg.MemEngine,
 		defaultLeverage: cfg.DefaultLeverage,
+		maxLeverage:     cfg.MaxLeverage,
 		maxPositions:    cfg.MaxPositions,
 		maxPositionPct:  cfg.MaxPositionPct,
 		minNotional:     cfg.MinNotional,
@@ -140,6 +156,92 @@ func NewPerpTrader(cfg TraderConfig) *PerpTrader {
 		dryRun:          cfg.DryRun,
 		activePositions: make(map[string]*ManagedPosition),
 	}
+}
+
+// MinSignalConfidence is the minimum confidence a signal needs to trade.
+const MinSignalConfidence = 0.60
+
+// ExchangeMaxLeverage is Aster's hard ceiling; operator config is clamped to it.
+const ExchangeMaxLeverage = 125
+
+func isFinite(f float64) bool { return !math.IsNaN(f) && !math.IsInf(f, 0) }
+
+// validateSignalNumbers rejects NaN/Inf in any numeric signal field. Every
+// comparison against NaN is false, so without this a NaN confidence would
+// slip past the `< MinSignalConfidence` gate.
+func validateSignalNumbers(s TradeSignal) error {
+	fields := []struct {
+		name string
+		v    float64
+	}{
+		{"confidence", s.Confidence},
+		{"size_pct", s.SizePct},
+		{"entry_price", s.EntryPrice},
+		{"stop_loss", s.StopLoss},
+		{"take_profit", s.TakeProfit},
+	}
+	for _, f := range fields {
+		if !isFinite(f.v) {
+			return fmt.Errorf("invalid %s: must be a finite number", f.name)
+		}
+	}
+	if s.Confidence < 0 || s.Confidence > 1 {
+		return fmt.Errorf("invalid confidence %.4f: must be between 0 and 1", s.Confidence)
+	}
+	return nil
+}
+
+// resolveSizePct returns the signal's size override when it is within
+// (0, maxPositionPct], otherwise maxPositionPct.
+func (t *PerpTrader) resolveSizePct(s TradeSignal) float64 {
+	if s.SizePct > 0 && s.SizePct <= t.maxPositionPct {
+		return s.SizePct
+	}
+	return t.maxPositionPct
+}
+
+// resolveLeverage clamps a signal-requested leverage to the operator max.
+// Zero/negative means "not set" and uses the default.
+func (t *PerpTrader) resolveLeverage(s TradeSignal) int {
+	if s.Leverage <= 0 {
+		return t.defaultLeverage
+	}
+	if s.Leverage > t.maxLeverage {
+		return t.maxLeverage
+	}
+	return s.Leverage
+}
+
+// preTradeGate runs the checks that need no exchange data. Caller holds t.mu.
+func (t *PerpTrader) preTradeGate(signal TradeSignal) error {
+	if err := validateSignalNumbers(signal); err != nil {
+		return err
+	}
+	if signal.Confidence < MinSignalConfidence {
+		return fmt.Errorf("confidence %.2f below 0.60 threshold", signal.Confidence)
+	}
+	if len(t.activePositions) >= t.maxPositions {
+		return fmt.Errorf("max positions reached (%d)", t.maxPositions)
+	}
+	if _, exists := t.activePositions[signal.Symbol]; exists {
+		return fmt.Errorf("already has position in %s", signal.Symbol)
+	}
+	return nil
+}
+
+// sizePosition computes notional = balance * sizePct * leverage and enforces
+// the minimum notional. Pure; mirrored by the Lean spec `executeSignal`.
+func (t *PerpTrader) sizePosition(signal TradeSignal, availableBalance float64) (sizePct float64, leverage int, notional float64, err error) {
+	if !isFinite(availableBalance) || availableBalance < 0 {
+		return 0, 0, 0, fmt.Errorf("invalid available balance")
+	}
+	sizePct = t.resolveSizePct(signal)
+	leverage = t.resolveLeverage(signal)
+	notional = availableBalance * sizePct * float64(leverage)
+	if notional < t.minNotional {
+		return sizePct, leverage, notional, fmt.Errorf("notional $%.2f below min $%.2f", notional, t.minNotional)
+	}
+	return sizePct, leverage, notional, nil
 }
 
 // ═══════════════════════════════════════════════════════════════════════
@@ -158,20 +260,8 @@ func (t *PerpTrader) ExecuteSignal(_ context.Context, signal TradeSignal) TradeR
 	}
 
 	// ── Validation ───────────────────────────────────────────────
-	if signal.Confidence < 0.60 {
-		result.Error = fmt.Sprintf("confidence %.2f below 0.60 threshold", signal.Confidence)
-		t.logTrade("REJECTED", signal, result)
-		return result
-	}
-
-	if len(t.activePositions) >= t.maxPositions {
-		result.Error = fmt.Sprintf("max positions reached (%d)", t.maxPositions)
-		t.logTrade("REJECTED", signal, result)
-		return result
-	}
-
-	if _, exists := t.activePositions[signal.Symbol]; exists {
-		result.Error = fmt.Sprintf("already has position in %s", signal.Symbol)
+	if err := t.preTradeGate(signal); err != nil {
+		result.Error = err.Error()
 		t.logTrade("REJECTED", signal, result)
 		return result
 	}
@@ -190,23 +280,13 @@ func (t *PerpTrader) ExecuteSignal(_ context.Context, signal TradeSignal) TradeR
 	}
 
 	markPrice, _ := strconv.ParseFloat(markPrices[0].MarkPrice, 64)
-	if markPrice <= 0 {
+	if !isFinite(markPrice) || markPrice <= 0 {
 		result.Error = "invalid mark price"
 		t.logTrade("ERROR", signal, result)
 		return result
 	}
 
 	// ── Calculate position size ──────────────────────────────────
-	sizePct := t.maxPositionPct
-	if signal.SizePct > 0 && signal.SizePct <= t.maxPositionPct {
-		sizePct = signal.SizePct
-	}
-
-	leverage := t.defaultLeverage
-	if signal.Leverage > 0 && signal.Leverage <= 125 {
-		leverage = signal.Leverage
-	}
-
 	availableBalance, err := t.getAvailableBalance()
 	if err != nil {
 		result.Error = fmt.Sprintf("failed to get balance: %v", err)
@@ -214,14 +294,12 @@ func (t *PerpTrader) ExecuteSignal(_ context.Context, signal TradeSignal) TradeR
 		return result
 	}
 
-	// Position size: available * sizePct * leverage
-	notional := availableBalance * sizePct * float64(leverage)
-	if notional < t.minNotional {
-		result.Error = fmt.Sprintf("notional $%.2f below min $%.2f", notional, t.minNotional)
+	_, leverage, notional, err := t.sizePosition(signal, availableBalance)
+	if err != nil {
+		result.Error = err.Error()
 		t.logTrade("REJECTED", signal, result)
 		return result
 	}
-
 	quantity := notional / markPrice
 
 	// ── Get symbol precision ─────────────────────────────────────
@@ -696,9 +774,9 @@ func (t *PerpTrader) recordToVault(signal TradeSignal, result TradeResult) {
 		t.memEngine.Remember(memory.RememberInput{
 			MemoryType: memory.TypeLearned,
 			Source:     "aster_perp_trade",
-			Topic:     fmt.Sprintf("%s %s trade", signal.Side, signal.Symbol),
-			Asset:     signal.Symbol,
-			Content:   fmt.Sprintf("Executed %s %s at %s (conf=%.2f, lev=%dx). Thesis: %s",
+			Topic:      fmt.Sprintf("%s %s trade", signal.Side, signal.Symbol),
+			Asset:      signal.Symbol,
+			Content: fmt.Sprintf("Executed %s %s at %s (conf=%.2f, lev=%dx). Thesis: %s",
 				signal.Side, signal.Symbol, result.EntryPrice, signal.Confidence, result.Leverage, signal.Thesis),
 			Confidence: signal.Confidence,
 		})

@@ -52,17 +52,17 @@ import (
 	"github.com/x402agent/Solana-Os-Go/pkg/config"
 	"github.com/x402agent/Solana-Os-Go/pkg/cron"
 	"github.com/x402agent/Solana-Os-Go/pkg/delegation"
+	"github.com/x402agent/Solana-Os-Go/pkg/dreaming"
 	e2bpkg "github.com/x402agent/Solana-Os-Go/pkg/e2b"
 	gatewaypkg "github.com/x402agent/Solana-Os-Go/pkg/gateway"
 	"github.com/x402agent/Solana-Os-Go/pkg/honcho"
 	hlpkg "github.com/x402agent/Solana-Os-Go/pkg/hyperliquid"
 	"github.com/x402agent/Solana-Os-Go/pkg/learning"
 	"github.com/x402agent/Solana-Os-Go/pkg/llm"
-	"github.com/x402agent/Solana-Os-Go/pkg/dreaming"
 	"github.com/x402agent/Solana-Os-Go/pkg/memory"
 	"github.com/x402agent/Solana-Os-Go/pkg/onchain"
-	"github.com/x402agent/Solana-Os-Go/pkg/pumplaunch"
 	"github.com/x402agent/Solana-Os-Go/pkg/pumpfun"
+	"github.com/x402agent/Solana-Os-Go/pkg/pumplaunch"
 	"github.com/x402agent/Solana-Os-Go/pkg/research"
 	"github.com/x402agent/Solana-Os-Go/pkg/routing"
 	"github.com/x402agent/Solana-Os-Go/pkg/runtimeenv"
@@ -70,8 +70,8 @@ import (
 	"github.com/x402agent/Solana-Os-Go/pkg/solana"
 	steelpkg "github.com/x402agent/Solana-Os-Go/pkg/steel"
 	storagepkg "github.com/x402agent/Solana-Os-Go/pkg/storage"
-	voicepkg "github.com/x402agent/Solana-Os-Go/pkg/voice"
 	"github.com/x402agent/Solana-Os-Go/pkg/tamagochi"
+	voicepkg "github.com/x402agent/Solana-Os-Go/pkg/voice"
 	mawdx402 "github.com/x402agent/Solana-Os-Go/pkg/x402"
 )
 
@@ -7644,6 +7644,38 @@ func (d *Daemon) asterIncomeResponse(args []string) string {
 	return strings.TrimSpace(b.String())
 }
 
+// parseAsterOpenNumbers parses the optional `[size_pct] [confidence] [thesis]`
+// tail of /aster_open. strconv.ParseFloat accepts "NaN" and "Inf", which would
+// slip past every `<`/`>` gate downstream, so non-finite values are rejected.
+func parseAsterOpenNumbers(rest []string) (sizePct, confidence float64, thesis string, err error) {
+	sizePct = 0.10
+	confidence = 0.70
+	idx := 0
+	if len(rest) > idx {
+		if v, perr := strconv.ParseFloat(rest[idx], 64); perr == nil {
+			if math.IsNaN(v) || math.IsInf(v, 0) {
+				return 0, 0, "", fmt.Errorf("size_pct must be a finite number")
+			}
+			sizePct = v
+			idx++
+		}
+	}
+	if len(rest) > idx {
+		if v, perr := strconv.ParseFloat(rest[idx], 64); perr == nil {
+			if math.IsNaN(v) || math.IsInf(v, 0) {
+				return 0, 0, "", fmt.Errorf("confidence must be a finite number")
+			}
+			confidence = v
+			idx++
+		}
+	}
+	thesis = "telegram manual trade"
+	if len(rest) > idx {
+		thesis = strings.Join(rest[idx:], " ")
+	}
+	return sizePct, confidence, thesis, nil
+}
+
 func (d *Daemon) asterOpenResponse(args []string) string {
 	trader, err := d.newAsterTrader()
 	if err != nil {
@@ -7662,24 +7694,9 @@ func (d *Daemon) asterOpenResponse(args []string) string {
 		return "Second arg must be `buy` or `sell`."
 	}
 
-	sizePct := 0.10
-	confidence := 0.70
-	restIdx := 2
-	if len(args) > 2 {
-		if v, err := strconv.ParseFloat(args[2], 64); err == nil {
-			sizePct = v
-			restIdx = 3
-		}
-	}
-	if len(args) > restIdx {
-		if v, err := strconv.ParseFloat(args[restIdx], 64); err == nil {
-			confidence = v
-			restIdx++
-		}
-	}
-	thesis := "telegram manual trade"
-	if len(args) > restIdx {
-		thesis = strings.Join(args[restIdx:], " ")
+	sizePct, confidence, thesis, argErr := parseAsterOpenNumbers(args[2:])
+	if argErr != nil {
+		return fmt.Sprintf("❌ Aster trade rejected for `%s`: %s", symbol, argErr.Error())
 	}
 
 	result := trader.ExecuteSignal(d.ctx, asterpkg.TradeSignal{
@@ -7741,6 +7758,7 @@ func (d *Daemon) newAsterTrader() (*asterpkg.PerpTrader, error) {
 	return asterpkg.NewPerpTrader(asterpkg.TraderConfig{
 		Client:          d.aster,
 		DefaultLeverage: 5,
+		MaxLeverage:     d.cfg.Strategy.MaxLeverage,
 		MaxPositions:    maxInt(1, d.cfg.OODA.MaxPositions),
 		MaxPositionPct:  maxFloat(0.01, d.cfg.Strategy.PositionSizePct),
 		MinNotional:     5.0,

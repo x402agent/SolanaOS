@@ -31,8 +31,8 @@ type Bus interface {
 type Device interface {
 	Read(reg byte, buf []byte) error
 	Write(reg byte, data []byte) error
-	ReadByte(reg byte) (byte, error)
-	WriteByte(reg byte, val byte) error
+	ReadReg8(reg byte) (byte, error)
+	WriteReg8(reg byte, val byte) error
 	ReadWord(reg byte) (uint16, error)
 	WriteWord(reg byte, val uint16) error
 	Close() error
@@ -71,8 +71,8 @@ type Platform struct {
 
 // Event represents a hardware sensor event routed to the agent.
 type Event struct {
-	Source    string    // "distance", "motion", "thermo", "button", "knob"
-	Type      string    // "value", "threshold", "press", "release", "rotate"
+	Source    string // "distance", "motion", "thermo", "button", "knob"
+	Type      string // "value", "threshold", "press", "release", "rotate"
 	Value     float64
 	RawBytes  []byte
 	Timestamp time.Time

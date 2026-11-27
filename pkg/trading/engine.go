@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"io"
 	"log/slog"
+	"math"
 	"net/http"
 	"time"
 
@@ -48,27 +49,27 @@ type Position struct {
 
 // OrderRequest is a unified order request across exchanges.
 type OrderRequest struct {
-	Symbol    string    `json:"symbol"`
-	Side      Side      `json:"side"`
-	Size      float64   `json:"size"`
-	OrderType OrderType `json:"order_type"`
-	Price     float64   `json:"price,omitempty"` // for limit orders
-	Leverage  float64   `json:"leverage"`
-	StopLoss  float64   `json:"stop_loss,omitempty"`
-	TakeProfit float64  `json:"take_profit,omitempty"`
-	Reduce    bool      `json:"reduce_only,omitempty"`
+	Symbol     string    `json:"symbol"`
+	Side       Side      `json:"side"`
+	Size       float64   `json:"size"`
+	OrderType  OrderType `json:"order_type"`
+	Price      float64   `json:"price,omitempty"` // for limit orders
+	Leverage   float64   `json:"leverage"`
+	StopLoss   float64   `json:"stop_loss,omitempty"`
+	TakeProfit float64   `json:"take_profit,omitempty"`
+	Reduce     bool      `json:"reduce_only,omitempty"`
 }
 
 // OrderResult captures the outcome of an order.
 type OrderResult struct {
-	OrderID    string    `json:"order_id"`
-	Symbol     string    `json:"symbol"`
-	Side       Side      `json:"side"`
-	Size       float64   `json:"size"`
-	Price      float64   `json:"price"`
-	Status     string    `json:"status"`
-	Exchange   string    `json:"exchange"`
-	Timestamp  time.Time `json:"timestamp"`
+	OrderID   string    `json:"order_id"`
+	Symbol    string    `json:"symbol"`
+	Side      Side      `json:"side"`
+	Size      float64   `json:"size"`
+	Price     float64   `json:"price"`
+	Status    string    `json:"status"`
+	Exchange  string    `json:"exchange"`
+	Timestamp time.Time `json:"timestamp"`
 }
 
 // AccountInfo holds balance and margin information.
@@ -164,12 +165,12 @@ func (h *HyperliquidClient) GetPositions(ctx context.Context) ([]Position, error
 	var resp struct {
 		AssetPositions []struct {
 			Position struct {
-				Coin           string `json:"coin"`
-				Szi            string `json:"szi"`
-				EntryPx        string `json:"entryPx"`
-				PositionValue  string `json:"positionValue"`
-				UnrealizedPnl  string `json:"unrealizedPnl"`
-				Leverage       struct {
+				Coin          string `json:"coin"`
+				Szi           string `json:"szi"`
+				EntryPx       string `json:"entryPx"`
+				PositionValue string `json:"positionValue"`
+				UnrealizedPnl string `json:"unrealizedPnl"`
+				Leverage      struct {
 					Value string `json:"value"`
 				} `json:"leverage"`
 				LiquidationPx string `json:"liquidationPx"`
@@ -255,9 +256,9 @@ func (h *HyperliquidClient) ClosePosition(ctx context.Context, symbol string) (*
 func (h *HyperliquidClient) GetCandles(ctx context.Context, symbol string, interval string, limit int) ([]Candle, error) {
 	var resp [][]any
 	err := h.infoPost(ctx, map[string]any{
-		"type":     "candleSnapshot",
-		"coin":     symbol,
-		"interval": interval,
+		"type":      "candleSnapshot",
+		"coin":      symbol,
+		"interval":  interval,
 		"startTime": time.Now().Add(-24 * time.Hour).UnixMilli(),
 	}, &resp)
 	if err != nil {
@@ -354,14 +355,14 @@ func (a *AsterClient) GetAccount(ctx context.Context) (*AccountInfo, error) {
 
 func (a *AsterClient) GetPositions(ctx context.Context) ([]Position, error) {
 	var resp []struct {
-		Symbol       string  `json:"symbol"`
-		Side         string  `json:"positionSide"`
-		Amount       float64 `json:"positionAmount"`
-		EntryPrice   float64 `json:"entryPrice"`
-		MarkPrice    float64 `json:"markPrice"`
-		Unrealized   float64 `json:"unrealizedProfit"`
-		Leverage     float64 `json:"leverage"`
-		LiqPrice     float64 `json:"liquidationPrice"`
+		Symbol     string  `json:"symbol"`
+		Side       string  `json:"positionSide"`
+		Amount     float64 `json:"positionAmount"`
+		EntryPrice float64 `json:"entryPrice"`
+		MarkPrice  float64 `json:"markPrice"`
+		Unrealized float64 `json:"unrealizedProfit"`
+		Leverage   float64 `json:"leverage"`
+		LiqPrice   float64 `json:"liquidationPrice"`
 	}
 	if err := a.signedGet(ctx, "/api/v1/positions", &resp); err != nil {
 		return nil, fmt.Errorf("aster_get_positions: %w", err)
@@ -502,19 +503,88 @@ func (te *TradingEngine) AllPositions(ctx context.Context) ([]Position, error) {
 	return all, nil
 }
 
-// ExecuteOrder places an order with risk validation and memory persistence.
-func (te *TradingEngine) ExecuteOrder(ctx context.Context, cs *memory.ChannelSession, exchange string, req OrderRequest) (*OrderResult, error) {
-	// Validate risk limits
-	if req.Size*req.Price > te.limits.MaxPositionUSD {
-		return nil, fmt.Errorf("position size $%.2f exceeds max $%.2f", req.Size*req.Price, te.limits.MaxPositionUSD)
+// PriceQuoter is optionally implemented by exchanges that can quote a mark
+// price; it is used to size-check market orders that carry no price.
+type PriceQuoter interface {
+	MarkPrice(ctx context.Context, symbol string) (float64, error)
+}
+
+func finite(f float64) bool { return !math.IsNaN(f) && !math.IsInf(f, 0) }
+
+// referencePrice returns the price used for the notional cap: the order's own
+// price if set, else the exchange mark price, else the last 1m candle close.
+func referencePrice(ctx context.Context, ex Exchange, req OrderRequest) (float64, error) {
+	if req.Price > 0 {
+		return req.Price, nil
+	}
+	if req.OrderType == OrderLimit {
+		return 0, fmt.Errorf("limit order requires a positive price")
+	}
+	if q, ok := ex.(PriceQuoter); ok {
+		if p, err := q.MarkPrice(ctx, req.Symbol); err == nil && finite(p) && p > 0 {
+			return p, nil
+		}
+	}
+	candles, err := ex.GetCandles(ctx, req.Symbol, "1m", 1)
+	if err == nil && len(candles) > 0 {
+		if p := candles[len(candles)-1].Close; finite(p) && p > 0 {
+			return p, nil
+		}
+	}
+	return 0, fmt.Errorf("market order rejected: no reference price available for %s to enforce the position size cap", req.Symbol)
+}
+
+// validateOrder enforces RiskLimits. Every comparison with NaN is false, so
+// non-finite inputs are rejected explicitly before any cap is checked.
+func (te *TradingEngine) validateOrder(ctx context.Context, ex Exchange, req OrderRequest) error {
+	for _, f := range []struct {
+		name string
+		v    float64
+	}{{"size", req.Size}, {"price", req.Price}, {"leverage", req.Leverage}, {"stop_loss", req.StopLoss}, {"take_profit", req.TakeProfit}} {
+		if !finite(f.v) {
+			return fmt.Errorf("invalid %s: must be a finite number", f.name)
+		}
+	}
+	if req.Size <= 0 {
+		return fmt.Errorf("invalid size %.8f: must be positive", req.Size)
+	}
+	if req.Price < 0 {
+		return fmt.Errorf("invalid price %.8f: must not be negative", req.Price)
+	}
+	if req.Leverage <= 0 {
+		return fmt.Errorf("invalid leverage %.2f: must be positive", req.Leverage)
+	}
+	if req.StopLoss < 0 || req.TakeProfit < 0 {
+		return fmt.Errorf("stop_loss/take_profit must not be negative")
+	}
+	if !finite(te.limits.MaxPositionUSD) || te.limits.MaxPositionUSD <= 0 ||
+		!finite(te.limits.MaxLeverage) || te.limits.MaxLeverage <= 0 {
+		return fmt.Errorf("risk limits not configured: refusing to trade")
 	}
 	if req.Leverage > te.limits.MaxLeverage {
-		return nil, fmt.Errorf("leverage %.1fx exceeds max %.1fx", req.Leverage, te.limits.MaxLeverage)
+		return fmt.Errorf("leverage %.1fx exceeds max %.1fx", req.Leverage, te.limits.MaxLeverage)
 	}
+	price, err := referencePrice(ctx, ex, req)
+	if err != nil {
+		return err
+	}
+	notional := req.Size * price
+	if !finite(notional) || notional > te.limits.MaxPositionUSD {
+		return fmt.Errorf("position size $%.2f exceeds max $%.2f", notional, te.limits.MaxPositionUSD)
+	}
+	return nil
+}
 
+// ExecuteOrder places an order with risk validation and memory persistence.
+func (te *TradingEngine) ExecuteOrder(ctx context.Context, cs *memory.ChannelSession, exchange string, req OrderRequest) (*OrderResult, error) {
 	ex, ok := te.exchanges[exchange]
 	if !ok {
 		return nil, fmt.Errorf("exchange %s not registered", exchange)
+	}
+
+	// Validate risk limits (fail closed).
+	if err := te.validateOrder(ctx, ex, req); err != nil {
+		return nil, err
 	}
 
 	// Execute
