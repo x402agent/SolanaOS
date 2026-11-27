@@ -2030,9 +2030,7 @@ Worker name: `pumpfun-mcp-server` — cron: `*/15 * * * *`
 
 The Clawd Bot Go runtime (🦞 Clawd mascot, Musebook provider) lives in
 [`clawdbot/`](clawdbot/README.md) as its own Go module. It was brought in from
-[Solizardking/clawdb0t](https://github.com/Solizardking/clawdb0t), plus the
-`zkomni` surface from
-[Solizardking/clawd-bot-zero](https://github.com/Solizardking/clawd-bot-zero).
+[Solizardking/clawdb0t](https://github.com/Solizardking/clawdb0t).
 
 ```bash
 make clawdbot-build   # clawdbot/build/clawdbot + clawdbot-tui

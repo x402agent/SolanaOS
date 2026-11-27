@@ -12,7 +12,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
-	"os/exec"
 	"strings"
 	"time"
 
@@ -21,21 +20,9 @@ import (
 	"github.com/x402agent/SolanaOS/clawdbot/pkg/godmode"
 	"github.com/x402agent/SolanaOS/clawdbot/pkg/tools"
 	"github.com/x402agent/SolanaOS/clawdbot/pkg/zero"
-	"github.com/x402agent/SolanaOS/clawdbot/pkg/zkomni"
 )
 
 const zeroSecretEnv = "ZERO_SECRET_HEX"
-
-func zkomniShouldAnimate() bool {
-	if os.Getenv("CI") != "" || os.Getenv("NO_COLOR") != "" {
-		return false
-	}
-	st, err := os.Stdout.Stat()
-	if err != nil {
-		return false
-	}
-	return st.Mode()&os.ModeCharDevice != 0
-}
 
 func NewZeroCommand() *cobra.Command {
 	cmd := &cobra.Command{
@@ -54,21 +41,10 @@ func NewZeroCommand() *cobra.Command {
 		Example: `  clawdbot zero run "explain pkg/zero/loop.go"
   clawdbot zero run --god --attest att.json "audit the OODA loop"
   clawdbot zero ask "god mode: refactor the config loader"
-  clawdbot zero ask "zk-omni message attest hello"
-  clawdbot zero zkomni inspect
-  clawdbot zero zkomni ask "derive a nullifier for context foo"
-  clawdbot zero zkomni plan --action attest --memo demo
-  clawdbot zero zkomni oneshot --action publish_attestation
   clawdbot zero verify transcript.jsonl
   clawdbot zero nullifier "zero/run/v1"`,
 	}
-	cmd.AddCommand(
-		newZeroRunCommand(),
-		newZeroAskCommand(),
-		newZeroVerifyCommand(),
-		newZeroNullifierCommand(),
-		newZeroZkOmniCommand(),
-	)
+	cmd.AddCommand(newZeroRunCommand(), newZeroAskCommand(), newZeroVerifyCommand(), newZeroNullifierCommand())
 	return cmd
 }
 
@@ -273,24 +249,10 @@ func newZeroAskCommand() *cobra.Command {
 					ctxTag = "zero/run/v1"
 				}
 				return zeroPrintNullifier(ctxTag)
-			case zero.IntentZkOmni:
-				// One-shot friendly: plan (+ optional deliver via robinhood-agents)
-				action := "zk_message"
-				if strings.Contains(strings.ToLower(utterance), "attest") {
-					action = "publish_attestation"
-				} else if strings.Contains(strings.ToLower(utterance), "commit") {
-					action = "commit_state"
-				}
-				memo := route.Args["context"]
-				if memo == "" {
-					memo = "zero-ask"
-				}
-				return zeroZkOmniPlan(action, memo, "robinhood-to-solana", true)
 			case zero.IntentAttest:
 				return fmt.Errorf("attest: run with attestation instead — clawdbot zero run --attest att.json %q", route.Prompt)
 			case zero.IntentInspect:
 				fmt.Println("zero engine: flat scheduler, spawn via queue, transcript hash chain sha256, nullifier = sha256(secret‖context‖nonce)")
-				fmt.Println("zk-omni: clawdbot zero zkomni plan|oneshot — RH↔Solana msgType 4 Ed25519 PoK (pkg/zkomni)")
 				return nil
 			default:
 				return cmd.Root().Help()
@@ -355,182 +317,6 @@ func zeroPrintNullifier(contextTag string) error {
 	}
 	fmt.Printf("0x%s\n", hex.EncodeToString(null[:]))
 	return nil
-}
-
-// ── zero zkomni — pkg/zkomni (zk-shark-agent + msgType 4) ────────────
-
-func newZeroZkOmniCommand() *cobra.Command {
-	cmd := &cobra.Command{
-		Use:   "zkomni",
-		Short: "ZK omnichain + zk-shark-agent (pkg/zkomni)",
-		Long: `Go package pkg/zkomni owns two surfaces:
-
-  • zk-shark-agent sidecar under ./zk-primitives/agent
-  • RH ↔ Solana msgType-4 Ed25519 PoK (CheshireZkOmniMessenger)
-
-  clawdbot zero zkomni inspect
-  clawdbot zero zkomni ask "derive a nullifier for context foo"
-  clawdbot zero zkomni plan --action attest --memo demo
-  clawdbot zero zkomni oneshot --action publish_attestation
-  clawdbot zero ask "zk-omni message attest demo"`,
-	}
-	cmd.AddCommand(
-		newZeroZkOmniInspectCommand(),
-		newZeroZkOmniAskCommand(),
-		newZeroZkOmniPlanCommand(),
-		newZeroZkOmniOneshotCommand(),
-	)
-	return cmd
-}
-
-func newZeroZkOmniInspectCommand() *cobra.Command {
-	var jsonOut bool
-	cmd := &cobra.Command{
-		Use:   "inspect",
-		Short: "Show the local zk-shark-agent surface (no node, no RPC)",
-		RunE: func(cmd *cobra.Command, args []string) error {
-			surface, err := zkomni.LoadSurface(zkomni.DefaultDir())
-			if err != nil {
-				return err
-			}
-			if jsonOut {
-				raw, err := json.MarshalIndent(surface, "", "  ")
-				if err != nil {
-					return err
-				}
-				fmt.Println(string(raw))
-				return nil
-			}
-			fmt.Print(colorTeal)
-			if zkomniShouldAnimate() {
-				_ = zkomni.Play(os.Stdout, 3, 80*time.Millisecond)
-			} else {
-				_ = zkomni.WriteBanner(os.Stdout)
-			}
-			fmt.Print(colorReset)
-			fmt.Printf("%s%s%s  %s\n", colorGreen, surface.AgentID, colorReset, surface.AgentPackageName)
-			fmt.Printf("  root:     %s\n", surface.Root)
-			fmt.Printf("  agent:    %s\n", surface.AgentDir)
-			fmt.Printf("  binary:   %s\n", surface.AgentBinary)
-			fmt.Printf("  complete: %v\n", surface.Complete())
-			if len(surface.Missing) > 0 {
-				fmt.Printf("  missing:  %s\n", strings.Join(surface.Missing, ", "))
-			}
-			return nil
-		},
-	}
-	cmd.Flags().BoolVar(&jsonOut, "json", false, "Print JSON")
-	return cmd
-}
-
-func newZeroZkOmniAskCommand() *cobra.Command {
-	cmd := &cobra.Command{
-		Use:   "ask <utterance>",
-		Short: "Route natural language to a zk-shark-agent intent (offline)",
-		Args:  cobra.MinimumNArgs(1),
-		RunE: func(cmd *cobra.Command, args []string) error {
-			route := zkomni.RouteIntent(strings.Join(args, " "))
-			raw, err := json.MarshalIndent(route, "", "  ")
-			if err != nil {
-				return err
-			}
-			fmt.Println(string(raw))
-			return nil
-		},
-	}
-	return cmd
-}
-
-func newZeroZkOmniPlanCommand() *cobra.Command {
-	var action, memo, direction string
-	cmd := &cobra.Command{
-		Use:   "plan",
-		Short: "Build a ZK omni message plan (Ed25519 PoK, no network)",
-		RunE: func(cmd *cobra.Command, args []string) error {
-			return zeroZkOmniPlan(action, memo, direction, true)
-		},
-	}
-	cmd.Flags().StringVar(&action, "action", "zk_message", "Action verb (≤64 chars)")
-	cmd.Flags().StringVar(&memo, "memo", "", "Memo (≤200 chars)")
-	cmd.Flags().StringVar(&direction, "direction", "robinhood-to-solana", "robinhood-to-solana|solana-to-robinhood")
-	return cmd
-}
-
-func newZeroZkOmniOneshotCommand() *cobra.Command {
-	var action, memo, direction string
-	cmd := &cobra.Command{
-		Use:   "oneshot",
-		Short: "Plan + try robinhood-agents relayer oneshot (falls back to plan-only)",
-		RunE: func(cmd *cobra.Command, args []string) error {
-			if err := zeroZkOmniPlan(action, memo, direction, true); err != nil {
-				return err
-			}
-			// Best-effort deliver via Node package when available.
-			return zeroZkOmniTryRelayer(action, memo, direction)
-		},
-	}
-	cmd.Flags().StringVar(&action, "action", "publish_attestation", "Action verb")
-	cmd.Flags().StringVar(&memo, "memo", "zero-oneshot", "Memo")
-	cmd.Flags().StringVar(&direction, "direction", "robinhood-to-solana", "Direction")
-	return cmd
-}
-
-func zeroZkOmniPlan(action, memo, direction string, printJSON bool) error {
-	secret, err := zeroSecret()
-	if err != nil {
-		return err
-	}
-	exp := uint64(time.Now().Add(time.Hour).Unix())
-	plan, err := zkomni.PlanMessage(secret, direction, action, memo, "", "", exp)
-	if err != nil {
-		return err
-	}
-	if !printJSON {
-		return nil
-	}
-	raw, _ := json.MarshalIndent(plan, "", "  ")
-	fmt.Println(string(raw))
-	fmt.Printf("%s✓ ZK proof verified locally (scheme=%s nullifier=%s…)%s\n",
-		colorGreen, plan.Scheme, plan.Message.Nullifier[:18], colorReset)
-	return nil
-}
-
-// zeroZkOmniTryRelayer shells to robinhood-agents when installed; never fails
-// the plan if the Node surface is missing (user-friendly offline path).
-func zeroZkOmniTryRelayer(action, memo, direction string) error {
-	// Prefer PATH binary, then npx from a known monorepo checkout.
-	candidates := [][]string{
-		{"robinhood-agents", "zk-omni-oneshot", "--action", action, "--memo", memo, "--direction", direction},
-		{"npx", "--yes", "robinhood-agents", "zk-omni-oneshot", "--action", action, "--memo", memo, "--direction", direction},
-	}
-	// Also try cheshire-terminal monorepo path if present.
-	if home := os.Getenv("HOME"); home != "" {
-		cli := home + "/cheshire-terminal/robinhood-agents/src/cli.js"
-		if _, err := os.Stat(cli); err == nil {
-			candidates = append([][]string{
-				{"node", cli, "zk-omni-oneshot", "--action", action, "--memo", memo, "--direction", direction},
-			}, candidates...)
-		}
-	}
-	for _, argv := range candidates {
-		cmd := execCommand(argv[0], argv[1:]...)
-		cmd.Stdout = os.Stdout
-		cmd.Stderr = os.Stderr
-		cmd.Env = append(os.Environ(), "ZK_OMNI_SIMULATE=1")
-		if err := cmd.Run(); err == nil {
-			fmt.Printf("%s✓ relayer oneshot via %s%s\n", colorGreen, argv[0], colorReset)
-			return nil
-		}
-	}
-	fmt.Printf("%s· plan-only (install robinhood-agents for journaled deliver)%s\n", colorDim, colorReset)
-	fmt.Printf("%s  tip: cd cheshire-terminal/robinhood-agents && npm run zk-omni:oneshot -- --action %s%s\n",
-		colorDim, action, colorReset)
-	return nil
-}
-
-// execCommand is a thin wrapper so tests can stub if needed.
-var execCommand = func(name string, arg ...string) *exec.Cmd {
-	return exec.Command(name, arg...)
 }
 
 // zeroSecret reads hex secret material from ZERO_SECRET_HEX, or mints an

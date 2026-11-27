@@ -292,9 +292,6 @@ func TestRouteIntent(t *testing.T) {
 		{"help", IntentHelp},
 		{"", IntentHelp},
 		{"summarize SOL price action today", IntentRun},
-		{"zk-omni message attest demo", IntentZkOmni},
-		{"send cross-chain message robinhood to solana", IntentZkOmni},
-		{"plan an omnichain message", IntentZkOmni},
 	}
 	for _, c := range cases {
 		r := RouteIntent(c.in)

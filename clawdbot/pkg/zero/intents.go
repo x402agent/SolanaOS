@@ -18,7 +18,6 @@ const (
 	IntentAttest    Intent = "attest"    // build a clawd-zk attestation
 	IntentVerify    Intent = "verify"    // verify a transcript / commitment
 	IntentNullifier Intent = "nullifier" // derive a nullifier
-	IntentZkOmni    Intent = "zk-omni"   // RH↔Solana ZK omnichain message (msgType 4)
 	IntentGodMode   Intent = "god-mode"  // race models (ZK God Mode)
 	IntentInspect   Intent = "inspect"   // show config / status
 	IntentHelp      Intent = "help"      // usage
@@ -47,9 +46,6 @@ var (
 		conf   float64
 	}{
 		{regexp.MustCompile(`(?i)\b(god\s*-?\s*mode|race\s+(the\s+)?models?|multi-?model)\b`), IntentGodMode, 0.9},
-		// ZK omni before plain attest/nullifier so "publish attestation omni" and
-		// "zk-omni message" route to the cross-chain messenger.
-		{regexp.MustCompile(`(?i)\b(zk[-\s]?omni|omnichain|cross[-\s]?chain\s+message|robinhood\s*(↔|->|to)\s*solana|solana\s*(↔|->|to)\s*robinhood|sendZkOmni)\b`), IntentZkOmni, 0.92},
 		{regexp.MustCompile(`(?i)\b(attest(ation)?|publish)\b`), IntentAttest, 0.9},
 		{regexp.MustCompile(`(?i)\b(verify|check|validate|replay)\b`), IntentVerify, 0.85},
 		{regexp.MustCompile(`(?i)\b(nullifier|derive|compute[_\s]nullifier)\b`), IntentNullifier, 0.9},

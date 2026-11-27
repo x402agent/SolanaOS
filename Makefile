@@ -446,7 +446,7 @@ help:
 	@echo "  clean               Remove build/ artifacts"
 
 # ── Clawd Bot runtime (nested Go module in ./clawdbot) ────────────────
-# Integrated from Solizardking/clawdb0t + Solizardking/clawd-bot-zero.
+# Integrated from Solizardking/clawdb0t.
 # Separate go.mod so its toolchain/deps never touch the root module.
 CLAWDBOT_DIR     := clawdbot
 CLAWDBOT_PKG_VER := github.com/x402agent/SolanaOS/clawdbot/pkg/config
