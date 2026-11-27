@@ -6,7 +6,7 @@
   "type": "module",
   "bin": {
     "solanaos": "bin/solanaos.mjs",
-    "solanaos-cli": "bin/solanaos.mjs",
+    "solanaos-cli": "bin/solanaos.mjs"
   },
   "files": [
     "bin",

@@ -8,13 +8,13 @@
     "secrets": "echo 'Run: wrangler secret put VAULT_PASSPHRASE && wrangler secret put WALLET_API_KEY && wrangler secret put SOLANA_RPC_URL'"
   },
   "dependencies": {
-    "hono": "^4.12.12",
+    "hono": "^4.13.23",
     "tweetnacl": "^1.0.3",
     "bs58": "^6.0.0"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^4.20250301.0",
-    "typescript": "^5.7.0",
-    "wrangler": "^4.0.0"
+    "@cloudflare/workers-types": "^4.20260702.1",
+    "typescript": "^5.9.3",
+    "wrangler": "^4.168.0"
   }
 }
