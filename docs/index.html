@@ -473,11 +473,11 @@
         </div>
         <div class="install-body">
           <div><span class="comment"># One-shot install</span></div>
-          <div><span class="cmd">curl -fsSL https://raw.githubusercontent.com/x402agent/Solana-Os-Go/newnew/install.sh |
+          <div><span class="cmd">curl -fsSL https://raw.githubusercontent.com/x402agent/SolanaOS/main/install.sh |
               bash</span></div>
           <div></div>
           <div><span class="comment"># With web console</span></div>
-          <div><span class="cmd">curl -fsSL https://raw.githubusercontent.com/x402agent/Solana-Os-Go/newnew/install.sh |
+          <div><span class="cmd">curl -fsSL https://raw.githubusercontent.com/x402agent/SolanaOS/main/install.sh |
               bash -s -- --with-web</span></div>
         </div>
       </div>
@@ -597,8 +597,8 @@
       </p>
       <p style="color:var(--dim);font-size:0.9rem">
         Source code →
-        <a href="https://github.com/x402agent/Solana-Os-Go" target="_blank"
-          rel="noopener">github.com/x402agent/Solana-Os-Go</a>
+        <a href="https://github.com/x402agent/SolanaOS" target="_blank"
+          rel="noopener">github.com/x402agent/SolanaOS</a>
       </p>
     </div>
   </section>
@@ -618,7 +618,7 @@
 
   <script>
     function copyInstall() {
-      const cmd = 'curl -fsSL https://raw.githubusercontent.com/x402agent/Solana-Os-Go/newnew/install.sh | bash';
+      const cmd = 'curl -fsSL https://raw.githubusercontent.com/x402agent/SolanaOS/main/install.sh | bash';
       navigator.clipboard.writeText(cmd).then(() => {
         const btn = document.getElementById('copyBtn');
         btn.textContent = 'Copied!';

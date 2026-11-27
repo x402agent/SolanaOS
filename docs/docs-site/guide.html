@@ -31,7 +31,7 @@
         <a href="/hardware">Hardware</a>
         <a href="/console">Console</a>
         <a href="/hub">SolanaOS Hub</a>
-        <a href="https://github.com/x402agent/Solana-Os-Go" target="_blank" class="nav-github">
+        <a href="https://github.com/x402agent/SolanaOS" target="_blank" class="nav-github">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
             <path
               d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
@@ -71,7 +71,7 @@
         <span class="guide-link-sep">·</span>
         <a href="https://docs.solanaos.net" class="guide-link">Docs</a>
         <span class="guide-link-sep">·</span>
-        <a href="https://github.com/x402agent/Solana-Os-Go" class="guide-link">GitHub</a>
+        <a href="https://github.com/x402agent/SolanaOS" class="guide-link">GitHub</a>
       </div>
     </div>
   </section>
@@ -148,11 +148,11 @@ npm install -g solanaos-computer
 solanaos install --with-web
 
 <span class="t-dim"># Shell install script</span>
-curl -fsSL https://raw.githubusercontent.com/x402agent/Solana-Os-Go/newnew/install.sh | sh
+curl -fsSL https://raw.githubusercontent.com/x402agent/SolanaOS/main/install.sh | sh
 
 <span class="t-dim"># From source</span>
-git clone https://github.com/x402agent/Solana-Os-Go.git
-cd Solana-Os-Go
+git clone https://github.com/x402agent/SolanaOS.git
+cd SolanaOS
 go build -o solanaos ./cmd/gateway-api</pre></div></div>
 
       <h3 class="guide-h3">Step-by-Step</h3>
@@ -575,7 +575,7 @@ npx @solanaos/nanohub publish ./my-skill \
 ├── <span class="t-green">skills/</span>                 Local skill library
 ├── <span class="t-green">site/</span>                   Landing site (solanaos.net)
 ├── <span class="t-green">ui/</span>                     Standalone web UI (Vite + Lit)
-├── <span class="t-amber">Solana-Os-Go/</span>           <span class="t-dim">Go implementation (SolanaOS runtime)</span>
+├── <span class="t-amber">SolanaOS/</span>           <span class="t-dim">Go implementation (SolanaOS runtime)</span>
 │   ├── pkg/                20+ core packages
 │   ├── chrome-extension/   Chrome extension (MV3)
 │   ├── apps/               macOS + Android apps
@@ -597,7 +597,7 @@ npx @solanaos/nanohub publish ./my-skill \
       <li>Internationalization</li>
       <li>Documentation and tutorials</li>
     </ul>
-    <div class="terminal"><div class="terminal-header"><div class="terminal-dots"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span></div><span class="terminal-title">contribute</span></div><div class="terminal-body"><pre>git clone https://github.com/x402agent/Solana-Os-Go.git
+    <div class="terminal"><div class="terminal-header"><div class="terminal-dots"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span></div><span class="terminal-title">contribute</span></div><div class="terminal-body"><pre>git clone https://github.com/x402agent/SolanaOS.git
 git checkout -b feature/amazing-feature
 make build && make test
 git commit -m 'Add amazing feature'
@@ -617,7 +617,7 @@ git push origin feature/amazing-feature
         <div class="footer-links">
           <a href="https://solanaos.net" target="_blank">Website</a>
           <a href="https://seeker.solanaos.net" target="_blank">Hub</a>
-          <a href="https://github.com/x402agent/Solana-Os-Go" target="_blank">GitHub</a>
+          <a href="https://github.com/x402agent/SolanaOS" target="_blank">GitHub</a>
           <a href="https://x402.org" target="_blank">x402.org</a>
         </div>
         <div class="footer-copy">

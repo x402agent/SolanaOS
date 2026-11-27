@@ -1336,12 +1336,12 @@ func buildSetupCodeResponse(r *http.Request, runtime gatewayRuntimeConfig) setup
 
 func buildSetupDownloadsResponse() setupDownloadsResponse {
 	return setupDownloadsResponse{
-		GitHubRepo:     "https://github.com/x402agent/Solana-Os-Go",
-		GitHubReleases: "https://github.com/x402agent/Solana-Os-Go/releases/latest",
+		GitHubRepo:     "https://github.com/x402agent/SolanaOS",
+		GitHubReleases: "https://github.com/x402agent/SolanaOS/releases/latest",
 		NpmPackage:     "https://www.npmjs.com/package/solanaos-computer",
 		Android: map[string]string{
 			"guide":        "/guide#s19",
-			"releases":     "https://github.com/x402agent/Solana-Os-Go/releases/latest",
+			"releases":     "https://github.com/x402agent/SolanaOS/releases/latest",
 			"buildCommand": "cd apps/android && GRADLE_USER_HOME=\"$PWD/.gradle-user\" ./gradlew :app:assembleDebug",
 			"apkPath":      "apps/android/app/build/outputs/apk/debug/app-debug.apk",
 		},
@@ -1353,8 +1353,8 @@ func buildSetupDownloadsResponse() setupDownloadsResponse {
 		},
 		Runtime: map[string]string{
 			"oneShot":  "npx solanaos-computer@latest install --with-web",
-			"shell":    "curl -fsSL https://raw.githubusercontent.com/x402agent/Solana-Os-Go/main/install.sh | bash -s -- --with-web",
-			"fromRepo": "git clone https://github.com/x402agent/Solana-Os-Go.git && cd Solana-Os-Go && npm install && npm run build",
+			"shell":    "curl -fsSL https://raw.githubusercontent.com/x402agent/SolanaOS/main/install.sh | bash -s -- --with-web",
+			"fromRepo": "git clone https://github.com/x402agent/SolanaOS.git && cd SolanaOS && npm install && npm run build",
 		},
 		Web: map[string]string{
 			"frontendDev": "cd web/frontend && npm run dev",
