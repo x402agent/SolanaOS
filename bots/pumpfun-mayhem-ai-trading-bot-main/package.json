@@ -21,14 +21,14 @@
   "author": "gigi0500",
   "license": "MIT",
   "dependencies": {
-    "@solana/web3.js": "^1.87.6",
-    "express": "^4.18.2",
-    "dotenv": "^16.3.1",
-    "cors": "^2.8.5",
-    "helmet": "^7.1.0",
-    "winston": "^3.11.0",
-    "axios": "^1.6.2",
-    "ws": "^8.14.2",
+    "@solana/web3.js": "^1.99.0",
+    "express": "^4.22.3",
+    "dotenv": "^16.6.1",
+    "cors": "^2.8.6",
+    "helmet": "^7.2.0",
+    "winston": "^3.19.0",
+    "axios": "^1.21.1",
+    "ws": "^8.23.0",
     "bs58": "^5.0.0"
   },
   "devDependencies": {
@@ -48,4 +48,3 @@
     "url": "https://github.com/gigi0500/pumpfun-mayhem-ai-trading-bot.git"
   }
 }
-

@@ -1,7 +1,7 @@
 {
   "name": "solanaos-agent-wallet-mcp",
   "version": "1.0.0",
-  "description": "MCP server for SolanaOS agent wallet — Solana + EVM vault with E2B deployment",
+  "description": "MCP server for SolanaOS agent wallet \u2014 Solana + EVM vault with E2B deployment",
   "type": "module",
   "main": "index.ts",
   "bin": {
@@ -12,11 +12,11 @@
     "build": "npx tsc"
   },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.0.0",
-    "zod": "^3.22.0"
+    "@modelcontextprotocol/sdk": "^1.32.2",
+    "zod": "^3.25.76"
   },
   "devDependencies": {
-    "tsx": "^4.0.0",
-    "typescript": "^5.3.0"
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3"
   }
 }
