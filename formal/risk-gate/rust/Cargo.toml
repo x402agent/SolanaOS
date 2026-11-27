@@ -1,0 +1,7 @@
+[package]
+name = "solanaos-risk-gate"
+version = "0.1.0"
+edition = "2021"
+description = "PoC: Rust port of the pure gating/sizing core of pkg/aster PerpTrader.ExecuteSignal"
+
+[dependencies]

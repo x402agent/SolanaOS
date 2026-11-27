@@ -4,6 +4,7 @@
 package agentwallet
 
 import (
+	"bytes"
 	"crypto/aes"
 	"crypto/cipher"
 	"crypto/ecdsa"
@@ -37,17 +38,22 @@ type WalletEntry struct {
 	ChainID      int       `json:"chain_id"`
 	Address      string    `json:"address"`
 	EncryptedKey string    `json:"encrypted_key"` // AES-256-GCM encrypted private key
-	Nonce        string    `json:"nonce"`          // GCM nonce
+	Nonce        string    `json:"nonce"`         // GCM nonce
 	CreatedAt    time.Time `json:"created_at"`
 	Paused       bool      `json:"paused"`
 }
 
 // Vault manages encrypted wallet storage.
 type Vault struct {
-	mu         sync.RWMutex
-	wallets    map[string]*WalletEntry
-	masterKey  []byte // 32-byte AES key derived from passphrase
-	storePath  string
+	mu        sync.RWMutex
+	wallets   map[string]*WalletEntry
+	masterKey []byte // 32-byte AES key derived from passphrase
+	kdf       kdfHeader
+	storePath string
+	// loadFailed is set when an existing vault file could not be decrypted
+	// (e.g. wrong passphrase). Saves are then refused so the unreadable file
+	// is never overwritten with an empty vault.
+	loadFailed bool
 }
 
 // VaultConfig configures the wallet vault.
@@ -78,18 +84,46 @@ func NewVault(cfg VaultConfig) (*Vault, error) {
 		return nil, fmt.Errorf("create vault dir: %w", err)
 	}
 
-	// Derive 32-byte master key from passphrase via SHA-256
-	hash := sha256.Sum256([]byte(cfg.Passphrase))
-
 	v := &Vault{
 		wallets:   make(map[string]*WalletEntry),
-		masterKey: hash[:],
 		storePath: cfg.StorePath,
 	}
 
+	// Existing vaults keep the KDF recorded in their header (legacy files have
+	// none and stay on SHA-256 until `agent-wallet migrate-kdf` is run). New
+	// vaults use argon2id with a random salt.
+	if raw, err := os.ReadFile(v.vaultFile()); err == nil {
+		var hdr struct {
+			kdfHeader
+		}
+		_ = json.Unmarshal(raw, &hdr)
+		v.kdf = hdr.kdfHeader
+	} else if os.IsNotExist(err) {
+		hdr, err := newKDFHeader()
+		if err != nil {
+			return nil, err
+		}
+		v.kdf = hdr
+	} else {
+		return nil, fmt.Errorf("read vault: %w", err)
+	}
+	key, err := deriveKeyWith(cfg.Passphrase, v.kdf)
+	if err != nil {
+		return nil, fmt.Errorf("derive vault key: %w", err)
+	}
+	v.masterKey = key
+
 	// Load existing wallets
 	if err := v.load(); err != nil {
-		log.Printf("[VAULT] ⚠️  No existing vault data: %v", err)
+		if !os.IsNotExist(err) {
+			v.loadFailed = true
+			log.Printf("[VAULT] ⚠️  Existing vault could not be loaded; refusing to overwrite it: %v", err)
+		} else {
+			log.Printf("[VAULT] ⚠️  No existing vault data: %v", err)
+		}
+	}
+	if v.kdf.isLegacy() && !v.loadFailed && len(v.wallets) > 0 {
+		log.Printf("[VAULT] ℹ️  Vault uses the legacy SHA-256 KDF; run `agent-wallet migrate-kdf` to re-encrypt with argon2id")
 	}
 
 	log.Printf("[VAULT] 🔐 Vault initialized (%d wallets) at %s", len(v.wallets), cfg.StorePath)
@@ -276,7 +310,18 @@ func (v *Vault) save() error {
 	return v.saveLocked()
 }
 
+// vaultEnvelope is the on-disk format. kdfHeader fields are omitempty, so a
+// legacy vault is written exactly as before: {"data":…,"nonce":…}.
+type vaultEnvelope struct {
+	kdfHeader
+	Data  string `json:"data"`
+	Nonce string `json:"nonce"`
+}
+
 func (v *Vault) saveLocked() error {
+	if v.loadFailed {
+		return fmt.Errorf("vault file exists but could not be decrypted; refusing to overwrite it")
+	}
 	data, err := json.MarshalIndent(v.wallets, "", "  ")
 	if err != nil {
 		return fmt.Errorf("marshal vault: %w", err)
@@ -288,13 +333,16 @@ func (v *Vault) saveLocked() error {
 		return fmt.Errorf("encrypt vault: %w", err)
 	}
 
-	envelope := map[string]string{
-		"data":  hex.EncodeToString(ciphertext),
-		"nonce": hex.EncodeToString(nonce),
+	envData, err := json.Marshal(vaultEnvelope{
+		kdfHeader: v.kdf,
+		Data:      hex.EncodeToString(ciphertext),
+		Nonce:     hex.EncodeToString(nonce),
+	})
+	if err != nil {
+		return fmt.Errorf("marshal vault envelope: %w", err)
 	}
-	envData, _ := json.Marshal(envelope)
 
-	return os.WriteFile(v.vaultFile(), envData, 0o600)
+	return writeFileAtomic(v.vaultFile(), envData, 0o600)
 }
 
 func (v *Vault) load() error {
@@ -303,10 +351,7 @@ func (v *Vault) load() error {
 		return err
 	}
 
-	var envelope struct {
-		Data  string `json:"data"`
-		Nonce string `json:"nonce"`
-	}
+	var envelope vaultEnvelope
 	if err := json.Unmarshal(raw, &envelope); err != nil {
 		return fmt.Errorf("decode vault envelope: %w", err)
 	}
@@ -326,4 +371,107 @@ func (v *Vault) load() error {
 	}
 
 	return json.Unmarshal(plaintext, &v.wallets)
+}
+
+// MigrateVaultKDF re-encrypts a legacy (SHA-256 KDF) vault with argon2id.
+// It is opt-in only (`agent-wallet migrate-kdf`); nothing calls it
+// automatically. A copy of the legacy file is kept as
+// wallets.enc.json.legacy-<unix>.bak (still encrypted). Returns migrated=false
+// when there is no vault or it already uses argon2id.
+func MigrateVaultKDF(cfg VaultConfig) (migrated bool, backup string, err error) {
+	old, err := NewVault(cfg)
+	if err != nil {
+		return false, "", err
+	}
+	if _, statErr := os.Stat(old.vaultFile()); os.IsNotExist(statErr) {
+		return false, "", nil
+	}
+	if old.loadFailed {
+		return false, "", fmt.Errorf("cannot migrate: vault could not be decrypted with the configured passphrase")
+	}
+	if !old.kdf.isLegacy() {
+		return false, "", nil
+	}
+
+	hdr, err := newKDFHeader()
+	if err != nil {
+		return false, "", err
+	}
+	newKey, err := deriveKeyWith(cfg.Passphrase, hdr)
+	if err != nil {
+		return false, "", err
+	}
+	next := &Vault{wallets: make(map[string]*WalletEntry), masterKey: newKey, kdf: hdr, storePath: old.storePath}
+
+	plain := make(map[string][]byte, len(old.wallets))
+	defer func() {
+		for _, b := range plain {
+			for i := range b {
+				b[i] = 0
+			}
+		}
+	}()
+	for id, w := range old.wallets {
+		ct, err := hex.DecodeString(w.EncryptedKey)
+		if err != nil {
+			return false, "", fmt.Errorf("wallet %s: decode ciphertext: %w", id, err)
+		}
+		nonce, err := hex.DecodeString(w.Nonce)
+		if err != nil {
+			return false, "", fmt.Errorf("wallet %s: decode nonce: %w", id, err)
+		}
+		pk, err := old.decrypt(ct, nonce)
+		if err != nil {
+			return false, "", fmt.Errorf("wallet %s: decrypt: %w", id, err)
+		}
+		plain[id] = pk
+		nct, nnonce, err := next.encrypt(pk)
+		if err != nil {
+			return false, "", fmt.Errorf("wallet %s: re-encrypt: %w", id, err)
+		}
+		entry := *w
+		entry.EncryptedKey = hex.EncodeToString(nct)
+		entry.Nonce = hex.EncodeToString(nnonce)
+		next.wallets[id] = &entry
+	}
+
+	backup, err = backupFile(old.vaultFile())
+	if err != nil {
+		return false, "", fmt.Errorf("backup legacy vault: %w", err)
+	}
+	if err := next.saveLocked(); err != nil {
+		return false, backup, fmt.Errorf("write migrated vault (legacy backup kept at %s): %w", backup, err)
+	}
+
+	// Verify: reopen and check every key decrypts to the same bytes.
+	check, err := NewVault(cfg)
+	if err != nil || check.loadFailed || check.kdf.KDF != kdfArgon2id || len(check.wallets) != len(plain) {
+		return false, backup, fmt.Errorf("verification of migrated vault failed; restore from %s", backup)
+	}
+	for id, want := range plain {
+		got, err := check.decryptEntry(id)
+		if err != nil || !bytes.Equal(got, want) {
+			return false, backup, fmt.Errorf("verification of wallet %s failed; restore from %s", id, backup)
+		}
+	}
+	return true, backup, nil
+}
+
+// decryptEntry decrypts a wallet's key regardless of its paused state.
+func (v *Vault) decryptEntry(id string) ([]byte, error) {
+	v.mu.RLock()
+	w, ok := v.wallets[id]
+	v.mu.RUnlock()
+	if !ok {
+		return nil, fmt.Errorf("wallet %s not found", id)
+	}
+	ct, err := hex.DecodeString(w.EncryptedKey)
+	if err != nil {
+		return nil, err
+	}
+	nonce, err := hex.DecodeString(w.Nonce)
+	if err != nil {
+		return nil, err
+	}
+	return v.decrypt(ct, nonce)
 }

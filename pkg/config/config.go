@@ -306,8 +306,8 @@ type SolanaConfig struct {
 	MinReserveSOL              float64 `json:"min_reserve_sol"`
 	SwapSlippageBps            int     `json:"swap_slippage_bps"`
 	// Generic RPC overrides (fallback if Helius/SolanaTracker not set)
-	RPCURL                     string  `json:"solana_rpc_url"`
-	WSSURL                     string  `json:"solana_wss_url"`
+	RPCURL string `json:"solana_rpc_url"`
+	WSSURL string `json:"solana_wss_url"`
 }
 
 // ── SolanaOS: OODA Loop ─────────────────────────────────────────────
@@ -493,7 +493,9 @@ type StrategyConfig struct {
 	StopLossPct     float64 `json:"stop_loss_pct"`
 	TakeProfitPct   float64 `json:"take_profit_pct"`
 	PositionSizePct float64 `json:"position_size_pct"`
-	UsePerps        bool    `json:"use_perps"`
+	// MaxLeverage caps any leverage a trade signal (LLM or command) requests.
+	MaxLeverage int  `json:"max_leverage"`
+	UsePerps    bool `json:"use_perps"`
 }
 
 // ── Agent Registry / Tokenized Agent Deployment ─────────────────────
@@ -550,13 +552,13 @@ type PumpLaunchConfig struct {
 // ── Pinata Private IPFS Hub ──────────────────────────────────────────
 
 type PinataHubConfig struct {
-	Enabled    bool   `json:"enabled"`
-	APIKey     string `json:"api_key"`
-	APISecret  string `json:"api_secret"`
-	JWT        string `json:"jwt"`
-	Gateway    string `json:"gateway"`     // e.g. "your-gateway.mypinata.cloud"
-	MeshSync   bool   `json:"mesh_sync"`   // auto-sync files across Tailscale/BLE mesh
-	BLEBridge  string `json:"ble_bridge"`  // BLE bridge addr (default 127.0.0.1:8765)
+	Enabled   bool   `json:"enabled"`
+	APIKey    string `json:"api_key"`
+	APISecret string `json:"api_secret"`
+	JWT       string `json:"jwt"`
+	Gateway   string `json:"gateway"`    // e.g. "your-gateway.mypinata.cloud"
+	MeshSync  bool   `json:"mesh_sync"`  // auto-sync files across Tailscale/BLE mesh
+	BLEBridge string `json:"ble_bridge"` // BLE bridge addr (default 127.0.0.1:8765)
 }
 
 // ── SolanaOS: Hume Voice AI ──────────────────────────────────────────
@@ -693,6 +695,7 @@ func DefaultConfig() *Config {
 			StopLossPct:     0.08,
 			TakeProfitPct:   0.20,
 			PositionSizePct: 0.10,
+			MaxLeverage:     5,
 			UsePerps:        true,
 		},
 		Registry: AgentRegistryConfig{
@@ -1262,6 +1265,11 @@ func applyEnvOverrides(cfg *Config) {
 	if v := os.Getenv("OODA_POSITION_SIZE_PCT"); v != "" {
 		if pct, err := strconv.ParseFloat(v, 64); err == nil && pct > 0 {
 			cfg.OODA.PositionSizePct = pct
+		}
+	}
+	if v := os.Getenv("STRATEGY_MAX_LEVERAGE"); v != "" {
+		if lev, err := strconv.Atoi(strings.TrimSpace(v)); err == nil && lev > 0 {
+			cfg.Strategy.MaxLeverage = lev
 		}
 	}
 	if v := os.Getenv("OPENROUTER_API_KEY"); v != "" {

@@ -103,7 +103,7 @@ func (d *stubDevice) Write(reg byte, data []byte) error {
 	return nil
 }
 
-func (d *stubDevice) ReadByte(reg byte) (byte, error) {
+func (d *stubDevice) ReadReg8(reg byte) (byte, error) {
 	buf := make([]byte, 1)
 	if err := d.Read(reg, buf); err != nil {
 		return 0, err
@@ -111,7 +111,7 @@ func (d *stubDevice) ReadByte(reg byte) (byte, error) {
 	return buf[0], nil
 }
 
-func (d *stubDevice) WriteByte(reg byte, val byte) error {
+func (d *stubDevice) WriteReg8(reg byte, val byte) error {
 	return d.Write(reg, []byte{val})
 }
 
@@ -133,11 +133,11 @@ func (d *stubDevice) Close() error { return nil }
 
 type StubGPIO struct{ Pin int }
 
-func (g *StubGPIO) High() error              { log.Printf("[HAL-STUB] GPIO %d HIGH", g.Pin); return nil }
-func (g *StubGPIO) Low() error               { log.Printf("[HAL-STUB] GPIO %d LOW", g.Pin); return nil }
-func (g *StubGPIO) Read() (bool, error)      { return false, nil }
-func (g *StubGPIO) SetDirection(bool) error   { return nil }
-func (g *StubGPIO) Close() error             { return nil }
+func (g *StubGPIO) High() error             { log.Printf("[HAL-STUB] GPIO %d HIGH", g.Pin); return nil }
+func (g *StubGPIO) Low() error              { log.Printf("[HAL-STUB] GPIO %d LOW", g.Pin); return nil }
+func (g *StubGPIO) Read() (bool, error)     { return false, nil }
+func (g *StubGPIO) SetDirection(bool) error { return nil }
+func (g *StubGPIO) Close() error            { return nil }
 
 // OpenGPIO opens a stub GPIO pin.
 func OpenGPIO(pin int) (GPIO, error) {

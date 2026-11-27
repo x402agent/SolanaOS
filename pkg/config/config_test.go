@@ -142,3 +142,24 @@ func TestApplyEnvOverridesBrowserUseAndBrowserbase(t *testing.T) {
 		t.Fatalf("BrowserUse.BrowserbaseTimeoutMS = %d, want %d", got, 600000)
 	}
 }
+
+func TestStrategyMaxLeverageDefaultAndEnv(t *testing.T) {
+	t.Setenv("STRATEGY_MAX_LEVERAGE", "")
+	cfg := DefaultConfig()
+	if cfg.Strategy.MaxLeverage != 5 {
+		t.Fatalf("default Strategy.MaxLeverage = %d, want 5", cfg.Strategy.MaxLeverage)
+	}
+	t.Setenv("STRATEGY_MAX_LEVERAGE", "12")
+	applyEnvOverrides(cfg)
+	if cfg.Strategy.MaxLeverage != 12 {
+		t.Fatalf("Strategy.MaxLeverage = %d, want 12", cfg.Strategy.MaxLeverage)
+	}
+	for _, bad := range []string{"0", "-3", "abc"} {
+		cfg := DefaultConfig()
+		t.Setenv("STRATEGY_MAX_LEVERAGE", bad)
+		applyEnvOverrides(cfg)
+		if cfg.Strategy.MaxLeverage != 5 {
+			t.Fatalf("STRATEGY_MAX_LEVERAGE=%q changed max to %d", bad, cfg.Strategy.MaxLeverage)
+		}
+	}
+}
