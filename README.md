@@ -2026,6 +2026,17 @@ Worker name: `pumpfun-mcp-server` — cron: `*/15 * * * *`
 
 ---
 
+## Clawd Bot Runtime (`clawdbot/`)
+
+The Clawd Bot Go runtime (🦞 Clawd mascot, Musebook provider) lives in
+[`clawdbot/`](clawdbot/README.md) as its own Go module. It was brought in from
+[Solizardking/clawdb0t](https://github.com/Solizardking/clawdb0t).
+
+```bash
+make clawdbot-build   # clawdbot/build/clawdbot + clawdbot-tui
+make clawdbot-test    # go vet + go test for the clawdbot module
+```
+
 ## Pump.fun Bots (`bots/`)
 
 Two pump.fun TypeScript bots are bundled in `bots/` and fully integrated into the SolanaOS daemon runtime via `pkg/pumpfun/`. The daemon manages them as supervised subprocesses — start, stop, log streaming, and .env config — all from Telegram without touching a terminal.
