@@ -444,3 +444,23 @@ help:
 	@echo "  scan-i2c            Scan I2C bus for Modulino sensors"
 	@echo "  connect-bundle      Regenerate Seeker connect bundle"
 	@echo "  clean               Remove build/ artifacts"
+
+# ── Clawd Bot runtime (nested Go module in ./clawdbot) ────────────────
+# Integrated from Solizardking/clawdb0t + Solizardking/clawd-bot-zero.
+# Separate go.mod so its toolchain/deps never touch the root module.
+CLAWDBOT_DIR     := clawdbot
+CLAWDBOT_PKG_VER := github.com/x402agent/SolanaOS/clawdbot/pkg/config
+CLAWDBOT_LDFLAGS := -s -w \
+  -X $(CLAWDBOT_PKG_VER).Version=$(VERSION) \
+  -X $(CLAWDBOT_PKG_VER).GitCommit=$(COMMIT) \
+  -X $(CLAWDBOT_PKG_VER).BuildTime=$(BUILDTIME) \
+  -X $(CLAWDBOT_PKG_VER).GoVersion=$(GOVERSION)
+
+.PHONY: clawdbot-build clawdbot-test
+
+clawdbot-build: ## Build the Clawd Bot CLI + TUI into clawdbot/build/
+	cd $(CLAWDBOT_DIR) && $(GO) build -trimpath -ldflags "$(CLAWDBOT_LDFLAGS)" -o build/clawdbot ./cmd/clawdbot
+	cd $(CLAWDBOT_DIR) && $(GO) build -trimpath -ldflags "$(CLAWDBOT_LDFLAGS)" -o build/clawdbot-tui ./cmd/clawdbot-tui
+
+clawdbot-test: ## go vet + go test for the Clawd Bot module
+	cd $(CLAWDBOT_DIR) && $(GO) vet ./... && $(GO) test ./...
